@@ -83,7 +83,9 @@ From any terminal (after the shell-shim install, or `npm install -g @tokmizer/pl
 
 ## Choosing a compression mode
 
-Choose `light` for gentle reduction, `balanced` (the default) for more compact output, or `max` for the strongest standard reduction. The aliases `normal`, `compact`, and `minimal` map to these levels respectively. Short or exact output can be identical across levels. Recognized failures retain their content apart from terminal colors.
+Choose `light` for gentle reduction, `balanced` (the default) for more compact output, or `max` for the strongest standard reduction. The aliases `normal`, `compact`, and `minimal` map to these levels respectively. Short or exact output can be identical across levels.
+
+Since 0.9.52, short code reads and small explicit excerpts stay complete by default in all three standard modes. Larger reads can still be shortened. Recognized failures retain their diagnostics; Max can summarize repeated log lines with an occurrence count. Distinct diagnostic messages and command exit codes are preserved.
 
 Without a linked account, standard settings stay on this machine and work offline after initial activation. With a linked account, changes require a connection and sync across machines. Linking an account restores its server settings.
 
@@ -122,6 +124,8 @@ The 85 checks cover 13 of the 30 cases. The other 17 have no complete preservati
 The result also depends on the output. In a separate set of five JSON examples, `light` produced 285 tokens, `balanced` 253, and both `max` and YOLO 197. YOLO does not always save more than `max`.
 
 In one real failed test, `max` kept 302 tokens and YOLO kept 77. Both retained the actual and expected values. YOLO removed the explanation about invoice 42 and the location `payment.test.mjs:4:10`, which were retained by `max`. That missing context can matter when fixing the failure.
+
+In a separate controlled test for 0.9.52, a repetitive failure log went from 1,094 to 84 tokens in Max (92.3% fewer, counted with cl100k). Every distinct diagnostic and the repetition counts were retained. This result applies to that example, not to typical usage.
 
 These tokenizer counts are separate from the byte-based estimates in `tkr gain`. They measure output volume, not your bill, an agent's task success, or execution speed. See the [mode guide](https://tokmizer.com/en/docs#configuration) for usage and limits.
 
