@@ -13,7 +13,7 @@ In Claude Code:
 /plugin install tokmizer@tokmizer
 ```
 
-Then restart Claude Code once, hooks only load at startup. Verify with `/tkr-status`, you should see your plan and Active.
+Then restart Claude Code once, hooks only load at startup. Verify with `/tkr-status`, you should see Status active.
 
 Any other tool (universal shell-shim):
 
@@ -63,7 +63,7 @@ In Claude Code:
 - `/tkr-link tokmizer_yourkey` connects an optional account
 - `/tkr-unlink` unlinks this machine from your account
 - `/tkr-gain` shows the estimated reduction in command-output tokens
-- `/tkr-status` shows your current plan and usage
+- `/tkr-status` shows your account and engine status
 - `/tkr-compression` picks the compression level (light, balanced, max)
 - `/tkr-yolo on` explicitly enables YOLO on this machine; `/tkr-yolo off` disables it
 - `/tkr-reducer` makes the assistant's replies shorter (off, light, balanced, max)
@@ -72,7 +72,7 @@ In Claude Code:
 
 From any terminal (after the shell-shim install, or `npm install -g @tokmizer/plugin`):
 
-- `tkr status` shows your current plan and status
+- `tkr status` shows your account and engine status
 - `tkr gain` shows the estimated reduction in command-output tokens
 - `tkr link <key>` connects an optional account
 - `tkr unlink` unlinks this machine
