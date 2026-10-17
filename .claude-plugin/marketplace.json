@@ -6,13 +6,13 @@
   },
   "metadata": {
     "description": "Tokmizer reduces token consumption for AI coding agents.",
-    "version": "0.9.59"
+    "version": "0.9.60"
   },
   "plugins": [
     {
       "name": "tokmizer",
       "description": "Reduces command-output tokens with selectable compression levels and an optional lossy YOLO mode.",
-      "version": "0.9.59",
+      "version": "0.9.60",
       "source": {
         "source": "npm",
         "package": "@tokmizer/plugin"
