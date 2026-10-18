@@ -1,0 +1,65 @@
+[filters.cmake]
+description = "Compact cmake configure/build"
+match_command = "^cmake(\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^-- ", "^\\s*$"]
+max_lines = 150
+
+[filters.ninja]
+description = "Compact ninja build"
+match_command = "^ninja(\\s|$)"
+priority = 55
+strip_ansi = true
+max_lines = 150
+
+[filters.bazel]
+description = "Compact bazel build/test/run"
+match_command = "^bazel(\\s|$)|^bazelisk(\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^INFO: ", "^Loading: ", "^\\s*$"]
+max_lines = 200
+
+[filters.sbt]
+description = "Compact sbt (drop startup, compile progress and passing tests, keep failures and totals)"
+match_command = "^sbt(\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = [
+  "^\\[info\\] welcome to sbt ",
+  "^\\[info\\] loading (?:settings for project|project definition from|global plugins from) ",
+  "^\\[info\\] set current project to ",
+  "^\\[info\\] (?:Compiling|compiling) \\d+ (?:Scala|Java|Scala and Java) sources? to ",
+  "^\\[info\\] done compiling",
+  "^\\[info\\]\\s+- (?!.*\\*\\*\\* (?:FAILED|CANCELED|IGNORED|PENDING) \\*\\*\\*).+$",
+  "^\\[info\\]\\s+\\+ .+$",
+  "^\\[info\\] (?:Run completed in|Suites: completed) ",
+  "^\\s*$"
+]
+max_lines = 150
+keep_failures = true
+strip_on_failure = true
+
+[filters.pio-run]
+description = "Compact PlatformIO run/upload"
+match_command = "^pio(\\s|$)|^platformio(\\s|$)"
+priority = 50
+strip_ansi = true
+max_lines = 150
+
+[filters.flutter]
+description = "Compact flutter run/build"
+match_command = "^flutter(\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^Running ", "^\\s*$"]
+max_lines = 200
+
+[filters.pod]
+description = "Compact CocoaPods"
+match_command = "^pod(\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^Analyzing dependencies", "^Fetching ", "^\\s*$"]
+max_lines = 120

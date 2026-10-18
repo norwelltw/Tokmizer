@@ -1,0 +1,248 @@
+Using CPython 3.14.7
+Creating virtual environment at: .venv
+Resolved 20 packages in 195ms
+Downloading pygments (1.2MiB)
+   Building pydantic-core==2.23.4
+ Downloaded pygments
+  × Failed to build `pydantic-core==2.23.4`
+  ├─▶ The build backend returned an error
+  ╰─▶ Call to `maturin.build_wheel` failed (exit status: 1)
+
+      [stdout]
+      Running `maturin pep517 build-wheel -i
+      /home/dev/.cache/uv/builds-v0/.tmpXGgSjr/bin/python --compatibility
+      off`
+
+      [stderr]
+          Updating crates.io index
+       Downloading crates ...
+        Downloaded displaydoc v0.2.5
+        Downloaded funty v2.0.0
+        Downloaded equivalent v1.0.1
+        Downloaded ahash v0.8.11
+        Downloaded radium v0.7.0
+        Downloaded form_urlencoded v1.2.1
+        Downloaded yoke-derive v0.7.4
+        Downloaded indoc v2.0.5
+        Downloaded tinyvec_macros v0.1.1
+        Downloaded cfg-if v1.0.0
+        Downloaded memoffset v0.9.1
+        Downloaded pyo3-macros v0.22.2
+        Downloaded unindent v0.2.3
+        Downloaded write16 v1.0.0
+        Downloaded percent-encoding v2.3.1
+        Downloaded strum v0.26.3
+        Downloaded zerofrom-derive v0.1.4
+        Downloaded tap v1.0.1
+        Downloaded icu_provider_macros v1.5.0
+        Downloaded hex v0.4.3
+        Downloaded enum_dispatch v0.3.13
+        Downloaded utf16_iter v1.0.5
+        Downloaded itoa v1.0.11
+        Downloaded zerofrom v0.1.4
+        Downloaded autocfg v1.3.0
+        Downloaded wyz v0.5.1
+        Downloaded rustversion v1.0.17
+        Downloaded quote v1.0.36
+        Downloaded synstructure v0.13.1
+        Downloaded yoke v0.7.4
+        Downloaded writeable v0.5.5
+        Downloaded target-lexicon v0.12.14
+        Downloaded tinystr v0.7.6
+        Downloaded zerovec-derive v0.10.3
+        Downloaded wasi v0.11.0+wasi-snapshot-preview1
+        Downloaded pyo3-build-config v0.22.2
+        Downloaded once_cell v1.19.0
+        Downloaded unicode-ident v1.0.12
+        Downloaded zerocopy-derive v0.7.34
+        Downloaded uuid v1.10.0
+        Downloaded url v2.5.2
+        Downloaded serde v1.0.209
+        Downloaded icu_properties v1.5.1
+        Downloaded memchr v2.7.4
+        Downloaded icu_collections v1.5.0
+        Downloaded unicode-normalization v0.1.23
+        Downloaded zerocopy v0.7.34
+        Downloaded zerovec v0.10.4
+        Downloaded portable-atomic v1.6.0
+        Downloaded lexical-parse-float v0.8.5
+        Downloaded aho-corasick v1.1.3
+        Downloaded bitvec v1.0.1
+        Downloaded idna v0.5.0
+        Downloaded syn v2.0.68
+        Downloaded regex v1.10.6
+        Downloaded icu_properties_data v1.5.0
+        Downloaded jiter v0.5.0
+        Downloaded idna v1.0.2
+        Downloaded regex-syntax v0.8.4
+        Downloaded serde_json v1.0.128
+        Downloaded num-bigint v0.4.6
+        Downloaded indexmap v2.2.6
+        Downloaded base64 v0.22.1
+        Downloaded cc v1.0.101
+        Downloaded lexical-util v0.8.5
+        Downloaded python3-dll-a v0.2.10
+        Downloaded pyo3-ffi v0.22.2
+        Downloaded pyo3 v0.22.2
+        Downloaded unicode-bidi v0.3.15
+        Downloaded tinyvec v1.6.1
+        Downloaded pyo3-macros-backend v0.22.2
+        Downloaded lexical-parse-integer v0.8.6
+        Downloaded icu_provider v1.5.0
+        Downloaded regex-automata v0.4.7
+        Downloaded icu_normalizer v1.5.0
+        Downloaded icu_locid v1.5.0
+        Downloaded serde_derive v1.0.209
+        Downloaded num-traits v0.2.19
+        Downloaded icu_normalizer_data v1.5.0
+        Downloaded libc v0.2.155
+        Downloaded smallvec v1.13.2
+        Downloaded ryu v1.0.18
+        Downloaded proc-macro2 v1.0.86
+        Downloaded speedate v0.14.4
+        Downloaded icu_locid_transform_data v1.5.0
+        Downloaded num-integer v0.1.46
+        Downloaded icu_locid_transform v1.5.0
+        Downloaded getrandom v0.2.15
+        Downloaded strum_macros v0.26.4
+        Downloaded static_assertions v1.1.0
+        Downloaded stable_deref_trait v1.2.0
+        Downloaded litemap v0.7.3
+      📦 Including license file `LICENSE`
+      🍹 Building a mixed python/rust project
+      🐍 Found CPython 3.14 at
+      /home/dev/.cache/uv/builds-v0/.tmpXGgSjr/bin/python
+      🔗 Found pyo3 bindings
+      📡 Using build options features, bindings from pyproject.toml
+      💻 Using `MACOSX_DEPLOYMENT_TARGET=11.0` for aarch64-apple-darwin by
+      default
+         Compiling proc-macro2 v1.0.86
+         Compiling unicode-ident v1.0.12
+         Compiling target-lexicon v0.12.14
+         Compiling python3-dll-a v0.2.10
+         Compiling once_cell v1.19.0
+         Compiling autocfg v1.3.0
+         Compiling stable_deref_trait v1.2.0
+         Compiling libc v0.2.155
+         Compiling heck v0.5.0
+         Compiling version_check v0.9.5
+         Compiling litemap v0.7.3
+         Compiling writeable v0.5.5
+         Compiling rustversion v1.0.17
+         Compiling icu_locid_transform_data v1.5.0
+         Compiling cfg-if v1.0.0
+         Compiling static_assertions v1.1.0
+         Compiling radium v0.7.0
+         Compiling tinyvec_macros v0.1.1
+         Compiling memchr v2.7.4
+         Compiling lexical-util v0.8.5
+         Compiling serde v1.0.209
+         Compiling ahash v0.8.11
+         Compiling num-traits v0.2.19
+         Compiling memoffset v0.9.1
+         Compiling tinyvec v1.6.1
+         Compiling icu_properties_data v1.5.0
+         Compiling smallvec v1.13.2
+         Compiling tap v1.0.1
+         Compiling lexical-parse-integer v0.8.6
+         Compiling wyz v0.5.1
+         Compiling aho-corasick v1.1.3
+         Compiling unicode-normalization v0.1.23
+         Compiling percent-encoding v2.3.1
+         Compiling serde_json v1.0.128
+         Compiling write16 v1.0.0
+         Compiling hashbrown v0.14.5
+         Compiling funty v2.0.0
+         Compiling zerocopy v0.7.34
+         Compiling equivalent v1.0.1
+         Compiling utf16_iter v1.0.5
+         Compiling indoc v2.0.5
+         Compiling unicode-bidi v0.3.15
+         Compiling pyo3-build-config v0.22.2
+         Compiling getrandom v0.2.15
+         Compiling regex-syntax v0.8.4
+         Compiling quote v1.0.36
+         Compiling utf8_iter v1.0.4
+         Compiling icu_normalizer_data v1.5.0
+         Compiling num-integer v0.1.46
+         Compiling syn v2.0.68
+         Compiling unindent v0.2.3
+         Compiling idna v0.5.0
+         Compiling indexmap v2.2.6
+         Compiling bitvec v1.0.1
+         Compiling num-bigint v0.4.6
+         Compiling form_urlencoded v1.2.1
+         Compiling lexical-parse-float v0.8.5
+         Compiling itoa v1.0.11
+         Compiling ryu v1.0.18
+         Compiling url v2.5.2
+         Compiling hex v0.4.3
+         Compiling uuid v1.10.0
+         Compiling base64 v0.22.1
+         Compiling regex-automata v0.4.7
+         Compiling pyo3-macros-backend v0.22.2
+         Compiling pyo3-ffi v0.22.2
+         Compiling pyo3 v0.22.2
+         Compiling jiter v0.5.0
+         Compiling pydantic-core v2.23.4
+      (/home/dev/.cache/uv/sdists-v9/pypi/pydantic-core/2.23.4/eJojKwc_13JAn4uB/src)
+      error: failed to run custom build command for `pyo3-ffi v0.22.2`
+
+      Caused by:
+        process didn't exit successfully:
+      `/home/dev/.cache/uv/sdists-v9/pypi/pydantic-core/2.23.4/eJojKwc_13JAn4uB/src/target/release/build/pyo3-ffi-c35097fb68c09443/build-script-build`
+      (exit status: 1)
+        --- stdout
+        cargo:rustc-check-cfg=cfg(Py_LIMITED_API)
+        cargo:rustc-check-cfg=cfg(PyPy)
+        cargo:rustc-check-cfg=cfg(GraalPy)
+        cargo:rustc-check-cfg=cfg(py_sys_config, values("Py_DEBUG",
+      "Py_REF_DEBUG", "Py_TRACE_REFS", "COUNT_ALLOCS"))
+        cargo:rustc-check-cfg=cfg(invalid_from_utf8_lint)
+        cargo:rustc-check-cfg=cfg(pyo3_disable_reference_pool)
+        cargo:rustc-check-cfg=cfg(pyo3_leak_on_drop_without_reference_pool)
+        cargo:rustc-check-cfg=cfg(diagnostic_namespace)
+        cargo:rustc-check-cfg=cfg(c_str_lit)
+        cargo:rustc-check-cfg=cfg(Py_3_7)
+        cargo:rustc-check-cfg=cfg(Py_3_8)
+        cargo:rustc-check-cfg=cfg(Py_3_9)
+        cargo:rustc-check-cfg=cfg(Py_3_10)
+        cargo:rustc-check-cfg=cfg(Py_3_11)
+        cargo:rustc-check-cfg=cfg(Py_3_12)
+        cargo:rustc-check-cfg=cfg(Py_3_13)
+        cargo:rerun-if-env-changed=PYO3_CROSS
+        cargo:rerun-if-env-changed=PYO3_CROSS_LIB_DIR
+        cargo:rerun-if-env-changed=PYO3_CROSS_PYTHON_VERSION
+        cargo:rerun-if-env-changed=PYO3_CROSS_PYTHON_IMPLEMENTATION
+        cargo:rerun-if-env-changed=PYO3_PRINT_CONFIG
+        cargo:rerun-if-env-changed=PYO3_USE_ABI3_FORWARD_COMPATIBILITY
+
+        --- stderr
+        error: the configured Python interpreter version (3.14) is newer than
+      PyO3's maximum supported version (3.13)
+        = help: please check if an updated version of PyO3 is available.
+      Current version: 0.22.2
+        = help: set PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 to suppress this
+      check and build anyway using the stable ABI
+      warning: build failed, waiting for other jobs to finish...
+      💥 maturin failed
+        Caused by: Failed to build a native library through cargo
+        Caused by: Cargo build finished with "exit status: 101": `env -u
+      CARGO MACOSX_DEPLOYMENT_TARGET="11.0" PYO3_BUILD_EXTENSION_MODULE="1"
+      PYO3_ENVIRONMENT_SIGNATURE="cpython-3.14-64bit"
+      PYO3_PYTHON="/home/dev/.cache/uv/builds-v0/.tmpXGgSjr/bin/python"
+      PYTHON_SYS_EXECUTABLE="/home/dev/.cache/uv/builds-v0/.tmpXGgSjr/bin/python"
+      "cargo" "rustc" "--profile" "release" "--features"
+      "pyo3/extension-module" "--message-format"
+      "json-render-diagnostics" "--manifest-path"
+      "/home/dev/.cache/uv/sdists-v9/pypi/pydantic-core/2.23.4/eJojKwc_13JAn4uB/src/Cargo.toml"
+      "--lib" "--crate-type" "cdylib" "--" "-C"
+      "link-args=-Wl,-install_name,@rpath/pydantic_core._pydantic_core.cpython-314-darwin.so"`
+      Error: command ['maturin', 'pep517', 'build-wheel', '-i',
+      '/home/dev/.cache/uv/builds-v0/.tmpXGgSjr/bin/python',
+      '--compatibility', 'off'] returned non-zero exit status 1
+
+      hint: This usually indicates a problem with the package or the build
+      environment.
+  help: `pydantic-core` (v2.23.4) was included because `svc` (v0.1.0) depends
+        on `pydantic` (v2.9.2) which depends on `pydantic-core`

@@ -1,0 +1,10 @@
+export { processOutput } from "../engine";
+export { captureForRestore, captureOriginalForRestore } from "../content-cache";
+export { FOLD_MARKER_RE } from "../engine/transforms/smart-code";
+export { resolveAllowedFilters } from "../default-rules";
+export { gatingPlan, graceExceeded } from "../entitlement";
+export { recordEvent } from "../learn/recorder";
+export { recordTelemetry } from "../learn/telemetry";
+export { recordStat, countedSaving, statCmdLabel, statOutcome } from "../stats";
+export { installDaemonResolver, closeDaemonResolver } from "../daemon/resolver";
+export { loadSettingsCache } from "../settings-cache";

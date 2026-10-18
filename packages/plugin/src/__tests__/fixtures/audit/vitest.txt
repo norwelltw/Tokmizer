@@ -1,0 +1,310 @@
+[33mThe CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.[39m
+
+ RUN  v1.6.1 /Users/user00/Documents/Token
+
+ ✓ packages/plugin/src/__tests__/redact.test.ts > redactCommand > redacts bearer tokens in -H Authorization
+ ✓ packages/plugin/src/__tests__/redact.test.ts > redactCommand > redacts --password=value
+ ✓ packages/plugin/src/__tests__/redact.test.ts > redactCommand > redacts --token foo
+ ✓ packages/plugin/src/__tests__/redact.test.ts > redactCommand > redacts URL-embedded creds
+ ✓ packages/plugin/src/__tests__/redact.test.ts > redactCommand > redacts AWS env-style
+ ✓ packages/plugin/src/__tests__/redact.test.ts > redactCommand > redacts Stripe live key
+ ✓ packages/plugin/src/__tests__/redact.test.ts > redactCommand > redacts GitHub personal token
+ ✓ packages/plugin/src/__tests__/redact.test.ts > redactCommand > redacts long base64-looking values after =
+ ✓ packages/plugin/src/__tests__/redact.test.ts > redactCommand > leaves benign commands unchanged
+ ✓ packages/plugin/src/__tests__/redact.test.ts > redactCommand > handles Basic auth
+ ✓ packages/plugin/src/__tests__/redact.test.ts > redactCommand > redacts curl -u user:pass
+ ✓ packages/plugin/src/__tests__/redact.test.ts > redactCommand > redacts ssh -i keypath
+ ✓ packages/plugin/src/__tests__/redact.test.ts > redactCommand > redacts OPENAI and ANTHROPIC env assignments
+ ✓ packages/plugin/src/__tests__/redact.test.ts > redactCommand > redacts JWT
+ ✓ packages/plugin/src/__tests__/redact.test.ts > redactCommand > redacts PEM private key blocks
+ ✓ packages/plugin/src/__tests__/redact.test.ts > redactCommand > redacts GitHub OAuth + GitLab PAT + Slack token
+ ✓ packages/plugin/src/__tests__/redact.test.ts > redactCommand > redacts AWS SESSION_TOKEN and GOOGLE_APPLICATION_CREDENTIALS
+ ✓ packages/plugin/src/__tests__/shim-install.test.ts > shim install > listShimmableCommands returns set including git npm docker
+ ✓ packages/plugin/src/__tests__/shim-install.test.ts > shim install > shimsDir under TOKMIZER_HOME
+ ✓ packages/plugin/src/__tests__/shim-install.test.ts > shim install > installShims creates entry per command
+ ✓ packages/plugin/src/__tests__/daemon-server.test.ts > daemon server > responds to ping with runtime metadata
+ ✓ packages/plugin/src/__tests__/daemon-server.test.ts > daemon server > returns matched filter for known command
+ ✓ packages/plugin/src/__tests__/daemon-server.test.ts > daemon server > returns null filter when no match
+ ✓ packages/plugin/src/__tests__/daemon-server.test.ts > daemon server > returns warming error when runtime not ready and no onWarming
+ ✓ packages/plugin/src/__tests__/daemon-server.test.ts > daemon server > rejects malformed request with bad_request error
+ ✓ packages/plugin/src/__tests__/daemon-server.test.ts > daemon server > reload op calls onWarming and replaces runtime
+ ✓ packages/plugin/src/__tests__/daemon-server.test.ts > daemon server > reload returns error when no onWarming handler
+ ✓ packages/plugin/src/__tests__/bundle-verify.test.ts > verifyFragmentSignature > verifies a freshly signed body
+ ✓ packages/plugin/src/__tests__/bundle-verify.test.ts > verifyFragmentSignature > rejects a single-byte tamper
+ ✓ packages/plugin/src/__tests__/bundle-verify.test.ts > verifyFragmentSignature > rejects a wrong signature
+ ✓ packages/plugin/src/__tests__/bundle-verify.test.ts > verifyFragmentSignature > rejects when signed with a different key
+ ✓ packages/plugin/src/__tests__/bundle-verify.test.ts > verifyFragmentSignature > rejects malformed base64url sig (returns false, no throw)
+ ✓ packages/plugin/src/__tests__/bundle-verify.test.ts > verifyFragmentSignature > verifies bodies of different positions independently
+ ✓ packages/plugin/src/__tests__/bundle-verify.test.ts > verifyFragmentSignature > throws clearly when public key env is missing
+ ✓ packages/plugin/src/__tests__/license-heartbeat.test.ts > license.heartbeat status branches > returns null on 401
+ ✓ packages/plugin/src/__tests__/license-heartbeat.test.ts > license.heartbeat status branches > clears state + returns null on 423 (revoked)
+ ✓ packages/plugin/src/__tests__/license-heartbeat.test.ts > license.heartbeat status branches > clears state + returns null on 426 (upgrade required)
+ ✓ packages/plugin/src/__tests__/license-heartbeat.test.ts > license.heartbeat status branches > clears state + returns null on 451 (legal)
+ ✓ packages/plugin/src/__tests__/license-heartbeat.test.ts > license.heartbeat status branches > returns cur on 5xx (soft-fail)
+ ✓ packages/plugin/src/__tests__/license-heartbeat.test.ts > license.heartbeat status branches > returns cur on transient 400 (soft-fail for non-auth 4xx)
+ ✓ packages/plugin/src/__tests__/license-heartbeat.test.ts > license.heartbeat status branches > returns cur on network exception
+ ✓ packages/plugin/src/__tests__/license-heartbeat.test.ts > license.heartbeat status branches > updates state from successful 200 (plan + revision)
+ ✓ packages/plugin/src/__tests__/license-heartbeat.test.ts > license.heartbeat status branches > returns null when no state present (not activated)
+ ✓ packages/plugin/src/__tests__/codex-adapter.test.ts > handleCodexHook > ignores before_tool_call
+ ✓ packages/plugin/src/__tests__/codex-adapter.test.ts > handleCodexHook > ignores non-shell tool
+ ✓ packages/plugin/src/__tests__/codex-adapter.test.ts > handleCodexHook > continues when output empty
+ ✓ packages/plugin/src/__tests__/codex-adapter.test.ts > handleCodexHook > replaces output when filter shrinks it
+ ✓ packages/plugin/src/__tests__/codex-adapter.test.ts > handleCodexHook > continues when filter does not shrink
+ ✓ packages/plugin/src/__tests__/codex-adapter.test.ts > handleCodexHook > accepts args array when command missing
+ ✓ packages/plugin/src/__tests__/codex-adapter.test.ts > runCodexHookFromStdin error paths > empty stdin → action:continue
+ ✓ packages/plugin/src/__tests__/codex-adapter.test.ts > runCodexHookFromStdin error paths > malformed JSON → action:continue
+ ✓ packages/plugin/src/__tests__/codex-adapter.test.ts > runCodexHookFromStdin error paths > valid payload returns JSON envelope
+ ✓ packages/plugin/src/__tests__/shim-install.test.ts > shim install > uninstallShims removes them
+ ✓ packages/plugin/src/__tests__/shim-install.test.ts > shim install > shellRcLine contains export PATH and shims dir
+ ✓ packages/plugin/src/__tests__/shim-install.test.ts > shim install > ensurePathInRc adds marker to rc file
+ ✓ packages/plugin/src/__tests__/shim-install.test.ts > shim install > ensurePathInRc idempotent on second call
+ ✓ packages/plugin/src/__tests__/shim-install.test.ts > shim install > ensurePathInRc returns missing when file absent
+ ✓ packages/plugin/src/__tests__/shim-install.test.ts > shim install > powershellProfileSnippet emits $env:Path
+ ✓ packages/plugin/src/__tests__/shim-install.test.ts > shim install > unixWrapperScript passes --as flag and forwards args
+ ✓ packages/plugin/src/__tests__/shim-install.test.ts > shim install > windowsWrapperScript passes --as flag and forwards args
+ ✓ app/tests/api/heartbeat-usage-day.test.ts > heartbeat usage-day quota > upserts a TokenUsageDay on first localDate of the month
+ ✓ app/tests/api/heartbeat-usage-day.test.ts > heartbeat usage-day quota > does not double-count the same calendar day
+ ✓ app/tests/api/heartbeat-usage-day.test.ts > heartbeat usage-day quota > returns bonusActive=true for days 1..7 and false from day 8
+ ✓ app/tests/api/heartbeat-usage-day.test.ts > heartbeat usage-day quota > legacy heartbeats with no localDate return bonusActive=false and skip upsert
+tokmizer-shim: missing command name
+ ✓ packages/plugin/src/__tests__/shim-install.test.ts > shim install > installed wrapper contains --as <cmd> (not symlink, no fork-bomb risk)
+ ✓ packages/plugin/src/__tests__/shim-install.test.ts > shim install > resolveShimJsPath honors TOKMIZER_SHIM_JS env override
+tokmizer-shim: spawn /no/such/cmd-xyz ENOENT
+ ✓ packages/plugin/src/__tests__/daemon-e2e.test.ts > daemon E2E — hook → daemon → backend > client.filter() returns a signed filter served by daemon backed by mock backend
+ ✓ packages/plugin/src/__tests__/daemon-e2e.test.ts > daemon E2E — hook → daemon → backend > client.filter() returns null when no rule matches
+ ✓ packages/plugin/src/__tests__/daemon-e2e.test.ts > daemon E2E — hook → daemon → backend > daemon ping returns ruleCount + bundleVersion after warm-up
+ ✓ app/tests/api/license-activate.test.ts > POST /api/v1/license/activate > 400 on missing headers
+ ✓ app/tests/api/license-activate.test.ts > POST /api/v1/license/activate > 429 when activate rate-limit exhausted
+hello
+x
+ ✓ packages/plugin/src/__tests__/shim-runner.test.ts > parseShimInvocation > parses --as <cmd> args
+ ✓ packages/plugin/src/__tests__/shim-runner.test.ts > parseShimInvocation > falls back to first arg when --as missing
+ ✓ packages/plugin/src/__tests__/shim-runner.test.ts > parseShimInvocation > empty argv → empty cmdName
+ ✓ packages/plugin/src/__tests__/shim-runner.test.ts > runShim > missing cmd → exit code 2
+ ✓ packages/plugin/src/__tests__/shim-runner.test.ts > runShim > preserves child exit code (true → 0)
+ ✓ packages/plugin/src/__tests__/shim-runner.test.ts > runShim > preserves child exit code (false → 1)
+ ✓ packages/plugin/src/__tests__/shim-runner.test.ts > runShim > returns 127 when command not found
+ ✓ packages/plugin/src/__tests__/shim-runner.test.ts > runShim > passes through when no state (no license)
+ ✓ packages/plugin/src/__tests__/shim-runner.test.ts > runShim > strips shimsDir from PATH before spawning child
+ ✓ packages/plugin/src/__tests__/plans-bonus.test.ts > plans two-layer model > free without bonus uses the rtk-equivalent baseline
+ ✓ packages/plugin/src/__tests__/plans-bonus.test.ts > plans two-layer model > free with bonus exposes the smart bundle
+ ✓ packages/plugin/src/__tests__/plans-bonus.test.ts > plans two-layer model > smart base = SMART_BASE; smart + bonus widens up to PRO_BASE
+ ✓ packages/plugin/src/__tests__/plans-bonus.test.ts > plans two-layer model > pro is identical regardless of bonusActive
+ ✓ packages/plugin/src/__tests__/plans-bonus.test.ts > plans two-layer model > trial behaves like smart base; bonus does not widen further
+ ✓ packages/plugin/src/__tests__/plans-bonus.test.ts > plans two-layer model > powerAvailable: pro=always; smart=only with bonus; free/trial=never
+ ✓ packages/plugin/src/__tests__/plans-bonus.test.ts > plans two-layer model > autoRoutingAvailable: pro=always; smart=only with bonus; free/trial=never
+ ✓ app/tests/api/license-activate.test.ts > POST /api/v1/license/activate > 426 when plugin outdated
+ ✓ app/tests/api/license-activate.test.ts > POST /api/v1/license/activate > 451 when version killed
+ ✓ app/tests/api/license-activate.test.ts > POST /api/v1/license/activate > 403 device_blacklisted
+ ✓ app/tests/api/license-activate.test.ts > POST /api/v1/license/activate > 400 on invalid body shape
+ ✓ packages/plugin/src/__tests__/host-detect.test.ts > detectHost > falls back to shell when no env match
+ ✓ packages/plugin/src/__tests__/host-detect.test.ts > detectHost > detects claude-code via CLAUDE_CODE
+ ✓ packages/plugin/src/__tests__/host-detect.test.ts > detectHost > detects codex via CODEX_VERSION
+ ✓ packages/plugin/src/__tests__/host-detect.test.ts > detectHost > detects cursor via CURSOR_TRACE_ID
+ ✓ packages/plugin/src/__tests__/host-detect.test.ts > detectHost > detects aider via AIDER_VERSION
+ ✓ packages/plugin/src/__tests__/host-detect.test.ts > detectHost > detects gemini-cli
+ ✓ packages/plugin/src/__tests__/host-detect.test.ts > detectHost > detects windsurf
+ ✓ packages/plugin/src/__tests__/host-detect.test.ts > detectHost > detects cline
+ ✓ packages/plugin/src/__tests__/host-detect.test.ts > detectHost > detects copilot
+ ✓ packages/plugin/src/__tests__/host-detect.test.ts > detectHost > claude-code wins over cursor when both set
+ ✓ packages/plugin/src/__tests__/host-detect.test.ts > detectHostFromArgv > parses --host claude-code
+ ✓ packages/plugin/src/__tests__/host-detect.test.ts > detectHostFromArgv > returns null when not present
+ ✓ packages/plugin/src/__tests__/host-detect.test.ts > detectHostFromArgv > rejects unknown host
+ ✓ packages/plugin/src/__tests__/host-detect.test.ts > adapterFor > claude-code → native-hooks
+ ✓ packages/plugin/src/__tests__/host-detect.test.ts > adapterFor > codex → native-hooks
+ ✓ packages/plugin/src/__tests__/host-detect.test.ts > adapterFor > cursor → shell-shim
+ ✓ packages/plugin/src/__tests__/host-detect.test.ts > adapterFor > shell → shell-shim
+ ✓ app/tests/api/license-activate.test.ts > POST /api/v1/license/activate > 401 when token unknown
+ ✓ packages/shared/src/__tests__/contracts-learn-settings.test.ts > LearnBatchRequest > accepts 1..100 events
+ ✓ packages/shared/src/__tests__/contracts-learn-settings.test.ts > LearnBatchRequest > rejects empty batch
+ ✓ packages/shared/src/__tests__/contracts-learn-settings.test.ts > LearnBatchRequest > rejects > 100 events
+ ✓ packages/shared/src/__tests__/contracts-learn-settings.test.ts > LearnBatchRequest > rejects negative bytes
+ ✓ packages/shared/src/__tests__/contracts-learn-settings.test.ts > LearnBatchRequest > rejects cmd > 512 chars
+ ✓ packages/shared/src/__tests__/contracts-learn-settings.test.ts > LearnBatchRequest > accepts optional nullable filterId
+ ✓ packages/shared/src/__tests__/contracts-learn-settings.test.ts > Settings > populates defaults from empty object
+ ✓ packages/shared/src/__tests__/contracts-learn-settings.test.ts > Settings > rejects invalid verbosity
+ ✓ packages/shared/src/__tests__/contracts-learn-settings.test.ts > Settings > rejects > 100 disabled filters
+ ✓ packages/shared/src/__tests__/contracts-learn-settings.test.ts > Settings > rejects filter slug > 64 chars
+ ✓ packages/shared/src/__tests__/contracts-learn-settings.test.ts > SettingsPatch > accepts partial update
+ ✓ packages/shared/src/__tests__/contracts-learn-settings.test.ts > SettingsPatch > accepts empty patch
+ ✓ app/tests/api/response.test.ts > response helpers > okJson 200 with body
+ ✓ app/tests/api/response.test.ts > response helpers > errJson custom status
+ ✓ app/tests/api/response.test.ts > response helpers > Errors.badRequest 400 with code
+ ✓ app/tests/api/response.test.ts > response helpers > Errors.unauthorized 401 default msg
+ ✓ app/tests/api/response.test.ts > response helpers > Errors.forbidden 403
+ ✓ app/tests/api/response.test.ts > response helpers > Errors.locked 423 with code
+ ✓ app/tests/api/response.test.ts > response helpers > Errors.upgrade 426 with version headers
+ ✓ app/tests/api/response.test.ts > response helpers > Errors.ratelimited 429
+ ✓ app/tests/api/response.test.ts > response helpers > Errors.killed 451 with rule code
+ ✓ app/tests/api/response.test.ts > response helpers > Errors.serverError 500
+ ✓ packages/plugin/src/__tests__/hook-rewrite.test.ts > PreToolUse rewrite > wraps a simple command
+ ✓ packages/plugin/src/__tests__/hook-rewrite.test.ts > PreToolUse rewrite > wraps each segment of compound &&
+ ✓ packages/plugin/src/__tests__/hook-rewrite.test.ts > PreToolUse rewrite > skips exception commands like cd, export, source
+ ✓ packages/plugin/src/__tests__/hook-rewrite.test.ts > PreToolUse rewrite > does not double-wrap if tokmizer-exec already present
+ ✓ packages/plugin/src/__tests__/hook-rewrite.test.ts > PreToolUse rewrite > handles pipe segments
+ ✓ packages/plugin/src/__tests__/hook-rewrite.test.ts > PreToolUse rewrite > does not split && inside double-quoted strings
+ ✓ packages/plugin/src/__tests__/hook-rewrite.test.ts > PreToolUse rewrite > does not split | inside grep pattern in double quotes
+ ✓ packages/plugin/src/__tests__/hook-rewrite.test.ts > PreToolUse rewrite > does not split inside single quotes
+ ✓ packages/plugin/src/__tests__/hook-rewrite.test.ts > PreToolUse rewrite > does not split inside backticks
+ ✓ packages/plugin/src/__tests__/hook-rewrite.test.ts > PreToolUse rewrite > does not split inside $() subshell
+ ✓ packages/plugin/src/__tests__/hook-rewrite.test.ts > PreToolUse rewrite > returns original on unbalanced quotes (fail-safe)
+ ✓ packages/plugin/src/__tests__/hook-rewrite.test.ts > PreToolUse rewrite > splitTopLevel marks separators correctly
+ ✓ packages/plugin/src/__tests__/settings-cache.test.ts > settings-cache > returns defaults when file missing
+ ✓ packages/plugin/src/__tests__/settings-cache.test.ts > settings-cache > round-trip save then load
+ ✓ packages/plugin/src/__tests__/settings-cache.test.ts > settings-cache > falls back to defaults on corrupt JSON
+ ✓ packages/plugin/src/__tests__/settings-cache.test.ts > settings-cache > merges partial cache with defaults
+ ✓ app/tests/api/license-activate.test.ts > POST /api/v1/license/activate > 423 when token revoked
+ ✓ packages/plugin/src/__tests__/smart-code.test.ts > looksLikeCode > false on prose
+ ✓ packages/plugin/src/__tests__/smart-code.test.ts > looksLikeCode > true on TS source
+ ✓ packages/plugin/src/__tests__/smart-code.test.ts > looksLikeCode > false on very short input even if code-like
+ ✓ packages/plugin/src/__tests__/smart-code.test.ts > smartCodeCollapse > passes through non-code lines unchanged
+ ✓ packages/plugin/src/__tests__/smart-code.test.ts > smartCodeCollapse > collapses long function body keeping first 2 lines
+ ✓ packages/plugin/src/__tests__/smart-code.test.ts > smartCodeCollapse > short functions not collapsed
+ ✓ packages/plugin/src/__tests__/smart-code.test.ts > smartCodeCollapse > handles class declaration
+ ✓ app/tests/api/license-activate.test.ts > POST /api/v1/license/activate > 403 email_mismatch when boundEmail differs
+ ✓ packages/plugin/src/__tests__/prompt-compress.test.ts > dropTimestampPrefix > strips ISO datetime
+ ✓ packages/plugin/src/__tests__/prompt-compress.test.ts > dropTimestampPrefix > strips HH:MM:SS
+ ✓ packages/plugin/src/__tests__/prompt-compress.test.ts > dropTimestampPrefix > strips HH:MM:SS.mmm
+ ✓ packages/plugin/src/__tests__/prompt-compress.test.ts > dropTimestampPrefix > leaves lines without timestamp
+ ✓ packages/plugin/src/__tests__/prompt-compress.test.ts > dropVerboseLogs > removes DEBUG/TRACE/INFO/VERBOSE
+ ✓ packages/plugin/src/__tests__/prompt-compress.test.ts > dropVerboseLogs > keeps WARN/ERROR/FATAL
+ ✓ packages/plugin/src/__tests__/prompt-compress.test.ts > dedupeAdjacent > empty input
+ ✓ packages/plugin/src/__tests__/prompt-compress.test.ts > dedupeAdjacent > collapses run of duplicates
+ ✓ packages/plugin/src/__tests__/prompt-compress.test.ts > dedupeAdjacent > non-adjacent stays separate
+ ✓ packages/plugin/src/__tests__/prompt-compress.test.ts > dedupeAdjacent > singleton not annotated
+ ✓ packages/plugin/src/__tests__/prompt-compress.test.ts > collapseBlankRuns > multiple blanks become single
+ ✓ packages/plugin/src/__tests__/prompt-compress.test.ts > collapseBlankRuns > no blanks unchanged
+ ✓ packages/plugin/src/__tests__/prompt-compress.test.ts > collapseBlankRuns > trailing blanks dropped
+ ✓ packages/plugin/src/__tests__/post-tool-use.test.ts > processToolOutput > returns null for un-covered tool
+ ✓ packages/plugin/src/__tests__/post-tool-use.test.ts > processToolOutput > returns null for empty output
+ ✓ packages/plugin/src/__tests__/post-tool-use.test.ts > processToolOutput > returns null when over size cap
+ ✓ packages/plugin/src/__tests__/post-tool-use.test.ts > processToolOutput > compresses Read output to first 3 lines
+ ✓ packages/plugin/src/__tests__/post-tool-use.test.ts > processToolOutput > returns null when filter does not actually compress
+ ✓ packages/plugin/src/__tests__/post-tool-use.test.ts > processToolOutput > supports object tool_response
+ ✓ packages/plugin/src/__tests__/daemon-protocol.test.ts > daemon protocol > PROTOCOL_VERSION exposed
+ ✓ packages/plugin/src/__tests__/daemon-protocol.test.ts > daemon protocol > encodeFrame appends newline
+ ✓ packages/plugin/src/__tests__/daemon-protocol.test.ts > daemon protocol > decodeFrames yields one per newline
+ ✓ packages/plugin/src/__tests__/daemon-protocol.test.ts > daemon protocol > decodeFrames stops at trailing partial frame
+ ✓ packages/plugin/src/__tests__/daemon-protocol.test.ts > daemon protocol > ReqMessage parses filter request
+ ✓ packages/plugin/src/__tests__/daemon-protocol.test.ts > daemon protocol > ReqMessage parses ping
+ ✓ packages/plugin/src/__tests__/daemon-protocol.test.ts > daemon protocol > ReqMessage rejects unknown op
+ ✓ packages/plugin/src/__tests__/daemon-protocol.test.ts > daemon protocol > ReqMessage rejects cmd over 2048 chars
+ ✓ packages/plugin/src/__tests__/daemon-protocol.test.ts > daemon protocol > ReqMessage rejects bad plan
+ ✓ packages/plugin/src/__tests__/daemon-protocol.test.ts > daemon protocol > nextRequestId is unique per call
+ ✓ packages/plugin/src/__tests__/daemon-protocol.test.ts > daemon protocol > MAX_FRAME_BYTES exposed for client/server bounds
+ ✓ packages/plugin/src/__tests__/debug-detect.test.ts > looksLikeFailure > false on empty
+ ✓ packages/plugin/src/__tests__/debug-detect.test.ts > looksLikeFailure > false on green log
+ ✓ packages/plugin/src/__tests__/debug-detect.test.ts > looksLikeFailure > detects ERROR
+ ✓ packages/plugin/src/__tests__/debug-detect.test.ts > looksLikeFailure > detects FAIL/FAILED
+ ✓ packages/plugin/src/__tests__/debug-detect.test.ts > looksLikeFailure > detects python Traceback
+ ✓ packages/plugin/src/__tests__/debug-detect.test.ts > looksLikeFailure > detects node Error: prefix
+ ✓ packages/plugin/src/__tests__/debug-detect.test.ts > looksLikeFailure > detects v8 stack frame
+ ✓ packages/plugin/src/__tests__/debug-detect.test.ts > looksLikeFailure > detects go panic
+ ✓ packages/plugin/src/__tests__/debug-detect.test.ts > looksLikeFailure > detects JS error classes
+ ✓ packages/plugin/src/__tests__/debug-detect.test.ts > looksLikeFailure > detects rust panic
+ ✓ packages/plugin/src/__tests__/debug-detect.test.ts > looksLikeFailure > case-sensitive on ERROR/FAIL (no fail in 'failing words')
+ ✓ packages/plugin/src/__tests__/daemon-lifecycle.test.ts > lifecycle > socketPath uses tmpdir or XDG dir on Unix, pipe on Windows
+ ✓ packages/plugin/src/__tests__/daemon-lifecycle.test.ts > lifecycle > cleanupStaleSocket removes a stale plain file
+ ✓ packages/plugin/src/__tests__/daemon-lifecycle.test.ts > lifecycle > isParentAlive returns boolean without throwing
+ ✓ packages/plugin/src/__tests__/state.test.ts > plugin state > returns null when no file exists
+ ✓ packages/plugin/src/__tests__/state.test.ts > plugin state > round-trips a state object
+ ✓ packages/plugin/src/__tests__/state.test.ts > plugin state > clearState removes the file
+ ✓ packages/plugin/src/__tests__/pipeline.test.ts > applyFilter pipeline > strips ansi when enabled
+ ✓ packages/plugin/src/__tests__/pipeline.test.ts > applyFilter pipeline > drops lines matching
+ ✓ packages/plugin/src/__tests__/pipeline.test.ts > applyFilter pipeline > truncates wide lines
+ ✓ packages/plugin/src/__tests__/pipeline.test.ts > applyFilter pipeline > caps max lines and appends omitted notice
+ ✓ packages/plugin/src/__tests__/pipeline.test.ts > applyFilter pipeline > returns on_empty if final output blank
+ ✓ app/tests/lib/headers.test.ts > parsePluginHeaders > returns not-ok when headers are missing
+ ✓ app/tests/lib/headers.test.ts > parsePluginHeaders > rejects a timestamp older than 5 minutes
+ ✓ app/tests/lib/headers.test.ts > parsePluginHeaders > accepts a fresh, well-formed header set
+ ✓ packages/plugin/src/__tests__/auto-routing.test.ts > shouldRouteLight > returns false when disabled
+ ✓ packages/plugin/src/__tests__/auto-routing.test.ts > shouldRouteLight > rejects complex tools regardless of threshold
+ ✓ packages/plugin/src/__tests__/auto-routing.test.ts > shouldRouteLight > routes mechanical tool with small prompt at medium threshold
+ ✓ packages/plugin/src/__tests__/auto-routing.test.ts > shouldRouteLight > does not route when prompt exceeds threshold cap
+ ✓ packages/plugin/src/__tests__/auto-routing.test.ts > shouldRouteLight > low threshold permits up to 4000 tokens
+ ✓ packages/shared/src/__tests__/contracts.test.ts > api-contracts > rejects an activate request missing fingerprint
+ ✓ packages/shared/src/__tests__/contracts.test.ts > api-contracts > accepts a valid activate request
+ ✓ packages/shared/src/__tests__/contracts.test.ts > api-contracts > exposes the plan enum
+ ✓ packages/shared/src/__tests__/contracts.test.ts > api-contracts > declares the health response shape
+ ✓ packages/plugin/src/__tests__/bench.test.ts > filter bench > processes 1MB input through git filter under 50ms
+ ✓ packages/plugin/src/__tests__/bench.test.ts > filter bench > processes 1MB input through a no-op filter under 30ms
+ ✓ packages/plugin/src/__tests__/transport.test.ts > fetchSigned > attaches all required headers
+ ✓ app/tests/lib/jwt.test.ts > plugin JWT > signs and verifies a fresh token
+ ✓ app/tests/lib/jwt.test.ts > plugin JWT > rejects with the wrong secret
+ ✓ app/tests/lib/jwt.test.ts > plugin JWT > rejects an expired token
+ ✓ app/tests/lib/env.test.ts > env parser > rejects when DATABASE_URL is missing
+ ✓ app/tests/lib/env.test.ts > env parser > accepts a fully populated env
+ ✓ app/tests/lib/currency.test.ts > currencyForCountry > returns EUR for every EU27 + EEA + CH + UK code
+ ✓ app/tests/lib/currency.test.ts > currencyForCountry > returns USD for non-cohort codes
+ ✓ app/tests/lib/currency.test.ts > currencyForCountry > returns USD when the input is empty / unknown
+ ✓ app/tests/lib/currency.test.ts > currencyForCountry > is case-insensitive
+ ✓ packages/plugin/src/__tests__/loader.test.ts > filter loader > returns empty Map when TOKMIZER_DEV not set (fail-closed)
+ ✓ packages/plugin/src/__tests__/loader.test.ts > filter loader > loads from disk when TOKMIZER_DEV=1 (dev mode)
+ ✓ app/tests/lib/ed25519.test.ts > ed25519 response signing > signs and verifies a body+ts pair
+ ✓ app/tests/lib/ed25519.test.ts > ed25519 response signing > rejects a tampered body
+ ✓ app/tests/lib/ed25519.test.ts > ed25519 response signing > rejects a stale ts
+ ✓ app/tests/lib/prisma-schema.test.ts > prisma schema > declares model User
+ ✓ app/tests/lib/prisma-schema.test.ts > prisma schema > declares model Token
+ ✓ app/tests/lib/prisma-schema.test.ts > prisma schema > declares model Device
+ ✓ app/tests/lib/prisma-schema.test.ts > prisma schema > declares model DeviceBlacklist
+ ✓ app/tests/lib/prisma-schema.test.ts > prisma schema > declares model Telemetry
+ ✓ app/tests/lib/prisma-schema.test.ts > prisma schema > declares model SkillBundle
+ ✓ app/tests/lib/prisma-schema.test.ts > prisma schema > declares model SkillFragment
+ ✓ app/tests/lib/prisma-schema.test.ts > prisma schema > declares model KillSwitchConfig
+ ✓ app/tests/lib/prisma-schema.test.ts > prisma schema > declares model AuditLog
+ ✓ app/tests/lib/prisma-schema.test.ts > prisma schema > declares model WebhookEvent
+ ✓ app/tests/lib/prisma-schema.test.ts > prisma schema > declares model Session
+ ✓ app/tests/lib/prisma-schema.test.ts > prisma schema > declares model Account
+ ✓ app/tests/lib/prisma-schema.test.ts > prisma schema > declares model VerificationToken
+ ✓ app/tests/lib/prisma-schema.test.ts > prisma schema > uses postgresql provider
+ ✓ app/tests/lib/prisma-schema.test.ts > prisma schema > references DIRECT_URL for migrations
+ ✓ packages/plugin/src/__tests__/compression-audit.test.ts > compression audit regression gate > weighted avg ≥ 70% across the audit corpus
+ ✓ packages/plugin/src/__tests__/compression-audit.test.ts > compression audit regression gate > simple avg ≥ 70% across the audit corpus
+ ✓ packages/plugin/src/__tests__/bench-10mb.test.ts > 10MB+ bench > 10MB through git filter under 500ms
+ ✓ packages/plugin/src/__tests__/bench-10mb.test.ts > 10MB+ bench > 10MB no-op filter under 300ms
+ ✓ packages/plugin/src/__tests__/bench-10mb.test.ts > 10MB+ bench > dedupeAdjacent on 1M-line input under 800ms
+ ✓ packages/plugin/src/__tests__/bench-10mb.test.ts > 10MB+ bench > collapseBlankRuns on 1M-line input under 500ms
+ ✓ packages/plugin/src/__tests__/bench-10mb.test.ts > 10MB+ bench > dropVerboseLogs on 500k-line input under 600ms
+ ✓ packages/plugin/src/__tests__/bench-10mb.test.ts > 10MB+ bench > smartCodeCollapse on 50k-line code input under 400ms
+ ✓ packages/plugin/src/__tests__/bench-10mb.test.ts > 10MB+ bench > memory stays bounded — 10MB filter does not RSS-grow > 200MB
+ ✓ app/tests/lib/hmac.test.ts > HMAC request signing > signs and verifies a fresh request
+ ✓ app/tests/lib/hmac.test.ts > HMAC request signing > rejects a tampered body
+ ✓ app/tests/lib/hmac.test.ts > HMAC request signing > rejects with the wrong secret
+ ✓ packages/plugin/src/__tests__/strip-ansi.test.ts > stripAnsi > strips a CSI SGR sequence with leading ESC
+ ✓ packages/plugin/src/__tests__/strip-ansi.test.ts > stripAnsi > leaves plain text untouched
+ ✓ packages/plugin/src/__tests__/strip-ansi.test.ts > stripAnsi > strips multiple CSI sequences
+ ✓ packages/plugin/src/__tests__/strip-ansi.test.ts > stripAnsi > strips OSC sequences
+ ✓ packages/plugin/src/__tests__/strip-ansi.test.ts > stripAnsi > does not match bracket text without ESC prefix
+ ✓ packages/plugin/src/__tests__/strip-ansi.test.ts > stripAnsi > handles empty string
+ ✓ app/tests/lib/rate-limit.test.ts > rate-limit > allows under the limit
+ ✓ app/tests/lib/rate-limit.test.ts > rate-limit > blocks when limit exceeded within window
+ ✓ app/tests/lib/rate-limit.test.ts > rate-limit > recovers after window expires
+ ✓ packages/plugin/src/__tests__/fingerprint.test.ts > buildFingerprint > returns 64-char hex + uuid install-id + signal fields
+ ✓ packages/plugin/src/__tests__/fingerprint.test.ts > buildFingerprint > is stable across two consecutive calls
+ ✓ packages/plugin/src/__tests__/cache.test.ts > skill cache > write + read round-trip
+ ✓ packages/plugin/src/__tests__/cache.test.ts > skill cache > isFresh returns false for missing slug
+ ✓ packages/plugin/src/__tests__/cache.test.ts > skill cache > isFresh returns true right after write
+ ✓ app/tests/lib/logger.test.ts > logger > exposes pino-style methods
+ ✓ app/tests/lib/logger.test.ts > logger > returns a child with bindings
+ ✓ app/tests/api/health.test.ts > GET /api/v1/health > returns 200 with ok payload
+ ✓ app/tests/lib/killswitch.test.ts > killswitch > compares plugin version against minPluginVersion
+ ✓ app/tests/lib/settings-access.test.ts > applyAccessRules > pro keeps autoRouting
+ ✓ app/tests/lib/settings-access.test.ts > applyAccessRules > smart strips autoRouting
+ ✓ app/tests/lib/settings-access.test.ts > applyAccessRules > trial strips autoRouting
+ ✓ app/tests/lib/settings-access.test.ts > applyAccessRules > keeps filters across all plans
+ ✓ app/tests/lib/settings-access.test.ts > applyAccessRules > does not mutate input patch
+ ✓ app/tests/lib/auth.test.ts > authOptions > declares the resend provider
+ ✓ app/tests/lib/auth.test.ts > authOptions > uses jwt session strategy
+ ✓ app/tests/api/plugin-auth.test.ts > getIp > returns undefined when no header present
+ ✓ app/tests/api/plugin-auth.test.ts > getIp > prefers x-vercel-forwarded-for first IP
+ ✓ app/tests/api/plugin-auth.test.ts > getIp > falls back to cf-connecting-ip
+ ✓ app/tests/api/plugin-auth.test.ts > getIp > falls back to x-real-ip
+ ✓ app/tests/api/plugin-auth.test.ts > getIp > ignores x-forwarded-for unless TRUST_PROXY_HEADERS=true
+ ✓ app/tests/api/plugin-auth.test.ts > getIp > uses x-forwarded-for when TRUST_PROXY_HEADERS=true
+ ✓ app/tests/api/plugin-auth.test.ts > getIp > vercel header wins over cf/real/x-forwarded-for
+
+ Test Files  48 passed (48)
+      Tests  296 passed (296)
+   Start at  20:26:39
+   Duration  953ms (transform 681ms, setup 193ms, collect 2.75s, tests 1.03s, environment 4ms, prepare 1.45s)
+

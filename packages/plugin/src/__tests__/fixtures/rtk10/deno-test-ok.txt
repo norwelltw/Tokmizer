@@ -1,0 +1,14 @@
+Check file:///home/dev/shop/src/cart_test.ts
+Check file:///home/dev/shop/src/price_test.ts
+running 4 tests from ./src/cart_test.ts
+adds an item ... ok (1ms)
+removes an item ... ok (0ms)
+merges duplicate items ... ok (0ms)
+computes totals ... ok (1ms)
+running 3 tests from ./src/price_test.ts
+rounds half up ... ok (0ms)
+formats euros ... ok (0ms)
+rejects negative prices ... ok (0ms)
+
+ok | 7 passed | 0 failed (18ms)
+

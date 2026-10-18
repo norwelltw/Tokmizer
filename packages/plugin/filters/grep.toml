@@ -1,0 +1,9 @@
+[filters.grep]
+description = "Compact grep output"
+match_command = "^grep(\\s|$)|^rg(\\s|$)"
+priority = 60
+strip_ansi = true
+transform = "smart-grep"
+truncate_lines_at = 200
+max_lines = 80
+on_empty = "grep: no match"

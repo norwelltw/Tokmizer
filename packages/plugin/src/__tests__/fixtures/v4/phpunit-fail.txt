@@ -1,0 +1,37 @@
+PHPUnit 11.4.3 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.3.12
+Configuration: /app/phpunit.xml
+
+.....S...................................................F.....  63 / 300 ( 21%)
+.......................................S....................... 126 / 300 ( 42%)
+..............F................................................ 189 / 300 ( 63%)
+..........S.................................F.................. 252 / 300 ( 84%)
+............................................S...                300 / 300 (100%)
+
+Time: 00:04.812, Memory: 48.00 MB
+
+There were 3 failures:
+
+1) Tests\Unit\InvoiceTest::test_total_includes_vat
+Failed asserting that 119.0 matches expected 120.0.
+
+/app/tests/Unit/InvoiceTest.php:42
+
+2) Tests\Feature\CheckoutTest::test_coupon_expired_is_rejected
+Expected response status code [422] but received 200.
+
+/app/tests/Feature/CheckoutTest.php:88
+
+3) Tests\Unit\SlugTest::test_unicode_slug
+Failed asserting that two strings are identical.
+--- Expected
++++ Actual
+@@ @@
+-'creme-brulee'
++'crme-brle'
+
+/app/tests/Unit/SlugTest.php:17
+
+FAILURES!
+Tests: 300, Assertions: 912, Failures: 3, Skipped: 3.

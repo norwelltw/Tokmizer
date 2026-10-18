@@ -1,0 +1,149 @@
+
+ RUN  v3.2.4 /home/dev/app/packages/plugin
+
+ ✓ src/__tests__/engine.test.ts (8 tests) 40ms
+ ✓ src/__tests__/matcher.test.ts (15 tests) 51ms
+ ❯ src/__tests__/pipeline.test.ts (22 tests | 2 failed) 146ms
+   ✓ pipeline › case 0 keeps output intact 2ms
+   ✓ pipeline › case 1 keeps output bounded 3ms
+   ✓ pipeline › case 2 keeps output intact 4ms
+   × pipeline › case 3 keeps output bounded
+   ✓ pipeline › case 4 keeps output intact 6ms
+   × pipeline › case 5 keeps output bounded
+   ✓ pipeline › case 6 keeps output intact 8ms
+   ✓ pipeline › case 7 keeps output bounded 9ms
+   ✓ pipeline › case 8 keeps output intact 10ms
+   ✓ pipeline › case 9 keeps output bounded 11ms
+   ✓ pipeline › case 10 keeps output intact 12ms
+   ✓ pipeline › case 11 keeps output bounded 13ms
+   ✓ pipeline › case 12 keeps output intact 14ms
+   ✓ pipeline › case 13 keeps output bounded 15ms
+   ✓ pipeline › case 14 keeps output intact 16ms
+   ✓ pipeline › case 15 keeps output bounded 17ms
+   ✓ pipeline › case 16 keeps output intact 18ms
+   ✓ pipeline › case 17 keeps output bounded 19ms
+   ✓ pipeline › case 18 keeps output intact 20ms
+   ✓ pipeline › case 19 keeps output bounded 21ms
+   ✓ pipeline › case 20 keeps output intact 22ms
+   ✓ pipeline › case 21 keeps output bounded 23ms
+ ✓ src/__tests__/routing.test.ts (29 tests) 73ms
+ ✓ src/__tests__/stats.test.ts (13 tests) 84ms
+ ✓ src/__tests__/state.test.ts (20 tests) 95ms
+ ✓ src/__tests__/wrapper.test.ts (27 tests) 106ms
+ ✓ src/__tests__/daemon-client.test.ts (11 tests) 117ms
+ ✓ src/__tests__/content-cache.test.ts (18 tests) 128ms
+ ✓ src/__tests__/settings-cache.test.ts (25 tests) 139ms
+ ✓ src/__tests__/yolo.test.ts (9 tests) 150ms
+ ✓ src/__tests__/compact-structured.test.ts (16 tests) 161ms
+ ✓ src/__tests__/repeated-diagnostics.test.ts (23 tests) 172ms
+ ❯ src/__tests__/targeted-read.test.ts (30 tests | 2 failed) 289ms
+   ✓ targeted-read › case 0 keeps output intact 2ms
+   ✓ targeted-read › case 1 keeps output bounded 3ms
+   ✓ targeted-read › case 2 keeps output intact 4ms
+   × targeted-read › case 3 keeps output bounded
+   ✓ targeted-read › case 4 keeps output intact 6ms
+   × targeted-read › case 5 keeps output bounded
+   ✓ targeted-read › case 6 keeps output intact 8ms
+   ✓ targeted-read › case 7 keeps output bounded 9ms
+   ✓ targeted-read › case 8 keeps output intact 10ms
+   ✓ targeted-read › case 9 keeps output bounded 11ms
+   ✓ targeted-read › case 10 keeps output intact 12ms
+   ✓ targeted-read › case 11 keeps output bounded 13ms
+   ✓ targeted-read › case 12 keeps output intact 14ms
+   ✓ targeted-read › case 13 keeps output bounded 15ms
+   ✓ targeted-read › case 14 keeps output intact 16ms
+   ✓ targeted-read › case 15 keeps output bounded 17ms
+   ✓ targeted-read › case 16 keeps output intact 18ms
+   ✓ targeted-read › case 17 keeps output bounded 19ms
+   ✓ targeted-read › case 18 keeps output intact 20ms
+   ✓ targeted-read › case 19 keeps output bounded 21ms
+   ✓ targeted-read › case 20 keeps output intact 22ms
+   ✓ targeted-read › case 21 keeps output bounded 23ms
+   ✓ targeted-read › case 22 keeps output intact 24ms
+   ✓ targeted-read › case 23 keeps output bounded 25ms
+   ✓ targeted-read › case 24 keeps output intact 26ms
+   ✓ targeted-read › case 25 keeps output bounded 27ms
+   ✓ targeted-read › case 26 keeps output intact 28ms
+   ✓ targeted-read › case 27 keeps output bounded 29ms
+   ✓ targeted-read › case 28 keeps output intact 30ms
+   ✓ targeted-read › case 29 keeps output bounded 31ms
+ ✓ src/__tests__/read-fold-integration.test.ts (14 tests) 194ms
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/pipeline.test.ts > pipeline > case 3 keeps output bounded
+AssertionError: expected 4812 to be less than 2406
+
+- Expected
++ Received
+
+- 2406
++ 4812
+
+ ❯ src/__tests__/pipeline.test.ts:87:38
+     85|     const result = await processOutput(command, input, null, { verbosity, exitCode: 0 });
+     86|     expect(result.output).toContain("invoiceTotal");
+     87|     expect(result.filteredBytes).toBeLessThan(result.rawBytes / 2);
+       |                                      ^
+     88|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/pipeline.test.ts > pipeline > case 5 keeps output bounded
+AssertionError: expected 4812 to be less than 2406
+
+- Expected
++ Received
+
+- 2406
++ 4812
+
+ ❯ src/__tests__/pipeline.test.ts:105:38
+     103|     const result = await processOutput(command, input, null, { verbosity, exitCode: 0 });
+     104|     expect(result.output).toContain("invoiceTotal");
+     105|     expect(result.filteredBytes).toBeLessThan(result.rawBytes / 2);
+       |                                      ^
+     106|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/targeted-read.test.ts > targeted-read > case 3 keeps output bounded
+AssertionError: expected 4812 to be less than 2406
+
+- Expected
++ Received
+
+- 2406
++ 4812
+
+ ❯ src/__tests__/targeted-read.test.ts:87:38
+     85|     const result = await processOutput(command, input, null, { verbosity, exitCode: 0 });
+     86|     expect(result.output).toContain("invoiceTotal");
+     87|     expect(result.filteredBytes).toBeLessThan(result.rawBytes / 2);
+       |                                      ^
+     88|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/targeted-read.test.ts > targeted-read > case 5 keeps output bounded
+AssertionError: expected 4812 to be less than 2406
+
+- Expected
++ Received
+
+- 2406
++ 4812
+
+ ❯ src/__tests__/targeted-read.test.ts:105:38
+     103|     const result = await processOutput(command, input, null, { verbosity, exitCode: 0 });
+     104|     expect(result.output).toContain("invoiceTotal");
+     105|     expect(result.filteredBytes).toBeLessThan(result.rawBytes / 2);
+       |                                      ^
+     106|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+ Test Files  2 failed | 13 passed (15)
+      Tests  4 failed | 268 passed (272)
+   Start at  09:41:12
+   Duration  3.84s (transform 812ms, setup 0ms, collect 2.91s, tests 1.62s, environment 1ms, prepare 1.04s)

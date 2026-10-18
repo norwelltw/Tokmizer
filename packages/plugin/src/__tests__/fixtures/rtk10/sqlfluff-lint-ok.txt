@@ -1,0 +1,42 @@
+==== sqlfluff ====
+sqlfluff:                4.4.0 python:                 3.14.7
+implementation:        cpython verbosity:                   1
+dialect:                  ansi templater:               jinja
+rules:                                all
+==== readout ====
+
+== [sql/good.sql] PASS
+== [sql/g1.sql] PASS
+== [sql/g10.sql] PASS
+== [sql/g11.sql] PASS
+== [sql/g12.sql] PASS
+== [sql/g13.sql] PASS
+== [sql/g14.sql] PASS
+== [sql/g15.sql] PASS
+== [sql/g16.sql] PASS
+== [sql/g17.sql] PASS
+== [sql/g18.sql] PASS
+== [sql/g19.sql] PASS
+== [sql/g2.sql] PASS
+== [sql/g20.sql] PASS
+== [sql/g21.sql] PASS
+== [sql/g22.sql] PASS
+== [sql/g23.sql] PASS
+== [sql/g24.sql] PASS
+== [sql/g25.sql] PASS
+== [sql/g26.sql] PASS
+== [sql/g27.sql] PASS
+== [sql/g28.sql] PASS
+== [sql/g29.sql] PASS
+== [sql/g3.sql] PASS
+== [sql/g30.sql] PASS
+== [sql/g4.sql] PASS
+== [sql/g5.sql] PASS
+== [sql/g6.sql] PASS
+== [sql/g7.sql] PASS
+== [sql/g8.sql] PASS
+== [sql/g9.sql] PASS
+== [sql/good.sql] PASS
+==== summary ====
+violations:        0 status:         PASS
+All Finished!

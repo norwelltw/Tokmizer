@@ -1,0 +1,5 @@
+name: tokmizer
+version: "1.0"
+description: Routes terminal commands through tokmizer to cut tool-output tokens.
+provides_hooks:
+  - pre_tool_call

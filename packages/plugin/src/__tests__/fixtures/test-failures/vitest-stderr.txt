@@ -1,0 +1,173 @@
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/math.test.ts > add > adds 6
+AssertionError: expected 8 to be 7 // Object.is equality
+
+- Expected
++ Received
+
+- 7
++ 8
+
+ ❯ src/math.test.ts:4:74
+      2| import { add, user } from "./math";
+      3| describe("add", () => {
+      4|   for (let i = 0; i < 12; i++) it(`adds ${i}`, () => { expect(add(i, 1…
+       |                                                                          ^
+      5| });
+      6| describe("user", () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  src/math.test.ts > add > adds 7
+AssertionError: expected 9 to be 8 // Object.is equality
+
+- Expected
++ Received
+
+- 8
++ 9
+
+ ❯ src/math.test.ts:4:74
+      2| import { add, user } from "./math";
+      3| describe("add", () => {
+      4|   for (let i = 0; i < 12; i++) it(`adds ${i}`, () => { expect(add(i, 1…
+       |                                                                          ^
+      5| });
+      6| describe("user", () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  src/math.test.ts > add > adds 8
+AssertionError: expected 10 to be 9 // Object.is equality
+
+- Expected
++ Received
+
+- 9
++ 10
+
+ ❯ src/math.test.ts:4:74
+      2| import { add, user } from "./math";
+      3| describe("add", () => {
+      4|   for (let i = 0; i < 12; i++) it(`adds ${i}`, () => { expect(add(i, 1…
+       |                                                                          ^
+      5| });
+      6| describe("user", () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  src/math.test.ts > add > adds 9
+AssertionError: expected 11 to be 10 // Object.is equality
+
+- Expected
++ Received
+
+- 10
++ 11
+
+ ❯ src/math.test.ts:4:74
+      2| import { add, user } from "./math";
+      3| describe("add", () => {
+      4|   for (let i = 0; i < 12; i++) it(`adds ${i}`, () => { expect(add(i, 1…
+       |                                                                          ^
+      5| });
+      6| describe("user", () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  src/math.test.ts > add > adds 10
+AssertionError: expected 12 to be 11 // Object.is equality
+
+- Expected
++ Received
+
+- 11
++ 12
+
+ ❯ src/math.test.ts:4:74
+      2| import { add, user } from "./math";
+      3| describe("add", () => {
+      4|   for (let i = 0; i < 12; i++) it(`adds ${i}`, () => { expect(add(i, 1…
+       |                                                                          ^
+      5| });
+      6| describe("user", () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  src/math.test.ts > add > adds 11
+AssertionError: expected 13 to be 12 // Object.is equality
+
+- Expected
++ Received
+
+- 12
++ 13
+
+ ❯ src/math.test.ts:4:74
+      2| import { add, user } from "./math";
+      3| describe("add", () => {
+      4|   for (let i = 0; i < 12; i++) it(`adds ${i}`, () => { expect(add(i, 1…
+       |                                                                          ^
+      5| });
+      6| describe("user", () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  src/math.test.ts > user > builds admin
+AssertionError: expected { Object (name, roles, ...) } to deeply equal { name: 'ann', …(2) }
+
+- Expected
++ Received
+
+  {
+    "active": true,
+    "name": "ann",
+    "roles": [
+-     "admin",
++     "user",
+    ],
+  }
+
+ ❯ src/math.test.ts:7:50
+      5| });
+      6| describe("user", () => {
+      7|   it("builds admin", () => { expect(user("ann")).toEqual({ name: "ann"…
+       |                                                  ^
+      8|   it("is active", () => { expect(user("bob").active).toBe(true); });
+      9|   it("throws", () => { throw new TypeError("cannot read properties of …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  src/math.test.ts > user > is active
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/math.test.ts:8:54
+      6| describe("user", () => {
+      7|   it("builds admin", () => { expect(user("ann")).toEqual({ name: "ann"…
+      8|   it("is active", () => { expect(user("bob").active).toBe(true); });
+       |                                                      ^
+      9|   it("throws", () => { throw new TypeError("cannot read properties of …
+     10| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+ FAIL  src/math.test.ts > user > throws
+TypeError: cannot read properties of undefined (reading 'x')
+ ❯ src/math.test.ts:9:30
+      7|   it("builds admin", () => { expect(user("ann")).toEqual({ name: "ann"…
+      8|   it("is active", () => { expect(user("bob").active).toBe(true); });
+      9|   it("throws", () => { throw new TypeError("cannot read properties of …
+       |                              ^
+     10| });
+     11|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/9]⎯
+

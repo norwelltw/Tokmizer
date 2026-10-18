@@ -1,0 +1,221 @@
+Composer could not detect the root package (acme/shop) version, defaulting to '1.0.0'. See https://getcomposer.org/root-version
+./composer.json has been updated
+Composer could not detect the root package (acme/shop) version, defaulting to '1.0.0'. See https://getcomposer.org/root-version
+Running composer update pestphp/pest phpstan/phpstan laravel/pint brianium/paratest --with-all-dependencies
+Loading composer repositories with package information
+Updating dependencies
+Lock file operations: 62 installs, 0 updates, 0 removals
+  - Locking brianium/paratest (v7.27.1)
+  - Locking doctrine/deprecations (1.1.6)
+  - Locking fidry/cpu-core-counter (1.4.1)
+  - Locking filp/whoops (2.18.6)
+  - Locking jean85/pretty-package-versions (2.1.1)
+  - Locking laravel/pint (v1.32.1)
+  - Locking myclabs/deep-copy (1.14.0)
+  - Locking nikic/php-parser (v5.9.0)
+  - Locking nunomaduro/collision (v8.9.5)
+  - Locking nunomaduro/termwind (v2.4.0)
+  - Locking pestphp/pest (v5.3.2)
+  - Locking pestphp/pest-plugin (v5.0.0)
+  - Locking pestphp/pest-plugin-arch (v5.0.0)
+  - Locking pestphp/pest-plugin-mutate (v5.0.2)
+  - Locking pestphp/pest-plugin-profanity (v5.0.1)
+  - Locking phar-io/manifest (2.0.4)
+  - Locking phar-io/version (3.2.1)
+  - Locking phpdocumentor/reflection-common (2.2.1)
+  - Locking phpdocumentor/reflection-docblock (6.0.3)
+  - Locking phpdocumentor/type-resolver (2.1.0)
+  - Locking phpstan/phpdoc-parser (2.3.6)
+  - Locking phpstan/phpstan (2.3.1)
+  - Locking phpunit/php-code-coverage (14.4.1)
+  - Locking phpunit/php-file-iterator (7.0.2)
+  - Locking phpunit/php-invoker (7.0.0)
+  - Locking phpunit/php-text-template (6.0.1)
+  - Locking phpunit/php-timer (9.0.0)
+  - Locking phpunit/phpunit (13.4.2)
+  - Locking psr/container (2.0.2)
+  - Locking psr/log (3.0.2)
+  - Locking psr/simple-cache (3.0.0)
+  - Locking sebastian/cli-parser (5.0.1)
+  - Locking sebastian/comparator (8.4.0)
+  - Locking sebastian/complexity (6.0.0)
+  - Locking sebastian/diff (9.0.1)
+  - Locking sebastian/environment (9.3.3)
+  - Locking sebastian/exporter (8.2.1)
+  - Locking sebastian/file-filter (1.0.0)
+  - Locking sebastian/git-state (1.0.0)
+  - Locking sebastian/global-state (9.0.1)
+  - Locking sebastian/lines-of-code (5.0.2)
+  - Locking sebastian/object-enumerator (8.1.0)
+  - Locking sebastian/object-reflector (6.1.0)
+  - Locking sebastian/recursion-context (8.0.1)
+  - Locking sebastian/type (7.0.2)
+  - Locking sebastian/version (7.0.1)
+  - Locking staabm/side-effects-detector (1.0.5)
+  - Locking symfony/console (v8.1.9)
+  - Locking symfony/deprecation-contracts (v3.7.1)
+  - Locking symfony/finder (v8.1.8)
+  - Locking symfony/polyfill-ctype (v1.37.0)
+  - Locking symfony/polyfill-intl-grapheme (v1.43.0)
+  - Locking symfony/polyfill-intl-normalizer (v1.43.0)
+  - Locking symfony/polyfill-mbstring (v1.43.0)
+  - Locking symfony/polyfill-php85 (v1.43.0)
+  - Locking symfony/process (v8.1.9)
+  - Locking symfony/service-contracts (v3.7.3)
+  - Locking symfony/string (v8.1.9)
+  - Locking symplify/easy-coding-standard (13.3.7)
+  - Locking ta-tikoma/phpunit-architecture-test (0.8.7)
+  - Locking theseer/tokenizer (2.0.1)
+  - Locking webmozart/assert (2.5.0)
+Writing lock file
+Installing dependencies from lock file (including require-dev)
+Package operations: 62 installs, 0 updates, 0 removals
+  - Downloading pestphp/pest-plugin (v5.0.0)
+  - Downloading fidry/cpu-core-counter (1.4.1)
+  - Downloading psr/log (3.0.2)
+  - Downloading filp/whoops (2.18.6)
+  - Downloading jean85/pretty-package-versions (2.1.1)
+  - Downloading symfony/polyfill-mbstring (v1.43.0)
+  - Downloading laravel/pint (v1.32.1)
+  - Downloading myclabs/deep-copy (1.14.0)
+  - Downloading symfony/process (v8.1.9)
+  - Downloading staabm/side-effects-detector (1.0.5)
+  - Downloading sebastian/version (7.0.1)
+  - Downloading sebastian/type (7.0.2)
+  - Downloading sebastian/recursion-context (8.0.1)
+  - Downloading sebastian/object-enumerator (8.1.0)
+  - Downloading sebastian/object-reflector (6.1.0)
+  - Downloading sebastian/global-state (9.0.1)
+  - Downloading sebastian/git-state (1.0.0)
+  - Downloading sebastian/file-filter (1.0.0)
+  - Downloading sebastian/exporter (8.2.1)
+  - Downloading sebastian/environment (9.3.3)
+  - Downloading sebastian/diff (9.0.1)
+  - Downloading sebastian/comparator (8.4.0)
+  - Downloading sebastian/cli-parser (5.0.1)
+  - Downloading phpunit/php-timer (9.0.0)
+  - Downloading phpunit/php-text-template (6.0.1)
+  - Downloading phpunit/php-invoker (7.0.0)
+  - Downloading phpunit/php-file-iterator (7.0.2)
+  - Downloading theseer/tokenizer (2.0.1)
+  - Downloading nikic/php-parser (v5.9.0)
+  - Downloading sebastian/lines-of-code (5.0.2)
+  - Downloading sebastian/complexity (6.0.0)
+  - Downloading phpunit/php-code-coverage (14.4.1)
+  - Downloading phar-io/version (3.2.1)
+  - Downloading phar-io/manifest (2.0.4)
+  - Downloading phpunit/phpunit (13.4.2)
+  - Downloading pestphp/pest-plugin-profanity (v5.0.1)
+  - Downloading psr/simple-cache (3.0.0)
+  - Downloading pestphp/pest-plugin-mutate (v5.0.2)
+  - Downloading symfony/finder (v8.1.8)
+  - Downloading symfony/polyfill-ctype (v1.37.0)
+  - Downloading webmozart/assert (2.5.0)
+  - Downloading phpstan/phpdoc-parser (2.3.6)
+  - Downloading phpdocumentor/reflection-common (2.2.1)
+  - Downloading doctrine/deprecations (1.1.6)
+  - Downloading phpdocumentor/type-resolver (2.1.0)
+  - Downloading phpdocumentor/reflection-docblock (6.0.3)
+  - Downloading ta-tikoma/phpunit-architecture-test (0.8.7)
+  - Downloading pestphp/pest-plugin-arch (v5.0.0)
+  - Downloading symfony/polyfill-intl-normalizer (v1.43.0)
+  - Downloading symfony/polyfill-intl-grapheme (v1.43.0)
+  - Downloading symfony/string (v8.1.9)
+  - Downloading symfony/deprecation-contracts (v3.7.1)
+  - Downloading psr/container (2.0.2)
+  - Downloading symfony/service-contracts (v3.7.3)
+  - Downloading symfony/polyfill-php85 (v1.43.0)
+  - Downloading symfony/console (v8.1.9)
+  - Downloading nunomaduro/termwind (v2.4.0)
+  - Downloading nunomaduro/collision (v8.9.5)
+  - Downloading brianium/paratest (v7.27.1)
+  - Downloading pestphp/pest (v5.3.2)
+  - Downloading phpstan/phpstan (2.3.1)
+  - Downloading symplify/easy-coding-standard (13.3.7)
+  0/62 [>---------------------------]   0%
+  8/62 [===>------------------------]  12%
+ 13/62 [=====>----------------------]  20%
+ 19/62 [========>-------------------]  30%
+ 25/62 [===========>----------------]  40%
+ 34/62 [===============>------------]  54%
+ 38/62 [=================>----------]  61%
+ 44/62 [===================>--------]  70%
+ 51/62 [=======================>----]  82%
+ 56/62 [=========================>--]  90%
+ 61/62 [===========================>]  98%
+ 62/62 [============================] 100%
+  - Installing pestphp/pest-plugin (v5.0.0): Extracting archive
+  - Installing fidry/cpu-core-counter (1.4.1): Extracting archive
+  - Installing psr/log (3.0.2): Extracting archive
+  - Installing filp/whoops (2.18.6): Extracting archive
+  - Installing jean85/pretty-package-versions (2.1.1): Extracting archive
+  - Installing symfony/polyfill-mbstring (v1.43.0): Extracting archive
+  - Installing laravel/pint (v1.32.1): Extracting archive
+  - Installing myclabs/deep-copy (1.14.0): Extracting archive
+  - Installing symfony/process (v8.1.9): Extracting archive
+  - Installing staabm/side-effects-detector (1.0.5): Extracting archive
+  - Installing sebastian/version (7.0.1): Extracting archive
+  - Installing sebastian/type (7.0.2): Extracting archive
+  - Installing sebastian/recursion-context (8.0.1): Extracting archive
+  - Installing sebastian/object-enumerator (8.1.0): Extracting archive
+  - Installing sebastian/object-reflector (6.1.0): Extracting archive
+  - Installing sebastian/global-state (9.0.1): Extracting archive
+  - Installing sebastian/git-state (1.0.0): Extracting archive
+  - Installing sebastian/file-filter (1.0.0): Extracting archive
+  - Installing sebastian/exporter (8.2.1): Extracting archive
+  - Installing sebastian/environment (9.3.3): Extracting archive
+  - Installing sebastian/diff (9.0.1): Extracting archive
+  - Installing sebastian/comparator (8.4.0): Extracting archive
+  - Installing sebastian/cli-parser (5.0.1): Extracting archive
+  - Installing phpunit/php-timer (9.0.0): Extracting archive
+  - Installing phpunit/php-text-template (6.0.1): Extracting archive
+  - Installing phpunit/php-invoker (7.0.0): Extracting archive
+  - Installing phpunit/php-file-iterator (7.0.2): Extracting archive
+  - Installing theseer/tokenizer (2.0.1): Extracting archive
+  - Installing nikic/php-parser (v5.9.0): Extracting archive
+  - Installing sebastian/lines-of-code (5.0.2): Extracting archive
+  - Installing sebastian/complexity (6.0.0): Extracting archive
+  - Installing phpunit/php-code-coverage (14.4.1): Extracting archive
+  - Installing phar-io/version (3.2.1): Extracting archive
+  - Installing phar-io/manifest (2.0.4): Extracting archive
+  - Installing phpunit/phpunit (13.4.2): Extracting archive
+  - Installing pestphp/pest-plugin-profanity (v5.0.1): Extracting archive
+  - Installing psr/simple-cache (3.0.0): Extracting archive
+  - Installing pestphp/pest-plugin-mutate (v5.0.2): Extracting archive
+  - Installing symfony/finder (v8.1.8): Extracting archive
+  - Installing symfony/polyfill-ctype (v1.37.0): Extracting archive
+  - Installing webmozart/assert (2.5.0): Extracting archive
+  - Installing phpstan/phpdoc-parser (2.3.6): Extracting archive
+  - Installing phpdocumentor/reflection-common (2.2.1): Extracting archive
+  - Installing doctrine/deprecations (1.1.6): Extracting archive
+  - Installing phpdocumentor/type-resolver (2.1.0): Extracting archive
+  - Installing phpdocumentor/reflection-docblock (6.0.3): Extracting archive
+  - Installing ta-tikoma/phpunit-architecture-test (0.8.7): Extracting archive
+  - Installing pestphp/pest-plugin-arch (v5.0.0): Extracting archive
+  - Installing symfony/polyfill-intl-normalizer (v1.43.0): Extracting archive
+  - Installing symfony/polyfill-intl-grapheme (v1.43.0): Extracting archive
+  - Installing symfony/string (v8.1.9): Extracting archive
+  - Installing symfony/deprecation-contracts (v3.7.1): Extracting archive
+  - Installing psr/container (2.0.2): Extracting archive
+  - Installing symfony/service-contracts (v3.7.3): Extracting archive
+  - Installing symfony/polyfill-php85 (v1.43.0): Extracting archive
+  - Installing symfony/console (v8.1.9): Extracting archive
+  - Installing nunomaduro/termwind (v2.4.0): Extracting archive
+  - Installing nunomaduro/collision (v8.9.5): Extracting archive
+  - Installing brianium/paratest (v7.27.1): Extracting archive
+  - Installing pestphp/pest (v5.3.2): Extracting archive
+  - Installing phpstan/phpstan (2.3.1): Extracting archive
+  - Installing symplify/easy-coding-standard (13.3.7): Extracting archive
+  0/61 [>---------------------------]   0%
+ 34/61 [===============>------------]  55%
+ 55/61 [=========================>--]  90%
+ 61/61 [============================] 100%
+4 package suggestions were added by new dependencies, use `composer suggest` to see details.
+Generating autoload files
+46 packages you are using are looking for funding.
+Use the `composer fund` command to find out more!
+No security vulnerability advisories found.
+Using version ^5.3 for pestphp/pest
+Using version ^2.3 for phpstan/phpstan
+Using version ^1.32 for laravel/pint
+Using version ^7.27 for brianium/paratest

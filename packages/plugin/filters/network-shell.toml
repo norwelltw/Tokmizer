@@ -1,0 +1,65 @@
+[filters.ssh]
+description = "Cap ssh remote output"
+match_command = "^ssh(\\s|$)"
+priority = 55
+strip_ansi = true
+truncate_lines_at = 200
+max_lines = 200
+
+[filters.rsync]
+description = "Compact rsync output"
+match_command = "^rsync(\\s|$)"
+priority = 55
+strip_lines_matching = [
+  "^building file list",
+  "^sending incremental file list",
+  "^sent\\s",
+  "^total size",
+  "^\\s*$"
+]
+max_lines = 100
+
+[filters.scp]
+description = "Compact scp transfer output"
+match_command = "^scp(\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["\\s\\d+%\\s", "^\\s*$"]
+max_lines = 60
+
+[filters.stat]
+description = "Compact stat output"
+match_command = "^stat(\\s|$)"
+priority = 50
+max_lines = 1000
+
+[filters.lsof]
+description = "Compact lsof output"
+match_command = "^lsof(\\s|$)"
+priority = 55
+truncate_lines_at = 200
+max_lines = 1000
+
+[filters.ping]
+description = "Compact ping output"
+match_command = "^ping(\\s|$)"
+priority = 50
+strip_lines_matching = ["^\\s*$"]
+max_lines = 30
+
+[filters.systemctl-status]
+description = "Compact systemctl status"
+match_command = "^systemctl(\\s|$)"
+priority = 55
+strip_ansi = true
+truncate_lines_at = 200
+max_lines = 60
+
+[filters.journalctl]
+description = "Dedupe journalctl log output, keep every distinct entry"
+match_command = "^journalctl(\\s|$)|^bash-tool: journalctl\\b"
+priority = 65
+strip_ansi = true
+strip_lines_matching = ["^-- Logs begin at ", "^Hint: You are currently not seeing messages"]
+transform = "squeeze-output"
+on_empty = "journalctl: no entries"

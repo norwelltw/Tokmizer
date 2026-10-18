@@ -1,0 +1,44 @@
+schema_version = 1
+
+[filters.make-quiet]
+description = "Hide make directory noise"
+match_command = "^make\\b"
+strip_ansi = true
+strip_lines_matching = ["^make\\[\\d+\\]: (Entering|Leaving) directory"]
+on_empty = "make: ok"
+
+[filters.short-log]
+match_command = "^(?:mylog|mylog2)\\b"
+max_lines = 3
+
+[filters.keep-errors]
+match_command = "^deploy\\b"
+keep_lines_matching = ["error"]
+
+[filters.loose]
+match_command = "make"
+strip_ansi = true
+
+[filters.weird]
+match_command = "^weird\\b"
+colour = true
+
+[[tests.make-quiet]]
+name = "drops directory noise"
+input = "make[1]: Entering directory '/src'\nbuilt app\nmake[1]: Leaving directory '/src'\n"
+expected = "built app"
+
+[[tests.make-quiet]]
+name = "empty becomes ok"
+input = "make[2]: Entering directory '/x'\n"
+expected = "make: ok"
+
+[[tests.short-log]]
+name = "keeps the first lines"
+input = "a\nb\nc\nd\ne\n"
+expected = "a\nb\nc\n... (2 lines truncated)"
+
+[[tests.ghost]]
+name = "orphan"
+input = "x"
+expected = "x"

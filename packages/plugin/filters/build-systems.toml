@@ -1,0 +1,156 @@
+[filters.cargo]
+description = "Compact cargo build/test/run output"
+match_command = "^cargo(\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = [
+  "^\\s*Compiling\\s",
+  "^\\s*Updating\\s",
+  "^\\s*Downloaded\\s",
+  "^\\s*Downloading\\s",
+  "^\\s*Fresh\\s",
+  "^\\s*Locking\\s",
+  "^\\s*Adding \\S+ v\\S+ \\(available: v\\S+\\)$",
+  "^\\s*Running `",
+  "^\\s*$"
+]
+max_lines = 120
+on_empty = "cargo: ok"
+
+[filters.gradle]
+description = "Compact gradle output"
+match_command = "^gradle(\\s|$)|^(?:\\./)?gradlew(?:\\.bat)?(\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = [
+  "^Download\\s",
+  "^Welcome to Gradle",
+  "^Daemon",
+  "^Calculating task graph",
+  "^> Task :.*UP-TO-DATE$",
+  "^\\s*$"
+]
+max_lines = 150
+on_empty = "gradle: ok"
+
+[filters.mvn]
+description = "Compact Maven build output"
+match_command = "^mvn(\\s|$)|^(?:\\./)?mvnw(?:\\.cmd)?(\\s|$)|^mvnd(?:\\.cmd)?(\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = [
+  "^(?:\\[[^\\]\\s]+\\] )?\\[INFO\\]\\s+Download(?:ing|ed)",
+  "^(?:\\[[^\\]\\s]+\\] )?\\[INFO\\]\\s*$",
+  "^(?:\\[[^\\]\\s]+\\] )?\\[INFO\\] -+$",
+  "^(?:\\[[^\\]\\s]+\\] )?\\[INFO\\] Building\\s",
+  "^(?:\\[[^\\]\\s]+\\] )?\\[INFO\\] Processing build on daemon ",
+  "^(?:\\[[^\\]\\s]+\\] )?\\[INFO\\] BuildTimeEventSpy is registered",
+  "^(?:\\[[^\\]\\s]+\\] )?\\[INFO\\] --- \\S+ \\(.+\\) @ \\S+ ---$",
+  "^(?:\\[[^\\]\\s]+\\] )?\\[INFO\\]\\s+from \\S*pom\\.xml$",
+  "^(?:\\[[^\\]\\s]+\\] )?\\[INFO\\] -+\\[ \\w+ \\]-+$",
+  "^(?:\\[[^\\]\\s]+\\] )?\\[INFO\\] -+< \\S+ >-+$",
+  "^(?:\\[[^\\]\\s]+\\] )?\\[INFO\\] (?:Scanning for projects|Using the SmartBuilder |Task segments :|Build maximum degree of concurrency|Total concurrency projects|Deleting \\S|Copying \\d+ resources? |Recompiling the module |Using auto detected provider |Finished at: |skip non existing resourceDirectory |Installing \\S+ to |Nothing to compile|No sources to compile|No tests to run)",
+  "^(?:\\[[^\\]\\s]+\\] )?\\[INFO\\]  T E S T S$",
+  "^(?:\\[[^\\]\\s]+\\] )?\\[INFO\\] Running [\\w.$]+$",
+  "^(?:\\[[^\\]\\s]+\\] )?\\[INFO\\] Tests run: \\d+, Failures: 0, Errors: 0, Skipped: \\d+, Time elapsed: .+ -- in \\S+$"
+]
+max_lines = 200
+on_empty = "mvn: ok"
+strip_on_failure = true
+
+[filters.dotnet]
+description = "Compact dotnet build/test output"
+match_command = "^dotnet(\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = [
+  "^MSBuild version",
+  "^Determining projects",
+  "^\\s+\\d+ Warning",
+  "^\\s*$"
+]
+max_lines = 150
+on_empty = "dotnet: ok"
+
+[filters.gcc]
+description = "Compact gcc/clang compile output"
+match_command = "^(gcc|clang|g\\+\\+|clang\\+\\+)(\\s|$)"
+priority = 55
+strip_ansi = true
+max_lines = 200
+
+[filters.make]
+description = "Compact make output"
+match_command = "^make(\\s|$)|^gmake(\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^make\\[", "^Entering directory", "^Leaving directory", "^\\s*$"]
+max_lines = 200
+
+[filters.swift-build]
+description = "Compact swift build output"
+match_command = "^swift\\s+build(\\s|$)|^xcodebuild(\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = [
+  "^Build complete!",
+  "^Fetching",
+  "^Computing",
+  "^Cloning",
+  "^\\s*$"
+]
+max_lines = 200
+on_empty = "build: ok"
+
+[filters.nx]
+description = "Compact Nx output"
+match_command = "^nx(\\s|$)|^npx\\s+nx(\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^> nx run", "^\\s*$"]
+max_lines = 150
+
+[filters.turbo]
+description = "Compact Turborepo output"
+match_command = "^turbo(\\s|$)|^npx\\s+turbo(\\s|$)"
+priority = 55
+strip_ansi = true
+max_lines = 150
+
+[filters.go-build]
+description = "Compact go build/vet/mod output (drop module download noise)"
+match_command = "^go\\s+(?:build|vet|install|mod|run|generate)(?:\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^go: downloading ", "^\\s*$"]
+max_lines = 150
+keep_failures = true
+on_empty = "go: ok"
+
+[filters.vite]
+description = "Compact vite output"
+match_command = "^vite(?:\\s|$)|^npx\\s+vite(?:\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^\\s*$"]
+max_lines = 120
+keep_failures = true
+
+[filters.webpack]
+description = "Compact webpack output"
+match_command = "^webpack(?:\\s|$)|^npx\\s+webpack(?:\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^\\s*$"]
+truncate_lines_at = 240
+max_lines = 120
+keep_failures = true
+
+[filters.esbuild]
+description = "Compact esbuild output"
+match_command = "^esbuild(?:\\s|$)|^npx\\s+esbuild(?:\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^\\s*$"]
+max_lines = 100
+keep_failures = true

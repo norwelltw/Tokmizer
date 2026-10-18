@@ -1,0 +1,4 @@
+export const TOKMIZER_PROD_PUBLIC_KEY_PEM = `-----BEGIN PUBLIC KEY-----
+MCowBQYDK2VwAyEAj/kMlXlhTIGHRKxOKMuGFa1S1ybxxwgdYcAE0YM9fgU=
+-----END PUBLIC KEY-----
+`;

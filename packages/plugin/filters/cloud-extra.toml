@@ -1,0 +1,111 @@
+[filters.az]
+description = "Compact Azure CLI"
+match_command = "^az(\\s|$)"
+priority = 60
+strip_ansi = true
+truncate_lines_at = 220
+max_lines = 120
+
+[filters.oc]
+description = "Compact OpenShift CLI"
+match_command = "^oc(\\s|$)"
+priority = 60
+strip_ansi = true
+truncate_lines_at = 240
+max_lines = 100
+
+[filters.packer]
+description = "Compact Packer build"
+match_command = "^packer(\\s|$)"
+priority = 55
+strip_ansi = true
+max_lines = 150
+
+[filters.vault]
+description = "Compact HashiCorp Vault CLI"
+match_command = "^vault(\\s|$)"
+priority = 55
+max_lines = 100
+
+[filters.consul]
+description = "Compact Consul CLI"
+match_command = "^consul(\\s|$)"
+priority = 55
+max_lines = 100
+
+[filters.nomad]
+description = "Compact Nomad CLI"
+match_command = "^nomad(\\s|$)"
+priority = 55
+max_lines = 100
+
+[filters.vercel]
+description = "Compact vercel CLI output"
+match_command = "^vercel(?:\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^\\s*$"]
+max_lines = 120
+keep_failures = true
+
+[filters.wrangler]
+description = "Compact wrangler CLI output"
+match_command = "^wrangler(?:\\s|$)|^npx\\s+wrangler(?:\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^\\s*$"]
+max_lines = 120
+keep_failures = true
+
+[filters.netlify]
+description = "Compact netlify CLI output"
+match_command = "^netlify(?:\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^\\s*$"]
+max_lines = 120
+keep_failures = true
+
+[filters.firebase]
+description = "Compact firebase CLI output"
+match_command = "^firebase(?:\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^\\s*$"]
+max_lines = 120
+keep_failures = true
+
+[filters.stripe]
+description = "Clean stripe CLI output (JSON stays whole: no line caps)"
+match_command = "^stripe(?:\\s|$)"
+priority = 55
+strip_ansi = true
+preserve_exact = true
+on_empty = "stripe: no output"
+
+[filters.supabase]
+description = "Compact supabase CLI output"
+match_command = "^supabase(?:\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^\\s*$"]
+max_lines = 150
+keep_failures = true
+
+[filters.pulumi]
+description = "Compact pulumi (drop banners, links and in-progress steps, keep changes, outputs, diagnostics)"
+match_command = "^pulumi(?:\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = [
+  "^@ ",
+  "^View in Browser",
+  "^View Live:",
+  "^Permalink:",
+  "^\\s*Type\\s+Name\\s+(?:Status|Plan)\\b",
+  "^\\s*[-+~]\\s.*\\s(?:creating|updating|deleting|replacing|refreshing|reading)\\s\\(\\d+s\\)",
+  "^\\s*$"
+]
+max_lines = 200
+keep_failures = true
+strip_on_failure = true

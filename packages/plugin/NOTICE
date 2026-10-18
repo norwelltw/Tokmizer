@@ -1,0 +1,18 @@
+Tokmizer
+Copyright 2026 Impulse Creation
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE),
+except the compression engine in src/engine/ and the rule catalogue in
+filters/, which are licensed under the Business Source License 1.1 (see
+LICENSE-ENGINE, src/engine/LICENSE and filters/LICENSE).
+LICENSES.md maps each directory to its licence.
+
+The TOML filter rule format and parts of the rule catalogue in filters/
+(rule names, some descriptions and some line patterns) are derived from rtk
+(https://github.com/rtk-ai/rtk), Copyright Patrick Szymkowiak and the rtk
+contributors, licensed under the Apache License, Version 2.0. Those derived
+portions remain available under the Apache License, Version 2.0; the
+Business Source License 1.1 applies to the changes and additions made here.
+
+The npm package and the native launcher bundle third-party software. Their
+copyright notices and licence texts are reproduced in THIRD-PARTY-NOTICES.md.

@@ -1,0 +1,12 @@
+{
+  "id": "tokmizer",
+  "name": "Tokmizer",
+  "description": "Routes exec commands through tokmizer to cut tool-output tokens.",
+  "activation": {
+    "onStartup": true
+  },
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false
+  }
+}

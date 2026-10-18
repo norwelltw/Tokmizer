@@ -1,0 +1,9 @@
+== [models/orders.sql] FAIL
+L:   1 | P:   1 | LT09 | Select targets should be on a new line unless there is only one select target.
+                       | [layout.select_targets]
+L:   2 | P:   1 | CP01 | Keywords must be consistently upper case.
+                       | [capitalisation.keywords]
+== [models/staging/stg_items.sql] FAIL
+L:   1 | P:   1 | AM04 | Query produces an unknown number of result columns.
+                       | [ambiguous.column_count]
+All Finished 📜 🎉!

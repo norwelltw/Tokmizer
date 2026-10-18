@@ -1,0 +1,358 @@
+{
+ "version": 1,
+ "note": "Shared cross-implementation redaction parity table. Consumed by BOTH the Rust engine (engine/src/redact.rs tests) and the npm plugin (packages/plugin/src/__tests__/redact.test.ts). Each probe asserts the same security invariant in both implementations: after redaction, the literal `secret` MUST NOT survive in the output. This catches silent drift between the two mirrored sanitizers without requiring byte-identical redaction markers (the two impls use different marker strings by design).",
+ "probes": [
+  {
+   "cmd": "gh auth login --with-token ghp_AbCdEf0123456789AbCdEf0123456789AbCd",
+   "secret": "ghp_AbCdEf0123456789AbCdEf0123456789AbCd"
+  },
+  {
+   "cmd": "glab auth login --token glpat-abcdEFGH1234ijklMNOP",
+   "secret": "glpat-abcdEFGH1234ijklMNOP"
+  },
+  {
+   "cmd": "export ANTHROPIC_KEY=sk-ant-api03-AbCdEf0123456789AbCdEf0123456789AbCdEf",
+   "secret": "sk-ant-api03-AbCdEf0123456789AbCdEf0123456789AbCdEf"
+  },
+  {
+   "cmd": "openai api --key sk-AbCdEf0123456789AbCdEf0123456789AbCdEf01",
+   "secret": "sk-AbCdEf0123456789AbCdEf0123456789AbCdEf01"
+  },
+  {
+   "cmd": "STRIPE_TOKEN=sk_live_AbCdEf0123456789AbCdEf01 npm start",
+   "secret": "sk_live_AbCdEf0123456789AbCdEf01"
+  },
+  {
+   "cmd": "npm publish --//registry.npmjs.org/:_authToken=npm_AbCdEf0123456789AbCdEf0123456789AbCd",
+   "secret": "npm_AbCdEf0123456789AbCdEf0123456789AbCd"
+  },
+  {
+   "cmd": "curl -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiPayload\" https://x.io",
+   "secret": "eyJhbGciOiJIUzI1NiPayload"
+  },
+  {
+   "cmd": "git clone https://alice:ghp_secretpwtokenvalue123@github.com/org/repo.git",
+   "secret": "ghp_secretpwtokenvalue123"
+  },
+  {
+   "cmd": "psql postgresql://admin:hunter2supersecret@localhost:5432/app",
+   "secret": "hunter2supersecret"
+  },
+  {
+   "cmd": "decode eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N",
+   "secret": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N"
+  },
+  {
+   "cmd": "aws configure set aws_access_key_id AKIAIOSFODNN7EXAMPLE",
+   "secret": "AKIAIOSFODNN7EXAMPLE"
+  },
+  {
+   "cmd": "export DATABASE_PASSWORD=supersecretvalue42",
+   "secret": "supersecretvalue42"
+  },
+  {
+   "cmd": "run API_SECRET=topsecretvalue123 node app.js",
+   "secret": "topsecretvalue123"
+  },
+  {
+   "cmd": "export DB_PASS=supersecretvalue123",
+   "secret": "supersecretvalue123"
+  },
+  {
+   "cmd": "export CREDENTIAL=longopaquesecretblob",
+   "secret": "longopaquesecretblob"
+  },
+  {
+   "cmd": "export SLACK=xoxb-1234567890-abcdefghijklmnop",
+   "secret": "xoxb-1234567890-abcdefghijklmnop"
+  },
+  {
+   "cmd": "echo ghs_abcdefghijklmnopqrstuvwx",
+   "secret": "ghs_abcdefghijklmnopqrstuvwx"
+  },
+  {
+   "cmd": "curl -u admin:s3cr3tHTTPpassword https://api.internal/v1",
+   "secret": "s3cr3tHTTPpassword"
+  },
+  {
+   "cmd": "curl --user bob:p4ssw0rdvalue123 https://x",
+   "secret": "p4ssw0rdvalue123"
+  },
+  {
+   "cmd": "http -a alice:topSecretAuthValue example.com",
+   "secret": "topSecretAuthValue"
+  },
+  {
+   "cmd": "curl -H X-Api-Key:opaqueapikeyvalue123 https://x",
+   "secret": "opaqueapikeyvalue123"
+  },
+  {
+   "cmd": "curl -H X-Auth-Token:opaquetokenvalue456 https://x",
+   "secret": "opaquetokenvalue456"
+  },
+  {
+   "cmd": "curl -H X-Custom-Secret:opaquesecretheaderval123 https://x",
+   "secret": "opaquesecretheaderval123"
+  },
+  {
+   "cmd": "curl -H Cookie:ssid=sessioncookiesecret789 https://x",
+   "secret": "sessioncookiesecret789"
+  },
+  {
+   "cmd": "curl -H Set-Cookie:session=newcookiesecret012 https://x",
+   "secret": "newcookiesecret012"
+  },
+  {
+   "cmd": "curl --token spaceTokenSecretValue123 https://x",
+   "secret": "spaceTokenSecretValue123"
+  },
+  {
+   "cmd": "curl --password spacePasswordSecretVal456 https://x",
+   "secret": "spacePasswordSecretVal456"
+  },
+  {
+   "cmd": "curl --api-key spaceApiKeySecretValue789 https://x",
+   "secret": "spaceApiKeySecretValue789"
+  },
+  {
+   "cmd": "curl -uadmin:gluedBasicAuthSecret777 https://x",
+   "secret": "gluedBasicAuthSecret777"
+  },
+  {
+   "cmd": "curl --cookie sessionid=cookieFlagParitySecret1 https://x",
+   "secret": "cookieFlagParitySecret1"
+  },
+  {
+   "cmd": "curl -b sessionid=cookieShortParitySecret2 https://x",
+   "secret": "cookieShortParitySecret2"
+  },
+  {
+   "cmd": "curl --cookie=sessionid=cookieEqParitySecret3 https://x",
+   "secret": "cookieEqParitySecret3"
+  },
+  {
+   "cmd": "curl -bsessionid=cookieGluedParitySecret4 https://x",
+   "secret": "cookieGluedParitySecret4"
+  },
+  {
+   "cmd": "curl --jwt jwtFlagParitySecret5 https://x",
+   "secret": "jwtFlagParitySecret5"
+  },
+  {
+   "cmd": "apicall bearer opaqueBearerNoLabelSecret12345 https://x",
+   "secret": "opaqueBearerNoLabelSecret12345"
+  },
+  {
+   "cmd": "setauth Authorization: opaqueNoSchemeAuthSecret123456 https://x",
+   "secret": "opaqueNoSchemeAuthSecret123456"
+  },
+  {
+   "cmd": "decode eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0",
+   "secret": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0"
+  },
+  {
+   "cmd": "npm config set _authToken=npm_ShortTokenUnder30chars1",
+   "secret": "npm_ShortTokenUnder30chars1"
+  },
+  {
+   "cmd": "echo \"-----BEGIN RSA PRIVATE KEY-----\nMIIEvQIBADANBgkSECRETPEMBODYacross99lines12345\n-----END RSA PRIVATE KEY-----\"",
+   "secret": "MIIEvQIBADANBgkSECRETPEMBODYacross99lines12345"
+  },
+  {
+   "cmd": "curl https://u:pa/ss/wordSlashSecret456@host/db",
+   "secret": "pa/ss/wordSlashSecret456"
+  },
+  {
+   "cmd": "curl redis://:noUserSlashSecret789@host:6379",
+   "secret": "noUserSlashSecret789"
+  },
+  {
+   "cmd": "decode eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.PAYLOADnotStartingEyJ12345.sigSegmentValue6789",
+   "secret": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.PAYLOADnotStartingEyJ12345.sigSegmentValue6789"
+  },
+  {
+   "cmd": "printf -----BEGIN RSA PRIVATE KEY-----\nMIIEvUntermSecretBodyNoEndMarker1234567890",
+   "secret": "MIIEvUntermSecretBodyNoEndMarker1234567890"
+  },
+  {
+   "cmd": "curl -u 12345:numericUserPasswordSecret1 https://api.internal",
+   "secret": "numericUserPasswordSecret1"
+  },
+  {
+   "cmd": "curl -u :emptyUserPasswordSecret2 https://api.internal",
+   "secret": "emptyUserPasswordSecret2"
+  },
+  {
+   "cmd": "MYSQL_PWD=mysqlEnvPasswordSecret3 mysql -h prod-replica",
+   "secret": "mysqlEnvPasswordSecret3"
+  },
+  {
+   "cmd": "curl -b 'sessionid=quotedCookieValueSecret4' https://x",
+   "secret": "quotedCookieValueSecret4"
+  },
+  {
+   "cmd": "deploy --api-key-id hyphenatedFlagSecret5 --region us-east",
+   "secret": "hyphenatedFlagSecret5"
+  },
+  {
+   "cmd": "gh auth login --with-token github_pat_11ABCDE0123456789abcdefSecret",
+   "secret": "github_pat_11ABCDE0123456789abcdefSecret"
+  },
+  {
+   "cmd": "echo ghr_abcdefghijklmnopqrstuvwxyz0123Secret",
+   "secret": "ghr_abcdefghijklmnopqrstuvwxyz0123Secret"
+  },
+  {
+   "cmd": "echo glrt-abcdefghijklmnopRuntimeSecret",
+   "secret": "glrt-abcdefghijklmnopRuntimeSecret"
+  },
+  {
+   "cmd": "vault login hvs.abcdefghijklmnopqrstVaultSecret",
+   "secret": "hvs.abcdefghijklmnopqrstVaultSecret"
+  },
+  {
+   "cmd": "aws iam create-role AROAJQABC1234567DEFG",
+   "secret": "AROAJQABC1234567DEFG"
+  },
+  {
+   "cmd": "doctl auth init -t dop_v1_0123456789abcdef0123456789abcdef0123456789abcdef",
+   "secret": "dop_v1_0123456789abcdef0123456789abcdef0123456789abcdef"
+  },
+  {
+   "cmd": "send --key SG.aBcDeFgHiJkLmNoPqRsTu.vWxYz0123456789aBcDeFgHiJ https://x",
+   "secret": "SG.aBcDeFgHiJkLmNoPqRsTu.vWxYz0123456789aBcDeFgHiJ"
+  },
+  {
+   "cmd": "twine upload -p pypi-AgEIcHlwaS5vcmcPypiTokenSecret",
+   "secret": "pypi-AgEIcHlwaS5vcmcPypiTokenSecret"
+  },
+  {
+   "cmd": "docker login -p dckr_pat_abcdefghijklmnopqrstuvwx registry.io",
+   "secret": "dckr_pat_abcdefghijklmnopqrstuvwx"
+  },
+  {
+   "cmd": "stripe config rk_live_abcdefghijklmnop1234",
+   "secret": "rk_live_abcdefghijklmnop1234"
+  },
+  {
+   "cmd": "stripe webhook whsec_abcdefghijklmnop1234",
+   "secret": "whsec_abcdefghijklmnop1234"
+  },
+  {
+   "cmd": "curl -b 'theme=dark; sessionid=multiPairCookieSecret1' https://x",
+   "secret": "multiPairCookieSecret1"
+  },
+  {
+   "cmd": "curl --cookie 'lang=en; sid=multiPairCookieSecret2' https://x",
+   "secret": "multiPairCookieSecret2"
+  },
+  {
+   "cmd": "curl -H 'Cookie: theme=dark; sessionid=multiPairHeaderSecret3' https://x",
+   "secret": "multiPairHeaderSecret3"
+  },
+  {
+   "cmd": "aws configure AKIAIOSFODNN7EXAMPLEtrailingchars",
+   "secret": "AKIAIOSFODNN7EXAMPLE"
+  },
+  {
+   "cmd": "slack-cli auth xapp-1-A0123-1234567890-abcdefghijklSecret",
+   "secret": "xapp-1-A0123-1234567890-abcdefghijklSecret"
+  },
+  {
+   "cmd": "echo glcbt-AbCdEf0123456789BuildTokenSecret",
+   "secret": "glcbt-AbCdEf0123456789BuildTokenSecret"
+  },
+  {
+   "cmd": "echo glptt-AbCdEf0123456789TriggerTokenSecret",
+   "secret": "glptt-AbCdEf0123456789TriggerTokenSecret"
+  },
+  {
+   "cmd": "curl -H 'Authorization: Basic YWRtaW46c3VwZXJzZWNyZXRWYWx1ZQ' https://x",
+   "secret": "YWRtaW46c3VwZXJzZWNyZXRWYWx1ZQ"
+  },
+  {
+   "cmd": "curl -H 'Authorization: Digest digestCredentialSecretValue123' https://x",
+   "secret": "digestCredentialSecretValue123"
+  },
+  {
+   "cmd": "aws config AKIAEXAMPLE1234567890ABCDEFGH",
+   "secret": "AKIAEXAMPLE1234567890ABCDEFGH"
+  },
+  {
+   "cmd": "env MY_API_KEY = spacedEqualsConfigSecret1 node app.js",
+   "secret": "spacedEqualsConfigSecret1"
+  },
+  {
+   "cmd": "config db_password : colonStyleConfigSecret2",
+   "secret": "colonStyleConfigSecret2"
+  },
+  {
+   "cmd": "yaml api_secret: colonNoSpaceConfigSecret3",
+   "secret": "colonNoSpaceConfigSecret3"
+  },
+  {
+   "cmd": "curl -d {\"client_secret\":\"jsonQuotedKeySecretAAA1\"} https://x",
+   "secret": "jsonQuotedKeySecretAAA1"
+  },
+  {
+   "cmd": "post {\"access_token\":\"jsonQuotedKeySecretBBB2\"}",
+   "secret": "jsonQuotedKeySecretBBB2"
+  },
+  {
+   "cmd": "set \"DB_PASSWORD\"=\"quotedEqualsKeySecretCCC3\"",
+   "secret": "quotedEqualsKeySecretCCC3"
+  },
+  {
+   "cmd": "mongorestore --pass Hunter2DbPasswordSecretX --host prod",
+   "secret": "Hunter2DbPasswordSecretX"
+  },
+  {
+   "cmd": "openconnect --passphrase vpnPassphraseSecretY vpn.corp",
+   "secret": "vpnPassphraseSecretY"
+  },
+  {
+   "cmd": "svc --apipass MyApiPasswordSecretZ --env prod",
+   "secret": "MyApiPasswordSecretZ"
+  },
+  {
+   "cmd": "fetch Authorization: Negotiate negotiateSchemeSecretGSSAPI1",
+   "secret": "negotiateSchemeSecretGSSAPI1"
+  },
+  {
+   "cmd": "fetch Authorization: HOBA hobaSchemeCredentialSecret2",
+   "secret": "hobaSchemeCredentialSecret2"
+  },
+  {
+   "cmd": "config {\"auth\": \"YWRtaW46ZG9ja2VyQXV0aFNlY3JldDE\"}",
+   "secret": "YWRtaW46ZG9ja2VyQXV0aFNlY3JldDE"
+  },
+  {
+   "cmd": "yaml registry_auth: regAuthColonSecretValue2",
+   "secret": "regAuthColonSecretValue2"
+  },
+  {
+   "cmd": "npm config set _authToken=npm_aB3-cD_4eF5gH6iJ7kL8mN9",
+   "secret": "npm_aB3-cD_4eF5gH6iJ7kL8mN9"
+  },
+  {
+   "cmd": "decode eyJhbGciOi.eyJzdW.shortSig",
+   "secret": "eyJhbGciOi.eyJzdW.shortSig"
+  },
+  {
+   "cmd": "curl -u svcacct:/k7Hd2SlashPwSecret https://api.internal",
+   "secret": "/k7Hd2SlashPwSecret"
+  },
+  {
+   "cmd": "curl -u 'svc:/AbcSlashLeadingSecret' https://api",
+   "secret": "/AbcSlashLeadingSecret"
+  },
+  {
+   "cmd": "curl -H 'Cookie: opaqueNoEqualsCookieSecret' https://x",
+   "secret": "opaqueNoEqualsCookieSecret"
+  },
+  {
+   "cmd": "dotnet myapp --conn Server=prod;Pwd=adoConnSecretPw;Database=app",
+   "secret": "adoConnSecretPw"
+  }
+ ]
+}

@@ -1,0 +1,82 @@
+=====================================================================
+PHP         : /usr/local/bin/php
+PHP_SAPI    : cli
+PHP_VERSION : 8.4.1
+ZEND_VERSION: 4.4.1
+PHP_OS      : Linux - Linux ci-runner 6.8.0-45-generic #45-Ubuntu SMP x86_64
+INI actual  : /home/dev/money/tmp-php.ini
+More .INIs  :  
+---------------------------------------------------------------------
+PHP         : /usr/local/bin/phpdbg
+PHP_SAPI    : phpdbg
+PHP_VERSION : 8.4.1
+ZEND_VERSION: 4.4.1
+PHP_OS      : Linux - Linux ci-runner 6.8.0-45-generic #45-Ubuntu SMP x86_64
+INI actual  : /home/dev/money/tmp-php.ini
+More .INIs  :  
+---------------------------------------------------------------------
+CWD         : /home/dev/money
+Extra dirs  : 
+VALGRIND    : Not used
+=====================================================================
+TIME START 2026-10-16 01:10:00
+=====================================================================
+PASS money_format(): basic rounding variant 1 [tests/001.phpt] 
+PASS money_format(): negative amounts variant 1 [tests/002.phpt] 
+PASS money_format(): currency symbol variant 1 [tests/003.phpt] 
+PASS money_format(): zero value variant 1 [tests/004.phpt] 
+PASS money_format(): large integers variant 1 [tests/005.phpt] 
+PASS money_format(): float precision variant 1 [tests/006.phpt] 
+PASS money_format(): locale fr_FR variant 1 [tests/007.phpt] 
+PASS money_format(): locale en_US variant 1 [tests/008.phpt] 
+PASS money_format(): invalid argument variant 1 [tests/009.phpt] 
+PASS money_format(): null input variant 1 [tests/010.phpt] 
+PASS money_format(): basic rounding variant 2 [tests/011.phpt] 
+PASS money_format(): negative amounts variant 2 [tests/012.phpt] 
+PASS money_format(): currency symbol variant 2 [tests/013.phpt] 
+PASS money_format(): zero value variant 2 [tests/014.phpt] 
+PASS money_format(): large integers variant 2 [tests/015.phpt] 
+PASS money_format(): float precision variant 2 [tests/016.phpt] 
+PASS money_format(): locale fr_FR variant 2 [tests/017.phpt] 
+PASS money_format(): locale en_US variant 2 [tests/018.phpt] 
+PASS money_format(): invalid argument variant 2 [tests/019.phpt] 
+PASS money_format(): null input variant 2 [tests/020.phpt] 
+PASS money_format(): basic rounding variant 3 [tests/021.phpt] 
+PASS money_format(): negative amounts variant 3 [tests/022.phpt] 
+PASS money_format(): currency symbol variant 3 [tests/023.phpt] 
+PASS money_format(): zero value variant 3 [tests/024.phpt] 
+PASS money_format(): large integers variant 3 [tests/025.phpt] 
+PASS money_format(): float precision variant 3 [tests/026.phpt] 
+PASS money_format(): locale fr_FR variant 3 [tests/027.phpt] 
+PASS money_format(): locale en_US variant 3 [tests/028.phpt] 
+PASS money_format(): invalid argument variant 3 [tests/029.phpt] 
+PASS money_format(): null input variant 3 [tests/030.phpt] 
+PASS money_format(): basic rounding variant 4 [tests/031.phpt] 
+PASS money_format(): negative amounts variant 4 [tests/032.phpt] 
+PASS money_format(): currency symbol variant 4 [tests/033.phpt] 
+PASS money_format(): zero value variant 4 [tests/034.phpt] 
+PASS money_format(): large integers variant 4 [tests/035.phpt] 
+PASS money_format(): float precision variant 4 [tests/036.phpt] 
+PASS money_format(): locale fr_FR variant 4 [tests/037.phpt] 
+PASS money_format(): locale en_US variant 4 [tests/038.phpt] 
+PASS money_format(): invalid argument variant 4 [tests/039.phpt] 
+PASS money_format(): null input variant 4 [tests/040.phpt] 
+SKIP money_format(): intl collation [tests/041.phpt] reason: intl extension not loaded
+=====================================================================
+TIME END 2026-10-16 01:10:02
+
+=====================================================================
+TEST RESULT SUMMARY
+---------------------------------------------------------------------
+Exts skipped    :    0
+Exts tested     :   32
+---------------------------------------------------------------------
+
+Number of tests :   41                40
+Tests skipped   :    1 (  2.4%) --------
+Tests warned    :    0 (  0.0%) (  0.0%)
+Tests failed    :    0 (  0.0%) (  0.0%)
+Tests passed    :   40 ( 97.6%) (100.0%)
+---------------------------------------------------------------------
+Time taken      :    2 seconds
+=====================================================================

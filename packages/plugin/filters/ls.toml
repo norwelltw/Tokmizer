@@ -1,0 +1,16 @@
+[filters.ls]
+description = "Compact ls output"
+match_command = "^ls(\\s|$)"
+priority = 60
+transform = "smart-ls"
+truncate_lines_at = 200
+max_lines = 2000
+
+[filters.ls-long]
+description = "Compact long-format ls output (keep modes, owners, names, types and sizes; drop link counts and dates; a shared owner is stated once)"
+match_command = "^ls\\s+-[a-zA-Z]*l"
+priority = 65
+strip_lines_matching = ["^\\s*$"]
+transform = "smart-ls"
+truncate_lines_at = 240
+max_lines = 2000

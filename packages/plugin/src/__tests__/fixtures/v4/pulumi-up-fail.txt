@@ -1,0 +1,100 @@
+Updating (dev)
+
+View in Browser (Ctrl+O): https://app.pulumi.com/acme/infra/dev/updates/42
+
+     Type                                 Name                         Status                  Info
+ +   pulumi:pulumi:Stack                  infra-dev                    **creating failed**     1 error
+ +   ├─ aws:ec2:SecurityGroup                svc-00-securitygroup         created (37s)
+ +   ├─ aws:s3:Bucket                        svc-01-bucket                created (1s)
+ +   ├─ aws:iam:Role                         svc-02-role                  created (24s)
+ +   ├─ aws:lambda:Function                  svc-03-function              created (3s)
+ +   ├─ aws:ec2:Instance                     svc-04-instance              created (30s)
+ +   ├─ aws:rds:Instance                     svc-05-instance              created (11s)
+ +   ├─ kubernetes:apps/v1:Deployment        svc-06-deployment            created (24s)
+ +   ├─ kubernetes:core/v1:Service           svc-07-service               created (24s)
+ +   ├─ aws:ec2:SecurityGroup                svc-08-securitygroup         created (19s)
+ +   ├─ aws:s3:Bucket                        svc-09-bucket                created (37s)
+ +   ├─ aws:iam:Role                         svc-10-role                  created (7s)
+ +   ├─ aws:lambda:Function                  svc-11-function              created (29s)
+ +   ├─ aws:ec2:Instance                     svc-12-instance              created (14s)
+ +   ├─ aws:rds:Instance                     svc-13-instance              created (28s)
+ +   ├─ kubernetes:apps/v1:Deployment        svc-14-deployment            created (14s)
+ +   ├─ kubernetes:core/v1:Service           svc-15-service               created (8s)
+ +   ├─ aws:ec2:SecurityGroup                svc-16-securitygroup         created (4s)
+ +   ├─ aws:s3:Bucket                        svc-17-bucket                created (4s)
+ +   ├─ aws:iam:Role                         svc-18-role                  created (4s)
+ +   ├─ aws:lambda:Function                  svc-19-function              created (11s)
+ +   ├─ aws:ec2:Instance                     svc-20-instance              created (39s)
+ +   ├─ aws:rds:Instance                     svc-21-instance              created (10s)
+ +   ├─ kubernetes:apps/v1:Deployment        svc-22-deployment            created (39s)
+ +   ├─ kubernetes:core/v1:Service           svc-23-service               created (3s)
+ +   ├─ aws:ec2:SecurityGroup                svc-24-securitygroup         created (35s)
+ +   ├─ aws:s3:Bucket                        svc-25-bucket                created (32s)
+ +   ├─ aws:iam:Role                         svc-26-role                  created (38s)
+ +   ├─ aws:lambda:Function                  svc-27-function              created (16s)
+ +   ├─ aws:ec2:Instance                     svc-28-instance              created (21s)
+ +   ├─ aws:rds:Instance                     svc-29-instance              created (3s)
+ +   ├─ kubernetes:apps/v1:Deployment        svc-30-deployment            created (8s)
+ +   ├─ kubernetes:core/v1:Service           svc-31-service               created (34s)
+ +   ├─ aws:ec2:SecurityGroup                svc-32-securitygroup         created (19s)
+ +   ├─ aws:s3:Bucket                        svc-33-bucket                created (27s)
+ +   ├─ aws:iam:Role                         svc-34-role                  created (13s)
+ +   ├─ aws:lambda:Function                  svc-35-function              created (31s)
+ +   ├─ aws:ec2:Instance                     svc-36-instance              created (13s)
+ +   ├─ aws:rds:Instance                     svc-37-instance              created (16s)
+ +   ├─ kubernetes:apps/v1:Deployment        svc-38-deployment            created (29s)
+ +   ├─ kubernetes:core/v1:Service           svc-39-service               created (27s)
+ +   ├─ aws:ec2:SecurityGroup                svc-40-securitygroup         created (32s)
+ +   ├─ aws:s3:Bucket                        svc-41-bucket                **creating failed**     1 error
+ +   ├─ aws:iam:Role                         svc-42-role                  created (3s)
+ +   ├─ aws:lambda:Function                  svc-43-function              created (15s)
+ +   ├─ aws:ec2:Instance                     svc-44-instance              created (27s)
+ +   ├─ aws:rds:Instance                     svc-45-instance              created (29s)
+ +   ├─ kubernetes:apps/v1:Deployment        svc-46-deployment            created (16s)
+ +   ├─ kubernetes:core/v1:Service           svc-47-service               created (28s)
+ +   ├─ aws:ec2:SecurityGroup                svc-48-securitygroup         created (14s)
+ +   ├─ aws:s3:Bucket                        svc-49-bucket                created (32s)
+ +   ├─ aws:iam:Role                         svc-50-role                  created (13s)
+ +   ├─ aws:lambda:Function                  svc-51-function              created (3s)
+ +   ├─ aws:ec2:Instance                     svc-52-instance              created (3s)
+ +   ├─ aws:rds:Instance                     svc-53-instance              created (17s)
+ +   ├─ kubernetes:apps/v1:Deployment        svc-54-deployment            created (17s)
+ +   ├─ kubernetes:core/v1:Service           svc-55-service               created (16s)
+ +   ├─ aws:ec2:SecurityGroup                svc-56-securitygroup         created (34s)
+ +   ├─ aws:s3:Bucket                        svc-57-bucket                created (14s)
+ +   ├─ aws:iam:Role                         svc-58-role                  created (15s)
+ +   ├─ aws:lambda:Function                  svc-59-function              created (27s)
+ +   ├─ aws:ec2:Instance                     svc-60-instance              created (17s)
+ +   ├─ aws:rds:Instance                     svc-61-instance              created (10s)
+ +   ├─ kubernetes:apps/v1:Deployment        svc-62-deployment            created (21s)
+ +   ├─ kubernetes:core/v1:Service           svc-63-service               created (4s)
+ +   ├─ aws:ec2:SecurityGroup                svc-64-securitygroup         created (21s)
+ +   ├─ aws:s3:Bucket                        svc-65-bucket                created (37s)
+ +   ├─ aws:iam:Role                         svc-66-role                  created (8s)
+ +   ├─ aws:lambda:Function                  svc-67-function              created (37s)
+ +   ├─ aws:ec2:Instance                     svc-68-instance              created (26s)
+ +   ├─ aws:rds:Instance                     svc-69-instance              created (3s)
+ +   ├─ kubernetes:apps/v1:Deployment        svc-70-deployment            created (32s)
+ +   ├─ kubernetes:core/v1:Service           svc-71-service               created (25s)
+ +   ├─ aws:ec2:SecurityGroup                svc-72-securitygroup         created (6s)
+ +   ├─ aws:s3:Bucket                        svc-73-bucket                created (28s)
+ +   ├─ aws:iam:Role                         svc-74-role                  created (14s)
+ +   ├─ aws:lambda:Function                  svc-75-function              created (37s)
+ +   ├─ aws:ec2:Instance                     svc-76-instance              created (11s)
+ +   ├─ aws:rds:Instance                     svc-77-instance              created (22s)
+ +   ├─ kubernetes:apps/v1:Deployment        svc-78-deployment            created (19s)
+ +   ├─ kubernetes:core/v1:Service           svc-79-service               created (31s)
+
+Diagnostics:
+  pulumi:pulumi:Stack (infra-dev):
+    error: update failed
+
+  aws:s3:Bucket (svc-41-bucket):
+    error: 1 error occurred:
+    	* creating Lambda Function (svc-41-function): InvalidParameterValueException: The role defined for the function cannot be assumed by Lambda.
+
+Resources:
+    + 80 created
+    1 errored
+
+Duration: 2m14s

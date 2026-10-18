@@ -1,0 +1,28 @@
+[filters.python]
+description = "Strip Python traceback and pip noise, keep every error and frame"
+match_command = "^python3?(?:\\.\\d+)?(?!\\s+-m\\s+pytest\\b)(\\s|$)|^bash-tool: python3?(?:\\.\\d+)?(?!\\s+-m\\s+pytest\\b)\\b"
+priority = 65
+strip_ansi = true
+strip_lines_matching = [
+  "^\\s*[\\^~]+\\s*$",
+  "^  File \"<frozen [^\"]*>\", line \\d+",
+  "^\\s*Requirement already satisfied: ",
+  "^\\s*Using cached ",
+  "^\\s*Downloading ",
+  "^\\s*Preparing metadata "
+]
+transform = "squeeze-output"
+on_empty = "python: ok"
+
+[filters.node]
+description = "Strip Node runtime warning noise, keep errors and stack frames"
+match_command = "^node(\\s|$)|^bash-tool: node\\b"
+priority = 65
+strip_ansi = true
+strip_lines_matching = [
+  "^\\(node:\\d+\\) (\\[DEP\\d+\\] )?DeprecationWarning",
+  "^\\(node:\\d+\\) ExperimentalWarning",
+  "^\\(Use `node --trace-"
+]
+transform = "squeeze-output"
+on_empty = "node: ok"

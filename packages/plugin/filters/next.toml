@@ -1,0 +1,25 @@
+[filters.next]
+description = "Compact next build / next dev output"
+match_command = "^next(\\s|$)|^npx\\s+next|^npm\\s+(run|exec)\\s+(build|dev|start)|^pnpm\\s+(run|exec)?\\s*(build|dev|start)"
+priority = 65
+strip_ansi = true
+strip_lines_matching = [
+  "^\\s*$",
+  "^\\s*▲\\s+Next\\.js",
+  "^\\s*- (Local|Network|Environments):",
+  "^\\s*✓ Ready in",
+  "^\\s*✓ Compiled(?! successfully)",
+  "^\\s*✓ Linting and checking",
+  "^\\s*✓ Generating static pages",
+  "^\\s*✓ Collecting page data",
+  "^\\s*Creating an optimized production build",
+  "^\\s*Route \\(",
+  "^\\s*\\+ First Load JS shared by all",
+  "^\\s*┌|^\\s*├|^\\s*└|^\\s*│",
+  "^\\s*ƒ Middleware",
+  "^\\s*\\(Server\\)|^\\s*\\(Static\\)|^\\s*\\(Dynamic\\)",
+  "^\\s*○ \\(",
+  "^\\s*● \\(",
+]
+truncate_lines_at = 240
+max_lines = 220

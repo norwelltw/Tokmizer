@@ -1,0 +1,9 @@
+bun add v1.3.13 (bf2e2cec)
+Resolving dependencies
+Resolved, downloaded and extracted [6]
+Saved lockfile
+
+installed zod@3.23.8
+installed react@18.3.1
+
+4 packages installed [212.00ms]

@@ -1,0 +1,44 @@
+[filters.tofu-init]
+description = "Compact OpenTofu init"
+match_command = "^(tofu|terraform)\\s+init"
+priority = 65
+strip_ansi = true
+strip_lines_matching = [
+  "^Initializing",
+  "^- Reusing previous version",
+  "^- Installing",
+  "^- Installed",
+  "^- Finding",
+  "^\\s*$"
+]
+max_lines = 60
+on_empty = "tofu init: ok"
+
+[filters.tofu-fmt]
+description = "Compact OpenTofu fmt"
+match_command = "^(tofu|terraform)\\s+fmt"
+priority = 65
+max_lines = 40
+on_empty = "fmt: ok"
+
+[filters.tofu-plan]
+description = "Compact OpenTofu plan"
+match_command = "^(tofu|terraform)\\s+plan"
+priority = 65
+strip_ansi = true
+strip_lines_matching = [
+  "^Refreshing state",
+  "^Acquiring state lock",
+  "^Releasing state lock",
+  "^\\s*#.*unchanged",
+  "^\\s*$"
+]
+max_lines = 100
+
+[filters.tofu-validate]
+description = "Compact OpenTofu validate"
+match_command = "^(tofu|terraform)\\s+validate"
+priority = 65
+strip_ansi = true
+max_lines = 30
+on_empty = "validate: ok"

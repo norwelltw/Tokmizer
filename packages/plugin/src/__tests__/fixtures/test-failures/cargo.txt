@@ -1,0 +1,42 @@
+   Compiling calc v0.1.0 (/home/dev/app)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.71s
+     Running unittests src/lib.rs (target/debug/deps/calc-0022785d6f5f994f)
+
+running 7 tests
+test tests::ok0 ... ok
+test tests::ok2 ... ok
+test tests::ok1 ... ok
+test tests::ok3 ... ok
+test tests::truthy ... FAILED
+test tests::big ... FAILED
+test tests::empty ... FAILED
+
+failures:
+
+---- tests::truthy stdout ----
+
+thread 'tests::truthy' (1234) panicked at src/lib.rs:12:27:
+assertion failed: add(0, 0) > 0
+
+---- tests::big stdout ----
+
+thread 'tests::big' (1234) panicked at src/lib.rs:10:24:
+assertion `left == right` failed: adding 6 and 1
+  left: 8
+ right: 7
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- tests::empty stdout ----
+
+thread 'tests::empty' (1234) panicked at src/lib.rs:2:34:
+index out of bounds: the len is 0 but the index is 0
+
+
+failures:
+    tests::big
+    tests::empty
+    tests::truthy
+
+test result: FAILED. 4 passed; 3 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`

@@ -1,0 +1,6 @@
+[filters.cat]
+description = "Cap large cat output"
+match_command = "^cat(\\s|$)"
+priority = 50
+transform = "smart-read"
+max_lines = 200

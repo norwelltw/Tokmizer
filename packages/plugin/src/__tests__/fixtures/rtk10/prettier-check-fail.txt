@@ -1,0 +1,4 @@
+Checking formatting...
+[warn] src/ugly.js
+[warn] src/ugly2.js
+[warn] Code style issues found in 2 files. Run Prettier with --write to fix.

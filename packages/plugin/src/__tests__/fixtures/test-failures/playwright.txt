@@ -1,0 +1,54 @@
+
+Running 6 tests using 2 workers
+
+  ✓  1 [chromium] › tests/home.spec.ts:3:5 › has title (812ms)
+  ✓  2 [chromium] › tests/home.spec.ts:8:5 › shows hero (640ms)
+  ✘  3 [chromium] › tests/login.spec.ts:10:5 › logs in with valid password (5.1s)
+  ✓  4 [chromium] › tests/home.spec.ts:13:5 › footer links (402ms)
+  ✓  5 [chromium] › tests/home.spec.ts:18:5 › language switch (733ms)
+  ✘  6 [chromium] › tests/cart.spec.ts:21:7 › cart › shows total (1.2s)
+
+
+  1) [chromium] › tests/login.spec.ts:10:5 › logs in with valid password ──────────────────────────
+
+    Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
+
+    Locator: getByRole('heading', { name: 'Dashboard' })
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - expect.toBeVisible with timeout 5000ms
+      - waiting for getByRole('heading', { name: 'Dashboard' })
+
+
+      12 |   await page.getByLabel('Password').fill('secret');
+      13 |   await page.getByRole('button', { name: 'Sign in' }).click();
+    > 14 |   await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
+         |                                                                    ^
+      15 | });
+
+        at /home/dev/app/tests/login.spec.ts:14:68
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────
+    test-results/login-logs-in-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › tests/cart.spec.ts:21:7 › cart › shows total ─────────────────────────────────
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "$42.00"
+    Received: "$40.00"
+
+      22 |     await page.goto('/cart');
+    > 23 |     expect(await page.locator('.total').textContent()).toBe('$42.00');
+         |                                                        ^
+      24 |   });
+
+        at /home/dev/app/tests/cart.spec.ts:23:56
+        at /home/dev/app/node_modules/@playwright/test/lib/worker.js:120:9
+
+  2 failed
+    [chromium] › tests/login.spec.ts:10:5 › logs in with valid password ───────────────────────────
+    [chromium] › tests/cart.spec.ts:21:7 › cart › shows total ────────────────────────────────────
+  4 passed (9.4s)

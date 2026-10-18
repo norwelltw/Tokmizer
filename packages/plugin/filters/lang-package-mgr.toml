@@ -1,0 +1,101 @@
+[filters.poetry]
+description = "Compact poetry output"
+match_command = "^poetry(\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^Updating dependencies", "^Resolving", "^\\s*$"]
+max_lines = 100
+
+[filters.uv]
+description = "Compact uv output"
+match_command = "^uv(\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^Resolved \\d+ packages? in ", "^Using (?:CPython|PyPy) ", "^Creating virtual environment at:", "^Downloading \\S+ \\(", "^ Downloaded \\S+$", "^Prepared \\d+ packages? in ", "^Audited \\d+ packages? in ", "^Checked \\d+ packages? in ", "^Bytecode compiled \\d+ files? in ", "^\\s*$"]
+max_lines = 80
+keep_failures = true
+
+[filters.pip]
+description = "Compact pip output"
+match_command = "^pip(\\s|$)|^pip3(\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = [
+  "^Collecting",
+  "^Downloading",
+  "^Requirement already satisfied",
+  "^\\s*$"
+]
+max_lines = 100
+
+[filters.bundle]
+description = "Compact bundler output"
+match_command = "^bundle(\\s|$)|^bundler(\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^Fetching", "^Using", "^\\s*$"]
+max_lines = 100
+
+[filters.composer]
+description = "Compact PHP composer output"
+match_command = "^composer(\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^\\s*-\\s+Installing", "^\\s*-\\s+Downloading", "^\\s*-\\s+Upgrading \\S+ \\(", "^\\s*-\\s+Removing \\S+ \\(", "^\\s*$"]
+max_lines = 100
+keep_failures = true
+strip_on_failure = true
+
+[filters.mix]
+description = "Compact Elixir mix output"
+match_command = "^mix(\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^Compiling \\d+ files", "^Generated\\s", "^\\s*$"]
+max_lines = 120
+
+[filters.jq]
+description = "Cap large jq output"
+match_command = "^jq(\\s|$)"
+priority = 50
+max_lines = 200
+
+[filters.javap]
+description = "Compact javap class disasm"
+match_command = "^javap(\\s|$)"
+priority = 50
+max_lines = 120
+
+[filters.jar]
+description = "Compact jar listing"
+match_command = "^jar(\\s|$)"
+priority = 50
+max_lines = 1000
+
+[filters.bun]
+description = "Compact bun output"
+match_command = "^bun(?:\\s|$)|^bunx(?:\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^\\s*$", "^Resolving dependencies", "^Resolved, downloaded and extracted", "^Saved lockfile", "^\\(pass\\) ", "^\\s*✓ "]
+max_lines = 150
+keep_failures = true
+
+[filters.deno]
+description = "Compact deno output"
+match_command = "^deno(?:\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^\\s*$", "^Download ", "^Check (?:file:)?\\S+$", "^running \\d+ tests? from ", "^\\S.* \\.\\.\\. ok \\(\\d+(?:\\.\\d+)?(?:m|µ|u|n)?s\\)$"]
+max_lines = 150
+keep_failures = true
+strip_on_failure = true
+
+[filters.npx]
+description = "Squeeze uncovered npx tool output"
+match_command = "^npx(?:\\s|$)"
+priority = 40
+strip_ansi = true
+transform = "squeeze-output"
+max_lines = 200
+keep_failures = true

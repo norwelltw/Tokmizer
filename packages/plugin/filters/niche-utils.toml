@@ -1,0 +1,66 @@
+[filters.ansible-playbook]
+description = "Compact ansible-playbook output"
+match_command = "^ansible-playbook(\\s|$)|^ansible(\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = [
+  "^PLAY \\[",
+  "^TASK \\[",
+  "^ok:",
+  "^\\s*$"
+]
+max_lines = 150
+
+[filters.liquibase]
+description = "Compact liquibase output"
+match_command = "^liquibase(\\s|$)"
+priority = 50
+strip_ansi = true
+max_lines = 100
+
+[filters.quarto-render]
+description = "Compact quarto render output"
+match_command = "^quarto(\\s|$)"
+priority = 50
+strip_ansi = true
+strip_lines_matching = ["^Output created:", "^\\s*$"]
+max_lines = 80
+
+[filters.shopify]
+description = "Compact shopify CLI"
+match_command = "^shopify(\\s|$)"
+priority = 50
+strip_ansi = true
+max_lines = 100
+
+[filters.redis-cli]
+description = "Compact redis-cli output"
+match_command = "^redis-cli(\\s|$)"
+priority = 50
+max_lines = 100
+
+[filters.iptables]
+description = "Compact iptables output"
+match_command = "^iptables(\\s|$)|^ip6tables(\\s|$)"
+priority = 50
+truncate_lines_at = 200
+max_lines = 80
+
+[filters.fail2ban-client]
+description = "Compact fail2ban-client output"
+match_command = "^fail2ban-client(\\s|$)"
+priority = 50
+max_lines = 60
+
+[filters.sops]
+description = "Compact sops output"
+match_command = "^sops(\\s|$)"
+priority = 50
+max_lines = 80
+
+[filters.ollama]
+description = "Compact ollama output"
+match_command = "^ollama(\\s|$)"
+priority = 50
+strip_ansi = true
+max_lines = 80

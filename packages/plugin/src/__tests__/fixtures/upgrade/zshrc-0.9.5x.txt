@@ -1,0 +1,4 @@
+
+
+# tokmizer-shim PATH (managed by tokmizer)
+export PATH='__HOME__/.tokmizer/shims':"$PATH"

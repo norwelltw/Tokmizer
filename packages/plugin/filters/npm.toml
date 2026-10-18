@@ -1,0 +1,25 @@
+[filters.npm]
+description = "Compact npm/yarn/pnpm output"
+match_command = "^(npm|yarn|pnpm)(\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = [
+  "^npm WARN",
+  "^npm notice",
+  "^npm fund",
+  "^npm audit",
+  "^Already up-to-date",
+  "^\\s*$",
+  "found 0 vulnerabilities"
+]
+max_lines = 80
+on_empty = "npm: ok"
+
+[filters.npm-test]
+description = "Compact npm/yarn/pnpm/bun test runs (drop passing lines, keep failures and the summary)"
+match_command = "^(?:npm|yarn|pnpm|bun)\\s+(?:run\\s+)?test(?::\\S+)?(?:\\s|$)"
+priority = 65
+strip_ansi = true
+strip_lines_matching = ["^\\s*✓", "^PASS\\s", "^\\(pass\\) ", "^\\s*$", "^> ", "^npm WARN", "^npm notice", "^Ran all test suites"]
+keep_failures = true
+max_lines = 200

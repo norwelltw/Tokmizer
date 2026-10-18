@@ -1,0 +1,78 @@
+FAIL src/other.test.js
+  ● string
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "hello there"
+    Received: "hello world"
+
+      1 | for (let i = 0; i < 8; i++) test(`fine ${i}`, () => expect(1).toBe(1));
+    > 2 | test("string", () => { expect("hello world").toBe("hello there"); });
+        |                                              ^
+      3 |
+
+      at Object.toBe (src/other.test.js:2:46)
+
+FAIL src/cart.test.js
+  ● cart › sums quantities
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 11
+    Received: 6
+
+      2 | describe("cart", () => {
+      3 |   for (let i = 0; i < 10; i++) test(`passes ${i}`, () => expect(i).toBe(i));
+    > 4 |   test("sums quantities", () => { expect(total([{ price: 2, qty: 3 }, { price: 5 }])).toBe(11); });
+        |                                                                                       ^
+      5 |   test("deep shape", () => { expect({ a: 1, list: [1, 2, 3] }).toEqual({ a: 1, list: [1, 2, 4] }); });
+      6 |   test("lookup missing", () => { expect(lookup({}, "x")).toBe(1); });
+      7 | });
+
+      at Object.toBe (src/cart.test.js:4:87)
+
+  ● cart › deep shape
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "a": 1,
+        "list": Array [
+          1,
+          2,
+    -     4,
+    +     3,
+        ],
+      }
+
+      3 |   for (let i = 0; i < 10; i++) test(`passes ${i}`, () => expect(i).toBe(i));
+      4 |   test("sums quantities", () => { expect(total([{ price: 2, qty: 3 }, { price: 5 }])).toBe(11); });
+    > 5 |   test("deep shape", () => { expect({ a: 1, list: [1, 2, 3] }).toEqual({ a: 1, list: [1, 2, 4] }); });
+        |                                                                ^
+      6 |   test("lookup missing", () => { expect(lookup({}, "x")).toBe(1); });
+      7 | });
+      8 |
+
+      at Object.toEqual (src/cart.test.js:5:64)
+
+  ● cart › lookup missing
+
+    TypeError: Cannot read properties of undefined (reading 'value')
+
+      1 | function total(items) { return items.reduce((s, i) => s + i.price * (i.qty || 0), 0); }
+    > 2 | function lookup(map, k) { return map[k].value; }
+        |                                         ^
+      3 | module.exports = { total, lookup };
+      4 |
+
+      at value (src/cart.js:2:41)
+      at Object.lookup (src/cart.test.js:6:41)
+
+Test Suites: 2 failed, 2 total
+Tests:       4 failed, 18 passed, 22 total
+Snapshots:   0 total
+Time:        0.268 s
+Ran all test suites matching /src/i.

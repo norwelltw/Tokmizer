@@ -1,0 +1,11 @@
+level=info msg="[config_reader] Config search paths: [./ /home/dev/shop /home/dev /home /]"
+level=info msg="[lintersdb] Active 5 linters: [errcheck govet ineffassign staticcheck unused]"
+level=info msg="[loader] Go packages loading at mode 575 (compiled_files|deps|exports_file|files|imports|name|types_sizes) took 412.338ms"
+level=info msg="[runner/filename_unadjuster] Pre-built 0 adjustments in 3.12ms"
+level=info msg="[linters_context/goanalysis] analyzers took 1.903s with top 10 stages: buildir: 1.1s, inspect: 201ms, ctrlflow: 140ms"
+level=info msg="[runner] processing took 2.1µs with stages: max_same_issues: 410ns, nolint: 300ns"
+level=info msg="[runner] linters took 2.01s with stages: goanalysis_metalinter: 2.01s"
+level=info msg="File cache stats: 42 entries of total size 311.4KiB"
+level=info msg="Memory: 26 samples, avg is 148.2MB, max is 301.6MB"
+level=info msg="Execution took 2.521s"
+0 issues.

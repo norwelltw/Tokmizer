@@ -1,0 +1,33 @@
+Test project /home/dev/shop/build
+      Start  1: unit_math_1
+ 1/14 Test  #1: unit_math_1 ......................   Passed    0.00 sec
+      Start  2: unit_math_2
+ 2/14 Test  #2: unit_math_2 ......................   Passed    0.00 sec
+      Start  3: unit_math_3
+ 3/14 Test  #3: unit_math_3 ......................   Passed    0.00 sec
+      Start  4: unit_math_4
+ 4/14 Test  #4: unit_math_4 ......................   Passed    0.00 sec
+      Start  5: unit_math_5
+ 5/14 Test  #5: unit_math_5 ......................   Passed    0.00 sec
+      Start  6: unit_math_6
+ 6/14 Test  #6: unit_math_6 ......................   Passed    0.00 sec
+      Start  7: unit_math_7
+ 7/14 Test  #7: unit_math_7 ......................   Passed    0.00 sec
+      Start  8: unit_math_8
+ 8/14 Test  #8: unit_math_8 ......................   Passed    0.00 sec
+      Start  9: unit_math_9
+ 9/14 Test  #9: unit_math_9 ......................   Passed    0.00 sec
+      Start 10: unit_math_10
+10/14 Test #10: unit_math_10 .....................   Passed    0.00 sec
+      Start 11: unit_math_11
+11/14 Test #11: unit_math_11 .....................   Passed    0.00 sec
+      Start 12: unit_math_12
+12/14 Test #12: unit_math_12 .....................   Passed    0.00 sec
+      Start 13: unit_math_13
+13/14 Test #13: unit_math_13 .....................   Passed    0.00 sec
+      Start 14: unit_math_14
+14/14 Test #14: unit_math_14 .....................   Passed    0.00 sec
+
+100% tests passed out of 14
+
+Total Test time (real) =   0.04 sec

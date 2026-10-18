@@ -1,0 +1,13 @@
+Inspecting 184 files
+..................C.....................................W.................................................................................................................................
+
+Offenses:
+
+app/models/order.rb:12:5: C: [Correctable] Style/GuardClause: Use a guard clause (return unless paid?) instead of wrapping the code inside a conditional expression.
+    if paid?
+    ^^
+app/services/checkout.rb:48:7: W: Lint/UselessAssignment: Useless assignment to variable - total. Did you mean totals?
+      total = cart.sum
+      ^^^^^
+
+184 files inspected, 2 offenses detected, 1 offense autocorrectable

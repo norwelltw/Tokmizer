@@ -1,0 +1,29 @@
+Updating (dev)
+
+View in Browser (Ctrl+O): https://app.pulumi.com/acme/shop-infra/dev/updates/87
+
+@ updating....
+     Type                              Name                  Status              Info
+     pulumi:pulumi:Stack               shop-infra-dev
+ +   ├─ aws:s3:BucketV2                assets                creating (0s)
+ +   ├─ aws:s3:BucketV2                assets                creating (1s)
+ +   ├─ aws:s3:BucketV2                assets                created (2s)
+ ~   ├─ aws:lambda:Function            checkout-api          updating (0s)       [diff: ~code]
+ ~   ├─ aws:lambda:Function            checkout-api          updating (3s)       [diff: ~code]
+ ~   ├─ aws:lambda:Function            checkout-api          updated (4s)        [diff: ~code]
+ +   └─ aws:cloudwatch:LogGroup        checkout-api-logs     creating (0s)
+ +   └─ aws:cloudwatch:LogGroup        checkout-api-logs     created (1s)
+@ updating....
+     pulumi:pulumi:Stack               shop-infra-dev
+
+Outputs:
+  ~ apiUrl    : "https://abc123.execute-api.eu-west-1.amazonaws.com/v1" => "https://abc123.execute-api.eu-west-1.amazonaws.com/v2"
+    bucketName: "assets-6f1d2c"
+
+Resources:
+    + 2 created
+    ~ 1 updated
+    3 changes. 14 unchanged
+
+Duration: 17s
+

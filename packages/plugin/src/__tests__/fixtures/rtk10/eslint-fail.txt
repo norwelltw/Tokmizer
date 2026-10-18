@@ -1,0 +1,8 @@
+
+/home/dev/shop/src/bad.js
+  1:7  error    'unused' is assigned a value but never used  no-unused-vars
+  3:3  warning  Unexpected console statement                 no-console
+  4:9  error    Expected '===' and instead saw '=='          eqeqeq
+
+✖ 3 problems (2 errors, 1 warning)
+

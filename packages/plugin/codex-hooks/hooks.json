@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/dist/bin/tkr-codex-hook.js\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,77 @@
+[INFO] Processing build on daemon 4f2a1c9e
+[INFO] Scanning for projects...
+[INFO] BuildTimeEventSpy is registered.
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] shop-parent                                                        [pom]
+[INFO] shop-core                                                          [jar]
+[INFO] shop-api                                                           [jar]
+[INFO] 
+[INFO] Using the SmartBuilder implementation with a thread count of 9
+[INFO] Task segments : [clean, verify]
+[INFO] Build maximum degree of concurrency is 9
+[INFO] Total concurrency projects is 3
+[INFO] 
+[INFO] -----------------------< com.acme:shop-parent >------------------------
+[INFO] Building shop-parent 1.4.0-SNAPSHOT                                [1/3]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ shop-parent ---
+[INFO] 
+[INFO] ------------------------< com.acme:shop-core >-------------------------
+[INFO] Building shop-core 1.4.0-SNAPSHOT                                  [2/3]
+[INFO]   from shop-core/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ shop-core ---
+[INFO] Deleting /home/dev/shop/shop-core/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ shop-core ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ shop-core ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 48 source files with javac [debug release 21] to target/classes
+[INFO] 
+[INFO] --- surefire:3.2.5:test (default-test) @ shop-core ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.acme.shop.core.PriceTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.081 s -- in com.acme.shop.core.PriceTest
+[INFO] Running com.acme.shop.core.CartTest
+[INFO] Tests run: 21, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.112 s -- in com.acme.shop.core.CartTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 33, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] --- jar:3.4.1:jar (default-jar) @ shop-core ---
+[INFO] Building jar: /home/dev/shop/shop-core/target/shop-core-1.4.0-SNAPSHOT.jar
+[INFO] 
+[INFO] -------------------------< com.acme:shop-api >-------------------------
+[INFO] Building shop-api 1.4.0-SNAPSHOT                                   [3/3]
+[INFO]   from shop-api/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ shop-api ---
+[INFO] Compiling 17 source files with javac [debug release 21] to target/classes
+[INFO] 
+[INFO] --- jar:3.4.1:jar (default-jar) @ shop-api ---
+[INFO] Building jar: /home/dev/shop/shop-api/target/shop-api-1.4.0-SNAPSHOT.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for shop-parent 1.4.0-SNAPSHOT:
+[INFO] 
+[INFO] shop-parent ........................................ SUCCESS [  0.112 s]
+[INFO] shop-core .......................................... SUCCESS [  3.418 s]
+[INFO] shop-api ........................................... SUCCESS [  1.207 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  4.902 s (Wall Clock)
+[INFO] Finished at: 2026-10-16T01:12:44+02:00
+[INFO] ------------------------------------------------------------------------

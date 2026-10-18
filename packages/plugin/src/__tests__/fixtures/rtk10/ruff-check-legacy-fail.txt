@@ -1,0 +1,40 @@
+app.py:1:8: F401 [*] `os` imported but unused
+  |
+1 | import os
+  |        ^^ F401
+2 | import sys
+3 | from typing import List
+  |
+  = help: Remove unused import: `os`
+
+app.py:2:8: F401 [*] `sys` imported but unused
+  |
+1 | import os
+2 | import sys
+  |        ^^^ F401
+3 | from typing import List
+  |
+  = help: Remove unused import: `sys`
+
+app.py:11:5: F841 Local variable `unused` is assigned to but never used
+   |
+10 | def main(argv: List[str]) -> None:
+11 |     unused = 1
+   |     ^^^^^^ F841
+12 |     total: int = add("1", 2)
+13 |     print(total)
+   |
+   = help: Remove assignment to unused variable `unused`
+
+app.py:14:16: E711 Comparison to `None` should be `cond is None`
+   |
+12 |     total: int = add("1", 2)
+13 |     print(total)
+14 |     if argv == None:
+   |                ^^^^ E711
+15 |         pass
+   |
+   = help: Replace with `cond is None`
+
+Found 4 errors.
+[*] 2 fixable with the `--fix` option (2 hidden fixes can be enabled with the `--unsafe-fixes` option).

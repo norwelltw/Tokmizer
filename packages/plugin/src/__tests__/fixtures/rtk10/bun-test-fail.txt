@@ -1,0 +1,22 @@
+bun test v1.3.13 (bf2e2cec)
+
+fail.test.ts:
+1 | import { test, expect } from "bun:test"; test("parses totals", () => { expect({ total: 3 }).toEqual({ total: 4 }); });
+                                                                                                ^
+error: expect(received).toEqual(expected)
+
+  {
+-   "total": 4,
++   "total": 3,
+  }
+
+- Expected  - 1
++ Received  + 1
+
+      at <anonymous> (/home/dev/shop/fail.test.ts:1:93)
+(fail) parses totals [0.12ms]
+
+ 24 pass
+ 1 fail
+ 25 expect() calls
+Ran 25 tests across 4 files. [6.00ms]

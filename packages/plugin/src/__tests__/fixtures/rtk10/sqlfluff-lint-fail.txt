@@ -1,0 +1,14 @@
+== [sql/bad.sql] FAIL
+L:   1 | P:   1 | LT09 | Select targets should be on a new line unless there is
+                       | only one select target. [layout.select_targets]
+L:   1 | P:  10 | LT01 | Expected single whitespace between comma ',' and naked
+                       | identifier. [layout.spacing]
+L:   1 | P:  11 | LT01 | Expected only single space before 'FROM' keyword. Found
+                       | '   '. [layout.spacing]
+L:   2 | P:   1 | CP01 | Keywords must be consistently upper case.
+                       | [capitalisation.keywords]
+L:   2 | P:   8 | LT01 | Expected single whitespace between naked identifier and
+                       | raw comparison operator '='. [layout.spacing]
+L:   2 | P:   9 | LT01 | Expected single whitespace between raw comparison
+                       | operator '=' and numeric literal. [layout.spacing]
+All Finished!

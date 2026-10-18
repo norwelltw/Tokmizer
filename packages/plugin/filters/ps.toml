@@ -1,0 +1,7 @@
+[filters.ps]
+description = "Compact ps output"
+match_command = "^ps(\\s|$)"
+priority = 60
+strip_ansi = true
+truncate_lines_at = 160
+max_lines = 1000

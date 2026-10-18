@@ -1,0 +1,212 @@
+Test project /home/user/proj/build
+  1/200 Test #  1: unit_net_001 ............................   Passed    0.01 sec
+  2/200 Test #  2: unit_io_002 .............................   Passed    0.02 sec
+  3/200 Test #  3: unit_parser_003 .........................   Passed    0.03 sec
+  4/200 Test #  4: unit_core_004 ...........................   Passed    0.04 sec
+  5/200 Test #  5: unit_net_005 ............................   Passed    0.05 sec
+  6/200 Test #  6: unit_io_006 .............................   Passed    0.06 sec
+  7/200 Test #  7: unit_parser_007 .........................   Passed    0.07 sec
+  8/200 Test #  8: unit_core_008 ...........................   Passed    0.08 sec
+  9/200 Test #  9: unit_net_009 ............................   Passed    0.00 sec
+ 10/200 Test # 10: unit_io_010 .............................   Passed    0.01 sec
+ 11/200 Test # 11: unit_parser_011 .........................   Passed    0.02 sec
+ 12/200 Test # 12: unit_core_012 ...........................   Passed    0.03 sec
+ 13/200 Test # 13: unit_net_013 ............................   Passed    0.04 sec
+ 14/200 Test # 14: unit_io_014 .............................   Passed    0.05 sec
+ 15/200 Test # 15: unit_parser_015 .........................   Passed    0.06 sec
+ 16/200 Test # 16: unit_core_016 ...........................   Passed    0.07 sec
+ 17/200 Test # 17: unit_net_017 ............................   Passed    0.08 sec
+ 18/200 Test # 18: unit_io_018 .............................   Passed    0.00 sec
+ 19/200 Test # 19: unit_parser_019 .........................   Passed    0.01 sec
+ 20/200 Test # 20: unit_core_020 ...........................   Passed    0.02 sec
+ 21/200 Test # 21: unit_net_021 ............................   Passed    0.03 sec
+ 22/200 Test # 22: unit_io_022 .............................   Passed    0.04 sec
+ 23/200 Test # 23: unit_parser_023 .........................   Passed    0.05 sec
+ 24/200 Test # 24: unit_core_024 ...........................   Passed    0.06 sec
+ 25/200 Test # 25: unit_net_025 ............................   Passed    0.07 sec
+ 26/200 Test # 26: unit_io_026 .............................   Passed    0.08 sec
+ 27/200 Test # 27: unit_parser_027 .........................   Passed    0.00 sec
+ 28/200 Test # 28: unit_core_028 ...........................   Passed    0.01 sec
+ 29/200 Test # 29: unit_net_029 ............................   Passed    0.02 sec
+ 30/200 Test # 30: unit_io_030 .............................   Passed    0.03 sec
+ 31/200 Test # 31: unit_parser_031 .........................   Passed    0.04 sec
+ 32/200 Test # 32: unit_core_032 ...........................   Passed    0.05 sec
+ 33/200 Test # 33: unit_net_033 ............................   Passed    0.06 sec
+ 34/200 Test # 34: unit_io_034 .............................   Passed    0.07 sec
+ 35/200 Test # 35: unit_parser_035 .........................   Passed    0.08 sec
+ 36/200 Test # 36: unit_core_036 ...........................   Passed    0.00 sec
+ 37/200 Test # 37: unit_net_037 ............................   Passed    0.01 sec
+ 38/200 Test # 38: unit_io_038 .............................   Passed    0.02 sec
+ 39/200 Test # 39: unit_parser_039 .........................   Passed    0.03 sec
+ 40/200 Test # 40: unit_core_040 ...........................   Passed    0.04 sec
+ 41/200 Test # 41: unit_net_041 ............................   Passed    0.05 sec
+ 42/200 Test # 42: unit_io_042 .............................   Passed    0.06 sec
+ 43/200 Test # 43: unit_parser_043 .........................   Passed    0.07 sec
+ 44/200 Test # 44: unit_core_044 ...........................   Passed    0.08 sec
+ 45/200 Test # 45: unit_net_045 ............................   Passed    0.00 sec
+ 46/200 Test # 46: unit_io_046 .............................   Passed    0.01 sec
+ 47/200 Test # 47: unit_parser_047 .........................   Passed    0.02 sec
+ 48/200 Test # 48: unit_core_048 ...........................   Passed    0.03 sec
+ 49/200 Test # 49: unit_net_049 ............................   Passed    0.04 sec
+ 50/200 Test # 50: unit_io_050 .............................   Passed    0.05 sec
+ 51/200 Test # 51: unit_parser_051 .........................   Passed    0.06 sec
+ 52/200 Test # 52: unit_core_052 ...........................   Passed    0.07 sec
+ 53/200 Test # 53: unit_net_053 ............................   Passed    0.08 sec
+ 54/200 Test # 54: unit_io_054 .............................   Passed    0.00 sec
+ 55/200 Test # 55: unit_parser_055 .........................   Passed    0.01 sec
+ 56/200 Test # 56: unit_core_056 ...........................   Passed    0.02 sec
+ 57/200 Test # 57: unit_net_057 ............................   Passed    0.03 sec
+ 58/200 Test # 58: unit_io_058 .............................   Passed    0.04 sec
+ 59/200 Test # 59: unit_parser_059 .........................   Passed    0.05 sec
+ 60/200 Test # 60: unit_core_060 ...........................   Passed    0.06 sec
+ 61/200 Test # 61: unit_net_061 ............................   Passed    0.07 sec
+ 62/200 Test # 62: unit_io_062 .............................   Passed    0.08 sec
+ 63/200 Test # 63: unit_parser_063 .........................   Passed    0.00 sec
+ 64/200 Test # 64: unit_core_064 ...........................   Passed    0.01 sec
+ 65/200 Test # 65: unit_net_065 ............................   Passed    0.02 sec
+ 66/200 Test # 66: unit_io_066 .............................   Passed    0.03 sec
+ 67/200 Test # 67: unit_parser_067 .........................   Passed    0.04 sec
+ 68/200 Test # 68: unit_core_068 ...........................   Passed    0.05 sec
+ 69/200 Test # 69: unit_net_069 ............................   Passed    0.06 sec
+ 70/200 Test # 70: unit_io_070 .............................   Passed    0.07 sec
+ 71/200 Test # 71: unit_parser_071 .........................   Passed    0.08 sec
+ 72/200 Test # 72: unit_core_072 ...........................   Passed    0.00 sec
+ 73/200 Test # 73: unit_net_073 ............................***Failed    0.01 sec
+ 74/200 Test # 74: unit_io_074 .............................   Passed    0.02 sec
+ 75/200 Test # 75: unit_parser_075 .........................   Passed    0.03 sec
+ 76/200 Test # 76: unit_core_076 ...........................   Passed    0.04 sec
+ 77/200 Test # 77: unit_net_077 ............................   Passed    0.05 sec
+ 78/200 Test # 78: unit_io_078 .............................   Passed    0.06 sec
+ 79/200 Test # 79: unit_parser_079 .........................   Passed    0.07 sec
+ 80/200 Test # 80: unit_core_080 ...........................   Passed    0.08 sec
+ 81/200 Test # 81: unit_net_081 ............................   Passed    0.00 sec
+ 82/200 Test # 82: unit_io_082 .............................   Passed    0.01 sec
+ 83/200 Test # 83: unit_parser_083 .........................   Passed    0.02 sec
+ 84/200 Test # 84: unit_core_084 ...........................   Passed    0.03 sec
+ 85/200 Test # 85: unit_net_085 ............................   Passed    0.04 sec
+ 86/200 Test # 86: unit_io_086 .............................   Passed    0.05 sec
+ 87/200 Test # 87: unit_parser_087 .........................   Passed    0.06 sec
+ 88/200 Test # 88: unit_core_088 ...........................   Passed    0.07 sec
+ 89/200 Test # 89: unit_net_089 ............................   Passed    0.08 sec
+ 90/200 Test # 90: unit_io_090 .............................   Passed    0.00 sec
+ 91/200 Test # 91: unit_parser_091 .........................   Passed    0.01 sec
+ 92/200 Test # 92: unit_core_092 ...........................   Passed    0.02 sec
+ 93/200 Test # 93: unit_net_093 ............................   Passed    0.03 sec
+ 94/200 Test # 94: unit_io_094 .............................   Passed    0.04 sec
+ 95/200 Test # 95: unit_parser_095 .........................   Passed    0.05 sec
+ 96/200 Test # 96: unit_core_096 ...........................   Passed    0.06 sec
+ 97/200 Test # 97: unit_net_097 ............................   Passed    0.07 sec
+ 98/200 Test # 98: unit_io_098 .............................   Passed    0.08 sec
+ 99/200 Test # 99: unit_parser_099 .........................   Passed    0.00 sec
+100/200 Test #100: unit_core_100 ...........................   Passed    0.01 sec
+101/200 Test #101: unit_net_101 ............................   Passed    0.02 sec
+102/200 Test #102: unit_io_102 .............................   Passed    0.03 sec
+103/200 Test #103: unit_parser_103 .........................   Passed    0.04 sec
+104/200 Test #104: unit_core_104 ...........................   Passed    0.05 sec
+105/200 Test #105: unit_net_105 ............................   Passed    0.06 sec
+106/200 Test #106: unit_io_106 .............................   Passed    0.07 sec
+107/200 Test #107: unit_parser_107 .........................   Passed    0.08 sec
+108/200 Test #108: unit_core_108 ...........................   Passed    0.00 sec
+109/200 Test #109: unit_net_109 ............................   Passed    0.01 sec
+110/200 Test #110: unit_io_110 .............................   Passed    0.02 sec
+111/200 Test #111: unit_parser_111 .........................   Passed    0.03 sec
+112/200 Test #112: unit_core_112 ...........................   Passed    0.04 sec
+113/200 Test #113: unit_net_113 ............................   Passed    0.05 sec
+114/200 Test #114: unit_io_114 .............................   Passed    0.06 sec
+115/200 Test #115: unit_parser_115 .........................   Passed    0.07 sec
+116/200 Test #116: unit_core_116 ...........................   Passed    0.08 sec
+117/200 Test #117: unit_net_117 ............................   Passed    0.00 sec
+118/200 Test #118: unit_io_118 .............................   Passed    0.01 sec
+119/200 Test #119: unit_parser_119 .........................   Passed    0.02 sec
+120/200 Test #120: unit_core_120 ...........................   Passed    0.03 sec
+121/200 Test #121: unit_net_121 ............................   Passed    0.04 sec
+122/200 Test #122: unit_io_122 .............................   Passed    0.05 sec
+123/200 Test #123: unit_parser_123 .........................   Passed    0.06 sec
+124/200 Test #124: unit_core_124 ...........................   Passed    0.07 sec
+125/200 Test #125: unit_net_125 ............................   Passed    0.08 sec
+126/200 Test #126: unit_io_126 .............................   Passed    0.00 sec
+127/200 Test #127: unit_parser_127 .........................   Passed    0.01 sec
+128/200 Test #128: unit_core_128 ...........................   Passed    0.02 sec
+129/200 Test #129: unit_net_129 ............................   Passed    0.03 sec
+130/200 Test #130: unit_io_130 .............................   Passed    0.04 sec
+131/200 Test #131: unit_parser_131 .........................   Passed    0.05 sec
+132/200 Test #132: unit_core_132 ...........................   Passed    0.06 sec
+133/200 Test #133: unit_net_133 ............................   Passed    0.07 sec
+134/200 Test #134: unit_io_134 .............................   Passed    0.08 sec
+135/200 Test #135: unit_parser_135 .........................   Passed    0.00 sec
+136/200 Test #136: unit_core_136 ...........................   Passed    0.01 sec
+137/200 Test #137: unit_net_137 ............................   Passed    0.02 sec
+138/200 Test #138: unit_io_138 .............................   Passed    0.03 sec
+139/200 Test #139: unit_parser_139 .........................   Passed    0.04 sec
+140/200 Test #140: unit_core_140 ...........................   Passed    0.05 sec
+141/200 Test #141: unit_net_141 ............................   Passed    0.06 sec
+142/200 Test #142: unit_io_142 .............................   Passed    0.07 sec
+143/200 Test #143: unit_parser_143 .........................   Passed    0.08 sec
+144/200 Test #144: unit_core_144 ...........................   Passed    0.00 sec
+145/200 Test #145: unit_net_145 ............................   Passed    0.01 sec
+146/200 Test #146: unit_io_146 .............................   Passed    0.02 sec
+147/200 Test #147: unit_parser_147 .........................   Passed    0.03 sec
+148/200 Test #148: unit_core_148 ...........................   Passed    0.04 sec
+149/200 Test #149: unit_net_149 ............................   Passed    0.05 sec
+150/200 Test #150: unit_io_150 .............................   Passed    0.06 sec
+151/200 Test #151: unit_parser_151 .........................***Failed    0.07 sec
+152/200 Test #152: unit_core_152 ...........................   Passed    0.08 sec
+153/200 Test #153: unit_net_153 ............................   Passed    0.00 sec
+154/200 Test #154: unit_io_154 .............................   Passed    0.01 sec
+155/200 Test #155: unit_parser_155 .........................   Passed    0.02 sec
+156/200 Test #156: unit_core_156 ...........................   Passed    0.03 sec
+157/200 Test #157: unit_net_157 ............................   Passed    0.04 sec
+158/200 Test #158: unit_io_158 .............................   Passed    0.05 sec
+159/200 Test #159: unit_parser_159 .........................   Passed    0.06 sec
+160/200 Test #160: unit_core_160 ...........................   Passed    0.07 sec
+161/200 Test #161: unit_net_161 ............................   Passed    0.08 sec
+162/200 Test #162: unit_io_162 .............................   Passed    0.00 sec
+163/200 Test #163: unit_parser_163 .........................   Passed    0.01 sec
+164/200 Test #164: unit_core_164 ...........................   Passed    0.02 sec
+165/200 Test #165: unit_net_165 ............................   Passed    0.03 sec
+166/200 Test #166: unit_io_166 .............................   Passed    0.04 sec
+167/200 Test #167: unit_parser_167 .........................   Passed    0.05 sec
+168/200 Test #168: unit_core_168 ...........................   Passed    0.06 sec
+169/200 Test #169: unit_net_169 ............................   Passed    0.07 sec
+170/200 Test #170: unit_io_170 .............................   Passed    0.08 sec
+171/200 Test #171: unit_parser_171 .........................   Passed    0.00 sec
+172/200 Test #172: unit_core_172 ...........................   Passed    0.01 sec
+173/200 Test #173: unit_net_173 ............................   Passed    0.02 sec
+174/200 Test #174: unit_io_174 .............................   Passed    0.03 sec
+175/200 Test #175: unit_parser_175 .........................   Passed    0.04 sec
+176/200 Test #176: unit_core_176 ...........................   Passed    0.05 sec
+177/200 Test #177: unit_net_177 ............................   Passed    0.06 sec
+178/200 Test #178: unit_io_178 .............................   Passed    0.07 sec
+179/200 Test #179: unit_parser_179 .........................   Passed    0.08 sec
+180/200 Test #180: unit_core_180 ...........................   Passed    0.00 sec
+181/200 Test #181: unit_net_181 ............................   Passed    0.01 sec
+182/200 Test #182: unit_io_182 .............................   Passed    0.02 sec
+183/200 Test #183: unit_parser_183 .........................   Passed    0.03 sec
+184/200 Test #184: unit_core_184 ...........................   Passed    0.04 sec
+185/200 Test #185: unit_net_185 ............................   Passed    0.05 sec
+186/200 Test #186: unit_io_186 .............................   Passed    0.06 sec
+187/200 Test #187: unit_parser_187 .........................   Passed    0.07 sec
+188/200 Test #188: unit_core_188 ...........................   Passed    0.08 sec
+189/200 Test #189: unit_net_189 ............................   Passed    0.00 sec
+190/200 Test #190: unit_io_190 .............................   Passed    0.01 sec
+191/200 Test #191: unit_parser_191 .........................   Passed    0.02 sec
+192/200 Test #192: unit_core_192 ...........................   Passed    0.03 sec
+193/200 Test #193: unit_net_193 ............................   Passed    0.04 sec
+194/200 Test #194: unit_io_194 .............................   Passed    0.05 sec
+195/200 Test #195: unit_parser_195 .........................   Passed    0.06 sec
+196/200 Test #196: unit_core_196 ...........................   Passed    0.07 sec
+197/200 Test #197: unit_net_197 ............................   Passed    0.08 sec
+198/200 Test #198: unit_io_198 .............................   Passed    0.00 sec
+199/200 Test #199: unit_parser_199 .........................   Passed    0.01 sec
+200/200 Test #200: unit_core_200 ...........................   Passed    0.02 sec
+
+99% tests passed, 2 tests failed out of 200
+
+Total Test time (real) =   3.41 sec
+
+The following tests FAILED:
+	 73 - unit_net_073 (Failed)
+	151 - unit_io_151 (Failed)
+Errors while running CTest
+Output from these tests are in: /home/user/proj/build/Testing/Temporary/LastTest.log
+Use "--rerun-failed --output-on-failure" to re-run the failed cases verbosely.

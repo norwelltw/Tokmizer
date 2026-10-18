@@ -1,0 +1,13 @@
+[filters.df]
+description = "Compact df output"
+match_command = "^df(\\s|$)"
+priority = 60
+truncate_lines_at = 120
+max_lines = 1000
+
+[filters.du]
+description = "Compact du output"
+match_command = "^du(\\s|$)"
+priority = 60
+truncate_lines_at = 160
+max_lines = 1000

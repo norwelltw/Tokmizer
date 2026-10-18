@@ -1,0 +1,8 @@
+[filters.xargs]
+description = "Cap large xargs output"
+match_command = "^xargs(\\s|$)"
+priority = 40
+strip_ansi = true
+truncate_lines_at = 500
+max_lines = 300
+on_empty = "xargs: no output"

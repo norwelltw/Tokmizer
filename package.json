@@ -1,0 +1,22 @@
+{
+  "name": "tokmizer",
+  "private": true,
+  "license": "Apache-2.0 AND BUSL-1.1",
+  "workspaces": [
+    "packages/plugin"
+  ],
+  "engines": {
+    "node": ">=20.11"
+  },
+  "scripts": {
+    "build": "npm --workspace packages/plugin run build",
+    "lint": "npm --workspace packages/plugin run lint",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "tsx": "^4.16.5",
+    "typescript": "^5.5.4",
+    "vitest": "^4.1.8"
+  }
+}

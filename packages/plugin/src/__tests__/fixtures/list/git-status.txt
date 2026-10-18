@@ -1,0 +1,297 @@
+On branch feat/auto-update
+Your branch is up to date with 'origin/feat/auto-update'.
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   .claude/scheduled_tasks.lock
+	modified:   .github/workflows/ci.yml
+	modified:   .github/workflows/publish-plugin.yml
+	modified:   app/.gitignore
+	modified:   app/messages/de.json
+	modified:   app/messages/en.json
+	modified:   app/messages/es.json
+	modified:   app/messages/fr.json
+	modified:   app/messages/pt.json
+	modified:   app/next.config.ts
+	modified:   app/package.json
+	modified:   app/public/plugin/marketplace.json
+	modified:   app/scripts/audit-site.mjs
+	deleted:    app/src/app/[locale]/(marketing)/changelog/page.tsx
+	modified:   app/src/app/[locale]/(marketing)/compare/context-mode/page.tsx
+	modified:   app/src/app/[locale]/(marketing)/compare/headroom/page.tsx
+	modified:   app/src/app/[locale]/(marketing)/compare/page.tsx
+	modified:   app/src/app/[locale]/(marketing)/compare/rtk/page.tsx
+	modified:   app/src/app/[locale]/(marketing)/docs/page.tsx
+	modified:   app/src/app/[locale]/(marketing)/dpa/page.tsx
+	modified:   app/src/app/[locale]/(marketing)/eula/page.tsx
+	modified:   app/src/app/[locale]/(marketing)/page.tsx
+	modified:   app/src/app/[locale]/(marketing)/privacy/page.tsx
+	modified:   app/src/app/[locale]/(marketing)/terms/page.tsx
+	modified:   app/src/app/[locale]/admin/ClearBacklogButton.tsx
+	deleted:    app/src/app/[locale]/admin/accounts/ManageModal.tsx
+	modified:   app/src/app/[locale]/admin/accounts/[id]/page.tsx
+	modified:   app/src/app/[locale]/admin/accounts/actions.ts
+	modified:   app/src/app/[locale]/admin/accounts/page.tsx
+	deleted:    app/src/app/[locale]/admin/grants/GrantManager.tsx
+	deleted:    app/src/app/[locale]/admin/grants/actions.ts
+	modified:   app/src/app/[locale]/admin/grants/page.tsx
+	modified:   app/src/app/[locale]/admin/page.tsx
+	modified:   app/src/app/[locale]/dashboard/_lib/actions.ts
+	modified:   app/src/app/[locale]/dashboard/actions.ts
+	modified:   app/src/app/[locale]/dashboard/claim/page.tsx
+	modified:   app/src/app/[locale]/dashboard/devices/page.tsx
+	modified:   app/src/app/[locale]/dashboard/docs/page.tsx
+	modified:   app/src/app/[locale]/dashboard/error.tsx
+	modified:   app/src/app/[locale]/dashboard/filters/page.tsx
+	modified:   app/src/app/[locale]/dashboard/layout.tsx
+	modified:   app/src/app/[locale]/dashboard/loading.tsx
+	modified:   app/src/app/[locale]/dashboard/page.tsx
+	modified:   app/src/app/[locale]/dashboard/privacy/page.tsx
+	modified:   app/src/app/[locale]/dashboard/sessions/page.tsx
+	modified:   app/src/app/[locale]/dashboard/suggestions/page.tsx
+	modified:   app/src/app/[locale]/dashboard/token/page.tsx
+	modified:   app/src/app/api/v1/_lib/plugin-auth.ts
+	modified:   app/src/app/api/v1/admin/backlog-reset/route.ts
+	modified:   app/src/app/api/v1/admin/grants/route.ts
+	modified:   app/src/app/api/v1/learn/route.ts
+	modified:   app/src/app/api/v1/license/activate/route.ts
+	modified:   app/src/app/api/v1/license/enroll/route.ts
+	modified:   app/src/app/globals.css
+	modified:   app/src/app/robots.ts
+	modified:   app/src/app/sitemap.ts
+	modified:   app/src/components/Faq.tsx
+	modified:   app/src/components/Footer.tsx
+	modified:   app/src/components/InstallPicker.tsx
+	modified:   app/src/components/LangSwitch.tsx
+	modified:   app/src/components/Scrollytelling.tsx
+	modified:   app/src/components/TokenCounts.tsx
+	deleted:    app/src/components/admin/AccountsChart.tsx
+	modified:   app/src/components/dashboard/CopyButton.tsx
+	modified:   app/src/components/dashboard/DashNav.tsx
+	modified:   app/src/components/dashboard/FilterBuilder.tsx
+	deleted:    app/src/components/dashboard/HoverChart.tsx
+	deleted:    app/src/components/dashboard/RangeToggle.tsx
+	modified:   app/src/components/docs/DocsBlock.tsx
+	modified:   app/src/components/docs/DocsSections.tsx
+	modified:   app/src/content/demo-commands.json
+	modified:   app/src/content/docs/de.ts
+	modified:   app/src/content/docs/en.ts
+	modified:   app/src/content/docs/es.ts
+	modified:   app/src/content/docs/fr.ts
+	modified:   app/src/content/docs/pt.ts
+	modified:   app/src/i18n/routing.ts
+	modified:   app/src/lib/accounts-series.ts
+	modified:   app/src/lib/admin-accounts-stats.ts
+	modified:   app/src/lib/admin-funnel.ts
+	deleted:    app/src/lib/admin-grant.ts
+	modified:   app/src/lib/auth.ts
+	modified:   app/src/lib/page-metadata.ts
+	modified:   app/src/lib/settings.ts
+	modified:   app/src/lib/telemetry-force.ts
+	modified:   app/src/proxy.ts
+	modified:   app/tests/api/activate-device-cap.test.ts
+	modified:   app/tests/api/activate-lifetime-cap.test.ts
+	modified:   app/tests/api/admin-backlog-reset.test.ts
+	deleted:    app/tests/api/admin-grant-surfaces.test.ts
+	modified:   app/tests/api/admin-grants.test.ts
+	modified:   app/tests/api/allowed-filters-customs.test.ts
+	modified:   app/tests/api/dashboard-action-rate-limits.test.ts
+	modified:   app/tests/api/learn-at.test.ts
+	modified:   app/tests/api/license-enroll.test.ts
+	modified:   app/tests/api/plugin-auth-device-blacklist.test.ts
+	modified:   app/tests/api/plugin-auth-hmac.test.ts
+	modified:   app/tests/api/plugin-auth-replay.test.ts
+	modified:   app/tests/lib/accounts-series.test.ts
+	modified:   app/tests/lib/admin-accounts-stats.test.ts
+	modified:   app/tests/lib/admin-funnel.test.ts
+	deleted:    app/tests/lib/admin-grant.test.ts
+	modified:   app/tests/lib/static-command-bundles.test.ts
+	modified:   app/tests/lib/telemetry-force.test.ts
+	modified:   app/tsconfig.json
+	modified:   engine/build.rs
+	modified:   engine/src/stages/build_tools.rs
+	modified:   package-lock.json
+	modified:   package.json
+	modified:   packages/plugin/.claude-plugin/plugin.json
+	deleted:    packages/plugin/CHANGELOG.md
+	modified:   packages/plugin/README.md
+	modified:   packages/plugin/codex-plugin/plugin.json
+	modified:   packages/plugin/command-templates/tkr-compression.md
+	modified:   packages/plugin/command-templates/tkr-gain.md
+	modified:   packages/plugin/command-templates/tkr.md
+	modified:   packages/plugin/filters/tsc.toml
+	modified:   packages/plugin/homebrew/tokmizer.rb
+	deleted:    packages/plugin/hooks/migrate-owner.mjs
+	modified:   packages/plugin/hooks/on-session-start.mjs
+	modified:   packages/plugin/package.json
+	modified:   packages/plugin/scripts/README-INSTALL.md
+	modified:   packages/plugin/scripts/bundle.mjs
+	modified:   packages/plugin/scripts/check-dist-clean.mjs
+	modified:   packages/plugin/scripts/gen-demo-data.ts
+	modified:   packages/plugin/scripts/install-mac-linux.sh
+	modified:   packages/plugin/scripts/install-windows.ps1
+	modified:   packages/plugin/src/__tests__/codex-adapter.test.ts
+	modified:   packages/plugin/src/__tests__/commands-cache.test.ts
+	modified:   packages/plugin/src/__tests__/daemon-idle-shutdown.test.ts
+	modified:   packages/plugin/src/__tests__/daemon-lifecycle.test.ts
+	modified:   packages/plugin/src/__tests__/debug-detect.test.ts
+	modified:   packages/plugin/src/__tests__/exec-wrapper.test.ts
+	modified:   packages/plugin/src/__tests__/hook-rewrite.test.ts
+	modified:   packages/plugin/src/__tests__/license-heartbeat.test.ts
+	deleted:    packages/plugin/src/__tests__/migrate-owner.test.ts
+	modified:   packages/plugin/src/__tests__/post-tool-use.test.ts
+	modified:   packages/plugin/src/__tests__/process-output.test.ts
+	modified:   packages/plugin/src/__tests__/prompt-compress.test.ts
+	modified:   packages/plugin/src/__tests__/read-fold-integration.test.ts
+	modified:   packages/plugin/src/__tests__/recorder-hash.test.ts
+	modified:   packages/plugin/src/__tests__/settings-cache.test.ts
+	modified:   packages/plugin/src/__tests__/shim-install.test.ts
+	modified:   packages/plugin/src/__tests__/shim-runner.test.ts
+	modified:   packages/plugin/src/__tests__/smart-grep.test.ts
+	modified:   packages/plugin/src/__tests__/smart-log.test.ts
+	modified:   packages/plugin/src/__tests__/spool-upload.test.ts
+	modified:   packages/plugin/src/__tests__/state.test.ts
+	modified:   packages/plugin/src/__tests__/stats.test.ts
+	modified:   packages/plugin/src/adapters/codex.ts
+	modified:   packages/plugin/src/bin/tkr-daemon.ts
+	modified:   packages/plugin/src/bin/tkr-exec.ts
+	modified:   packages/plugin/src/bin/tkr.ts
+	modified:   packages/plugin/src/brew.ts
+	modified:   packages/plugin/src/cache.ts
+	modified:   packages/plugin/src/configure.ts
+	modified:   packages/plugin/src/content-cache.ts
+	modified:   packages/plugin/src/daemon/client.ts
+	modified:   packages/plugin/src/daemon/lifecycle.ts
+	modified:   packages/plugin/src/daemon/runtime.ts
+	modified:   packages/plugin/src/daemon/server.ts
+	modified:   packages/plugin/src/engine/debug-detect.ts
+	modified:   packages/plugin/src/engine/index.ts
+	modified:   packages/plugin/src/engine/matcher.ts
+	modified:   packages/plugin/src/engine/pipeline.ts
+	modified:   packages/plugin/src/engine/transforms/prompt-compress.ts
+	modified:   packages/plugin/src/engine/transforms/smart-code.ts
+	modified:   packages/plugin/src/engine/transforms/smart-grep.ts
+	modified:   packages/plugin/src/engine/transforms/smart-log.ts
+	modified:   packages/plugin/src/engine/transforms/truncate-lines.ts
+	modified:   packages/plugin/src/exec/wrapper.ts
+	modified:   packages/plugin/src/hooks-host/post-tool-use.ts
+	modified:   packages/plugin/src/hooks-host/pre-tool-rewrite.ts
+	modified:   packages/plugin/src/learn/recorder.ts
+	modified:   packages/plugin/src/learn/spool.ts
+	modified:   packages/plugin/src/license.ts
+	modified:   packages/plugin/src/settings-cache.ts
+	modified:   packages/plugin/src/settings-client.ts
+	modified:   packages/plugin/src/shim/install.ts
+	modified:   packages/plugin/src/shim/runner.ts
+	modified:   packages/plugin/src/state.ts
+	modified:   packages/plugin/src/stats.ts
+	modified:   packages/shared/src/__tests__/contracts-learn-settings.test.ts
+	modified:   packages/shared/src/api-contracts.ts
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	.claude/settings.local.json
+	.github/workflows/native-artifacts.yml
+	AGENTS.md
+	app/public/benchmarks/
+	app/src/app/[locale]/(marketing)/blog/
+	app/src/app/[locale]/admin/accounts/[id]/not-found.tsx
+	app/src/app/[locale]/admin/error.tsx
+	app/src/app/[locale]/admin/layout.tsx
+	app/src/components/ComparisonBenchmarks.tsx
+	app/src/components/CompetitorComparison.tsx
+	app/src/components/admin/AccountManagement.tsx
+	app/src/components/admin/AdminInsights.tsx
+	app/src/components/admin/AdminUi.tsx
+	app/src/components/dashboard/ActionForm.tsx
+	app/src/components/dashboard/AnalyticsChart.tsx
+	app/src/components/dashboard/DashboardShell.tsx
+	app/src/components/dashboard/OverviewAnalytics.tsx
+	app/src/components/dashboard/SessionHistory.tsx
+	app/src/components/dashboard/SubmitButton.tsx
+	app/src/components/dashboard/analytics-chart.css
+	app/src/components/dashboard/analytics-overview.css
+	app/src/content/blog.ts
+	app/src/content/competitor-comparisons.json
+	app/src/lib/admin-overview-data.ts
+	app/src/lib/analytics-data.ts
+	app/src/lib/analytics.ts
+	app/src/lib/comparisons.ts
+	app/src/lib/serializable.ts
+	app/tests/api/admin-account-actions.test.ts
+	app/tests/api/dashboard-settings-actions.test.ts
+	app/tests/api/license-concurrency.test.ts
+	app/tests/lib/analytics-data.test.ts
+	app/tests/lib/analytics.test.ts
+	app/tests/lib/auth-session-identity.test.ts
+	app/tests/lib/page-metadata.test.ts
+	app/tests/lib/serializable.test.ts
+	app/tests/lib/settings-preference.test.ts
+	app/tests/seo-routing.test.ts
+	docs/marketing/
+	docs/releases/
+	docs/solutions/2026-10-08-installation-security-audit.md
+	docs/solutions/2026-10-09-compression-modes.md
+	docs/solutions/2026-10-09-dashboard-analytics.md
+	docs/solutions/2026-10-09-dashboard-redesign.md
+	docs/solutions/2026-10-09-engine-quality-audit.md
+	docs/solutions/2026-10-09-gain-measurement.md
+	docs/solutions/2026-10-09-mode-separation.md
+	docs/solutions/2026-10-09-seo-audit.md
+	docs/solutions/2026-10-09-yolo-mode.md
+	docs/solutions/2026-10-10-homepage-mode-selector.md
+	docs/solutions/2026-10-11-targeted-reads-and-max-logs.md
+	docs/solutions/2026-10-12-daemon-disconnect-latency.md
+	docs/solutions/2026-10-12-engine-transparency.md
+	docs/solutions/2026-10-12-engine-weakness-reduction.md
+	docs/superpowers/plans/2026-10-09-dashboard-analytics.md
+	docs/superpowers/plans/2026-10-09-dashboard-redesign.md
+	docs/superpowers/specs/2026-10-12-persistent-cli-design.md
+	packages/plugin/command-templates/tkr-yolo.md
+	packages/plugin/native/
+	packages/plugin/scripts/benchmark-quality.ts
+	packages/plugin/scripts/build-native.mjs
+	packages/plugin/scripts/check-native-artifacts.mjs
+	packages/plugin/scripts/install-native.mjs
+	packages/plugin/scripts/native-artifacts.mjs
+	packages/plugin/src/__tests__/captured-output.test.ts
+	packages/plugin/src/__tests__/cli.test.ts
+	packages/plugin/src/__tests__/compact-structured.test.ts
+	packages/plugin/src/__tests__/daemon-client-lifecycle.test.ts
+	packages/plugin/src/__tests__/engine-quality.test.ts
+	packages/plugin/src/__tests__/engine-resolver-isolation.test.ts
+	packages/plugin/src/__tests__/exec-timeout-process.test.ts
+	packages/plugin/src/__tests__/gain-cli.test.ts
+	packages/plugin/src/__tests__/gain-measurement.test.ts
+	packages/plugin/src/__tests__/installer.test.ts
+	packages/plugin/src/__tests__/matcher-isolation.test.ts
+	packages/plugin/src/__tests__/modes-gating.test.ts
+	packages/plugin/src/__tests__/modes-quality.test.ts
+	packages/plugin/src/__tests__/native-hook-entry.test.ts
+	packages/plugin/src/__tests__/native-hook.test.ts
+	packages/plugin/src/__tests__/native-install.test.ts
+	packages/plugin/src/__tests__/native-launcher.test.ts
+	packages/plugin/src/__tests__/processing-hook.test.ts
+	packages/plugin/src/__tests__/processing-protocol.test.ts
+	packages/plugin/src/__tests__/processing-server.test.ts
+	packages/plugin/src/__tests__/pytest-presentation.test.ts
+	packages/plugin/src/__tests__/repeated-diagnostics.test.ts
+	packages/plugin/src/__tests__/runtime-allowlist.test.ts
+	packages/plugin/src/__tests__/settings-local.test.ts
+	packages/plugin/src/__tests__/targeted-read.test.ts
+	packages/plugin/src/__tests__/tsc-output.test.ts
+	packages/plugin/src/__tests__/windows-shim.test.ts
+	packages/plugin/src/__tests__/yolo-cli.test.ts
+	packages/plugin/src/__tests__/yolo-delivery.test.ts
+	packages/plugin/src/__tests__/yolo-engine.test.ts
+	packages/plugin/src/__tests__/yolo-mode.test.ts
+	packages/plugin/src/engine/compact-structured.ts
+	packages/plugin/src/engine/repeated-diagnostics.ts
+	packages/plugin/src/engine/yolo.ts
+	packages/plugin/src/exec/processing-endpoint.ts
+	packages/plugin/src/exec/processing-protocol.ts
+	packages/plugin/src/exec/processing-server.ts
+	packages/plugin/src/yolo-mode.ts
+
+no changes added to commit (use "git add" and/or "git commit -a")

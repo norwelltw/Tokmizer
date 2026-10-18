@@ -1,0 +1,163 @@
+ 0/12 [░░░░░░░░░░░░░░░░░░░░░░░░░░░░]   0%
+12/12 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 100%
+
+ ------ ----------------------------------------------------------------------
+  Line   app/Models/User.php
+ ------ ----------------------------------------------------------------------
+  15     Property User::$id (int) does not accept null.
+         🪪  property.nonObject
+         💡 Use ?int if null is a valid value.
+  18     Property User::$email (string) does not accept null.
+         🪪  property.nonObject
+  45     Method User::find() has no return type specified.
+         🪪  missingType.return
+         💡 Add @return type annotation or declare the return type.
+  67     Call to an undefined method Illuminate\Database\Eloquent\Model::unknownMethod().
+         🪪  method.notFound
+  89     Parameter #1 $id of method User::find() expects int, string given.
+         🪪  argument.type
+  120    Dead catch - Exception is never thrown in the try block.
+         🪪  deadCode.catch
+ ------ ----------------------------------------------------------------------
+
+ ------ ----------------------------------------------------------------------
+  Line   app/Http/Controllers/UserController.php
+ ------ ----------------------------------------------------------------------
+  34     Parameter $request of method UserController::store() has no type specified.
+         🪪  missingType.parameter
+  56     Variable $user might not be defined.
+         🪪  variable.undefined
+  78     Binary operation '+' between string and int results in an error.
+         🪪  binaryOp.invalid
+  95     Unreachable statement - code above always terminates.
+         🪪  deadCode.unreachable
+  112    Result of method UserRepository::create() (void) is used.
+         🪪  return.void
+ ------ ----------------------------------------------------------------------
+
+ ------ ----------------------------------------------------------------------
+  Line   app/Services/AuthService.php
+ ------ ----------------------------------------------------------------------
+  23     Method AuthService::login() should return User but returns User|null.
+         🪪  return.type
+  45     Comparison operation '>' between int<0, max> and 0 is always true.
+         🪪  comparison.alwaysTrue
+  67     Parameter #2 $password of function password_verify expects string, int given.
+         🪪  argument.type
+  89     Property AuthService::$logger is never read, only written.
+         🪪  deadCode.property
+ ------ ----------------------------------------------------------------------
+
+ ------ ----------------------------------------------------------------------
+  Line   app/Repositories/UserRepository.php
+ ------ ----------------------------------------------------------------------
+  28     Access to an undefined property User::$unknownField.
+         🪪  property.notFound
+  52     Method UserRepository::all() should return Collection<User> but returns Collection.
+         🪪  return.type
+         💡 Specify the collection type parameter.
+  78     Instanceof between User and stdClass will always evaluate to false.
+         🪪  instanceof.alwaysFalse
+ ------ ----------------------------------------------------------------------
+
+ ------ ----------------------------------------------------------------------
+  Line   app/Http/Middleware/Authenticate.php
+ ------ ----------------------------------------------------------------------
+  19     Method Authenticate::handle() has parameter $next with no type specified.
+         🪪  missingType.parameter
+  34     Negated boolean expression is always false.
+         🪪  booleanNot.alwaysFalse
+ ------ ----------------------------------------------------------------------
+
+ ------ ----------------------------------------------------------------------
+  Line   app/Console/Commands/SyncUsers.php
+ ------ ----------------------------------------------------------------------
+  22     Method SyncUsers::handle() has no return type specified.
+         🪪  missingType.return
+  45     Variable $users might not be defined.
+         🪪  variable.undefined
+  67     Call to function array_map() with Closure and array|null will result in an error.
+         🪪  argument.type
+ ------ ----------------------------------------------------------------------
+
+ ------ ----------------------------------------------------------------------
+  Line   app/Events/UserRegistered.php
+ ------ ----------------------------------------------------------------------
+  12     Property UserRegistered::$user has no type specified.
+         🪪  missingType.property
+  30     Call to an undefined method Illuminate\Events\Dispatcher::dispatch().
+         🪪  method.notFound
+ ------ ----------------------------------------------------------------------
+
+ ------ ----------------------------------------------------------------------
+  Line   app/Listeners/SendWelcomeEmail.php
+ ------ ----------------------------------------------------------------------
+  18     Parameter $event of method SendWelcomeEmail::handle() has no type specified.
+         🪪  missingType.parameter
+  35     Variable $mailer might not be defined.
+         🪪  variable.undefined
+ ------ ----------------------------------------------------------------------
+
+ ------ ----------------------------------------------------------------------
+  Line   app/Policies/UserPolicy.php
+ ------ ----------------------------------------------------------------------
+  25     Method UserPolicy::view() has no return type specified.
+         🪪  missingType.return
+  35     Method UserPolicy::create() has no return type specified.
+         🪪  missingType.return
+  45     Method UserPolicy::update() has no return type specified.
+         🪪  missingType.return
+ ------ ----------------------------------------------------------------------
+
+ ------ ----------------------------------------------------------------------
+  Line   app/Observers/UserObserver.php
+ ------ ----------------------------------------------------------------------
+  14     Method UserObserver::created() has parameter $user with no type specified.
+         🪪  missingType.parameter
+  24     Method UserObserver::deleted() has parameter $user with no type specified.
+         🪪  missingType.parameter
+ ------ ----------------------------------------------------------------------
+
+ ------ ----------------------------------------------------------------------
+  Line   app/Providers/AuthServiceProvider.php
+ ------ ----------------------------------------------------------------------
+  30     Method AuthServiceProvider::boot() has no return type specified.
+         🪪  missingType.return
+  45     Variable $gate might not be defined.
+         🪪  variable.undefined
+ ------ ----------------------------------------------------------------------
+
+ ------ ----------------------------------------------------------------------
+  Line   app/Jobs/ProcessPayment.php
+ ------ ----------------------------------------------------------------------
+  35     Method ProcessPayment::handle() has no return type specified.
+         🪪  missingType.return
+  18     Property ProcessPayment::$amount has no type specified.
+         🪪  missingType.property
+  58     Variable $payment might not be defined.
+         🪪  variable.undefined
+  72     Call to an undefined method PaymentGateway::charge().
+         🪪  method.notFound
+ ------ ----------------------------------------------------------------------
+
+ ------ ----------------------------------------------------------------------
+  Line   app/Mail/WelcomeEmail.php
+ ------ ----------------------------------------------------------------------
+  28     Method WelcomeEmail::build() has no return type specified.
+         🪪  missingType.return
+  15     Property WelcomeEmail::$user has no type specified.
+         🪪  missingType.property
+ ------ ----------------------------------------------------------------------
+
+ ------ ----------------------------------------------------------------------
+  Line   app/Http/Requests/StoreUserRequest.php
+ ------ ----------------------------------------------------------------------
+  18     Method StoreUserRequest::rules() has no return type specified.
+         🪪  missingType.return
+  12     Method StoreUserRequest::authorize() has no return type specified.
+         🪪  missingType.return
+  32     Strict comparison using === between string and int will always evaluate to false.
+         🪪  comparison.strict
+ ------ ----------------------------------------------------------------------
+
+ [ERROR] Found 47 errors

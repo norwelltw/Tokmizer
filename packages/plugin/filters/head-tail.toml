@@ -1,0 +1,11 @@
+[filters.head]
+description = "Cap large head output"
+match_command = "^head(\\s|$)"
+priority = 50
+max_lines = 200
+
+[filters.tail]
+description = "Cap large tail output"
+match_command = "^tail(\\s|$)"
+priority = 50
+max_lines = 200

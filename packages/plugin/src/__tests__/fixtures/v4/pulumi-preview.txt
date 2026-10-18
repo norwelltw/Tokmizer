@@ -1,0 +1,93 @@
+Previewing update (dev)
+
+View in Browser (Ctrl+O): https://app.pulumi.com/acme/infra/dev/previews/3f1c2a9e
+
+     Type                                 Name                         Plan       
+ +   pulumi:pulumi:Stack                  infra-dev                    create     
+ +   ├─ aws:ec2:SecurityGroup                svc-00-securitygroup         create     
+ +   ├─ aws:s3:Bucket                        svc-01-bucket                create     
+ +   ├─ aws:iam:Role                         svc-02-role                  create     
+ +   ├─ aws:lambda:Function                  svc-03-function              create     
+ +   ├─ aws:ec2:Instance                     svc-04-instance              create     
+ +   ├─ aws:rds:Instance                     svc-05-instance              create     
+ +   ├─ kubernetes:apps/v1:Deployment        svc-06-deployment            create     
+ +   ├─ kubernetes:core/v1:Service           svc-07-service               create     
+ +   ├─ aws:ec2:SecurityGroup                svc-08-securitygroup         create     
+ +   ├─ aws:s3:Bucket                        svc-09-bucket                create     
+ +   ├─ aws:iam:Role                         svc-10-role                  create     
+ +   ├─ aws:lambda:Function                  svc-11-function              create     
+ +   ├─ aws:ec2:Instance                     svc-12-instance              create     
+ +   ├─ aws:rds:Instance                     svc-13-instance              create     
+ +   ├─ kubernetes:apps/v1:Deployment        svc-14-deployment            create     
+ +   ├─ kubernetes:core/v1:Service           svc-15-service               create     
+ +   ├─ aws:ec2:SecurityGroup                svc-16-securitygroup         create     
+ +   ├─ aws:s3:Bucket                        svc-17-bucket                create     
+ +   ├─ aws:iam:Role                         svc-18-role                  create     
+ +   ├─ aws:lambda:Function                  svc-19-function              create     
+ +   ├─ aws:ec2:Instance                     svc-20-instance              create     
+ +   ├─ aws:rds:Instance                     svc-21-instance              create     
+ +   ├─ kubernetes:apps/v1:Deployment        svc-22-deployment            create     
+ +   ├─ kubernetes:core/v1:Service           svc-23-service               create     
+ +   ├─ aws:ec2:SecurityGroup                svc-24-securitygroup         create     
+ +   ├─ aws:s3:Bucket                        svc-25-bucket                create     
+ +   ├─ aws:iam:Role                         svc-26-role                  create     
+ +   ├─ aws:lambda:Function                  svc-27-function              create     
+ +   ├─ aws:ec2:Instance                     svc-28-instance              create     
+ +   ├─ aws:rds:Instance                     svc-29-instance              create     
+ +   ├─ kubernetes:apps/v1:Deployment        svc-30-deployment            create     
+ +   ├─ kubernetes:core/v1:Service           svc-31-service               create     
+ +   ├─ aws:ec2:SecurityGroup                svc-32-securitygroup         create     
+ +   ├─ aws:s3:Bucket                        svc-33-bucket                create     
+ +   ├─ aws:iam:Role                         svc-34-role                  create     
+ +   ├─ aws:lambda:Function                  svc-35-function              create     
+ +   ├─ aws:ec2:Instance                     svc-36-instance              create     
+ +   ├─ aws:rds:Instance                     svc-37-instance              create     
+ +   ├─ kubernetes:apps/v1:Deployment        svc-38-deployment            create     
+ +   ├─ kubernetes:core/v1:Service           svc-39-service               create     
+ +   ├─ aws:ec2:SecurityGroup                svc-40-securitygroup         create     
+ +   ├─ aws:s3:Bucket                        svc-41-bucket                create     
+ +   ├─ aws:iam:Role                         svc-42-role                  create     
+ +   ├─ aws:lambda:Function                  svc-43-function              create     
+ +   ├─ aws:ec2:Instance                     svc-44-instance              create     
+ +   ├─ aws:rds:Instance                     svc-45-instance              create     
+ +   ├─ kubernetes:apps/v1:Deployment        svc-46-deployment            create     
+ +   ├─ kubernetes:core/v1:Service           svc-47-service               create     
+ +   ├─ aws:ec2:SecurityGroup                svc-48-securitygroup         create     
+ +   ├─ aws:s3:Bucket                        svc-49-bucket                create     
+ +   ├─ aws:iam:Role                         svc-50-role                  create     
+ +   ├─ aws:lambda:Function                  svc-51-function              create     
+ +   ├─ aws:ec2:Instance                     svc-52-instance              create     
+ +   ├─ aws:rds:Instance                     svc-53-instance              create     
+ +   ├─ kubernetes:apps/v1:Deployment        svc-54-deployment            create     
+ +   ├─ kubernetes:core/v1:Service           svc-55-service               create     
+ +   ├─ aws:ec2:SecurityGroup                svc-56-securitygroup         create     
+ +   ├─ aws:s3:Bucket                        svc-57-bucket                create     
+ +   ├─ aws:iam:Role                         svc-58-role                  create     
+ +   ├─ aws:lambda:Function                  svc-59-function              create     
+ +   ├─ aws:ec2:Instance                     svc-60-instance              create     
+ +   ├─ aws:rds:Instance                     svc-61-instance              create     
+ +   ├─ kubernetes:apps/v1:Deployment        svc-62-deployment            create     
+ +   ├─ kubernetes:core/v1:Service           svc-63-service               create     
+ +   ├─ aws:ec2:SecurityGroup                svc-64-securitygroup         create     
+ +   ├─ aws:s3:Bucket                        svc-65-bucket                create     
+ +   ├─ aws:iam:Role                         svc-66-role                  create     
+ +   ├─ aws:lambda:Function                  svc-67-function              create     
+ +   ├─ aws:ec2:Instance                     svc-68-instance              create     
+ +   ├─ aws:rds:Instance                     svc-69-instance              create     
+ +   ├─ kubernetes:apps/v1:Deployment        svc-70-deployment            create     
+ +   ├─ kubernetes:core/v1:Service           svc-71-service               create     
+ +   ├─ aws:ec2:SecurityGroup                svc-72-securitygroup         create     
+ +   ├─ aws:s3:Bucket                        svc-73-bucket                create     
+ +   ├─ aws:iam:Role                         svc-74-role                  create     
+ +   ├─ aws:lambda:Function                  svc-75-function              create     
+ +   ├─ aws:ec2:Instance                     svc-76-instance              create     
+ +   ├─ aws:rds:Instance                     svc-77-instance              create     
+ +   ├─ kubernetes:apps/v1:Deployment        svc-78-deployment            create     
+ +   ├─ kubernetes:core/v1:Service           svc-79-service               create     
+
+Outputs:
+    bucketName: "svc-01-bucket-7c1e2f"
+    endpoint  : output<string>
+
+Resources:
+    + 81 to create

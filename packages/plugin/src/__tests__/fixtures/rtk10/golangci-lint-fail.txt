@@ -1,0 +1,13 @@
+internal/cart/cart.go:42:2: ineffectual assignment to err (ineffassign)
+	err = c.store.Save(ctx, cart)
+	^
+internal/cart/cart.go:57:15: Error return value of `c.cache.Delete` is not checked (errcheck)
+	c.cache.Delete(key)
+	             ^
+internal/http/server.go:88:6: func `legacyHandler` is unused (unused)
+func legacyHandler(w http.ResponseWriter, r *http.Request) {
+     ^
+3 issues:
+* errcheck: 1
+* ineffassign: 1
+* unused: 1

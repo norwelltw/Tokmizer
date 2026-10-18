@@ -1,0 +1,24 @@
+◉  feat/checkout-coupons (current)
+│  3 hours ago
+│
+│  PR #412 (Draft) feat(checkout): apply coupons at payment step
+│  https://app.graphite.dev/github/pr/acme/shop/412
+│  Last submitted version: v3 (local changes, need submit)
+│
+│  e41c2a7 - feat(checkout): apply coupons at payment step
+│  9b03d11 - test(checkout): cover expired coupons
+│
+◯  feat/coupon-model
+│  1 day ago
+│
+│  PR #409 (Open) feat(coupons): coupon model and migrations
+│  https://app.graphite.dev/github/pr/acme/shop/409
+│  Last submitted version: v2
+│
+│  1f77e30 - feat(coupons): coupon model and migrations
+│
+◯  main
+│  2 days ago
+│
+│  7c5ad90 - Merge pull request #405 from acme/fix/tax-rounding
+│

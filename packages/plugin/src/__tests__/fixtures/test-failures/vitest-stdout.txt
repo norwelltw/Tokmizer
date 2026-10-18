@@ -1,0 +1,19 @@
+
+ RUN  v4.1.11 /home/dev/app
+
+ ❯ src/math.test.ts (15 tests | 9 failed) 6ms
+     × adds 6 2ms
+     × adds 7 0ms
+     × adds 8 0ms
+     × adds 9 0ms
+     × adds 10 0ms
+     × adds 11 0ms
+     × builds admin 1ms
+     × is active 0ms
+     × throws 0ms
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  9 failed | 26 passed (35)
+   Start at  20:08:46
+   Duration  111ms (transform 22ms, setup 0ms, import 33ms, tests 8ms, environment 0ms)
+

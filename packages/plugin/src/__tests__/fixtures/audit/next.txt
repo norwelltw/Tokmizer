@@ -1,0 +1,1344 @@
+ [34m▲ Next.js 15.0.0[0m
+
+   Creating an optimized production build ...
+ [32m✓[0m Compiled successfully in 26.88s
+
+Route (app)                                Size     First Load JS
+┌ ○ /docs/536a0e                             43.79 kB  90.30 kB
+┌ ○ /auth/0256e1                             32.22 kB  63.84 kB
+
+┌ ○ /settings/ae430a                         11.69 kB  38.59 kB
+├ ○ /api/0f9cca47                        2.97 kB         0.02 kB
+┌ ○ /auth/c36190                             19.75 kB  123.56 kB
+┌ ○ /blog/75ce68                             30.60 kB  131.41 kB
+
+┌ ○ /blog/4cf813                             27.37 kB  148.59 kB
+  └ chunks/80f87f47eda2.js                     29.59 kB
+┌ ○ /settings/a59504                         22.30 kB  190.00 kB
+
+┌ ○ /dashboard/aec5f8                        27.49 kB  217.91 kB
+┌ ○ /pricing/d7fa02                          34.83 kB  213.68 kB
++ First Load JS shared by all                        102.20 kB
+┌ ○ /blog/780e6b                             43.64 kB  240.91 kB
+┌ ○ /pricing/79df3b                          38.20 kB  199.66 kB
+┌ ○ /pricing/b2aedb                          24.78 kB  109.57 kB
+
+┌ ○ /docs/ace87b                             43.35 kB  229.13 kB
+├ ○ /api/e9598f88                        3.61 kB         21.00 kB
+┌ ○ /pricing/0e6a48                          15.14 kB  18.34 kB
+┌ ○ /pricing/e2bf0b                          43.61 kB  91.34 kB
+┌ ○ /settings/121bc7                         25.99 kB  101.89 kB
+├ ƒ /api/c086c056                        3.52 kB         2.29 kB
+┌ ○ /dashboard/227fb6                        23.27 kB  69.85 kB
+┌ ○ /blog/296857                             13.23 kB  204.27 kB
+
+  └ chunks/8ff7946d7c3d.js                     40.39 kB
+┌ ○ /dashboard/6a5271                        14.51 kB  190.41 kB
+  └ chunks/adca7c273d2a.js                     54.48 kB
+┌ ○ /auth/1aa53c                             25.14 kB  172.72 kB
+┌ ○ /blog/38f35a                             24.50 kB  233.60 kB
+┌ ○ /settings/b500fc                         45.83 kB  167.75 kB
+
+┌ ○ /settings/c2a010                         23.85 kB  152.43 kB
+
+┌ ○ /settings/f31c94                         37.76 kB  65.93 kB
+┌ ○ /dashboard/8a047b                        24.03 kB  192.73 kB
+┌ ○ /pricing/f0e43b                          39.06 kB  43.66 kB
+├ ƒ /api/e096ea4e                        1.35 kB         44.55 kB
+
+├ ƒ /api/92b50e33                        1.66 kB         37.65 kB
+  └ chunks/9b21ccea0844.js                     94.39 kB
+┌ ○ /dashboard/a54cba                        43.41 kB  129.52 kB
+
++ First Load JS shared by all                        115.55 kB
++ First Load JS shared by all                        130.56 kB
+
+┌ ○ /settings/54aae1                         15.92 kB  203.92 kB
+
++ First Load JS shared by all                        77.15 kB
+├ ƒ /api/62b62b3f                        4.20 kB         9.66 kB
+┌ ○ /dashboard/514851                        32.18 kB  224.43 kB
+┌ ○ /pricing/1b76cd                          16.49 kB  43.40 kB
+┌ ○ /settings/623d90                         20.74 kB  96.67 kB
+┌ ○ /docs/2c0767                             22.63 kB  51.03 kB
+┌ ○ /blog/74c9d4                             0.21 kB  35.35 kB
+┌ ○ /blog/1be9b8                             16.12 kB  14.89 kB
+  └ chunks/e430c662e90e.js                     4.36 kB
+├ ƒ /api/0c28238d                        1.93 kB         88.28 kB
+┌ ○ /dashboard/1b8a97                        36.63 kB  12.40 kB
+
++ First Load JS shared by all                        166.50 kB
+├ ○ /api/ae0ea5c4                        0.38 kB         69.82 kB
+├ ○ /api/4b14611f                        2.85 kB         35.24 kB
+┌ ○ /pricing/ac6f21                          34.30 kB  110.43 kB
+  └ chunks/3648a294df05.js                     65.77 kB
+┌ ○ /settings/7eb8c7                         18.75 kB  213.86 kB
+
++ First Load JS shared by all                        121.19 kB
+┌ ○ /dashboard/d13e62                        3.24 kB  130.81 kB
+┌ ○ /docs/76756a                             13.77 kB  56.54 kB
+┌ ○ /docs/f24925                             2.05 kB  209.22 kB
++ First Load JS shared by all                        98.32 kB
+┌ ○ /auth/419de8                             7.63 kB  204.36 kB
++ First Load JS shared by all                        174.11 kB
+
+┌ ○ /dashboard/ad54f1                        7.82 kB  24.13 kB
+┌ ○ /auth/08e18f                             44.02 kB  85.26 kB
+┌ ○ /docs/f60fc1                             33.85 kB  241.71 kB
+┌ ○ /blog/3807b6                             25.51 kB  220.55 kB
+
++ First Load JS shared by all                        16.37 kB
+
+├ ○ /api/6bcad055                        0.43 kB         6.59 kB
+┌ ○ /pricing/fadd4b                          18.00 kB  153.45 kB
+┌ ○ /dashboard/4864b6                        35.66 kB  231.81 kB
++ First Load JS shared by all                        159.07 kB
+┌ ○ /settings/46b13c                         7.99 kB  145.48 kB
+
+┌ ○ /pricing/82cf49                          13.70 kB  169.30 kB
+┌ ○ /pricing/8ff7a9                          3.32 kB  61.02 kB
+┌ ○ /docs/e6ebf2                             22.74 kB  243.96 kB
+┌ ○ /blog/1fa71f                             1.64 kB  40.07 kB
+┌ ○ /blog/e4d041                             8.92 kB  32.96 kB
+┌ ○ /dashboard/8a7bda                        11.38 kB  78.18 kB
+
+┌ ○ /pricing/8e68f5                          8.44 kB  49.46 kB
+┌ ○ /pricing/bd192a                          37.63 kB  58.53 kB
+├ ƒ /api/c2cd3bbc                        4.05 kB         42.60 kB
+┌ ○ /settings/3ab3ba                         7.93 kB  174.18 kB
++ First Load JS shared by all                        62.18 kB
+┌ ○ /docs/7e5fd1                             6.33 kB  32.94 kB
+┌ ○ /settings/ae4209                         31.49 kB  123.72 kB
+├ ○ /api/5820d30b                        3.99 kB         88.03 kB
+├ ○ /api/2801bc9e                        3.68 kB         86.97 kB
+
+┌ ○ /pricing/7ff961                          45.24 kB  166.04 kB
+┌ ○ /auth/6c04d9                             28.78 kB  16.83 kB
+┌ ○ /blog/0c2379                             7.19 kB  28.17 kB
+┌ ○ /pricing/9f422d                          25.45 kB  58.40 kB
+┌ ○ /settings/bd9964                         41.20 kB  205.49 kB
+┌ ○ /settings/22149c                         37.92 kB  14.01 kB
+┌ ○ /auth/cafbd6                             39.69 kB  145.51 kB
++ First Load JS shared by all                        145.83 kB
+┌ ○ /auth/3b84a7                             44.04 kB  142.99 kB
+┌ ○ /blog/1814f7                             8.12 kB  150.44 kB
+├ ƒ /api/1fbdbbbf                        4.86 kB         50.51 kB
+┌ ○ /pricing/976e1f                          41.75 kB  147.70 kB
+
+┌ ○ /docs/6c50fb                             24.96 kB  149.72 kB
+┌ ○ /docs/638205                             4.80 kB  178.40 kB
+┌ ○ /auth/d8a693                             34.41 kB  4.14 kB
++ First Load JS shared by all                        24.39 kB
+  └ chunks/498d38f722f6.js                     30.62 kB
+  └ chunks/95227e5f589e.js                     67.45 kB
+┌ ○ /blog/6c4151                             12.49 kB  205.78 kB
++ First Load JS shared by all                        0.46 kB
+  └ chunks/8ab13875bc8f.js                     20.22 kB
+
+
+┌ ○ /settings/c7052a                         12.00 kB  219.47 kB
+┌ ○ /settings/e60972                         49.95 kB  174.73 kB
++ First Load JS shared by all                        188.93 kB
+├ ƒ /api/a3ef472c                        4.94 kB         35.72 kB
+┌ ○ /pricing/d26455                          15.37 kB  228.15 kB
+┌ ○ /blog/711760                             30.72 kB  186.89 kB
++ First Load JS shared by all                        119.96 kB
+  └ chunks/cf7f71583b95.js                     47.65 kB
++ First Load JS shared by all                        32.71 kB
+├ ƒ /api/4955f2fd                        3.43 kB         16.65 kB
+┌ ○ /auth/e5edd2                             10.60 kB  131.74 kB
+┌ ○ /settings/ca9efa                         27.64 kB  164.83 kB
+┌ ○ /pricing/38feaf                          44.96 kB  3.77 kB
+├ ○ /api/c2f4c604                        3.38 kB         9.93 kB
+┌ ○ /docs/654131                             13.96 kB  231.04 kB
+┌ ○ /dashboard/1a87c4                        26.08 kB  135.13 kB
+┌ ○ /blog/6d58c1                             15.28 kB  44.49 kB
+┌ ○ /auth/c8e231                             29.89 kB  162.15 kB
+├ ○ /api/14e98ed4                        4.53 kB         83.98 kB
+┌ ○ /auth/76f548                             13.74 kB  29.87 kB
+┌ ○ /settings/f9ffe2                         8.00 kB  69.03 kB
+
+├ ƒ /api/91137d04                        2.12 kB         37.23 kB
+├ ƒ /api/30f115e0                        3.14 kB         63.69 kB
+┌ ○ /dashboard/854cf1                        48.89 kB  162.09 kB
+  └ chunks/a028a9a85171.js                     87.17 kB
++ First Load JS shared by all                        109.58 kB
+┌ ○ /docs/eeb3e5                             48.57 kB  176.24 kB
+┌ ○ /settings/f4e6d4                         32.23 kB  38.43 kB
++ First Load JS shared by all                        195.99 kB
+┌ ○ /auth/9abfb1                             2.45 kB  217.41 kB
+┌ ○ /dashboard/f89820                        35.30 kB  69.83 kB
+┌ ○ /dashboard/3740e9                        41.81 kB  89.24 kB
+
+┌ ○ /settings/d7e54d                         37.09 kB  201.60 kB
+┌ ○ /dashboard/ade1c1                        42.64 kB  56.06 kB
+┌ ○ /docs/de31bb                             19.50 kB  197.46 kB
++ First Load JS shared by all                        94.99 kB
+├ ƒ /api/35783983                        2.37 kB         25.26 kB
+┌ ○ /pricing/e84e36                          12.02 kB  102.53 kB
+┌ ○ /docs/9f89ba                             4.05 kB  34.18 kB
+┌ ○ /settings/fb7c4b                         38.14 kB  147.77 kB
+┌ ○ /docs/7a2e8f                             8.16 kB  230.60 kB
+┌ ○ /blog/b5343b                             8.07 kB  227.75 kB
+┌ ○ /settings/3274a5                         49.12 kB  178.95 kB
+┌ ○ /dashboard/af1ce3                        24.67 kB  214.41 kB
+  └ chunks/e24cc3df4f03.js                     64.98 kB
+┌ ○ /settings/f932e3                         15.00 kB  126.52 kB
+┌ ○ /blog/47b9d1                             22.19 kB  143.73 kB
+┌ ○ /blog/df658f                             18.28 kB  178.95 kB
+┌ ○ /auth/0ae721                             4.93 kB  76.30 kB
+┌ ○ /settings/9d91e5                         20.55 kB  15.66 kB
+┌ ○ /auth/ae1802                             41.20 kB  199.63 kB
+┌ ○ /blog/ad1d10                             4.97 kB  219.44 kB
+┌ ○ /settings/9957d7                         0.29 kB  203.70 kB
++ First Load JS shared by all                        43.51 kB
+┌ ○ /settings/2a0b2c                         41.30 kB  58.64 kB
+┌ ○ /settings/78edb9                         45.61 kB  171.76 kB
+
+┌ ○ /blog/2b1acc                             32.77 kB  90.34 kB
+├ ○ /api/5d6dc1af                        4.44 kB         12.67 kB
+├ ○ /api/f831aaae                        1.44 kB         25.59 kB
+┌ ○ /auth/19095b                             39.70 kB  151.35 kB
+
+┌ ○ /dashboard/b4ad71                        5.70 kB  48.61 kB
+┌ ○ /blog/e9f27e                             26.46 kB  39.34 kB
+┌ ○ /dashboard/c2137a                        11.82 kB  38.88 kB
+
+┌ ○ /auth/656b7a                             0.34 kB  146.59 kB
+┌ ○ /dashboard/00faa5                        34.12 kB  139.78 kB
+┌ ○ /auth/16d142                             35.32 kB  131.79 kB
+┌ ○ /pricing/2b095e                          3.52 kB  210.13 kB
+┌ ○ /dashboard/ef2695                        33.33 kB  168.49 kB
+  └ chunks/00983bf6167d.js                     11.12 kB
+┌ ○ /docs/a9d57d                             10.94 kB  105.63 kB
+
+  └ chunks/d5eed641b738.js                     56.46 kB
+
+┌ ○ /docs/3fcf72                             49.66 kB  138.30 kB
+├ ○ /api/249f5245                        0.90 kB         0.52 kB
+┌ ○ /blog/7d3bb9                             27.25 kB  158.25 kB
+┌ ○ /blog/ed9969                             46.62 kB  16.76 kB
+┌ ○ /settings/1b7fda                         27.88 kB  169.18 kB
+
+┌ ○ /docs/bd6976                             17.15 kB  19.25 kB
+  └ chunks/cf0adbd87693.js                     23.33 kB
+┌ ○ /auth/7607d5                             18.17 kB  65.40 kB
+┌ ○ /dashboard/bf8e81                        30.18 kB  54.93 kB
+├ ○ /api/b77d3697                        1.74 kB         49.02 kB
+  └ chunks/7638bc5151f6.js                     12.82 kB
+  └ chunks/224809bc18bf.js                     48.19 kB
++ First Load JS shared by all                        80.90 kB
+┌ ○ /docs/5ab8fc                             35.45 kB  148.27 kB
+├ ○ /api/d2da1bc9                        1.85 kB         32.97 kB
+┌ ○ /pricing/603d31                          19.28 kB  122.56 kB
+┌ ○ /docs/86a0b4                             21.68 kB  106.86 kB
++ First Load JS shared by all                        159.11 kB
+┌ ○ /auth/07ecfb                             20.30 kB  193.94 kB
+┌ ○ /pricing/89dd46                          0.99 kB  70.26 kB
+┌ ○ /pricing/313083                          13.02 kB  87.91 kB
+┌ ○ /auth/369aa4                             15.19 kB  203.02 kB
+┌ ○ /dashboard/b04536                        3.74 kB  153.72 kB
+┌ ○ /pricing/bbc4c9                          5.80 kB  247.79 kB
+┌ ○ /dashboard/24f46d                        38.15 kB  32.53 kB
+┌ ○ /settings/df2720                         49.58 kB  69.52 kB
+┌ ○ /docs/578022                             8.06 kB  215.53 kB
+
+┌ ○ /docs/e262d7                             23.49 kB  180.13 kB
+
+├ ƒ /api/8765b5c8                        0.77 kB         51.71 kB
+┌ ○ /pricing/fcf80a                          7.41 kB  81.45 kB
+┌ ○ /auth/195602                             19.26 kB  38.02 kB
+
+┌ ○ /blog/5d7bb5                             31.03 kB  13.55 kB
+┌ ○ /pricing/40ad84                          21.48 kB  156.78 kB
+┌ ○ /dashboard/83b095                        23.98 kB  193.04 kB
+┌ ○ /docs/fafeb9                             25.37 kB  4.70 kB
+┌ ○ /docs/df29d8                             32.96 kB  147.07 kB
+┌ ○ /blog/e549ab                             33.38 kB  232.24 kB
+├ ƒ /api/f93ba207                        2.91 kB         75.28 kB
+  └ chunks/bf86ce3520c3.js                     93.37 kB
+  └ chunks/ff59cc64fcb8.js                     86.02 kB
+┌ ○ /docs/514687                             14.27 kB  35.29 kB
+├ ƒ /api/ec61b9c3                        4.86 kB         87.04 kB
+┌ ○ /dashboard/214ce9                        16.08 kB  239.70 kB
+┌ ○ /docs/3eefe8                             38.41 kB  192.12 kB
+┌ ○ /settings/467d94                         13.94 kB  177.68 kB
+┌ ○ /docs/8d7fb3                             19.83 kB  79.98 kB
++ First Load JS shared by all                        28.03 kB
++ First Load JS shared by all                        163.64 kB
+┌ ○ /pricing/870b4c                          20.41 kB  183.23 kB
+
++ First Load JS shared by all                        43.51 kB
++ First Load JS shared by all                        44.86 kB
+
+┌ ○ /pricing/cda08d                          49.97 kB  81.66 kB
+├ ƒ /api/a9cf034c                        3.64 kB         2.98 kB
+├ ○ /api/0c77ff0a                        0.27 kB         8.87 kB
+
+├ ○ /api/e491987a                        0.80 kB         1.18 kB
+┌ ○ /settings/0a9ea3                         5.33 kB  20.32 kB
+  └ chunks/6da83cf728e8.js                     69.08 kB
+  └ chunks/dd02a8e63b6b.js                     15.02 kB
+├ ○ /api/f0dcd8d6                        4.07 kB         59.66 kB
+├ ○ /api/e242710a                        4.49 kB         22.64 kB
++ First Load JS shared by all                        143.59 kB
+├ ○ /api/c034aa4b                        2.03 kB         37.47 kB
+┌ ○ /pricing/0a498b                          48.73 kB  139.43 kB
+├ ○ /api/5ef82502                        4.77 kB         13.25 kB
+┌ ○ /docs/228cb8                             16.24 kB  103.82 kB
+
+  └ chunks/8395f81bb3d8.js                     75.15 kB
+┌ ○ /blog/be049f                             33.15 kB  201.99 kB
+┌ ○ /dashboard/d71388                        33.98 kB  194.89 kB
+┌ ○ /blog/f28094                             47.55 kB  120.23 kB
+┌ ○ /auth/63a0f8                             40.21 kB  124.22 kB
+┌ ○ /pricing/677fb2                          47.38 kB  228.60 kB
+┌ ○ /settings/d52bc9                         28.03 kB  131.85 kB
+┌ ○ /settings/aaf87d                         26.78 kB  68.07 kB
+┌ ○ /dashboard/32249a                        28.20 kB  94.25 kB
++ First Load JS shared by all                        86.94 kB
+┌ ○ /docs/595af8                             42.19 kB  5.36 kB
+┌ ○ /blog/a867b0                             46.58 kB  182.68 kB
+┌ ○ /pricing/da63ae                          32.98 kB  88.00 kB
+┌ ○ /blog/c991ec                             34.65 kB  206.71 kB
++ First Load JS shared by all                        51.38 kB
+┌ ○ /dashboard/167dbd                        4.71 kB  197.45 kB
+├ ○ /api/b20ce2a7                        3.80 kB         10.45 kB
+├ ƒ /api/e7785199                        3.54 kB         46.86 kB
+┌ ○ /auth/d56ae3                             43.13 kB  23.40 kB
+  └ chunks/27f8bb751536.js                     16.84 kB
+├ ƒ /api/52cba46b                        1.35 kB         7.13 kB
++ First Load JS shared by all                        169.28 kB
+┌ ○ /blog/2733e8                             42.19 kB  58.75 kB
++ First Load JS shared by all                        52.75 kB
+┌ ○ /pricing/ec51f5                          32.30 kB  215.14 kB
+
+
+┌ ○ /auth/d48e0e                             20.77 kB  234.61 kB
+┌ ○ /dashboard/ea6a22                        32.87 kB  165.78 kB
+┌ ○ /docs/926465                             6.94 kB  132.55 kB
+┌ ○ /blog/4f75a2                             39.05 kB  69.21 kB
+┌ ○ /docs/ff4b91                             4.28 kB  240.72 kB
+├ ○ /api/6b095852                        3.60 kB         75.64 kB
+
+  └ chunks/ad6df57c8f77.js                     34.30 kB
+┌ ○ /settings/ed7932                         21.77 kB  180.49 kB
++ First Load JS shared by all                        173.01 kB
+┌ ○ /settings/ad640e                         32.16 kB  177.80 kB
+┌ ○ /pricing/14fc86                          46.97 kB  222.12 kB
+┌ ○ /docs/08a6a1                             8.37 kB  183.25 kB
+├ ƒ /api/5797b3f3                        4.52 kB         57.16 kB
+┌ ○ /pricing/7bb701                          21.01 kB  145.52 kB
+┌ ○ /dashboard/ebf458                        4.29 kB  50.08 kB
+┌ ○ /settings/862aea                         15.97 kB  191.36 kB
+┌ ○ /blog/279bf0                             24.96 kB  138.86 kB
++ First Load JS shared by all                        112.53 kB
+├ ○ /api/4850c1f4                        0.45 kB         59.03 kB
+┌ ○ /pricing/9e6edf                          28.08 kB  239.02 kB
+
+┌ ○ /dashboard/7ee02f                        8.94 kB  150.89 kB
+├ ƒ /api/183a47f8                        1.20 kB         85.79 kB
+┌ ○ /blog/5d8982                             2.98 kB  248.99 kB
+  └ chunks/66b932a40801.js                     77.09 kB
+
+┌ ○ /settings/6bca97                         28.45 kB  158.80 kB
+┌ ○ /blog/139c85                             38.55 kB  14.92 kB
+├ ○ /api/9e8d2c48                        0.01 kB         78.53 kB
+
+┌ ○ /auth/482e40                             10.18 kB  152.85 kB
++ First Load JS shared by all                        45.89 kB
+├ ○ /api/acd0dbc1                        4.70 kB         88.57 kB
+┌ ○ /dashboard/6a35fd                        48.04 kB  170.36 kB
+┌ ○ /blog/9970dd                             16.86 kB  60.15 kB
+┌ ○ /dashboard/18620c                        33.67 kB  215.90 kB
+┌ ○ /dashboard/185f9f                        22.58 kB  212.91 kB
+├ ƒ /api/887bd35c                        3.54 kB         69.89 kB
+┌ ○ /settings/b0ef05                         20.62 kB  83.62 kB
+┌ ○ /blog/0cc52c                             32.96 kB  26.21 kB
+├ ƒ /api/00453cd8                        4.68 kB         33.94 kB
+┌ ○ /settings/ea0457                         22.14 kB  143.43 kB
+  └ chunks/76e18968e94f.js                     3.45 kB
+┌ ○ /blog/405bc7                             21.56 kB  163.97 kB
+┌ ○ /dashboard/cd84f3                        31.92 kB  238.32 kB
+┌ ○ /blog/abc853                             41.45 kB  70.98 kB
+┌ ○ /auth/f9f555                             39.00 kB  207.85 kB
+├ ƒ /api/7fd3edb2                        0.88 kB         13.72 kB
+├ ○ /api/dd075afe                        0.49 kB         34.05 kB
+┌ ○ /blog/5ece92                             38.30 kB  173.42 kB
+
+┌ ○ /blog/6bb05b                             0.13 kB  33.59 kB
++ First Load JS shared by all                        3.48 kB
+┌ ○ /docs/9edb93                             3.62 kB  200.72 kB
+┌ ○ /docs/5a643c                             21.56 kB  21.07 kB
+┌ ○ /dashboard/a3d23d                        3.78 kB  71.27 kB
+┌ ○ /blog/92cef6                             40.86 kB  237.13 kB
+┌ ○ /docs/ac32c8                             0.96 kB  238.38 kB
+├ ƒ /api/a3daaa79                        3.00 kB         74.42 kB
+├ ƒ /api/bd16bffe                        1.59 kB         62.63 kB
+  └ chunks/b52a05b8f0ce.js                     45.65 kB
+├ ○ /api/efdc42cc                        1.35 kB         50.35 kB
+┌ ○ /dashboard/92ba61                        19.60 kB  246.09 kB
+┌ ○ /pricing/5c8c63                          25.01 kB  78.42 kB
++ First Load JS shared by all                        50.13 kB
+
+
+├ ○ /api/fbeb1647                        4.01 kB         71.27 kB
+┌ ○ /auth/e17920                             41.16 kB  21.53 kB
+┌ ○ /auth/ea9e82                             24.71 kB  194.97 kB
+┌ ○ /dashboard/531699                        48.76 kB  103.41 kB
+
+  └ chunks/7798c4531edb.js                     48.75 kB
+┌ ○ /pricing/a135f1                          7.06 kB  42.66 kB
+┌ ○ /docs/184532                             48.38 kB  156.66 kB
++ First Load JS shared by all                        29.36 kB
+┌ ○ /auth/216087                             1.39 kB  14.62 kB
+┌ ○ /dashboard/da9f89                        17.55 kB  152.22 kB
++ First Load JS shared by all                        141.28 kB
+┌ ○ /auth/61695f                             8.44 kB  8.35 kB
+┌ ○ /docs/21442a                             14.32 kB  51.82 kB
+┌ ○ /docs/dd0834                             0.07 kB  249.19 kB
+  └ chunks/7584daf10085.js                     43.62 kB
+  └ chunks/5fecff6a45a8.js                     5.54 kB
+├ ƒ /api/3d10a931                        1.28 kB         74.33 kB
+
+┌ ○ /settings/505569                         7.67 kB  184.59 kB
+  └ chunks/fca2eb9d2f61.js                     1.89 kB
+├ ○ /api/5b038a0e                        2.70 kB         20.27 kB
+  └ chunks/cf5896dbf2c0.js                     60.94 kB
+
+├ ƒ /api/051d914f                        4.97 kB         70.69 kB
+┌ ○ /auth/1a872a                             31.15 kB  71.22 kB
+┌ ○ /settings/8b9914                         17.05 kB  4.82 kB
+┌ ○ /auth/e1d6f5                             2.35 kB  211.46 kB
+┌ ○ /auth/67a2ee                             47.95 kB  59.96 kB
+┌ ○ /docs/1f54bc                             28.16 kB  189.97 kB
++ First Load JS shared by all                        89.78 kB
++ First Load JS shared by all                        143.00 kB
+┌ ○ /auth/770c0d                             21.21 kB  90.61 kB
+┌ ○ /dashboard/cc71c5                        48.93 kB  100.94 kB
+
+┌ ○ /dashboard/e94525                        11.68 kB  178.49 kB
+├ ƒ /api/a1620f5c                        3.37 kB         68.94 kB
+┌ ○ /auth/994800                             41.21 kB  40.70 kB
+┌ ○ /dashboard/b7e8df                        41.38 kB  61.42 kB
+┌ ○ /dashboard/743abd                        41.29 kB  76.16 kB
+┌ ○ /blog/2d980c                             42.24 kB  183.27 kB
+┌ ○ /pricing/15b3dc                          1.15 kB  73.44 kB
+  └ chunks/b96bfcc6208d.js                     94.78 kB
+┌ ○ /auth/179835                             18.96 kB  5.99 kB
+  └ chunks/0d23a31f67f9.js                     53.78 kB
+┌ ○ /blog/0282c7                             5.43 kB  156.48 kB
+┌ ○ /pricing/d00c08                          47.28 kB  74.40 kB
+┌ ○ /dashboard/75005f                        19.79 kB  53.34 kB
+┌ ○ /dashboard/a84401                        11.53 kB  38.42 kB
+├ ○ /api/3d675699                        0.10 kB         64.76 kB
+├ ƒ /api/ce4b8b53                        0.66 kB         1.55 kB
+┌ ○ /auth/ab6b49                             3.64 kB  167.17 kB
+
+┌ ○ /docs/b84850                             38.14 kB  2.27 kB
++ First Load JS shared by all                        44.27 kB
+
+┌ ○ /settings/a3432f                         45.57 kB  123.35 kB
+
+
+┌ ○ /settings/48e58d                         6.24 kB  139.12 kB
+┌ ○ /docs/4cfd48                             10.36 kB  117.55 kB
+┌ ○ /docs/c41516                             30.53 kB  88.13 kB
+┌ ○ /pricing/210b04                          40.27 kB  92.61 kB
+  └ chunks/44455900f255.js                     27.68 kB
+├ ○ /api/5905490e                        3.19 kB         57.40 kB
++ First Load JS shared by all                        125.16 kB
+┌ ○ /blog/8b3942                             49.98 kB  244.22 kB
++ First Load JS shared by all                        35.33 kB
+┌ ○ /docs/b462bb                             47.28 kB  42.99 kB
++ First Load JS shared by all                        192.78 kB
+
+  └ chunks/891927e1297c.js                     31.03 kB
+┌ ○ /settings/1f713f                         26.02 kB  45.27 kB
+
+├ ○ /api/560a68e3                        1.35 kB         31.43 kB
+├ ƒ /api/e5f86383                        3.44 kB         57.24 kB
+  └ chunks/ba2e078f17fc.js                     59.36 kB
+
+
+├ ƒ /api/9589cc4c                        2.69 kB         76.71 kB
+┌ ○ /blog/b08369                             11.68 kB  186.52 kB
+├ ƒ /api/a687d2e5                        2.96 kB         56.00 kB
++ First Load JS shared by all                        16.98 kB
+┌ ○ /docs/3f0bd8                             47.59 kB  147.12 kB
+┌ ○ /settings/6e6e37                         38.32 kB  215.36 kB
+├ ○ /api/2521972b                        2.94 kB         90.06 kB
++ First Load JS shared by all                        103.82 kB
+├ ○ /api/8c24e75b                        3.25 kB         69.83 kB
+┌ ○ /pricing/7f6de4                          8.70 kB  100.36 kB
+┌ ○ /auth/b06967                             23.15 kB  118.06 kB
+┌ ○ /auth/177ade                             32.09 kB  87.10 kB
+├ ○ /api/dfa7dc6e                        2.41 kB         44.27 kB
+┌ ○ /auth/b60185                             31.93 kB  235.00 kB
++ First Load JS shared by all                        76.09 kB
+┌ ○ /dashboard/29bac7                        11.18 kB  15.50 kB
+┌ ○ /docs/b6323f                             35.39 kB  69.18 kB
+┌ ○ /settings/a2874b                         33.05 kB  32.26 kB
+
+
+
+  └ chunks/6903d2bc5f34.js                     18.10 kB
+┌ ○ /auth/2011b4                             7.48 kB  171.73 kB
+┌ ○ /settings/a3a26d                         5.63 kB  143.98 kB
++ First Load JS shared by all                        93.73 kB
+┌ ○ /pricing/89e371                          24.67 kB  60.55 kB
+
+
+┌ ○ /dashboard/f55543                        20.44 kB  139.92 kB
++ First Load JS shared by all                        58.44 kB
+┌ ○ /dashboard/a31b3b                        7.65 kB  48.58 kB
+
+┌ ○ /settings/82a513                         34.38 kB  147.32 kB
+  └ chunks/87522f63793e.js                     20.05 kB
+┌ ○ /settings/b07f41                         0.00 kB  72.04 kB
+├ ƒ /api/7fe35ce8                        4.75 kB         43.17 kB
+┌ ○ /docs/914c43                             6.69 kB  75.31 kB
+┌ ○ /docs/6ca68d                             15.07 kB  230.25 kB
+┌ ○ /docs/67c9b7                             18.37 kB  232.00 kB
+
+┌ ○ /docs/3f2a65                             4.35 kB  173.64 kB
++ First Load JS shared by all                        116.71 kB
+┌ ○ /blog/bf6c3c                             49.27 kB  6.48 kB
++ First Load JS shared by all                        24.86 kB
+┌ ○ /dashboard/9cd271                        3.85 kB  236.17 kB
++ First Load JS shared by all                        143.73 kB
+┌ ○ /dashboard/0645bb                        32.83 kB  157.97 kB
+┌ ○ /blog/73950b                             47.28 kB  199.75 kB
+┌ ○ /docs/6a94bf                             1.02 kB  45.85 kB
+┌ ○ /dashboard/13baba                        16.32 kB  88.70 kB
+├ ƒ /api/750b6569                        2.33 kB         26.15 kB
+
+┌ ○ /docs/095b37                             36.16 kB  124.66 kB
+┌ ○ /blog/2aa771                             25.51 kB  15.28 kB
+┌ ○ /auth/79857d                             9.14 kB  180.81 kB
+├ ○ /api/021915d1                        4.71 kB         34.44 kB
+┌ ○ /auth/fee163                             19.46 kB  209.57 kB
+┌ ○ /auth/fd79b9                             47.44 kB  126.25 kB
+┌ ○ /blog/6336dd                             47.22 kB  85.75 kB
+┌ ○ /docs/66d6ec                             49.14 kB  1.53 kB
+├ ƒ /api/e3778b30                        4.82 kB         86.04 kB
+┌ ○ /dashboard/a4312e                        8.70 kB  249.70 kB
+├ ƒ /api/583b92ab                        2.67 kB         48.77 kB
+├ ○ /api/21ebab06                        0.23 kB         61.43 kB
+  └ chunks/1e794cb7c615.js                     20.55 kB
+├ ƒ /api/9dfd59cf                        0.74 kB         43.84 kB
++ First Load JS shared by all                        166.14 kB
++ First Load JS shared by all                        168.23 kB
+┌ ○ /pricing/ad22a0                          10.88 kB  200.55 kB
+┌ ○ /dashboard/4eae17                        23.32 kB  92.72 kB
+┌ ○ /dashboard/8d8628                        11.74 kB  188.30 kB
+
++ First Load JS shared by all                        116.46 kB
+┌ ○ /dashboard/10a4f9                        5.41 kB  63.21 kB
+├ ○ /api/3fa202e9                        3.61 kB         95.48 kB
+  └ chunks/cd4d2dab2119.js                     74.60 kB
+┌ ○ /settings/256aba                         6.91 kB  45.23 kB
+  └ chunks/bd6e2c2e94a7.js                     53.09 kB
+┌ ○ /dashboard/88a0a1                        4.19 kB  89.62 kB
+┌ ○ /docs/f0dc3c                             30.14 kB  194.02 kB
+┌ ○ /docs/77cf07                             41.11 kB  189.15 kB
+┌ ○ /settings/ac1947                         33.42 kB  86.88 kB
+┌ ○ /settings/fee737                         15.55 kB  196.24 kB
++ First Load JS shared by all                        155.25 kB
+  └ chunks/dca55203d19e.js                     64.93 kB
+  └ chunks/0c4327ee5480.js                     96.90 kB
+┌ ○ /auth/bf7dea                             4.74 kB  200.47 kB
+┌ ○ /blog/0c9619                             13.82 kB  202.89 kB
+
++ First Load JS shared by all                        77.43 kB
+
+  └ chunks/7c92793a7530.js                     77.80 kB
+├ ○ /api/9c30d5da                        0.95 kB         85.54 kB
+
+┌ ○ /auth/a37645                             33.21 kB  68.17 kB
+┌ ○ /docs/c7ffef                             12.05 kB  83.12 kB
+├ ƒ /api/ad7fae3f                        2.37 kB         21.01 kB
+┌ ○ /blog/c23432                             2.77 kB  62.66 kB
+┌ ○ /auth/ba0eff                             39.95 kB  103.90 kB
+├ ƒ /api/601fab37                        2.67 kB         23.61 kB
+┌ ○ /pricing/ce19a1                          38.18 kB  165.59 kB
+┌ ○ /pricing/3e676e                          18.04 kB  134.15 kB
++ First Load JS shared by all                        61.34 kB
+┌ ○ /dashboard/1d6084                        24.36 kB  205.62 kB
+┌ ○ /settings/e0b50b                         37.59 kB  0.54 kB
+├ ○ /api/6a17f629                        4.58 kB         34.92 kB
+┌ ○ /settings/91e833                         3.03 kB  97.92 kB
+┌ ○ /auth/33267a                             4.44 kB  33.31 kB
+├ ƒ /api/325dbbbb                        0.33 kB         20.94 kB
+┌ ○ /auth/07d72f                             30.04 kB  42.81 kB
++ First Load JS shared by all                        88.04 kB
+├ ƒ /api/3b2cc32c                        3.51 kB         38.51 kB
+┌ ○ /docs/f4101a                             48.62 kB  167.89 kB
+
+┌ ○ /blog/09b5dd                             27.98 kB  220.21 kB
++ First Load JS shared by all                        132.30 kB
+┌ ○ /dashboard/310246                        29.03 kB  65.72 kB
+
+┌ ○ /docs/ffe6e3                             10.32 kB  243.26 kB
+├ ƒ /api/a51f692f                        4.96 kB         11.33 kB
+┌ ○ /settings/9381c9                         19.70 kB  241.67 kB
+
+┌ ○ /docs/cfc3d9                             16.23 kB  40.63 kB
+┌ ○ /auth/21b774                             0.48 kB  114.64 kB
+┌ ○ /pricing/7a608e                          17.22 kB  223.67 kB
+  └ chunks/fbce85bf6f0d.js                     19.06 kB
+┌ ○ /settings/5e8ec6                         17.92 kB  166.52 kB
+┌ ○ /pricing/86f7a6                          29.15 kB  57.09 kB
+┌ ○ /dashboard/e822f5                        30.50 kB  0.17 kB
++ First Load JS shared by all                        23.96 kB
+├ ƒ /api/c744ec0f                        3.03 kB         41.05 kB
+┌ ○ /docs/cfc8c1                             2.69 kB  7.38 kB
+├ ƒ /api/5965c382                        1.80 kB         36.19 kB
+  └ chunks/43e2b9d73b52.js                     4.34 kB
+├ ○ /api/5897a5e4                        4.24 kB         59.71 kB
+┌ ○ /settings/fc6465                         0.22 kB  54.43 kB
+┌ ○ /dashboard/b06da5                        16.20 kB  70.94 kB
+┌ ○ /auth/2d4351                             12.12 kB  208.03 kB
+┌ ○ /blog/7c4d02                             0.98 kB  101.72 kB
+┌ ○ /settings/083d55                         40.33 kB  112.41 kB
+┌ ○ /auth/74911b                             49.34 kB  98.67 kB
+┌ ○ /pricing/9aa050                          40.51 kB  166.58 kB
+┌ ○ /auth/bcb4e6                             1.28 kB  115.54 kB
+  └ chunks/f0232fc6adcd.js                     21.98 kB
+┌ ○ /settings/fe1592                         49.04 kB  217.19 kB
+  └ chunks/78c1609d1545.js                     20.86 kB
+├ ƒ /api/a6efbf27                        4.59 kB         73.09 kB
+┌ ○ /pricing/3f7e2a                          21.73 kB  226.02 kB
+┌ ○ /blog/5c020a                             30.58 kB  151.42 kB
+
+┌ ○ /blog/f2f644                             36.50 kB  128.29 kB
+┌ ○ /blog/63ce91                             10.56 kB  201.58 kB
+┌ ○ /settings/f2427a                         26.48 kB  203.87 kB
+
+  └ chunks/4e98347f4342.js                     20.03 kB
++ First Load JS shared by all                        73.77 kB
+┌ ○ /dashboard/21d3c4                        38.63 kB  187.64 kB
+┌ ○ /blog/da88ba                             4.68 kB  136.36 kB
+
+
+┌ ○ /settings/4c701b                         10.75 kB  40.06 kB
+┌ ○ /auth/3ec7e4                             2.27 kB  72.85 kB
+  └ chunks/45da3790a652.js                     84.15 kB
+
+┌ ○ /docs/1929ec                             32.70 kB  172.83 kB
+┌ ○ /settings/2814db                         19.54 kB  31.91 kB
+┌ ○ /auth/4c70ea                             13.07 kB  44.84 kB
+┌ ○ /blog/c224e4                             41.74 kB  175.69 kB
+┌ ○ /dashboard/aff3a8                        3.81 kB  26.13 kB
+  └ chunks/04ae882a1fcb.js                     36.21 kB
+┌ ○ /dashboard/7b1727                        19.11 kB  223.46 kB
++ First Load JS shared by all                        155.42 kB
+┌ ○ /docs/75499a                             14.36 kB  134.74 kB
++ First Load JS shared by all                        129.25 kB
+  └ chunks/1161de769388.js                     48.91 kB
+┌ ○ /auth/9917a6                             11.89 kB  221.83 kB
+  └ chunks/1d1875952eb4.js                     95.47 kB
+├ ○ /api/4894f00b                        0.37 kB         77.01 kB
+┌ ○ /settings/ca12f2                         48.22 kB  55.91 kB
+  └ chunks/c3e8e10c622d.js                     8.21 kB
+┌ ○ /settings/b5bb44                         23.72 kB  109.35 kB
+┌ ○ /dashboard/14eb9f                        33.59 kB  51.70 kB
+┌ ○ /auth/6d6d9e                             16.92 kB  135.70 kB
+├ ○ /api/4d2f3d08                        3.53 kB         1.14 kB
+├ ○ /api/6ab780d1                        0.79 kB         12.85 kB
+┌ ○ /dashboard/329547                        16.98 kB  185.69 kB
+┌ ○ /settings/9eb9f6                         9.96 kB  21.38 kB
+  └ chunks/8622e35b6e65.js                     58.98 kB
+┌ ○ /auth/823a06                             42.30 kB  195.20 kB
+┌ ○ /blog/b3802e                             5.53 kB  224.19 kB
+
+┌ ○ /auth/79cb3d                             22.28 kB  237.23 kB
++ First Load JS shared by all                        18.14 kB
+┌ ○ /dashboard/8aeea3                        44.36 kB  86.47 kB
+┌ ○ /settings/9cf116                         37.45 kB  166.49 kB
++ First Load JS shared by all                        116.02 kB
+┌ ○ /settings/ec113e                         11.62 kB  182.15 kB
++ First Load JS shared by all                        78.62 kB
+┌ ○ /pricing/998b3e                          10.01 kB  90.50 kB
+┌ ○ /dashboard/ac5d1d                        15.69 kB  92.45 kB
+┌ ○ /pricing/14f656                          13.73 kB  225.14 kB
+┌ ○ /auth/b88855                             17.34 kB  0.48 kB
+┌ ○ /docs/9d45a0                             19.78 kB  99.74 kB
+┌ ○ /auth/23480c                             16.44 kB  49.76 kB
+┌ ○ /docs/1a33b6                             24.69 kB  249.27 kB
+├ ○ /api/b3dffba8                        1.32 kB         2.31 kB
+┌ ○ /dashboard/6add66                        9.77 kB  232.12 kB
+┌ ○ /dashboard/95b28b                        43.98 kB  238.95 kB
++ First Load JS shared by all                        36.45 kB
+┌ ○ /docs/ddccbb                             12.75 kB  28.96 kB
+├ ƒ /api/d77284f1                        3.26 kB         48.37 kB
+┌ ○ /dashboard/838e18                        10.77 kB  83.28 kB
+┌ ○ /docs/5bf4d8                             34.10 kB  238.78 kB
+  └ chunks/1997b05ffc4b.js                     58.65 kB
+  └ chunks/0add298be07b.js                     57.66 kB
+├ ƒ /api/64f42d3b                        2.67 kB         0.80 kB
+├ ƒ /api/0d48691d                        3.86 kB         18.28 kB
+┌ ○ /pricing/08f867                          43.60 kB  195.72 kB
+  └ chunks/d3dca0912992.js                     77.25 kB
++ First Load JS shared by all                        138.48 kB
+┌ ○ /dashboard/164faf                        18.50 kB  125.55 kB
+┌ ○ /pricing/1f5086                          49.48 kB  98.85 kB
+┌ ○ /docs/cb6054                             3.93 kB  109.87 kB
+
+
+├ ƒ /api/29e2fcc8                        3.30 kB         54.24 kB
+├ ƒ /api/eed4862d                        1.69 kB         65.96 kB
+├ ƒ /api/aa0fa4c8                        2.22 kB         56.37 kB
+┌ ○ /auth/ba376e                             49.24 kB  49.66 kB
+  └ chunks/d0f0b5cfcff9.js                     46.17 kB
+┌ ○ /settings/b631ea                         13.04 kB  232.47 kB
+├ ƒ /api/a34c8678                        0.74 kB         62.20 kB
+┌ ○ /docs/55758a                             46.12 kB  102.17 kB
+
++ First Load JS shared by all                        109.15 kB
+┌ ○ /blog/a9a926                             26.01 kB  139.10 kB
+┌ ○ /dashboard/a1aaf8                        46.46 kB  36.70 kB
+├ ƒ /api/55425a43                        1.64 kB         92.17 kB
+┌ ○ /dashboard/b75fcc                        29.79 kB  60.77 kB
+┌ ○ /dashboard/475dfa                        28.36 kB  92.20 kB
+┌ ○ /blog/56681b                             32.86 kB  158.24 kB
+
+├ ƒ /api/d0de93e7                        4.43 kB         78.81 kB
++ First Load JS shared by all                        86.58 kB
+├ ƒ /api/e77d6d5f                        3.13 kB         20.57 kB
+├ ○ /api/c8128653                        0.04 kB         35.82 kB
+┌ ○ /docs/874eff                             28.99 kB  66.61 kB
+
+┌ ○ /pricing/478e8d                          6.92 kB  182.40 kB
++ First Load JS shared by all                        106.24 kB
+  └ chunks/411a37c13a3a.js                     28.45 kB
+
+├ ○ /api/524ea752                        3.22 kB         61.08 kB
++ First Load JS shared by all                        147.40 kB
+┌ ○ /settings/5a771b                         7.86 kB  195.68 kB
+┌ ○ /docs/ffd6ad                             48.89 kB  151.75 kB
+┌ ○ /dashboard/d688e8                        43.29 kB  107.72 kB
+  └ chunks/c7010e79f711.js                     12.62 kB
+├ ƒ /api/efa242b3                        3.88 kB         92.63 kB
+├ ƒ /api/f5eeb76e                        3.61 kB         79.21 kB
+┌ ○ /blog/d17b3d                             18.97 kB  182.76 kB
+┌ ○ /dashboard/fbc90a                        36.29 kB  107.76 kB
+┌ ○ /settings/74dfde                         5.14 kB  2.91 kB
+  └ chunks/4997b3581a5a.js                     72.60 kB
+
+  └ chunks/6cdd2c1f7fb9.js                     54.51 kB
+
++ First Load JS shared by all                        167.61 kB
+┌ ○ /docs/e7d3f4                             18.08 kB  195.05 kB
+┌ ○ /docs/93fd75                             24.55 kB  112.25 kB
+┌ ○ /auth/f74faf                             48.11 kB  222.57 kB
+┌ ○ /docs/53ebf9                             40.50 kB  2.26 kB
++ First Load JS shared by all                        19.73 kB
+├ ƒ /api/77fd0d52                        4.17 kB         30.90 kB
+┌ ○ /pricing/09daef                          30.92 kB  27.75 kB
+┌ ○ /settings/74b52c                         41.43 kB  162.52 kB
+┌ ○ /blog/25f085                             13.35 kB  237.86 kB
++ First Load JS shared by all                        119.73 kB
+┌ ○ /blog/577b2f                             33.64 kB  166.99 kB
+
+┌ ○ /dashboard/dddffd                        35.41 kB  235.17 kB
+┌ ○ /dashboard/dd66a8                        20.69 kB  159.84 kB
+├ ƒ /api/24014461                        1.03 kB         7.14 kB
+
+├ ƒ /api/499d785c                        4.48 kB         31.32 kB
+┌ ○ /dashboard/0d03f9                        45.06 kB  79.46 kB
+┌ ○ /docs/c2f03a                             5.47 kB  198.19 kB
+┌ ○ /pricing/7272ff                          23.41 kB  211.68 kB
+├ ○ /api/7a4e1f2b                        2.67 kB         24.11 kB
+┌ ○ /pricing/31674a                          15.36 kB  55.85 kB
+├ ○ /api/6e924033                        0.15 kB         40.04 kB
+┌ ○ /docs/441a7b                             33.26 kB  152.80 kB
++ First Load JS shared by all                        128.37 kB
+┌ ○ /blog/27081e                             7.38 kB  196.52 kB
+┌ ○ /docs/c29feb                             26.18 kB  48.41 kB
+  └ chunks/2f31994ef7ac.js                     45.20 kB
+  └ chunks/47aa2bf56991.js                     12.31 kB
+┌ ○ /docs/1e75dc                             41.67 kB  93.59 kB
+├ ƒ /api/9831bafa                        0.87 kB         24.81 kB
+
+┌ ○ /dashboard/f706c6                        7.80 kB  124.90 kB
+┌ ○ /settings/791aea                         33.67 kB  144.97 kB
+┌ ○ /blog/bbe1cb                             23.02 kB  124.80 kB
+┌ ○ /pricing/86c2e1                          44.57 kB  228.77 kB
+┌ ○ /docs/63fc32                             41.32 kB  60.06 kB
+┌ ○ /blog/974dc2                             9.36 kB  200.47 kB
+┌ ○ /blog/7908c7                             3.27 kB  221.61 kB
+┌ ○ /pricing/625056                          47.34 kB  201.77 kB
+┌ ○ /settings/94c9fc                         33.50 kB  204.00 kB
+┌ ○ /pricing/85b595                          16.19 kB  127.39 kB
+
+  └ chunks/4e956f7a0f66.js                     22.70 kB
+┌ ○ /auth/9a5e26                             5.43 kB  239.78 kB
+
+├ ƒ /api/9c3c0f6a                        0.88 kB         51.57 kB
+
+├ ○ /api/e018aff5                        0.35 kB         38.02 kB
+┌ ○ /auth/b99d4c                             46.02 kB  129.78 kB
+┌ ○ /dashboard/cd01df                        30.02 kB  185.82 kB
+
+┌ ○ /dashboard/91245c                        38.87 kB  249.45 kB
+├ ƒ /api/0edd0829                        4.71 kB         2.33 kB
+├ ƒ /api/b9e3469d                        2.46 kB         55.11 kB
+  └ chunks/ba94e7626dc3.js                     83.60 kB
+├ ○ /api/0c1d2ff6                        3.87 kB         7.60 kB
+├ ƒ /api/8b25a06c                        1.96 kB         12.47 kB
+┌ ○ /pricing/ff6c3e                          27.61 kB  143.29 kB
+├ ƒ /api/c0d85db5                        4.91 kB         72.88 kB
+┌ ○ /auth/cb02e9                             27.78 kB  175.87 kB
+
+├ ƒ /api/3873dada                        2.49 kB         29.33 kB
+┌ ○ /settings/901c07                         46.83 kB  88.40 kB
+┌ ○ /docs/fcec2a                             3.16 kB  38.66 kB
++ First Load JS shared by all                        121.34 kB
+┌ ○ /auth/70a89f                             30.76 kB  64.72 kB
+├ ƒ /api/e3be941e                        4.86 kB         43.40 kB
+┌ ○ /dashboard/41af3f                        38.99 kB  171.01 kB
+┌ ○ /auth/56c30e                             47.74 kB  126.23 kB
+┌ ○ /blog/766f5c                             35.22 kB  140.45 kB
+┌ ○ /pricing/8f0d79                          27.16 kB  28.45 kB
+  └ chunks/7bac3690dd3e.js                     74.38 kB
++ First Load JS shared by all                        25.96 kB
+┌ ○ /pricing/f724dc                          33.17 kB  99.11 kB
+┌ ○ /dashboard/58f6c4                        38.47 kB  130.97 kB
+┌ ○ /auth/ba3da7                             48.56 kB  169.45 kB
+┌ ○ /dashboard/b65e2e                        25.99 kB  18.18 kB
+  └ chunks/353a371078f0.js                     56.27 kB
+┌ ○ /dashboard/381b31                        29.46 kB  184.71 kB
++ First Load JS shared by all                        44.12 kB
+┌ ○ /settings/35f6bd                         28.25 kB  128.68 kB
+┌ ○ /docs/56aabd                             36.53 kB  7.70 kB
+├ ○ /api/e431233b                        3.26 kB         16.10 kB
+┌ ○ /auth/2540c8                             27.12 kB  81.24 kB
+┌ ○ /dashboard/b83a3d                        6.30 kB  38.49 kB
+┌ ○ /settings/818036                         5.69 kB  117.97 kB
+
+┌ ○ /settings/996c0e                         43.37 kB  119.15 kB
+├ ƒ /api/46fe2ffb                        4.77 kB         53.36 kB
+┌ ○ /pricing/2efb76                          9.06 kB  8.99 kB
+┌ ○ /dashboard/c3fee0                        45.92 kB  167.31 kB
+┌ ○ /pricing/8c025b                          22.14 kB  244.53 kB
+  └ chunks/decbc6f375c2.js                     18.59 kB
+┌ ○ /settings/17198f                         22.41 kB  111.96 kB
+┌ ○ /docs/0648d5                             27.09 kB  201.66 kB
+┌ ○ /dashboard/1d6af5                        1.56 kB  192.65 kB
+
+├ ƒ /api/997a589c                        3.55 kB         53.76 kB
+┌ ○ /dashboard/a19908                        33.81 kB  175.89 kB
+┌ ○ /settings/d08f82                         14.40 kB  145.06 kB
+┌ ○ /blog/26f539                             10.32 kB  177.70 kB
+┌ ○ /dashboard/091ea2                        15.72 kB  198.20 kB
+├ ƒ /api/d6203359                        0.88 kB         13.03 kB
++ First Load JS shared by all                        30.29 kB
+┌ ○ /blog/b78f09                             18.52 kB  139.74 kB
+  └ chunks/df69c85b4f60.js                     55.88 kB
+┌ ○ /settings/f2e5fd                         17.11 kB  76.19 kB
+├ ○ /api/6b1de068                        1.23 kB         25.29 kB
+  └ chunks/63e6874fe2fc.js                     50.13 kB
+┌ ○ /auth/4b35d7                             21.60 kB  243.69 kB
+
+  └ chunks/e02cae5df869.js                     83.61 kB
+
+┌ ○ /pricing/ddb2fd                          24.59 kB  49.37 kB
+┌ ○ /pricing/a44cce                          37.62 kB  76.23 kB
+├ ○ /api/d2f1eb4d                        2.51 kB         83.79 kB
+┌ ○ /docs/68a1be                             20.70 kB  18.13 kB
+┌ ○ /auth/9a88d6                             11.36 kB  15.78 kB
+┌ ○ /pricing/8c8be5                          33.25 kB  134.53 kB
+├ ƒ /api/d833e589                        4.54 kB         90.50 kB
+┌ ○ /docs/b1f84e                             6.14 kB  217.88 kB
+┌ ○ /dashboard/3296ec                        8.74 kB  129.69 kB
+┌ ○ /docs/012d93                             13.88 kB  30.16 kB
+┌ ○ /blog/ec6d92                             19.81 kB  80.27 kB
+  └ chunks/78d92652fc96.js                     96.33 kB
++ First Load JS shared by all                        59.35 kB
+┌ ○ /dashboard/ae5f13                        5.87 kB  93.43 kB
+├ ƒ /api/71c7e871                        3.79 kB         93.43 kB
++ First Load JS shared by all                        141.18 kB
+├ ƒ /api/9fa719eb                        3.50 kB         36.74 kB
+┌ ○ /blog/8709b4                             33.65 kB  164.85 kB
+┌ ○ /blog/fbfa7e                             9.89 kB  202.23 kB
++ First Load JS shared by all                        112.02 kB
+
+┌ ○ /settings/823afb                         45.63 kB  40.69 kB
+┌ ○ /auth/dfd305                             4.80 kB  174.28 kB
+├ ƒ /api/534b0a1a                        3.52 kB         79.16 kB
+┌ ○ /docs/10409b                             32.38 kB  53.89 kB
+├ ƒ /api/d89a5424                        0.36 kB         62.76 kB
+┌ ○ /docs/2880c5                             49.98 kB  247.70 kB
+┌ ○ /pricing/90d3b3                          38.28 kB  29.05 kB
+┌ ○ /auth/dd4a9d                             22.02 kB  10.54 kB
+├ ƒ /api/a8f8236c                        1.82 kB         25.45 kB
+┌ ○ /pricing/fdea6f                          48.37 kB  208.11 kB
+├ ○ /api/a1872dab                        1.86 kB         30.45 kB
+┌ ○ /settings/e94da3                         24.66 kB  223.98 kB
+┌ ○ /blog/707b24                             18.95 kB  111.57 kB
+┌ ○ /docs/538703                             44.25 kB  216.20 kB
+┌ ○ /dashboard/047385                        23.32 kB  111.65 kB
++ First Load JS shared by all                        84.79 kB
+┌ ○ /dashboard/d76513                        1.43 kB  193.70 kB
+  └ chunks/e51915c5ad59.js                     60.43 kB
+├ ○ /api/2a15d26a                        2.19 kB         98.54 kB
+├ ○ /api/ab787cbf                        4.49 kB         55.46 kB
+  └ chunks/e7dcddc67297.js                     1.70 kB
+┌ ○ /auth/fecc12                             21.23 kB  59.63 kB
+├ ƒ /api/4e246b2c                        2.89 kB         71.05 kB
+┌ ○ /docs/a5c301                             48.58 kB  228.18 kB
+├ ○ /api/f6637e2c                        3.90 kB         85.47 kB
+
+┌ ○ /docs/462371                             14.10 kB  165.50 kB
+┌ ○ /blog/7de6a3                             45.94 kB  10.64 kB
+
+┌ ○ /settings/f7f6eb                         2.90 kB  16.08 kB
+├ ƒ /api/7f5792b2                        3.91 kB         84.92 kB
+┌ ○ /dashboard/b1e96a                        44.19 kB  212.83 kB
+┌ ○ /docs/a773f2                             2.90 kB  143.47 kB
+├ ○ /api/0d324452                        4.50 kB         80.02 kB
+├ ○ /api/b06b3289                        2.78 kB         34.91 kB
+├ ○ /api/f0a9158d                        0.07 kB         8.11 kB
+┌ ○ /pricing/b88794                          5.72 kB  224.28 kB
+┌ ○ /dashboard/f5e5a0                        9.59 kB  93.70 kB
+┌ ○ /pricing/e16700                          4.91 kB  34.42 kB
+┌ ○ /dashboard/e7554f                        7.48 kB  242.21 kB
+
+├ ○ /api/ba7ba3f4                        1.98 kB         5.53 kB
+  └ chunks/fa6dbe56e9ec.js                     54.62 kB
+┌ ○ /blog/595a91                             28.17 kB  183.21 kB
+┌ ○ /settings/3a45e6                         39.28 kB  44.70 kB
+┌ ○ /docs/d8e165                             3.90 kB  126.38 kB
+┌ ○ /docs/ee8b07                             44.32 kB  13.72 kB
+
+┌ ○ /dashboard/3d6478                        47.74 kB  214.74 kB
+
+
+
+├ ○ /api/eedfd29a                        0.90 kB         99.44 kB
+
+
++ First Load JS shared by all                        123.30 kB
+┌ ○ /docs/209204                             16.76 kB  89.06 kB
+┌ ○ /pricing/38813f                          17.21 kB  100.44 kB
+┌ ○ /blog/b47457                             40.36 kB  170.30 kB
+┌ ○ /auth/f8ad8d                             39.02 kB  204.02 kB
+├ ○ /api/e16db57d                        3.10 kB         68.88 kB
+┌ ○ /docs/4a4e3b                             26.79 kB  89.02 kB
+┌ ○ /docs/c81632                             38.39 kB  118.98 kB
++ First Load JS shared by all                        146.25 kB
+  └ chunks/64d67b42cfdf.js                     24.54 kB
++ First Load JS shared by all                        57.90 kB
+┌ ○ /dashboard/a4af37                        20.11 kB  78.89 kB
+
+  └ chunks/9fa8483a73a0.js                     95.35 kB
+┌ ○ /blog/1ceb37                             13.96 kB  112.96 kB
+├ ○ /api/263df88a                        3.03 kB         37.09 kB
+┌ ○ /blog/e4893a                             0.28 kB  80.09 kB
++ First Load JS shared by all                        101.11 kB
+┌ ○ /auth/a291fb                             20.77 kB  141.75 kB
+┌ ○ /pricing/ddf44a                          36.98 kB  118.47 kB
+┌ ○ /docs/078dfb                             18.77 kB  53.94 kB
+┌ ○ /auth/b302bb                             48.00 kB  146.48 kB
+┌ ○ /pricing/8efd00                          36.38 kB  149.29 kB
+┌ ○ /auth/ccb5d8                             48.73 kB  201.23 kB
+┌ ○ /docs/154ffb                             2.48 kB  217.64 kB
+┌ ○ /blog/c63eee                             11.96 kB  152.57 kB
+┌ ○ /blog/c97032                             44.56 kB  139.42 kB
+┌ ○ /docs/193760                             12.00 kB  111.15 kB
+
+├ ƒ /api/2b2bdf5b                        4.59 kB         1.52 kB
+┌ ○ /blog/6b47c5                             6.51 kB  180.06 kB
+┌ ○ /docs/f74c5e                             25.48 kB  115.57 kB
+┌ ○ /docs/3e39ac                             27.00 kB  197.55 kB
+┌ ○ /blog/291e5a                             19.22 kB  43.79 kB
+├ ƒ /api/a7f25949                        1.23 kB         58.60 kB
+
+┌ ○ /docs/2d726d                             2.43 kB  240.49 kB
++ First Load JS shared by all                        103.07 kB
+┌ ○ /settings/2cb5dc                         5.06 kB  138.12 kB
+┌ ○ /docs/3e2705                             31.25 kB  20.00 kB
++ First Load JS shared by all                        34.81 kB
+┌ ○ /docs/d9315a                             2.07 kB  205.60 kB
++ First Load JS shared by all                        135.40 kB
+├ ƒ /api/5eed4595                        2.96 kB         52.24 kB
+  └ chunks/f2801285e99c.js                     37.01 kB
+├ ƒ /api/c14a29b5                        3.19 kB         9.37 kB
+  └ chunks/3b795838b878.js                     34.52 kB
+┌ ○ /auth/9b1f49                             32.83 kB  72.62 kB
+┌ ○ /pricing/419fe3                          32.25 kB  219.71 kB
+  └ chunks/93f0265b97b7.js                     64.02 kB
++ First Load JS shared by all                        197.38 kB
+
+├ ƒ /api/9eb326be                        3.76 kB         33.00 kB
+  └ chunks/36e7a5a7fbea.js                     97.54 kB
+┌ ○ /pricing/543e47                          42.85 kB  241.03 kB
+┌ ○ /blog/ed39ce                             15.03 kB  24.38 kB
++ First Load JS shared by all                        96.85 kB
+┌ ○ /auth/6c8dd7                             42.82 kB  236.06 kB
+┌ ○ /blog/ce8c01                             18.05 kB  221.44 kB
+┌ ○ /settings/3bb734                         39.50 kB  173.62 kB
+├ ○ /api/fd730d93                        4.11 kB         31.90 kB
+┌ ○ /auth/8a4e65                             33.70 kB  33.34 kB
+┌ ○ /dashboard/4f1a00                        36.37 kB  111.95 kB
+├ ○ /api/7f0127f9                        3.99 kB         9.10 kB
+┌ ○ /pricing/4b451d                          11.04 kB  227.84 kB
+┌ ○ /blog/b52143                             20.24 kB  176.21 kB
+┌ ○ /pricing/8ab4d5                          26.76 kB  17.95 kB
+┌ ○ /pricing/5a2942                          38.03 kB  20.87 kB
++ First Load JS shared by all                        148.72 kB
+├ ○ /api/78837d1e                        0.31 kB         86.39 kB
+  └ chunks/5da5e3097b4b.js                     67.23 kB
+
+┌ ○ /dashboard/d12ba1                        40.50 kB  184.63 kB
+┌ ○ /docs/f276fa                             34.62 kB  58.00 kB
+┌ ○ /pricing/9a48dc                          11.50 kB  127.52 kB
+┌ ○ /blog/4d5045                             21.42 kB  162.19 kB
+┌ ○ /auth/874107                             22.39 kB  66.25 kB
+├ ƒ /api/6be97eda                        0.75 kB         46.93 kB
++ First Load JS shared by all                        9.55 kB
+┌ ○ /dashboard/15c2d6                        48.98 kB  9.17 kB
+┌ ○ /blog/3902e1                             21.32 kB  199.98 kB
+┌ ○ /pricing/dcd565                          24.77 kB  206.08 kB
+├ ƒ /api/b78936ee                        1.59 kB         55.37 kB
+┌ ○ /docs/8154c9                             28.73 kB  110.92 kB
+
+┌ ○ /auth/d5d69a                             22.03 kB  231.68 kB
+┌ ○ /docs/eee154                             28.77 kB  39.50 kB
+┌ ○ /pricing/eb39fb                          9.63 kB  33.08 kB
+┌ ○ /settings/7922a5                         19.42 kB  161.29 kB
+┌ ○ /auth/8e20c5                             25.45 kB  185.25 kB
+┌ ○ /settings/2da2c7                         11.19 kB  110.86 kB
+┌ ○ /dashboard/5cfb36                        37.43 kB  195.46 kB
+┌ ○ /auth/adf7f3                             29.94 kB  79.43 kB
+├ ƒ /api/56650598                        4.03 kB         93.58 kB
+├ ○ /api/68197f72                        4.15 kB         10.42 kB
+┌ ○ /docs/902b90                             44.04 kB  72.38 kB
+┌ ○ /docs/cc6e54                             13.59 kB  170.42 kB
+┌ ○ /auth/8b03d5                             9.14 kB  181.32 kB
+┌ ○ /settings/c469d0                         40.33 kB  36.04 kB
+  └ chunks/81e21be84d75.js                     50.29 kB
+├ ƒ /api/d5d52a00                        0.73 kB         3.55 kB
+┌ ○ /docs/449074                             25.52 kB  152.53 kB
+┌ ○ /dashboard/9d1825                        1.85 kB  114.01 kB
+┌ ○ /blog/75a511                             12.07 kB  208.15 kB
+├ ƒ /api/e906b173                        3.65 kB         13.59 kB
+├ ○ /api/f492e563                        0.71 kB         93.34 kB
+├ ƒ /api/de3533c4                        0.74 kB         48.56 kB
+  └ chunks/520e057cf8cf.js                     0.57 kB
+┌ ○ /auth/2ed0ff                             34.57 kB  115.29 kB
+┌ ○ /dashboard/ba5deb                        6.52 kB  213.80 kB
+┌ ○ /blog/a2db64                             25.46 kB  245.61 kB
+┌ ○ /auth/c09b0c                             6.71 kB  100.59 kB
++ First Load JS shared by all                        151.64 kB
+┌ ○ /settings/9cabbe                         38.67 kB  173.70 kB
+┌ ○ /docs/764c8a                             45.00 kB  160.74 kB
++ First Load JS shared by all                        118.05 kB
+┌ ○ /pricing/0109ad                          27.51 kB  4.46 kB
+┌ ○ /dashboard/f831cb                        33.93 kB  86.22 kB
+├ ƒ /api/543fd720                        4.11 kB         29.62 kB
+├ ƒ /api/ff1a3713                        1.65 kB         3.96 kB
+┌ ○ /docs/17d432                             8.52 kB  12.95 kB
++ First Load JS shared by all                        93.34 kB
+
+  └ chunks/a1c0d518243e.js                     40.97 kB
+┌ ○ /docs/146d2f                             36.44 kB  152.16 kB
+  └ chunks/b73841155c6c.js                     61.75 kB
+┌ ○ /auth/e0d5fc                             42.56 kB  34.41 kB
+┌ ○ /blog/da9b3a                             23.29 kB  189.29 kB
+  └ chunks/2c0ea5906b91.js                     59.49 kB
+┌ ○ /auth/7ff78b                             45.54 kB  151.76 kB
+┌ ○ /docs/198073                             40.86 kB  232.32 kB
+  └ chunks/4d58467e318e.js                     37.99 kB
+┌ ○ /dashboard/047241                        16.88 kB  211.78 kB
+
+┌ ○ /dashboard/beaf5a                        28.79 kB  78.56 kB
+┌ ○ /auth/2250ae                             30.88 kB  109.35 kB
+┌ ○ /auth/a7e2c1                             37.32 kB  10.62 kB
+├ ƒ /api/18f4855a                        4.78 kB         31.39 kB
+┌ ○ /docs/c8586c                             44.98 kB  172.11 kB
+┌ ○ /dashboard/50a292                        16.90 kB  28.27 kB
+
+┌ ○ /blog/548153                             36.57 kB  13.28 kB
+┌ ○ /dashboard/cff713                        28.30 kB  47.24 kB
+┌ ○ /blog/13a642                             8.46 kB  200.06 kB
+┌ ○ /docs/c38b48                             36.03 kB  163.96 kB
+
+┌ ○ /auth/f656eb                             37.14 kB  143.85 kB
+┌ ○ /docs/4eb35f                             9.43 kB  35.21 kB
+├ ƒ /api/91aa07ca                        1.53 kB         23.02 kB
+┌ ○ /docs/42879d                             36.03 kB  33.48 kB
+┌ ○ /dashboard/96ff51                        48.76 kB  80.69 kB
+┌ ○ /pricing/c554f6                          2.96 kB  168.39 kB
+┌ ○ /dashboard/b69f6c                        24.70 kB  229.92 kB
+┌ ○ /settings/3d403e                         37.03 kB  210.39 kB
+┌ ○ /pricing/8bdee7                          49.92 kB  197.60 kB
+├ ƒ /api/949d8ee2                        4.28 kB         62.40 kB
++ First Load JS shared by all                        31.00 kB
+  └ chunks/42098a5f8ec3.js                     77.47 kB
+┌ ○ /docs/212dfb                             18.33 kB  200.39 kB
+┌ ○ /docs/215e23                             39.78 kB  195.36 kB
+┌ ○ /docs/031ae4                             49.91 kB  165.79 kB
+┌ ○ /settings/495950                         40.23 kB  30.09 kB
+
+┌ ○ /blog/c9315a                             46.19 kB  45.09 kB
++ First Load JS shared by all                        8.77 kB
+┌ ○ /blog/947951                             19.25 kB  101.76 kB
+┌ ○ /settings/16702c                         36.96 kB  180.56 kB
+┌ ○ /pricing/dc06f1                          21.93 kB  128.13 kB
+┌ ○ /dashboard/ccb4b1                        11.16 kB  207.28 kB
+┌ ○ /blog/70db09                             13.23 kB  15.88 kB
+├ ○ /api/622c332e                        2.03 kB         9.12 kB
+
+┌ ○ /settings/0d5207                         37.51 kB  217.39 kB
+┌ ○ /blog/9a1251                             22.80 kB  140.60 kB
+┌ ○ /pricing/1904a8                          46.08 kB  167.53 kB
+├ ƒ /api/281267dc                        0.64 kB         65.85 kB
+
+┌ ○ /auth/dbee9e                             17.04 kB  214.59 kB
+├ ƒ /api/da0a6fd6                        4.63 kB         50.02 kB
+├ ○ /api/cc4984c8                        4.49 kB         79.47 kB
+├ ○ /api/fa8407a9                        4.21 kB         75.99 kB
+┌ ○ /dashboard/1e577c                        42.87 kB  196.68 kB
+┌ ○ /docs/ff3c32                             27.96 kB  118.83 kB
+┌ ○ /auth/720a1e                             48.83 kB  134.46 kB
+┌ ○ /docs/ca7022                             11.15 kB  68.08 kB
+
+┌ ○ /settings/cee071                         27.92 kB  140.38 kB
+├ ○ /api/093c9f8d                        2.26 kB         42.40 kB
+┌ ○ /dashboard/7ccbba                        12.00 kB  27.85 kB
+├ ƒ /api/6c17ff68                        3.19 kB         87.04 kB
+┌ ○ /auth/c2ca43                             42.92 kB  102.22 kB
+┌ ○ /blog/e4b93d                             35.35 kB  241.39 kB
+
+  └ chunks/b6d88bcecd9a.js                     27.49 kB
++ First Load JS shared by all                        70.26 kB
+┌ ○ /blog/766399                             31.29 kB  244.92 kB
+┌ ○ /dashboard/d87ca9                        45.25 kB  129.61 kB
+  └ chunks/b791bbf49c2f.js                     34.71 kB
+  └ chunks/6d067ed8827f.js                     24.48 kB
++ First Load JS shared by all                        47.76 kB
++ First Load JS shared by all                        90.74 kB
+┌ ○ /auth/0979d6                             27.24 kB  84.06 kB
+├ ƒ /api/e1ddb40d                        1.56 kB         85.66 kB
+
+
+┌ ○ /blog/339f98                             10.04 kB  56.44 kB
+├ ƒ /api/67540c62                        0.74 kB         37.62 kB
+├ ○ /api/a9ecd4be                        4.88 kB         70.07 kB
+
+  └ chunks/15124459b301.js                     16.76 kB
+
+┌ ○ /pricing/51da25                          14.67 kB  178.01 kB
++ First Load JS shared by all                        151.45 kB
+┌ ○ /settings/ece0bb                         15.05 kB  122.96 kB
+┌ ○ /blog/d3f550                             22.76 kB  212.42 kB
+├ ○ /api/1e4b193c                        0.93 kB         13.05 kB
+
++ First Load JS shared by all                        101.06 kB
+  └ chunks/db535d8c8365.js                     61.38 kB
+  └ chunks/5bbc529403cc.js                     65.95 kB
+┌ ○ /docs/831c42                             43.31 kB  140.98 kB
+┌ ○ /pricing/ca720c                          6.39 kB  203.73 kB
+┌ ○ /auth/2f041b                             35.10 kB  191.80 kB
+┌ ○ /dashboard/702ff1                        11.45 kB  49.90 kB
+┌ ○ /auth/f6228b                             42.89 kB  59.56 kB
++ First Load JS shared by all                        93.54 kB
+  └ chunks/d51d0acd0e2a.js                     66.84 kB
+├ ○ /api/18f7d0cd                        0.74 kB         71.84 kB
+┌ ○ /dashboard/229308                        6.71 kB  127.06 kB
+┌ ○ /blog/eece93                             27.08 kB  53.07 kB
+  └ chunks/e8c737b9050a.js                     97.85 kB
+┌ ○ /settings/82915b                         20.61 kB  35.99 kB
++ First Load JS shared by all                        170.15 kB
+  └ chunks/f9d76ce55472.js                     27.02 kB
+┌ ○ /blog/8dc38b                             34.58 kB  150.39 kB
+├ ƒ /api/7a7cfc15                        0.35 kB         42.11 kB
+┌ ○ /blog/2f1733                             25.67 kB  193.37 kB
+┌ ○ /settings/9b43f3                         46.31 kB  83.74 kB
+┌ ○ /auth/d876b2                             5.52 kB  174.30 kB
+┌ ○ /auth/73ec72                             48.13 kB  57.95 kB
+┌ ○ /pricing/4d6fcd                          8.43 kB  192.41 kB
+┌ ○ /dashboard/210ea6                        45.01 kB  170.65 kB
+├ ƒ /api/1a18d1b7                        3.67 kB         34.20 kB
+┌ ○ /docs/e895ba                             26.71 kB  52.36 kB
+┌ ○ /pricing/a710e0                          31.23 kB  162.26 kB
+├ ƒ /api/552030cf                        3.14 kB         67.44 kB
+  └ chunks/63c0a64bb804.js                     96.27 kB
+┌ ○ /blog/ebcf81                             28.65 kB  41.12 kB
++ First Load JS shared by all                        84.85 kB
+├ ○ /api/3a1d7fd0                        3.30 kB         77.54 kB
+┌ ○ /docs/3f7297                             46.77 kB  161.91 kB
+├ ƒ /api/177b04ae                        4.84 kB         23.19 kB
+├ ○ /api/e235a75c                        2.59 kB         70.26 kB
+┌ ○ /blog/44b286                             9.54 kB  134.25 kB
++ First Load JS shared by all                        23.24 kB
+├ ƒ /api/527ee48f                        1.81 kB         87.75 kB
+┌ ○ /settings/bfda17                         0.89 kB  51.32 kB
+┌ ○ /blog/c21da5                             30.02 kB  64.41 kB
+├ ○ /api/c35faacb                        4.92 kB         45.56 kB
+┌ ○ /pricing/c5444a                          14.89 kB  177.33 kB
+
+  └ chunks/5f1321245be5.js                     7.98 kB
+├ ƒ /api/fcff268b                        0.80 kB         18.24 kB
+  └ chunks/80ee44f7c3ad.js                     52.60 kB
+├ ƒ /api/de99cc5f                        0.49 kB         3.34 kB
++ First Load JS shared by all                        48.10 kB
+┌ ○ /pricing/ce5e03                          6.32 kB  33.30 kB
+┌ ○ /auth/049dcd                             30.81 kB  202.67 kB
+┌ ○ /dashboard/4d790c                        39.25 kB  87.34 kB
+
+┌ ○ /docs/584558                             29.06 kB  110.48 kB
++ First Load JS shared by all                        22.44 kB
+
+  └ chunks/8a418d6114dc.js                     46.85 kB
+┌ ○ /dashboard/e5dea8                        20.89 kB  123.06 kB
+  └ chunks/afb1a8cf4727.js                     98.51 kB
++ First Load JS shared by all                        169.22 kB
+├ ○ /api/99f85d24                        1.71 kB         5.63 kB
+┌ ○ /dashboard/082ad5                        19.06 kB  246.67 kB
+┌ ○ /pricing/f0f79f                          48.10 kB  99.37 kB
+┌ ○ /docs/3e79a9                             45.08 kB  100.78 kB
+┌ ○ /docs/ac69b4                             18.31 kB  246.15 kB
+┌ ○ /pricing/ea2214                          41.79 kB  55.27 kB
+  └ chunks/36f9aec506c3.js                     95.02 kB
+┌ ○ /auth/5e5219                             16.52 kB  139.60 kB
+┌ ○ /auth/e88389                             36.80 kB  216.55 kB
++ First Load JS shared by all                        172.50 kB
+┌ ○ /blog/7cde82                             8.98 kB  124.35 kB
+┌ ○ /pricing/b78c16                          34.62 kB  158.60 kB
+┌ ○ /auth/e8cbbf                             39.45 kB  207.63 kB
+┌ ○ /pricing/f9e756                          47.01 kB  90.21 kB
+┌ ○ /settings/c2c4cd                         32.72 kB  60.61 kB
+┌ ○ /dashboard/4919d2                        25.76 kB  198.07 kB
+┌ ○ /docs/0755bd                             5.39 kB  187.75 kB
+┌ ○ /pricing/e5581d                          18.66 kB  232.30 kB
++ First Load JS shared by all                        61.80 kB
+├ ○ /api/a8eec9bd                        1.69 kB         51.41 kB
+
+
+┌ ○ /docs/14a998                             33.44 kB  148.32 kB
+├ ○ /api/14892994                        3.20 kB         64.38 kB
+
+┌ ○ /auth/86ebca                             31.05 kB  6.23 kB
+┌ ○ /dashboard/f8190d                        21.12 kB  132.04 kB
+┌ ○ /auth/c24638                             22.17 kB  197.48 kB
++ First Load JS shared by all                        89.03 kB
+┌ ○ /dashboard/cd23f0                        28.67 kB  116.50 kB
+├ ○ /api/488d07f4                        1.80 kB         92.80 kB
+├ ƒ /api/81b17d72                        0.67 kB         18.20 kB
+  └ chunks/23e4a243cbd5.js                     4.89 kB
+┌ ○ /auth/cdc2e9                             44.99 kB  154.55 kB
+
+  └ chunks/96b0188fd441.js                     6.87 kB
++ First Load JS shared by all                        157.71 kB
+┌ ○ /pricing/5716db                          5.49 kB  232.83 kB
+  └ chunks/c18845463fe5.js                     80.63 kB
+┌ ○ /pricing/2f06ab                          14.92 kB  168.89 kB
+
+├ ○ /api/851ccb01                        1.42 kB         1.01 kB
++ First Load JS shared by all                        158.78 kB
+┌ ○ /blog/8b17f2                             40.28 kB  92.99 kB
+┌ ○ /dashboard/55998c                        0.15 kB  119.03 kB
+┌ ○ /dashboard/b05efe                        2.04 kB  26.25 kB
+┌ ○ /auth/e2ba4d                             14.75 kB  150.56 kB
+┌ ○ /pricing/5b5c87                          7.72 kB  25.97 kB
+
+├ ƒ /api/3fac5504                        3.18 kB         60.16 kB
+┌ ○ /auth/cc5db0                             41.90 kB  3.97 kB
+
+┌ ○ /pricing/86b4e7                          16.08 kB  71.79 kB
+┌ ○ /auth/1c1208                             5.80 kB  226.26 kB
+┌ ○ /auth/ec4de8                             21.90 kB  101.22 kB
+┌ ○ /dashboard/9fdf13                        18.03 kB  123.22 kB
+├ ○ /api/6076a36f                        0.08 kB         35.19 kB
+┌ ○ /blog/f6d7e9                             7.42 kB  31.38 kB
+├ ƒ /api/5e591d07                        3.30 kB         0.02 kB
+┌ ○ /blog/b87936                             12.79 kB  128.01 kB
+┌ ○ /blog/d43910                             47.12 kB  220.39 kB
+  └ chunks/68a1ed6af710.js                     95.03 kB
+┌ ○ /settings/c1fe1e                         32.42 kB  76.33 kB
+┌ ○ /auth/2351b9                             37.81 kB  120.31 kB
+┌ ○ /docs/52dd6a                             36.18 kB  80.35 kB
+┌ ○ /pricing/336f37                          36.94 kB  193.15 kB
+┌ ○ /settings/7ca9d6                         45.08 kB  15.24 kB
+┌ ○ /docs/ea9251                             41.35 kB  179.18 kB
+
+┌ ○ /pricing/110276                          47.41 kB  50.14 kB
++ First Load JS shared by all                        100.16 kB
++ First Load JS shared by all                        31.56 kB
++ First Load JS shared by all                        119.47 kB
+┌ ○ /docs/ff2023                             41.80 kB  130.16 kB
+  └ chunks/5f03c3e65187.js                     25.40 kB
+  └ chunks/2dcd9187f601.js                     10.47 kB
++ First Load JS shared by all                        27.66 kB
+
+┌ ○ /docs/55bdc3                             16.57 kB  174.22 kB
+├ ƒ /api/ff9597b7                        0.27 kB         47.40 kB
+┌ ○ /dashboard/415e2e                        24.44 kB  212.76 kB
+┌ ○ /blog/dd3965                             45.99 kB  31.98 kB
+┌ ○ /auth/77cfe8                             28.92 kB  163.17 kB
+┌ ○ /blog/20e249                             29.97 kB  87.18 kB
+┌ ○ /pricing/45c1f7                          20.15 kB  242.17 kB
+┌ ○ /docs/d453b9                             13.67 kB  168.18 kB
+  └ chunks/71791c35c21a.js                     94.82 kB
+┌ ○ /pricing/03e476                          19.65 kB  141.70 kB
+┌ ○ /settings/645dee                         8.39 kB  145.37 kB
+┌ ○ /auth/27d590                             14.96 kB  149.49 kB
+┌ ○ /settings/1b4cd8                         2.77 kB  60.30 kB
+├ ○ /api/e0b2c553                        0.50 kB         44.53 kB
+┌ ○ /auth/ceb86d                             27.84 kB  194.22 kB
+┌ ○ /auth/9e9fd4                             16.20 kB  78.93 kB
+┌ ○ /dashboard/6fedfd                        24.84 kB  225.24 kB
+┌ ○ /settings/6dec0e                         14.32 kB  103.98 kB
+┌ ○ /blog/965890                             6.52 kB  107.45 kB
+┌ ○ /docs/366968                             30.14 kB  89.92 kB
+┌ ○ /blog/a39d25                             32.73 kB  164.67 kB
+  └ chunks/665c88d8a156.js                     16.65 kB
++ First Load JS shared by all                        136.08 kB
+┌ ○ /dashboard/7a3f45                        16.16 kB  92.91 kB
+┌ ○ /blog/de9f9f                             9.48 kB  89.65 kB
+┌ ○ /docs/021d98                             16.78 kB  112.34 kB
+┌ ○ /auth/2f4c65                             21.32 kB  2.49 kB
+┌ ○ /blog/934759                             22.77 kB  224.47 kB
+
+┌ ○ /settings/8e30a7                         4.45 kB  157.81 kB
+
+├ ƒ /api/748a0085                        0.41 kB         66.95 kB
+┌ ○ /dashboard/4afa44                        1.36 kB  205.20 kB
+┌ ○ /dashboard/9f20f7                        6.65 kB  30.53 kB
+┌ ○ /blog/b81e00                             39.86 kB  238.42 kB
+  └ chunks/5749c032ea52.js                     70.65 kB
+┌ ○ /dashboard/dbbce5                        19.51 kB  119.98 kB
+┌ ○ /pricing/e81d4f                          28.78 kB  17.33 kB
+┌ ○ /blog/d63dd3                             17.94 kB  160.52 kB
++ First Load JS shared by all                        44.52 kB
+┌ ○ /settings/1e839c                         38.69 kB  214.62 kB
+┌ ○ /blog/33b0b5                             2.71 kB  226.63 kB
+
+┌ ○ /pricing/fdc6ad                          34.60 kB  18.43 kB
++ First Load JS shared by all                        79.07 kB
+┌ ○ /dashboard/e8e89c                        34.80 kB  199.25 kB
+├ ○ /api/306d3988                        2.64 kB         88.27 kB
+┌ ○ /dashboard/832001                        32.12 kB  117.67 kB
+┌ ○ /settings/8cbbac                         36.14 kB  233.65 kB
+┌ ○ /settings/8e3dd1                         13.62 kB  100.14 kB
+┌ ○ /docs/1343dc                             21.73 kB  242.78 kB
+┌ ○ /auth/efc2d5                             12.26 kB  57.59 kB
+┌ ○ /dashboard/3e6e45                        14.18 kB  234.28 kB
+├ ○ /api/87f33c26                        1.60 kB         2.60 kB
++ First Load JS shared by all                        119.40 kB
+├ ƒ /api/4e81d760                        1.37 kB         87.65 kB
+┌ ○ /dashboard/755abd                        47.33 kB  9.75 kB
+
+┌ ○ /auth/bcfa50                             32.04 kB  74.15 kB
+
+┌ ○ /settings/92ebb3                         41.79 kB  0.55 kB
++ First Load JS shared by all                        185.88 kB
++ First Load JS shared by all                        182.04 kB
+┌ ○ /auth/5b60bc                             39.88 kB  6.95 kB
++ First Load JS shared by all                        119.94 kB
+┌ ○ /auth/e1f415                             2.47 kB  119.00 kB
+┌ ○ /auth/2b14b2                             16.95 kB  131.87 kB
+  └ chunks/2191fbc01d3c.js                     42.59 kB

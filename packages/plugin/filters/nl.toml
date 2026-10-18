@@ -1,0 +1,8 @@
+[filters.nl]
+description = "Cap large nl output"
+match_command = "^nl(\\s|$)"
+priority = 50
+strip_ansi = true
+truncate_lines_at = 500
+max_lines = 200
+on_empty = "nl: no output"

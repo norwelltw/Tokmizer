@@ -1,0 +1,14 @@
+[hooks]
+exclude_commands = ["curl", "^playwright test", "  "]
+transparent_prefixes = ["docker exec app"]
+
+[retriever]
+mode = "sqlite"
+retention_days = 14
+max_entries = 500
+
+[telemetry]
+enabled = false
+
+[limits]
+grep_max_results = 50

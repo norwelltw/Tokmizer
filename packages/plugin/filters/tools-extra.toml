@@ -1,0 +1,55 @@
+[filters.mise]
+description = "Compact mise (asdf successor)"
+match_command = "^mise(\\s|$)"
+priority = 50
+strip_ansi = true
+max_lines = 80
+
+[filters.yadm]
+description = "Compact yadm (dotfile manager)"
+match_command = "^yadm(\\s|$)"
+priority = 50
+max_lines = 80
+
+[filters.just]
+description = "Compact just task runner"
+match_command = "^just(\\s|$)"
+priority = 55
+strip_ansi = true
+max_lines = 100
+
+[filters.task]
+description = "Compact go-task taskfile"
+match_command = "^task(\\s|$)"
+priority = 55
+strip_ansi = true
+max_lines = 100
+
+[filters.trunk]
+description = "Compact Trunk linter aggregator"
+match_command = "^trunk(\\s|$)"
+priority = 55
+strip_ansi = true
+max_lines = 120
+
+[filters.pre-commit]
+description = "Compact pre-commit"
+match_command = "^pre-commit(\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^\\[INFO\\]", "^\\s*$"]
+max_lines = 100
+
+[filters.act]
+description = "Compact act (GitHub Actions local runner)"
+match_command = "^act(\\s|$)"
+priority = 55
+strip_ansi = true
+max_lines = 150
+
+[filters.spring-boot]
+description = "Compact Spring Boot logs"
+match_command = "^(java\\s+-jar.*\\.jar|\\./mvnw\\s+spring-boot|gradle\\s+bootRun)"
+priority = 50
+strip_lines_matching = ["^\\d{4}-\\d{2}-\\d{2}.*DEBUG", "^\\s*$"]
+max_lines = 200

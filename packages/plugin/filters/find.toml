@@ -1,0 +1,8 @@
+[filters.find]
+description = "Compact find output"
+match_command = "^find(\\s|$)"
+priority = 60
+transform = "smart-find"
+strip_lines_matching = ["^find:.*Permission denied", "^find:.*Operation not permitted"]
+max_lines = 2000
+on_empty = "find: no matches"

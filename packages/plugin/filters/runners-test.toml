@@ -1,0 +1,154 @@
+[filters.pytest]
+description = "Compact pytest"
+match_command = "^pytest(\\s|$)|^python\\s+-m\\s+pytest"
+priority = 60
+strip_ansi = true
+strip_lines_matching = [
+  " PASSED",
+  " SKIPPED",
+  " XFAIL",
+  " XPASS",
+  "^=+ test session starts",
+  "^cachedir:",
+  "^collecting ",
+  "^collected \\d+ items",
+  "^rootdir:",
+  "^configfile:",
+  "^plugins:",
+  "^platform ",
+  "^\\s*$"
+]
+transform = "strip-banners"
+max_lines = 200
+
+[filters.jest]
+description = "Compact jest"
+match_command = "^jest(\\s|$)|^npx\\s+jest"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^PASS\\s", "^\\s*✓", "^Ran all test suites", "^\\s*$"]
+max_lines = 200
+
+[filters.vitest]
+description = "Compact vitest"
+match_command = "^vitest(\\s|$)|^npx\\s+vitest"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^\\s*✓", "^\\s*$"]
+max_lines = 200
+
+[filters.go-test]
+description = "Compact go test"
+match_command = "^go\\s+test"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^=== RUN", "^--- PASS:", "^\\s*$"]
+max_lines = 200
+
+[filters.rspec]
+description = "Compact rspec"
+match_command = "^rspec(\\s|$)|^bundle\\s+exec\\s+rspec"
+priority = 60
+strip_ansi = true
+max_lines = 200
+
+[filters.phpunit]
+description = "Compact phpunit"
+match_command = "^phpunit(\\s|$)|^vendor/bin/phpunit|^php\\s+(?:\\S*/)?phpunit(?:\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^Runtime:\\s", "^Configuration:\\s", "^Processes:\\s", "^[.SIRDWFEN]+\\s+\\d+ / \\d+ \\(\\s*\\d+%\\)$", "^\\s*$"]
+max_lines = 150
+strip_on_failure = true
+
+[filters.paratest]
+description = "Compact paratest"
+match_command = "^paratest(?:\\s|$)|^php\\s+(?:\\S*/)?paratest(?:\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^Runtime:\\s", "^Configuration:\\s", "^Processes:\\s", "^[.SIRDWFEN]+\\s+\\d+ / \\d+ \\(\\s*\\d+%\\)$", "^\\s*$"]
+max_lines = 150
+strip_on_failure = true
+
+[filters.pest]
+description = "Compact pest (drop passing tests, keep failures and totals)"
+match_command = "^pest(?:\\s|$)|^php\\s+(?:\\S*/)?pest(?:\\s|$)|^php\\s+artisan\\s+test(?:\\s|$)"
+priority = 62
+strip_ansi = true
+strip_lines_matching = ["^\\s*✓ ", "^\\s*PASS\\s+\\S", "^\\s*$"]
+max_lines = 150
+keep_failures = true
+strip_on_failure = true
+
+[filters.phpt]
+description = "Compact php run-tests.php (drop environment banner and passing tests)"
+match_command = "^php\\s+(?:\\S*/)?run-tests\\.php(?:\\s|$)"
+priority = 66
+strip_ansi = true
+strip_lines_matching = [
+  "^PASS .*\\[[^\\]]+\\.phpt\\]\\s*$",
+  "^(?:PHP|PHP_SAPI|PHP_VERSION|ZEND_VERSION|PHP_OS|INI actual|More \\.INIs|CWD|Extra dirs|VALGRIND)\\s*:",
+  "^TIME (?:START|END) ",
+  "^Exts (?:skipped|tested)\\s*:",
+  "^[=-]{20,}$",
+  "^\\s*$"
+]
+max_lines = 150
+keep_failures = true
+strip_on_failure = true
+
+[filters.artisan]
+description = "Compact php artisan (drop blank lines and dot leaders)"
+match_command = "^php\\s+artisan(?:\\s|$)|^artisan(?:\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^\\s*$"]
+max_lines = 150
+keep_failures = true
+
+[filters.ctest]
+description = "Compact ctest (drop passing tests and start lines, keep failures and totals)"
+match_command = "^ctest(?:\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^\\s+Start\\s+\\d+: ", "^\\s*\\d+/\\d+ Test\\s+#\\s*\\d+: \\S+ \\.+\\s+Passed\\s", "^\\s*$"]
+max_lines = 150
+keep_failures = true
+strip_on_failure = true
+
+[filters.playwright]
+description = "Compact Playwright run output; failures always kept"
+match_command = "^playwright(?:\\s|$)|^npx\\s+playwright(?:\\s|$)"
+priority = 60
+strip_ansi = true
+transform = "squeeze-output"
+max_lines = 150
+keep_failures = true
+
+[filters.rails]
+description = "Compact rails output"
+match_command = "^rails(?:\\s|$)|^(?:bundle\\s+exec\\s+)rails(?:\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^\\s*$"]
+max_lines = 200
+keep_failures = true
+
+[filters.rake]
+description = "Compact rake output"
+match_command = "^rake(?:\\s|$)|^(?:bundle\\s+exec\\s+)rake(?:\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^\\s*$"]
+max_lines = 200
+keep_failures = true
+
+[filters.bun-test]
+description = "Compact bun test (drop passing tests, keep failures and totals)"
+match_command = "^bun\\s+test(?:\\s|$)"
+priority = 66
+strip_ansi = true
+strip_lines_matching = ["^\\(pass\\) ", "^\\s*✓ ", "^\\s*$"]
+max_lines = 200
+keep_failures = true
+strip_on_failure = true

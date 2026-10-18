@@ -1,0 +1,93 @@
+{
+  "name": "@tokmizer/plugin",
+  "version": "0.9.64",
+  "description": "Tokmizer reduces token consumption for AI coding tools (Claude Code, Codex, Cursor, Aider, Gemini CLI, Cline, Windsurf, Copilot). Cross-OS.",
+  "type": "module",
+  "engines": {
+    "node": ">=20.11"
+  },
+  "main": "dist/index.js",
+  "bin": {
+    "tkr": "dist/bin/tkr.js",
+    "tkr-exec": "dist/bin/tkr-exec",
+    "tkr-shim": "dist/bin/tkr-shim.js",
+    "tkr-codex-hook": "dist/bin/tkr-codex-hook.js",
+    "tkr-cursor-hook": "dist/bin/tkr-cursor-hook.js",
+    "tkr-gemini-hook": "dist/bin/tkr-gemini-hook.js",
+    "tkr-agent-hook": "dist/bin/tkr-agent-hook.js",
+    "tkr-copilot-hook": "dist/bin/tkr-copilot-hook.js",
+    "tkr-droid-hook": "dist/bin/tkr-droid-hook.js",
+    "tkr-trae-hook": "dist/bin/tkr-trae-hook.js",
+    "tkr-qwen-hook": "dist/bin/tkr-qwen-hook.js",
+    "tkr-crush-hook": "dist/bin/tkr-crush-hook.js",
+    "tkr-junie-hook": "dist/bin/tkr-junie-hook.js",
+    "tkr-zcode-hook": "dist/bin/tkr-zcode-hook.js",
+    "tkr-grok-hook": "dist/bin/tkr-grok-hook.js",
+    "tkr-daemon": "dist/bin/tkr-daemon.js"
+  },
+  "files": [
+    "dist",
+    ".codex-plugin",
+    "codex-hooks",
+    ".claude-plugin",
+    "hooks",
+    "command-templates",
+    "agent-plugins",
+    "scripts/install-mac-linux.sh",
+    "scripts/install-windows.ps1",
+    "scripts/install-native.mjs",
+    "scripts/README-INSTALL.md",
+    "README.md",
+    "LICENSE-ENGINE",
+    "LICENSES.md",
+    "NOTICE",
+    "THIRD-PARTY-NOTICES.md"
+  ],
+  "scripts": {
+    "lint": "tsc --noEmit",
+    "build": "tsc -p tsconfig.json --noEmit && node scripts/bundle.mjs",
+    "build:native": "node scripts/build-native.mjs",
+    "postinstall": "node scripts/install-native.mjs",
+    "prepublishOnly": "npm run build && node scripts/check-native-artifacts.mjs && ( cd ../.. && npx vitest run packages/plugin ) && npx tsx scripts/benchmark-quality.ts --check && node scripts/check-upgrade-safety.mjs && node scripts/check-prod-key.mjs && node scripts/check-version.mjs && node scripts/check-dist-clean.mjs && node scripts/check-pack-clean.mjs && node scripts/smoke-dist.mjs",
+    "build:single": "node scripts/build-single.mjs",
+    "pack:single": "node scripts/pack-single.mjs"
+  },
+  "devDependencies": {
+    "@types/cross-spawn": "^6.0.6",
+    "cross-spawn": "^7.0.6",
+    "esbuild": "^0.28.0",
+    "smol-toml": "^1.9.0",
+    "zod": "^3.23.8"
+  },
+  "optionalDependencies": {
+    "@tokmizer/plugin-darwin-arm64": "0.9.64",
+    "@tokmizer/plugin-darwin-x64": "0.9.64",
+    "@tokmizer/plugin-linux-arm64": "0.9.64",
+    "@tokmizer/plugin-linux-x64": "0.9.64",
+    "@tokmizer/plugin-win32-arm64": "0.9.64",
+    "@tokmizer/plugin-win32-x64": "0.9.64"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/norwelltw/Tokmizer"
+  },
+  "homepage": "https://tokmizer.com",
+  "keywords": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "aider",
+    "gemini-cli",
+    "cline",
+    "windsurf",
+    "copilot",
+    "tokmizer",
+    "plugin",
+    "tokens",
+    "token-optimizer"
+  ],
+  "license": "Apache-2.0 AND BUSL-1.1"
+}

@@ -1,0 +1,8 @@
+[filters.diff]
+description = "Cap large diff output"
+match_command = "^diff(\\s|$)"
+priority = 50
+strip_ansi = true
+truncate_lines_at = 500
+max_lines = 400
+on_empty = "diff: no differences"

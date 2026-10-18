@@ -1,0 +1,20 @@
+Previewing update (dev)
+
+View in Browser (Ctrl+O): https://app.pulumi.com/acme/shop-infra/dev/previews/4f6c2a1e-1d55-4c1a-9e02-77a4bb19f0c1
+
+@ previewing update....
+     Type                              Name                  Plan       Info
+     pulumi:pulumi:Stack               shop-infra-dev
+ +   ├─ aws:s3:BucketV2                assets                create
+ ~   ├─ aws:lambda:Function            checkout-api          update     [diff: ~code]
+ -   └─ aws:sqs:Queue                  legacy-orders         delete
+
+Outputs:
+  ~ apiUrl: "https://abc123.execute-api.eu-west-1.amazonaws.com/v1" => output<string>
+
+Resources:
+    + 1 to create
+    ~ 1 to update
+    - 1 to delete
+    3 changes. 14 unchanged
+

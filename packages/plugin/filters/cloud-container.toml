@@ -1,0 +1,74 @@
+[filters.kubectl]
+description = "Compact kubectl output"
+match_command = "^kubectl(\\s|$)|^k(\\s|$)"
+priority = 60
+strip_ansi = true
+truncate_lines_at = 240
+max_lines = 100
+
+[filters.helm]
+description = "Compact Helm output"
+match_command = "^helm(\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^WARNING:", "^\\s*$"]
+max_lines = 120
+on_empty = "helm: ok"
+
+[filters.terraform]
+description = "Compact Terraform/OpenTofu plan/apply output"
+match_command = "^(terraform|tofu)(\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = [
+  "^Refreshing state",
+  "^Acquiring state lock",
+  "^Releasing state lock",
+  "^\\s*#.*unchanged",
+  "^Initializing",
+  "^- Reusing previous version",
+  "^- Installing",
+  "^- Installed",
+  "^\\s*$"
+]
+max_lines = 120
+on_empty = "terraform: no changes"
+
+[filters.gcloud]
+description = "Compact gcloud CLI output"
+match_command = "^gcloud(\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^\\s*$"]
+max_lines = 60
+
+[filters.aws]
+description = "Compact aws CLI output"
+match_command = "^aws(\\s|$)"
+priority = 60
+strip_ansi = true
+truncate_lines_at = 200
+max_lines = 120
+
+[filters.skopeo]
+description = "Compact skopeo output"
+match_command = "^skopeo(\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^Getting image", "^Copying", "^Writing manifest", "^\\s*$"]
+max_lines = 60
+
+[filters.brew]
+description = "Compact Homebrew output"
+match_command = "^brew(\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = [
+  "^==>\\s*Downloading",
+  "^==>\\s*Pouring",
+  "^==>\\s*Fetching",
+  "^Already downloaded",
+  "^\\s*$"
+]
+max_lines = 100
+on_empty = "brew: ok"

@@ -1,0 +1,10 @@
+PHPUnit 13.4.2 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.5.0
+Configuration: /home/dev/shop/phpunit-p.xml
+
+........................                                          24 / 24 (100%)
+
+Time: 00:00.002, Memory: 20.00 MB
+
+OK (24 tests, 24 assertions)

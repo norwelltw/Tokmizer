@@ -1,5 +1,7 @@
-.DS_Store
 node_modules/
 dist/
-.env
-.env.*
+coverage/
+packages/plugin/native/target/
+packages/plugin/native/artifacts/
+*.tgz
+.env*

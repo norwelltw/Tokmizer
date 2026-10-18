@@ -1,0 +1,44 @@
+[filters.glab]
+description = "Compact GitLab CLI output"
+match_command = "^glab(\\s|$)"
+priority = 60
+strip_ansi = true
+truncate_lines_at = 200
+max_lines = 80
+
+[filters.gh]
+description = "Compact GitHub CLI output"
+match_command = "^gh(\\s|$)"
+priority = 60
+strip_ansi = true
+truncate_lines_at = 200
+max_lines = 80
+
+[filters.gh-api]
+description = "Compact gh api raw json"
+match_command = "^gh\\s+api"
+priority = 65
+
+[filters.jira]
+description = "Compact jira CLI output"
+match_command = "^jira(\\s|$)"
+priority = 55
+strip_ansi = true
+truncate_lines_at = 200
+max_lines = 80
+
+[filters.jj]
+description = "Compact Jujutsu output"
+match_command = "^jj(\\s|$)"
+priority = 55
+strip_ansi = true
+max_lines = 100
+
+[filters.gt]
+description = "Compact Graphite CLI output (drop tree spacer lines)"
+match_command = "^gt(?:\\s|$)"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^[│\\s]*$"]
+truncate_lines_at = 240
+max_lines = 150

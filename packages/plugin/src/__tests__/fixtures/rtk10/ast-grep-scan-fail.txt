@@ -1,0 +1,39 @@
+error[no-console]: Remove console.log before shipping
+  ┌─ src/m3.ts:2:3
+  │
+2 │   console.log("value", x);
+  │   ^^^^^^^^^^^^^^^^^^^^^^^
+
+error[no-console]: Remove console.log before shipping
+  ┌─ src/m3.ts:5:1
+  │
+5 │ console.log("done");
+  │ ^^^^^^^^^^^^^^^^^^^
+
+error[no-console]: Remove console.log before shipping
+  ┌─ src/m2.ts:2:3
+  │
+2 │   console.log("value", x);
+  │   ^^^^^^^^^^^^^^^^^^^^^^^
+
+error[no-console]: Remove console.log before shipping
+  ┌─ src/m2.ts:5:1
+  │
+5 │ console.log("done");
+  │ ^^^^^^^^^^^^^^^^^^^
+
+error[no-console]: Remove console.log before shipping
+  ┌─ src/m1.ts:2:3
+  │
+2 │   console.log("value", x);
+  │   ^^^^^^^^^^^^^^^^^^^^^^^
+
+error[no-console]: Remove console.log before shipping
+  ┌─ src/m1.ts:5:1
+  │
+5 │ console.log("done");
+  │ ^^^^^^^^^^^^^^^^^^^
+
+Error: 6 error(s) found in code.
+Help: Scan succeeded and found error level diagnostics in the codebase.
+

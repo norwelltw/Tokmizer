@@ -1,0 +1,43 @@
+=== RUN   TestAdd
+    calc_test.go:10: Add(2, 2) = 5, want 4
+--- FAIL: TestAdd (0.00s)
+=== RUN   TestSub
+--- PASS: TestSub (0.00s)
+=== RUN   TestMul
+--- PASS: TestMul (0.00s)
+=== RUN   TestDiv
+--- PASS: TestDiv (0.00s)
+=== RUN   TestTable
+=== RUN   TestTable/positive
+=== RUN   TestTable/negative
+    calc_test.go:31: Abs(-3) = -3, want 3
+=== RUN   TestTable/zero
+--- FAIL: TestTable (0.00s)
+    --- PASS: TestTable/positive (0.00s)
+    --- FAIL: TestTable/negative (0.00s)
+    --- PASS: TestTable/zero (0.00s)
+=== RUN   TestParse
+--- PASS: TestParse (0.00s)
+=== RUN   TestFirst
+--- FAIL: TestFirst (0.00s)
+panic: runtime error: index out of range [0] with length 0 [recovered]
+	panic: runtime error: index out of range [0] with length 0
+
+goroutine 21 [running]:
+testing.tRunner.func1.2({0x1029c4f60, 0x14000016108})
+	/usr/local/go/src/testing/testing.go:1631 +0x1c4
+testing.tRunner.func1()
+	/usr/local/go/src/testing/testing.go:1634 +0x33c
+panic({0x1029c4f60?, 0x14000016108?})
+	/usr/local/go/src/runtime/panic.go:770 +0x124
+example.com/calc.First(...)
+	/home/dev/calc/calc.go:18
+example.com/calc.TestFirst(0x14000107040?)
+	/home/dev/calc/calc_test.go:44 +0x20
+testing.tRunner(0x14000107040, 0x1029d8b28)
+	/usr/local/go/src/testing/testing.go:1689 +0xec
+created by testing.(*T).Run in goroutine 1
+	/usr/local/go/src/testing/testing.go:1742 +0x318
+exit status 2
+FAIL	example.com/calc	0.231s
+ok  	example.com/calc/internal/fmt	0.112s

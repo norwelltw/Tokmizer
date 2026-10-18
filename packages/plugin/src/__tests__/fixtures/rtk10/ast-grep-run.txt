@@ -1,0 +1,6 @@
+src/m3.ts:2:  console.log("value", x);
+src/m3.ts:5:console.log("done");
+src/m2.ts:2:  console.log("value", x);
+src/m2.ts:5:console.log("done");
+src/m1.ts:2:  console.log("value", x);
+src/m1.ts:5:console.log("done");

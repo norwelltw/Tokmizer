@@ -1,0 +1,15 @@
+[filters.tsc]
+description = "Compact tsc / tsc --noEmit output"
+match_command = "^tsc(\\s|$)|^npx\\s+tsc|^npm\\s+(run|exec)\\s+tsc|^pnpm\\s+(run|exec)?\\s*tsc"
+priority = 65
+strip_ansi = true
+preserve_exact = true
+strip_lines_matching = [
+  "^\\s*$",
+  "^Watching for file changes",
+  "^Starting compilation in watch mode",
+  "^File change detected",
+  "^Found \\d+ error",
+  "^\\s*Found 0 error",
+  "^\\s*\\d+:\\d+:\\d+\\s+(AM|PM)\\s+-",
+]

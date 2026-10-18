@@ -1,0 +1,26 @@
+[filters.glab-mr-view]
+description = "Compact glab mr view"
+match_command = "^glab\\s+mr\\s+view"
+priority = 65
+strip_ansi = true
+truncate_lines_at = 200
+max_lines = 120
+
+[filters.glab-mr-diff]
+description = "Compact glab mr diff"
+match_command = "^glab\\s+mr\\s+diff"
+priority = 65
+strip_ansi = true
+max_lines = 200
+
+[filters.glab-api]
+description = "Compact glab api raw json"
+match_command = "^glab\\s+api"
+priority = 65
+
+[filters.glab-auth]
+description = "Compact glab auth status/login"
+match_command = "^glab\\s+auth"
+priority = 65
+strip_ansi = true
+max_lines = 30

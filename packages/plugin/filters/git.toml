@@ -1,0 +1,43 @@
+[filters.git]
+description = "Compact git log/status/diff output"
+match_command = "^git(\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^\\s*$"]
+max_lines = 80
+on_empty = "git: no output"
+
+[filters.git-status]
+description = "Compact git status output (drop hint lines, keep state)"
+match_command = "^git\\s+status(\\s|$)"
+priority = 65
+strip_ansi = true
+strip_lines_matching = ["^\\s*$", "^\\s*\\(use \"git [^)]*\\)$", "^no changes added to commit"]
+on_empty = "git status: clean"
+
+[filters.git-log]
+description = "Compact git log output (drop blank lines and commit trailers, keep every commit header)"
+match_command = "^git\\s+log(\\s|$)"
+priority = 65
+strip_ansi = true
+strip_lines_matching = ["^\\s*$", "^\\s*(?:Co-[Aa]uthored-[Bb]y|Signed-off-by):"]
+transform = "smart-log"
+max_lines = 160
+on_empty = "git log: no commits"
+
+[filters.git-diff]
+description = "Compact git diff/show output (cap runaway diffs)"
+match_command = "^git\\s+(?:diff|show)(\\s|$)"
+priority = 65
+strip_ansi = true
+strip_lines_matching = ["^index [0-9a-f]+\\.\\.[0-9a-f]+"]
+truncate_lines_at = 300
+max_lines = 200
+on_empty = "git diff: no changes"
+
+[filters.git-show-blob]
+description = "Read a file at a revision like cat"
+match_command = "^git\\s+show\\s+(?:-\\S+\\s+)*[^\\s:-][^\\s:]*:[^\\s]+\\s*$"
+priority = 70
+transform = "smart-read"
+max_lines = 200

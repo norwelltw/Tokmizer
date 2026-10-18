@@ -1,0 +1,23 @@
+[filters.mix-compile]
+description = "Compact mix compile"
+match_command = "^mix\\s+compile"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^Compiling \\d+ files", "^Generated\\s", "^\\s*$"]
+max_lines = 100
+
+[filters.mix-format]
+description = "Compact mix format"
+match_command = "^mix\\s+format"
+priority = 60
+strip_ansi = true
+max_lines = 40
+on_empty = "mix format: ok"
+
+[filters.mix-test]
+description = "Compact mix test"
+match_command = "^mix\\s+test"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^Excluding tags:", "^\\s*$"]
+max_lines = 120

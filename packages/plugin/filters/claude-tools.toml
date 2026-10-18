@@ -1,0 +1,33 @@
+[filters.read-tool]
+description = "Outline large Read tool output (code skeleton)"
+match_command = "^read-tool:"
+priority = 70
+transform = "smart-read"
+preserve_exact = true
+max_lines = 400
+scale_with_level = false
+
+[filters.grep-tool]
+description = "Compact Grep tool output (group hits by file)"
+match_command = "^grep-tool:"
+priority = 70
+strip_lines_matching = ["^\\s*$"]
+transform = "smart-grep"
+truncate_lines_at = 240
+max_lines = 200
+
+[filters.glob-tool]
+description = "Compact Glob tool output (group paths by directory)"
+match_command = "^glob-tool:"
+priority = 70
+transform = "smart-find"
+max_lines = 1000
+
+[filters.bash-tool]
+description = "Squeeze and cap uncovered Bash tool output; failure lines always kept"
+match_command = "^bash-tool:"
+priority = 60
+strip_ansi = true
+transform = "squeeze-output"
+max_lines = 200
+keep_failures = true

@@ -1,0 +1,108 @@
+[filters.tar]
+description = "Compact tar archive output"
+match_command = "^tar(\\s|$)"
+priority = 50
+max_lines = 1000
+
+[filters.unzip]
+description = "Compact unzip output"
+match_command = "^unzip(\\s|$)|^zip(\\s|$)"
+priority = 50
+strip_lines_matching = ["^\\s*inflating: ", "^\\s*extracting: ", "^\\s*creating: ", "^\\s*$"]
+max_lines = 1000
+on_empty = "unzip: ok"
+
+[filters.awk]
+description = "Cap awk output"
+match_command = "^awk(\\s|$)|^gawk(\\s|$)"
+priority = 45
+max_lines = 200
+
+[filters.sed]
+description = "Cap sed output"
+match_command = "^sed(\\s|$)"
+priority = 45
+max_lines = 200
+
+[filters.sort]
+description = "Cap sort output"
+match_command = "^sort(\\s|$)"
+priority = 45
+max_lines = 200
+
+[filters.uniq]
+description = "Cap uniq output"
+match_command = "^uniq(\\s|$)"
+priority = 45
+max_lines = 200
+
+[filters.wc]
+description = "Compact wc output"
+match_command = "^wc(\\s|$)"
+priority = 50
+max_lines = 30
+
+[filters.tree]
+description = "Compact tree command"
+match_command = "^tree(\\s|$)"
+priority = 55
+max_lines = 1000
+
+[filters.dig]
+description = "Compact dig DNS lookup"
+match_command = "^dig(\\s|$)|^nslookup(\\s|$)|^host(\\s|$)"
+priority = 50
+strip_lines_matching = ["^;;", "^\\s*$"]
+max_lines = 60
+
+[filters.sleep]
+description = "Silence sleep output"
+match_command = "^sleep(\\s|$)"
+priority = 45
+strip_lines_matching = ["^\\s*$"]
+max_lines = 5
+
+[filters.echo]
+description = "Cap runaway echo output"
+match_command = "^echo(\\s|$)"
+priority = 40
+max_lines = 500
+
+[filters.printf]
+description = "Cap runaway printf output"
+match_command = "^printf(\\s|$)"
+priority = 40
+max_lines = 500
+
+[filters.tr]
+description = "Cap tr output"
+match_command = "^tr(\\s|$)"
+priority = 45
+max_lines = 200
+
+[filters.cut]
+description = "Cap cut output"
+match_command = "^cut(\\s|$)"
+priority = 45
+max_lines = 200
+
+[filters.file]
+description = "Compact file type detection output"
+match_command = "^file(\\s|$)"
+priority = 50
+strip_lines_matching = ["^\\s*$"]
+max_lines = 100
+
+[filters.open]
+description = "Silence open launcher output"
+match_command = "^open(\\s|$)"
+priority = 45
+strip_lines_matching = ["^\\s*$"]
+max_lines = 10
+
+[filters.shasum]
+description = "Compact checksum output, drop OK lines in check mode"
+match_command = "^(shasum|sha1sum|sha224sum|sha256sum|sha384sum|sha512sum|md5sum|md5)(\\s|$)"
+priority = 50
+strip_lines_matching = ["^\\s*$", ": OK$"]
+on_empty = "shasum: all checksums OK"

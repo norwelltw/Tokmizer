@@ -1,0 +1,22 @@
+Updating (dev)
+
+View in Browser (Ctrl+O): https://app.pulumi.com/acme/shop-infra/dev/updates/88
+
+@ updating....
+     Type                              Name                  Status                  Info
+     pulumi:pulumi:Stack               shop-infra-dev        **failed**              1 error
+ +   └─ aws:s3:BucketV2                assets                **creating failed**     1 error
+
+Diagnostics:
+  aws:s3:BucketV2 (assets):
+    error: 1 error occurred:
+    	* creating S3 Bucket (assets-6f1d2c): operation error S3: CreateBucket, https response error StatusCode: 409, RequestID: 8C1F, BucketAlreadyExists:
+
+  pulumi:pulumi:Stack (shop-infra-dev):
+    error: update failed
+
+Resources:
+    14 unchanged
+
+Duration: 6s
+

@@ -1,0 +1,3033 @@
+      [2m# (45 unchanged attributes hidden)[0m
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "77310fe2667e4ce2" -> (known after apply)
+      [2m# (7 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "7456808013212c76" -> (known after apply)
+      [2m# (12 unchanged attributes hidden)[0m
+    }
+Plan: 3 to add, 8 to change, 4 to destroy.
+Initializing the backend...
+Plan: 13 to add, 2 to change, 2 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "bb9c865c1630e772" -> (known after apply)
+      [2m# (17 unchanged attributes hidden)[0m
+    }
+
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=24ff8035bedd534febc863495c08ec]
+      [2m# (21 unchanged attributes hidden)[0m
+Plan: 17 to add, 9 to change, 1 to destroy.
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Refreshing state... [id=e4aa845497a4bf9202c7aac0848143]
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 17 to add, 7 to change, 1 to destroy.
+- Installed hashicorp/aws v5.24.55 (signed by HashiCorp)
+Initializing the backend...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+      [2m# (14 unchanged attributes hidden)[0m
+Plan: 17 to add, 3 to change, 1 to destroy.
+Releasing state lock. This may take a few moments...
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 16 to add, 7 to change, 0 to destroy.
+Plan: 17 to add, 10 to change, 1 to destroy.
+Releasing state lock. This may take a few moments...
+      [2m# (10 unchanged attributes hidden)[0m
+      [2m# (16 unchanged attributes hidden)[0m
+      [2m# (28 unchanged attributes hidden)[0m
+Refreshing state... [id=087767d38d6f90259ac2bfd5d529dc]
+      [2m# (13 unchanged attributes hidden)[0m
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "961bacefcea76b41" -> (known after apply)
+      [2m# (4 unchanged attributes hidden)[0m
+    }
+
+Acquiring state lock. This may take a few moments...
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "1a7af172a89a269e" -> (known after apply)
+      [2m# (6 unchanged attributes hidden)[0m
+    }
+- Installed hashicorp/aws v5.25.11 (signed by HashiCorp)
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "e3353e410fb67cd3" -> (known after apply)
+      [2m# (12 unchanged attributes hidden)[0m
+    }
+Plan: 14 to add, 15 to change, 1 to destroy.
+- Installing hashicorp/aws v5.3.42...
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 9 to add, 11 to change, 1 to destroy.
+Plan: 17 to add, 11 to change, 2 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+- Installed hashicorp/aws v5.23.29 (signed by HashiCorp)
+      [2m# (35 unchanged attributes hidden)[0m
+- Installing hashicorp/aws v5.13.41...
+      [2m# (1 unchanged attributes hidden)[0m
+Refreshing state... [id=d93e7a02ef0cbe502035c7b08804c0]
+
+[2mNote: Objects have changed outside of Terraform[0m
+- Installed hashicorp/aws v5.3.4 (signed by HashiCorp)
+- Installed hashicorp/aws v5.13.4 (signed by HashiCorp)
+- Reusing previous version of hashicorp/aws from the dependency lock file
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "d5e86c89aff1c450" -> (known after apply)
+      [2m# (2 unchanged attributes hidden)[0m
+    }
+Initializing the backend...
+Plan: 18 to add, 3 to change, 4 to destroy.
+      [2m# (0 unchanged attributes hidden)[0m
+- Installed hashicorp/aws v5.21.52 (signed by HashiCorp)
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Refreshing state... [id=6982332c80e663eeccb7f70e8d9ad4]
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "d089ef1448a96ae5" -> (known after apply)
+      [2m# (9 unchanged attributes hidden)[0m
+    }
+- Reusing previous version of hashicorp/aws from the dependency lock file
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "965ba646cc536bd0" -> (known after apply)
+      [2m# (6 unchanged attributes hidden)[0m
+    }
+Plan: 8 to add, 19 to change, 4 to destroy.
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "bbbd23c1fbee7e8c" -> (known after apply)
+      [2m# (13 unchanged attributes hidden)[0m
+    }
+
+
+
+
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "41866734986f4aa0" -> (known after apply)
+      [2m# (9 unchanged attributes hidden)[0m
+    }
+Initializing the backend...
+      [2m# (7 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 12 to add, 8 to change, 2 to destroy.
+
+Initializing the backend...
+Refreshing state... [id=a68b20c6c7b242bd7843f12ec6b566]
+Acquiring state lock. This may take a few moments...
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "493ff32221e4c115" -> (known after apply)
+      [2m# (19 unchanged attributes hidden)[0m
+    }
+Initializing the backend...
+Plan: 15 to add, 8 to change, 2 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+- Installing hashicorp/aws v5.16.39...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+
+Releasing state lock. This may take a few moments...
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "8e662dfbcb79dc42" -> (known after apply)
+      [2m# (8 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "2fff9fb32bdd69ff" -> (known after apply)
+      [2m# (5 unchanged attributes hidden)[0m
+    }
+Initializing the backend...
+Plan: 6 to add, 1 to change, 0 to destroy.
+Plan: 2 to add, 10 to change, 0 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=b80eb41381cdf9c9a66426ebcbe891]
+Plan: 17 to add, 18 to change, 1 to destroy.
+- Installing hashicorp/aws v5.12.50...
+
+Refreshing state... [id=3e4c5dc1288148ebc0448c47938d4a]
+Refreshing state... [id=5f016bd3ca413f4248e6508613e1b6]
+Acquiring state lock. This may take a few moments...
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=7106bb4b6806481fceea5124bc87a7]
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 9 to add, 9 to change, 2 to destroy.
+Refreshing state... [id=ec9a3b4f6e6a35dda5cb908d5202c9]
+Plan: 0 to add, 6 to change, 3 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (23 unchanged attributes hidden)[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "39e8a45d0b20e65c" -> (known after apply)
+      [2m# (15 unchanged attributes hidden)[0m
+    }
+      [2m# (21 unchanged attributes hidden)[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 16 to add, 19 to change, 3 to destroy.
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "bf816613cf21622c" -> (known after apply)
+      [2m# (3 unchanged attributes hidden)[0m
+    }
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Installed hashicorp/aws v5.10.11 (signed by HashiCorp)
+Acquiring state lock. This may take a few moments...
+- Installed hashicorp/aws v5.16.26 (signed by HashiCorp)
+Refreshing state... [id=8ccce7480b8809d3ff0f07525f11ec]
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "e48569bcbe616b4b" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+Plan: 19 to add, 0 to change, 3 to destroy.
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "fcf8beb924926cd0" -> (known after apply)
+      [2m# (17 unchanged attributes hidden)[0m
+    }
+
+      [2m# (31 unchanged attributes hidden)[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (11 unchanged attributes hidden)[0m
+Refreshing state... [id=b6b78fd30000b06d7a422b8e50af4c]
+Initializing the backend...
+Acquiring state lock. This may take a few moments...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "473e408a8a7fb6fb" -> (known after apply)
+      [2m# (3 unchanged attributes hidden)[0m
+    }
+Plan: 7 to add, 10 to change, 1 to destroy.
+
+Releasing state lock. This may take a few moments...
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 19 to add, 3 to change, 3 to destroy.
+      [2m# (23 unchanged attributes hidden)[0m
+      [2m# (0 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+- Installed hashicorp/aws v5.4.45 (signed by HashiCorp)
+Refreshing state... [id=168583c49c15fbc21c3e36657ee367]
+Acquiring state lock. This may take a few moments...
+Refreshing state... [id=31acdfe221087a749040530f90f4d2]
+[2mNote: Objects have changed outside of Terraform[0m
+- Installed hashicorp/aws v5.5.16 (signed by HashiCorp)
+
+Releasing state lock. This may take a few moments...
+      [2m# (11 unchanged attributes hidden)[0m
+- Installed hashicorp/aws v5.25.15 (signed by HashiCorp)
+Acquiring state lock. This may take a few moments...
+Refreshing state... [id=c80965074fea21faa295571c274672]
+Initializing the backend...
+
+[2mNote: Objects have changed outside of Terraform[0m
+
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "7941cb847f030c43" -> (known after apply)
+      [2m# (1 unchanged attributes hidden)[0m
+    }
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Reusing previous version of hashicorp/aws from the dependency lock file
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 4 to add, 17 to change, 4 to destroy.
+      [2m# (42 unchanged attributes hidden)[0m
+      [2m# (12 unchanged attributes hidden)[0m
+Refreshing state... [id=10165405b8c599f6dd15c7efebd665]
+Plan: 6 to add, 16 to change, 4 to destroy.
+Plan: 3 to add, 16 to change, 3 to destroy.
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "54231a4e13cca2b5" -> (known after apply)
+      [2m# (4 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "8b381656f7a86a17" -> (known after apply)
+      [2m# (5 unchanged attributes hidden)[0m
+    }
+Initializing the backend...
+Initializing the backend...
+Refreshing state... [id=2bd8f6a90a0d0022bb45e1d84fe72a]
+Plan: 5 to add, 17 to change, 0 to destroy.
+      [2m# (29 unchanged attributes hidden)[0m
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "4723f8899af2831e" -> (known after apply)
+      [2m# (17 unchanged attributes hidden)[0m
+    }
+
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "bc8d37a826c12c6b" -> (known after apply)
+      [2m# (18 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "cc3ce74c066a7857" -> (known after apply)
+      [2m# (5 unchanged attributes hidden)[0m
+    }
+
+      [2m# (17 unchanged attributes hidden)[0m
+Refreshing state... [id=ed1453cf33406be011a460b58ae3c1]
+Plan: 13 to add, 4 to change, 1 to destroy.
+Releasing state lock. This may take a few moments...
+      [2m# (30 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=b9e0512cbeb6fa398cfb3acf086c0f]
+      [2m# (10 unchanged attributes hidden)[0m
+Acquiring state lock. This may take a few moments...
+Refreshing state... [id=cbc58c5a555cb6e75d91facdc580c4]
+Initializing the backend...
+Plan: 13 to add, 2 to change, 4 to destroy.
+Refreshing state... [id=a1da95407bf0f4dedd611ed5f89e7e]
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "092daa4a75f291e4" -> (known after apply)
+      [2m# (0 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+Initializing the backend...
+Refreshing state... [id=70630ec0f17349d626d56a735d2292]
+      [2m# (18 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 16 to add, 13 to change, 4 to destroy.
+- Installed hashicorp/aws v5.29.14 (signed by HashiCorp)
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "0b6d5dbc6abe0d64" -> (known after apply)
+      [2m# (8 unchanged attributes hidden)[0m
+    }
+      [2m# (45 unchanged attributes hidden)[0m
+
+Acquiring state lock. This may take a few moments...
+Acquiring state lock. This may take a few moments...
+      [2m# (33 unchanged attributes hidden)[0m
+      [2m# (12 unchanged attributes hidden)[0m
+Refreshing state... [id=a32ae7f07919e136421900c24627e3]
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "3b1f2d7ff2145a7e" -> (known after apply)
+      [2m# (5 unchanged attributes hidden)[0m
+    }
+Acquiring state lock. This may take a few moments...
+Plan: 10 to add, 9 to change, 0 to destroy.
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Acquiring state lock. This may take a few moments...
+
+      [2m# (39 unchanged attributes hidden)[0m
+- Installed hashicorp/aws v5.16.21 (signed by HashiCorp)
+Initializing the backend...
+      [2m# (20 unchanged attributes hidden)[0m
+Refreshing state... [id=4f0aea894bce20437522b9cd3b273c]
+- Installed hashicorp/aws v5.0.42 (signed by HashiCorp)
+Plan: 1 to add, 0 to change, 2 to destroy.
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "5426d20847e3d28e" -> (known after apply)
+      [2m# (7 unchanged attributes hidden)[0m
+    }
+Initializing the backend...
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "8efa387aa65a140f" -> (known after apply)
+      [2m# (16 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "18fbc1f0c95c1c9b" -> (known after apply)
+      [2m# (17 unchanged attributes hidden)[0m
+    }
+      [2m# (49 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "94a6453d18974128" -> (known after apply)
+      [2m# (16 unchanged attributes hidden)[0m
+    }
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Refreshing state... [id=6a59f6d344e068464e5b7d2ae29958]
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Initializing the backend...
+Refreshing state... [id=5c0d64fc873b3bb0bd7ec3a382539e]
+Plan: 15 to add, 13 to change, 4 to destroy.
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "97a877141213b1c0" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+Acquiring state lock. This may take a few moments...
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "960ce4ab647f1941" -> (known after apply)
+      [2m# (1 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "6cd1b276a6881579" -> (known after apply)
+      [2m# (4 unchanged attributes hidden)[0m
+    }
+
+
+Plan: 16 to add, 2 to change, 3 to destroy.
+      [2m# (12 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Releasing state lock. This may take a few moments...
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 5 to add, 8 to change, 0 to destroy.
+      [2m# (39 unchanged attributes hidden)[0m
+Refreshing state... [id=3ec9dcfcf26dbd60bae8af25f0590e]
+[2mNote: Objects have changed outside of Terraform[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Installing hashicorp/aws v5.15.23...
+Plan: 7 to add, 13 to change, 3 to destroy.
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 6 to add, 13 to change, 4 to destroy.
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "7a44bd56dbfbf16a" -> (known after apply)
+      [2m# (6 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "6b6c79044f6bce13" -> (known after apply)
+      [2m# (16 unchanged attributes hidden)[0m
+    }
+Plan: 3 to add, 1 to change, 3 to destroy.
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "d3d4948630942a87" -> (known after apply)
+      [2m# (8 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "927cd603c8689038" -> (known after apply)
+      [2m# (12 unchanged attributes hidden)[0m
+    }
+
+Plan: 7 to add, 0 to change, 3 to destroy.
+      [2m# (11 unchanged attributes hidden)[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 7 to add, 2 to change, 3 to destroy.
+- Installed hashicorp/aws v5.14.6 (signed by HashiCorp)
+- Installed hashicorp/aws v5.25.39 (signed by HashiCorp)
+      [2m# (6 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Initializing the backend...
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (4 unchanged attributes hidden)[0m
+Acquiring state lock. This may take a few moments...
+Plan: 15 to add, 0 to change, 4 to destroy.
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "dd746a99efaffc84" -> (known after apply)
+      [2m# (2 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "d57620702b036b10" -> (known after apply)
+      [2m# (1 unchanged attributes hidden)[0m
+    }
+
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "8ff261b770b6f6d9" -> (known after apply)
+      [2m# (9 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 17 to add, 10 to change, 3 to destroy.
+Plan: 0 to add, 14 to change, 3 to destroy.
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "34ebe39d6a9f95c7" -> (known after apply)
+      [2m# (19 unchanged attributes hidden)[0m
+    }
+Releasing state lock. This may take a few moments...
+Plan: 16 to add, 6 to change, 1 to destroy.
+Plan: 11 to add, 0 to change, 4 to destroy.
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "2f9e2da0e4b1c52b" -> (known after apply)
+      [2m# (14 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 10 to add, 0 to change, 2 to destroy.
+Refreshing state... [id=10d15b379069343c38109bb15233f2]
+- Reusing previous version of hashicorp/aws from the dependency lock file
+
+[2mNote: Objects have changed outside of Terraform[0m
+Initializing the backend...
+- Installing hashicorp/aws v5.7.39...
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "bfedcf3497d87bce" -> (known after apply)
+      [2m# (0 unchanged attributes hidden)[0m
+    }
+- Reusing previous version of hashicorp/aws from the dependency lock file
+[2mNote: Objects have changed outside of Terraform[0m
+Initializing the backend...
+      [2m# (3 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "a04a00594ff11730" -> (known after apply)
+      [2m# (11 unchanged attributes hidden)[0m
+    }
+Plan: 15 to add, 19 to change, 0 to destroy.
+Plan: 2 to add, 19 to change, 3 to destroy.
+
+      [2m# (31 unchanged attributes hidden)[0m
+Plan: 16 to add, 17 to change, 2 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (9 unchanged attributes hidden)[0m
+      [2m# (38 unchanged attributes hidden)[0m
+Refreshing state... [id=16cf34863d210c8dd9f3d2b07b045d]
+Plan: 5 to add, 18 to change, 2 to destroy.
+Releasing state lock. This may take a few moments...
+
+Initializing the backend...
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (18 unchanged attributes hidden)[0m
+      [2m# (24 unchanged attributes hidden)[0m
+      [2m# (21 unchanged attributes hidden)[0m
+Plan: 10 to add, 15 to change, 2 to destroy.
+Acquiring state lock. This may take a few moments...
+Refreshing state... [id=16fe9d19d3b060f910e0763d28cd0a]
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 1 to add, 15 to change, 3 to destroy.
+
+      [2m# (19 unchanged attributes hidden)[0m
+
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Installed hashicorp/aws v5.29.41 (signed by HashiCorp)
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "f729881e9c40afe5" -> (known after apply)
+      [2m# (0 unchanged attributes hidden)[0m
+    }
+Initializing the backend...
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "7afb7cf395322ba9" -> (known after apply)
+      [2m# (14 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "0aa507a03665a4b0" -> (known after apply)
+      [2m# (8 unchanged attributes hidden)[0m
+    }
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 16 to add, 19 to change, 3 to destroy.
+Acquiring state lock. This may take a few moments...
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "78d1ac0277406a7f" -> (known after apply)
+      [2m# (9 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=1a5b4d65474a6e81ba82ed189c09da]
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "9688f3591306bf80" -> (known after apply)
+      [2m# (18 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=86d8830e4f49b69970b78c44f2db79]
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 13 to add, 12 to change, 2 to destroy.
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "daa633ee4510f5c8" -> (known after apply)
+      [2m# (16 unchanged attributes hidden)[0m
+    }
+Acquiring state lock. This may take a few moments...
+      [2m# (29 unchanged attributes hidden)[0m
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "0563f14e1906457f" -> (known after apply)
+      [2m# (14 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=92372c565dfea2d209e172b08e19c9]
+[2mNote: Objects have changed outside of Terraform[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Initializing the backend...
+Refreshing state... [id=de0faa28b01ce6608d5206ad5c1792]
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "c58b618c12f95d75" -> (known after apply)
+      [2m# (4 unchanged attributes hidden)[0m
+    }
+Acquiring state lock. This may take a few moments...
+- Installing hashicorp/aws v5.20.6...
+      [2m# (16 unchanged attributes hidden)[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Refreshing state... [id=44dd1bf6e7fcfca230cd07224093f9]
+Plan: 8 to add, 8 to change, 1 to destroy.
+- Installed hashicorp/aws v5.8.57 (signed by HashiCorp)
+Plan: 14 to add, 1 to change, 2 to destroy.
+Refreshing state... [id=367ac6a1b0ee213efe1417af8b70e3]
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 0 to add, 19 to change, 2 to destroy.
+      [2m# (24 unchanged attributes hidden)[0m
+Refreshing state... [id=18dda46da0972f32dd5d7f5c168798]
+Plan: 7 to add, 1 to change, 1 to destroy.
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "8b10ac3e3f08d025" -> (known after apply)
+      [2m# (16 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "ae5db59afd91dd28" -> (known after apply)
+      [2m# (16 unchanged attributes hidden)[0m
+    }
+      [2m# (12 unchanged attributes hidden)[0m
+Plan: 17 to add, 15 to change, 2 to destroy.
+Releasing state lock. This may take a few moments...
+[2mNote: Objects have changed outside of Terraform[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "0d18cd0903dfcf03" -> (known after apply)
+      [2m# (6 unchanged attributes hidden)[0m
+    }
+Acquiring state lock. This may take a few moments...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+      [2m# (7 unchanged attributes hidden)[0m
+      [2m# (38 unchanged attributes hidden)[0m
+      [2m# (1 unchanged attributes hidden)[0m
+Acquiring state lock. This may take a few moments...
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "60c02561ccca8e13" -> (known after apply)
+      [2m# (14 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=a6925169e8060187c700c5d80f475a]
+
+      [2m# (5 unchanged attributes hidden)[0m
+      [2m# (12 unchanged attributes hidden)[0m
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "201b52fc942aba83" -> (known after apply)
+      [2m# (14 unchanged attributes hidden)[0m
+    }
+      [2m# (11 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Acquiring state lock. This may take a few moments...
+Releasing state lock. This may take a few moments...
+
+
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "c8e05cdad27df178" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+Initializing the backend...
+Refreshing state... [id=0a3a374a02bb7290d75154762742e1]
+[2mNote: Objects have changed outside of Terraform[0m
+- Installing hashicorp/aws v5.13.7...
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "8daaa9554c5ee0bb" -> (known after apply)
+      [2m# (12 unchanged attributes hidden)[0m
+    }
+Releasing state lock. This may take a few moments...
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "640e46b34433edff" -> (known after apply)
+      [2m# (2 unchanged attributes hidden)[0m
+    }
+Initializing the backend...
+
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "3b370d6af505a774" -> (known after apply)
+      [2m# (5 unchanged attributes hidden)[0m
+    }
+- Reusing previous version of hashicorp/aws from the dependency lock file
+
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "58604a4e1d525f59" -> (known after apply)
+      [2m# (9 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=e3b49dca3f74119a8a010b14058b40]
+
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=f1eef9ed154179a2f238fde50c22e6]
+- Reusing previous version of hashicorp/aws from the dependency lock file
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "eb53d763b19006f2" -> (known after apply)
+      [2m# (0 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "221e1cc6a99e656a" -> (known after apply)
+      [2m# (11 unchanged attributes hidden)[0m
+    }
+      [2m# (23 unchanged attributes hidden)[0m
+      [2m# (38 unchanged attributes hidden)[0m
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "f0d2ce7b9f67eb41" -> (known after apply)
+      [2m# (6 unchanged attributes hidden)[0m
+    }
+
+Refreshing state... [id=f896eb070308e532f8332e6b02dcce]
+Refreshing state... [id=59917fdc9b74cdf9984c6c97e07bf2]
+Refreshing state... [id=2ef021fa4ef89b3bd71102b49f0554]
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Acquiring state lock. This may take a few moments...
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (6 unchanged attributes hidden)[0m
+Refreshing state... [id=1e4e8ee0039575d50f01ac8751f0dc]
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "d3a847da6b4dd8cc" -> (known after apply)
+      [2m# (8 unchanged attributes hidden)[0m
+    }
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 5 to add, 3 to change, 3 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 1 to add, 8 to change, 3 to destroy.
+Plan: 9 to add, 0 to change, 2 to destroy.
+Refreshing state... [id=d4514603e6737bf12a69fbaa07c169]
+Refreshing state... [id=5a1d38de84ee32f18a389a3671eb12]
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 8 to add, 16 to change, 0 to destroy.
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "294696504dc5816d" -> (known after apply)
+      [2m# (9 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+Acquiring state lock. This may take a few moments...
+Plan: 15 to add, 4 to change, 4 to destroy.
+- Installing hashicorp/aws v5.9.22...
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "e03cc3e7c9fd2c6c" -> (known after apply)
+      [2m# (13 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 12 to add, 1 to change, 0 to destroy.
+Acquiring state lock. This may take a few moments...
+      [2m# (15 unchanged attributes hidden)[0m
+- Installing hashicorp/aws v5.24.51...
+Refreshing state... [id=bd30512c4966409437ee3c9ec3a343]
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "5423ec8155734ae7" -> (known after apply)
+      [2m# (18 unchanged attributes hidden)[0m
+    }
+Plan: 4 to add, 12 to change, 0 to destroy.
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "217b2031fc09da1f" -> (known after apply)
+      [2m# (2 unchanged attributes hidden)[0m
+    }
+
+Refreshing state... [id=232ac1cd4d88af8ad8906993f8f673]
+Plan: 0 to add, 13 to change, 1 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+      [2m# (24 unchanged attributes hidden)[0m
+
+- Installed hashicorp/aws v5.4.31 (signed by HashiCorp)
+      [2m# (18 unchanged attributes hidden)[0m
+- Installed hashicorp/aws v5.19.4 (signed by HashiCorp)
+Plan: 5 to add, 8 to change, 0 to destroy.
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "35808129ba692d3f" -> (known after apply)
+      [2m# (6 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "d9b74810c6635968" -> (known after apply)
+      [2m# (8 unchanged attributes hidden)[0m
+    }
+      [2m# (16 unchanged attributes hidden)[0m
+Releasing state lock. This may take a few moments...
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "22c8132e2ea940de" -> (known after apply)
+      [2m# (19 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "7eafb72ab116dfda" -> (known after apply)
+      [2m# (2 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "e9261c3562204f4d" -> (known after apply)
+      [2m# (8 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=b44e43ebdad4e1f19bb24affd3c3b6]
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "57734af739fd6acf" -> (known after apply)
+      [2m# (15 unchanged attributes hidden)[0m
+    }
+Plan: 8 to add, 8 to change, 4 to destroy.
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "417702cd405e0119" -> (known after apply)
+      [2m# (16 unchanged attributes hidden)[0m
+    }
+Releasing state lock. This may take a few moments...
+[2mNote: Objects have changed outside of Terraform[0m
+- Installing hashicorp/aws v5.11.1...
+[2mNote: Objects have changed outside of Terraform[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+      [2m# (0 unchanged attributes hidden)[0m
+      [2m# (13 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "26b32beb87016ad2" -> (known after apply)
+      [2m# (14 unchanged attributes hidden)[0m
+    }
+
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "ddcbf786850f4c48" -> (known after apply)
+      [2m# (3 unchanged attributes hidden)[0m
+    }
+- Reusing previous version of hashicorp/aws from the dependency lock file
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (29 unchanged attributes hidden)[0m
+
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "a5a5d4b0e1f76816" -> (known after apply)
+      [2m# (12 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+Releasing state lock. This may take a few moments...
+      [2m# (13 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=c22d3fb00ed9f8fc05d2f8df47c908]
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 14 to add, 10 to change, 0 to destroy.
+- Installed hashicorp/aws v5.23.4 (signed by HashiCorp)
+Plan: 16 to add, 1 to change, 2 to destroy.
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "3cea8d4234d1a45a" -> (known after apply)
+      [2m# (14 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "34bf30b4b2ba71b9" -> (known after apply)
+      [2m# (1 unchanged attributes hidden)[0m
+    }
+Acquiring state lock. This may take a few moments...
+
+
+Refreshing state... [id=db2da73334f2b41d5d4c440a083f08]
+Initializing the backend...
+- Installed hashicorp/aws v5.29.15 (signed by HashiCorp)
+Initializing the backend...
+Plan: 16 to add, 17 to change, 3 to destroy.
+
+Plan: 10 to add, 6 to change, 3 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=d70eaff611edbf41e294978f50989a]
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "aa61631d3cb86b46" -> (known after apply)
+      [2m# (0 unchanged attributes hidden)[0m
+    }
+Releasing state lock. This may take a few moments...
+
+[2mNote: Objects have changed outside of Terraform[0m
+Initializing the backend...
+- Installed hashicorp/aws v5.20.46 (signed by HashiCorp)
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=dabfedcdee8453e830ea012697e840]
+      [2m# (16 unchanged attributes hidden)[0m
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "8963014ebfccc47d" -> (known after apply)
+      [2m# (4 unchanged attributes hidden)[0m
+    }
+Acquiring state lock. This may take a few moments...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Acquiring state lock. This may take a few moments...
+- Installing hashicorp/aws v5.16.42...
+      [2m# (12 unchanged attributes hidden)[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Releasing state lock. This may take a few moments...
+Plan: 10 to add, 16 to change, 4 to destroy.
+Plan: 7 to add, 5 to change, 0 to destroy.
+Acquiring state lock. This may take a few moments...
+Initializing the backend...
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "7e7798e5901efddd" -> (known after apply)
+      [2m# (13 unchanged attributes hidden)[0m
+    }
+Initializing the backend...
+Initializing the backend...
+Plan: 1 to add, 8 to change, 4 to destroy.
+Plan: 0 to add, 4 to change, 2 to destroy.
+Plan: 4 to add, 5 to change, 4 to destroy.
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "7980daa974c27f8b" -> (known after apply)
+      [2m# (18 unchanged attributes hidden)[0m
+    }
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 6 to add, 17 to change, 1 to destroy.
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "a20bff750ad827eb" -> (known after apply)
+      [2m# (2 unchanged attributes hidden)[0m
+    }
+      [2m# (16 unchanged attributes hidden)[0m
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "395077929f00c11f" -> (known after apply)
+      [2m# (4 unchanged attributes hidden)[0m
+    }
+Releasing state lock. This may take a few moments...
+      [2m# (36 unchanged attributes hidden)[0m
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "309e387cfc3bb5ce" -> (known after apply)
+      [2m# (4 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 5 to add, 7 to change, 3 to destroy.
+Refreshing state... [id=fc92bba551e3c9073355e10e72675e]
+Acquiring state lock. This may take a few moments...
+Plan: 11 to add, 11 to change, 2 to destroy.
+Plan: 11 to add, 19 to change, 4 to destroy.
+Refreshing state... [id=beadab47b5cd93b6be13d331c65ff9]
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 15 to add, 8 to change, 4 to destroy.
+
+Initializing the backend...
+Refreshing state... [id=a585b40bcecbd6497d71916fd5012a]
+- Reusing previous version of hashicorp/aws from the dependency lock file
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 12 to add, 19 to change, 1 to destroy.
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "f95b56142a8e32fc" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+- Installed hashicorp/aws v5.13.54 (signed by HashiCorp)
+Initializing the backend...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (4 unchanged attributes hidden)[0m
+Releasing state lock. This may take a few moments...
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "c5855a07aa00caac" -> (known after apply)
+      [2m# (5 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=6eb92c93e15b6c50ec965b6006aa2a]
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=f86f1390b6ad2570f5e500ea5a2719]
+Plan: 18 to add, 17 to change, 0 to destroy.
+Plan: 9 to add, 16 to change, 3 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+Releasing state lock. This may take a few moments...
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=62ada0f309c1e2d9936ded0533e301]
+Releasing state lock. This may take a few moments...
+[2mNote: Objects have changed outside of Terraform[0m
+
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "9c1560e891b09ff8" -> (known after apply)
+      [2m# (13 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=b846c1b9e4b64b2dd5be0d354c6e1a]
+Plan: 8 to add, 19 to change, 2 to destroy.
+
+Initializing the backend...
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "b20856a5768203df" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+Acquiring state lock. This may take a few moments...
+- Installed hashicorp/aws v5.29.14 (signed by HashiCorp)
+- Installed hashicorp/aws v5.5.29 (signed by HashiCorp)
+- Installing hashicorp/aws v5.9.27...
+      [2m# (22 unchanged attributes hidden)[0m
+Plan: 12 to add, 7 to change, 3 to destroy.
+      [2m# (38 unchanged attributes hidden)[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Acquiring state lock. This may take a few moments...
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "3ee02f5930f4b55f" -> (known after apply)
+      [2m# (15 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "6407d9d4388e0d2c" -> (known after apply)
+      [2m# (0 unchanged attributes hidden)[0m
+    }
+Plan: 6 to add, 13 to change, 4 to destroy.
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "fe7af83eef5f0dc1" -> (known after apply)
+      [2m# (6 unchanged attributes hidden)[0m
+    }
+Initializing the backend...
+Plan: 1 to add, 18 to change, 0 to destroy.
+Refreshing state... [id=0dbbb33eaa8669b725563f16871729]
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "1aa05249ec90eccd" -> (known after apply)
+      [2m# (14 unchanged attributes hidden)[0m
+    }
+Acquiring state lock. This may take a few moments...
+- Installing hashicorp/aws v5.28.24...
+      [2m# (39 unchanged attributes hidden)[0m
+Refreshing state... [id=7c11430f28b562b2f31b97fad96d10]
+Plan: 9 to add, 11 to change, 2 to destroy.
+Refreshing state... [id=3c48296bcba5b075ee9a1b5785b2de]
+[2mNote: Objects have changed outside of Terraform[0m
+Initializing the backend...
+
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "1ca2d097d41f3351" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Initializing the backend...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Releasing state lock. This may take a few moments...
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "d6da4c84c0306284" -> (known after apply)
+      [2m# (2 unchanged attributes hidden)[0m
+    }
+- Reusing previous version of hashicorp/aws from the dependency lock file
+
+      [2m# (20 unchanged attributes hidden)[0m
+      [2m# (47 unchanged attributes hidden)[0m
+- Installing hashicorp/aws v5.11.21...
+Initializing the backend...
+Plan: 11 to add, 2 to change, 0 to destroy.
+- Reusing previous version of hashicorp/aws from the dependency lock file
+
+Initializing the backend...
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "29bd4c3bfd76b08f" -> (known after apply)
+      [2m# (19 unchanged attributes hidden)[0m
+    }
+
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Refreshing state... [id=b2207fe35fc2b2fad561d2e4d81c91]
+      [2m# (18 unchanged attributes hidden)[0m
+- Installed hashicorp/aws v5.11.5 (signed by HashiCorp)
+      [2m# (47 unchanged attributes hidden)[0m
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "aab0e98ff55d9b33" -> (known after apply)
+      [2m# (17 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "b8ea4829ab655e6b" -> (known after apply)
+      [2m# (16 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "5878f327b86bb72c" -> (known after apply)
+      [2m# (19 unchanged attributes hidden)[0m
+    }
+Initializing the backend...
+[2mNote: Objects have changed outside of Terraform[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Initializing the backend...
+Releasing state lock. This may take a few moments...
+- Installing hashicorp/aws v5.4.5...
+Plan: 16 to add, 12 to change, 1 to destroy.
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 5 to add, 11 to change, 4 to destroy.
+Plan: 17 to add, 16 to change, 4 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "114f391d110f330b" -> (known after apply)
+      [2m# (13 unchanged attributes hidden)[0m
+    }
+Plan: 11 to add, 10 to change, 3 to destroy.
+Initializing the backend...
+      [2m# (42 unchanged attributes hidden)[0m
+      [2m# (29 unchanged attributes hidden)[0m
+Refreshing state... [id=6eed4ae078b06d59af93471f3c6e55]
+Initializing the backend...
+      [2m# (9 unchanged attributes hidden)[0m
+- Installed hashicorp/aws v5.3.38 (signed by HashiCorp)
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "2751c6b2491896ee" -> (known after apply)
+      [2m# (13 unchanged attributes hidden)[0m
+    }
+Plan: 11 to add, 2 to change, 2 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+
+
+
+Plan: 13 to add, 0 to change, 3 to destroy.
+Plan: 0 to add, 12 to change, 1 to destroy.
+- Reusing previous version of hashicorp/aws from the dependency lock file
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "ff14fadd5a232925" -> (known after apply)
+      [2m# (19 unchanged attributes hidden)[0m
+    }
+- Installed hashicorp/aws v5.22.35 (signed by HashiCorp)
+Plan: 18 to add, 15 to change, 0 to destroy.
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "6f545ed2a54d683c" -> (known after apply)
+      [2m# (8 unchanged attributes hidden)[0m
+    }
+Acquiring state lock. This may take a few moments...
+      [2m# (42 unchanged attributes hidden)[0m
+
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "fc847eb3c44df333" -> (known after apply)
+      [2m# (14 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=eb1cf13dab5eb703699da822c3e3d0]
+Releasing state lock. This may take a few moments...
+- Installing hashicorp/aws v5.1.4...
+Refreshing state... [id=78c628535396ea626f954a00f7b9a1]
+Acquiring state lock. This may take a few moments...
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "05f3193e67c6edc7" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+- Installing hashicorp/aws v5.23.29...
+
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 1 to add, 0 to change, 0 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (16 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 7 to add, 7 to change, 4 to destroy.
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "d466f3f67f39fba6" -> (known after apply)
+      [2m# (7 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (20 unchanged attributes hidden)[0m
+Refreshing state... [id=f5de8601e1f4dded18dcb5e3243801]
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Releasing state lock. This may take a few moments...
+Refreshing state... [id=bc66fd2f27cdfb47c71953728a54f8]
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "8fa21f966a4e6718" -> (known after apply)
+      [2m# (15 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "0165bead9704edeb" -> (known after apply)
+      [2m# (11 unchanged attributes hidden)[0m
+    }
+
+
+Plan: 19 to add, 9 to change, 2 to destroy.
+Plan: 3 to add, 14 to change, 4 to destroy.
+Refreshing state... [id=7a0dfe9e25451d224b0ac7dfcf5750]
+Releasing state lock. This may take a few moments...
+Plan: 6 to add, 12 to change, 1 to destroy.
+Plan: 19 to add, 6 to change, 4 to destroy.
+Plan: 4 to add, 6 to change, 2 to destroy.
+Initializing the backend...
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "8f7480cf20100b07" -> (known after apply)
+      [2m# (7 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=94f6e422ca353cfdfc79ec91b4384a]
+      [2m# (24 unchanged attributes hidden)[0m
+Releasing state lock. This may take a few moments...
+
+[2mNote: Objects have changed outside of Terraform[0m
+Acquiring state lock. This may take a few moments...
+      [2m# (32 unchanged attributes hidden)[0m
+Plan: 1 to add, 2 to change, 1 to destroy.
+Plan: 19 to add, 2 to change, 4 to destroy.
+Releasing state lock. This may take a few moments...
+
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 4 to add, 8 to change, 2 to destroy.
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "59e41dd7dba6af23" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+- Installing hashicorp/aws v5.21.51...
+Releasing state lock. This may take a few moments...
+Plan: 2 to add, 19 to change, 3 to destroy.
+- Installed hashicorp/aws v5.29.32 (signed by HashiCorp)
+Plan: 11 to add, 3 to change, 2 to destroy.
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "83602d7e220feec7" -> (known after apply)
+      [2m# (6 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "72b959e2d0b5604b" -> (known after apply)
+      [2m# (13 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=b620dc8c0514b04102fca2ae9645b1]
+      [2m# (41 unchanged attributes hidden)[0m
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "ff1cf623ddac3490" -> (known after apply)
+      [2m# (18 unchanged attributes hidden)[0m
+    }
+Initializing the backend...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "f46497532470870b" -> (known after apply)
+      [2m# (15 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=ec2c343ab851c520c8429b04ff59d4]
+      [2m# (34 unchanged attributes hidden)[0m
+Refreshing state... [id=609d0b7761143fabd587e58efab8c0]
+Initializing the backend...
+Plan: 3 to add, 3 to change, 3 to destroy.
+Plan: 17 to add, 9 to change, 1 to destroy.
+Plan: 14 to add, 11 to change, 1 to destroy.
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "29e7f9b24ca63fc2" -> (known after apply)
+      [2m# (4 unchanged attributes hidden)[0m
+    }
+- Installing hashicorp/aws v5.27.36...
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "6cc851ddb867bbbe" -> (known after apply)
+      [2m# (17 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+
+- Installing hashicorp/aws v5.17.22...
+Acquiring state lock. This may take a few moments...
+Plan: 1 to add, 13 to change, 3 to destroy.
+
+Refreshing state... [id=550b75861b7fc10bda1efbee778643]
+
+- Installed hashicorp/aws v5.5.12 (signed by HashiCorp)
+Acquiring state lock. This may take a few moments...
+Plan: 14 to add, 18 to change, 1 to destroy.
+Refreshing state... [id=9bc5388d846289cf8b46f3f2a729b3]
+Acquiring state lock. This may take a few moments...
+Plan: 14 to add, 19 to change, 4 to destroy.
+Refreshing state... [id=e8574cb06b7a61ab2278793da77607]
+Refreshing state... [id=503c4d3c8862f0675a91ebc44a765d]
+      [2m# (45 unchanged attributes hidden)[0m
+Plan: 0 to add, 17 to change, 2 to destroy.
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "79a75b50154c5b89" -> (known after apply)
+      [2m# (7 unchanged attributes hidden)[0m
+    }
+      [2m# (38 unchanged attributes hidden)[0m
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "a1fc8d638ec512b3" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+
+Plan: 16 to add, 11 to change, 3 to destroy.
+      [2m# (18 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Initializing the backend...
+Releasing state lock. This may take a few moments...
+Plan: 12 to add, 12 to change, 1 to destroy.
+Plan: 17 to add, 4 to change, 3 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+- Installing hashicorp/aws v5.25.34...
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "36adb4477f391592" -> (known after apply)
+      [2m# (13 unchanged attributes hidden)[0m
+    }
+Acquiring state lock. This may take a few moments...
+Initializing the backend...
+Plan: 6 to add, 0 to change, 4 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 2 to add, 16 to change, 0 to destroy.
+Acquiring state lock. This may take a few moments...
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "a134311be0e1b3d1" -> (known after apply)
+      [2m# (15 unchanged attributes hidden)[0m
+    }
+- Installed hashicorp/aws v5.22.8 (signed by HashiCorp)
+      [2m# (34 unchanged attributes hidden)[0m
+Refreshing state... [id=bf0586f3e6616d4866b4c3a7cf7a1d]
+Refreshing state... [id=caaa422cb30e6c66f0e038622dfcb5]
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "a91a7423f4c3f81f" -> (known after apply)
+      [2m# (19 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (42 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (5 unchanged attributes hidden)[0m
+      [2m# (10 unchanged attributes hidden)[0m
+Initializing the backend...
+
+Plan: 18 to add, 11 to change, 3 to destroy.
+Releasing state lock. This may take a few moments...
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "09d7ad16cf674400" -> (known after apply)
+      [2m# (1 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "8ca986f3538e7d41" -> (known after apply)
+      [2m# (8 unchanged attributes hidden)[0m
+    }
+Plan: 13 to add, 10 to change, 2 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+- Installed hashicorp/aws v5.4.17 (signed by HashiCorp)
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "2402d63f4a8993ec" -> (known after apply)
+      [2m# (12 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "d7880abb36d73167" -> (known after apply)
+      [2m# (3 unchanged attributes hidden)[0m
+    }
+Plan: 11 to add, 5 to change, 4 to destroy.
+      [2m# (33 unchanged attributes hidden)[0m
+Plan: 5 to add, 15 to change, 3 to destroy.
+Plan: 9 to add, 19 to change, 2 to destroy.
+Releasing state lock. This may take a few moments...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Initializing the backend...
+Refreshing state... [id=fbce8d9e68cfaad169bbca239fb369]
+- Installed hashicorp/aws v5.28.49 (signed by HashiCorp)
+Refreshing state... [id=78d6217844342c6ba1cd8674cb935e]
+Plan: 18 to add, 5 to change, 1 to destroy.
+- Installing hashicorp/aws v5.14.22...
+Releasing state lock. This may take a few moments...
+Refreshing state... [id=d80d385a69165cac8cec1e641db80b]
+[2mNote: Objects have changed outside of Terraform[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "54f3f5348a181ec1" -> (known after apply)
+      [2m# (7 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=50368ccc94f87ef31502d134ddbb6b]
+
+- Reusing previous version of hashicorp/aws from the dependency lock file
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "05366ab8643c4b25" -> (known after apply)
+      [2m# (2 unchanged attributes hidden)[0m
+    }
+- Reusing previous version of hashicorp/aws from the dependency lock file
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "264f8f850be5eff9" -> (known after apply)
+      [2m# (9 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+- Installing hashicorp/aws v5.23.15...
+Plan: 5 to add, 11 to change, 4 to destroy.
+      [2m# (39 unchanged attributes hidden)[0m
+Initializing the backend...
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "90609566e8e34dea" -> (known after apply)
+      [2m# (9 unchanged attributes hidden)[0m
+    }
+      [2m# (37 unchanged attributes hidden)[0m
+Refreshing state... [id=e2601ce0fd95c7c536b812ce5cd571]
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "36a0ff43e7d520ac" -> (known after apply)
+      [2m# (18 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=4a03786238368b39b87c49ff0e6e49]
+
+Initializing the backend...
+Initializing the backend...
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 9 to add, 2 to change, 1 to destroy.
+Refreshing state... [id=bb0f5f20e008d3b3ffe9c8ddbc70e1]
+- Reusing previous version of hashicorp/aws from the dependency lock file
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=49819bbb5ff2d58be6e460baa93900]
+Initializing the backend...
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "9fbd8722653dc3a3" -> (known after apply)
+      [2m# (9 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=d0f489e945bdf02623b6685a6f5d6c]
+      [2m# (14 unchanged attributes hidden)[0m
+Refreshing state... [id=fe7478185bf350d29d62c2bcdebb50]
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "21484ea798c67063" -> (known after apply)
+      [2m# (1 unchanged attributes hidden)[0m
+    }
+Plan: 7 to add, 15 to change, 1 to destroy.
+Plan: 6 to add, 6 to change, 1 to destroy.
+- Installing hashicorp/aws v5.22.39...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Initializing the backend...
+Plan: 0 to add, 18 to change, 3 to destroy.
+
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "7fe45fd0a2f28330" -> (known after apply)
+      [2m# (5 unchanged attributes hidden)[0m
+    }
+- Installing hashicorp/aws v5.21.10...
+Plan: 8 to add, 19 to change, 1 to destroy.
+Initializing the backend...
+
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "45ca1ffc6e145caa" -> (known after apply)
+      [2m# (12 unchanged attributes hidden)[0m
+    }
+Acquiring state lock. This may take a few moments...
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Releasing state lock. This may take a few moments...
+Refreshing state... [id=7c8da1f0c486b6e01c5b39ebe55609]
+Refreshing state... [id=b5600055522761b0397eb51432141c]
+Plan: 3 to add, 14 to change, 4 to destroy.
+- Installing hashicorp/aws v5.12.31...
+- Installing hashicorp/aws v5.26.52...
+Plan: 18 to add, 10 to change, 3 to destroy.
+- Installing hashicorp/aws v5.24.20...
+      [2m# (30 unchanged attributes hidden)[0m
+Plan: 11 to add, 6 to change, 0 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+- Installed hashicorp/aws v5.2.31 (signed by HashiCorp)
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "9a1b35290b0b7cf8" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+Initializing the backend...
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "741b502e72805fc4" -> (known after apply)
+      [2m# (6 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+
+      [2m# (20 unchanged attributes hidden)[0m
+
+Initializing the backend...
+Plan: 7 to add, 7 to change, 2 to destroy.
+Plan: 16 to add, 4 to change, 4 to destroy.
+Releasing state lock. This may take a few moments...
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "57ee084948c3ea79" -> (known after apply)
+      [2m# (0 unchanged attributes hidden)[0m
+    }
+
+Plan: 3 to add, 15 to change, 4 to destroy.
+Initializing the backend...
+      [2m# (19 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Acquiring state lock. This may take a few moments...
+Plan: 5 to add, 1 to change, 3 to destroy.
+Acquiring state lock. This may take a few moments...
+      [2m# (33 unchanged attributes hidden)[0m
+
+Refreshing state... [id=885a9e634e99197c294982656cea5d]
+Initializing the backend...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 10 to add, 19 to change, 0 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+- Installed hashicorp/aws v5.23.43 (signed by HashiCorp)
+[2mNote: Objects have changed outside of Terraform[0m
+
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (26 unchanged attributes hidden)[0m
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "4805153252511169" -> (known after apply)
+      [2m# (3 unchanged attributes hidden)[0m
+    }
+
+Plan: 13 to add, 19 to change, 1 to destroy.
+
+      [2m# (7 unchanged attributes hidden)[0m
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "52c929226efa48b5" -> (known after apply)
+      [2m# (11 unchanged attributes hidden)[0m
+    }
+- Installed hashicorp/aws v5.7.49 (signed by HashiCorp)
+Refreshing state... [id=9515176baa2fe4808d2bfb8c4649c8]
+Plan: 2 to add, 12 to change, 4 to destroy.
+- Installing hashicorp/aws v5.20.10...
+Acquiring state lock. This may take a few moments...
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "d513d3078e67cbba" -> (known after apply)
+      [2m# (7 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "943383bc7aa769cc" -> (known after apply)
+      [2m# (17 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=c80675826b6a42f65ccd70842c91e1]
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=d541dad99ffb84f9879b1df08b17bb]
+Plan: 6 to add, 11 to change, 3 to destroy.
+Initializing the backend...
+Plan: 7 to add, 1 to change, 3 to destroy.
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Acquiring state lock. This may take a few moments...
+Acquiring state lock. This may take a few moments...
+- Installed hashicorp/aws v5.15.58 (signed by HashiCorp)
+Plan: 10 to add, 16 to change, 2 to destroy.
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "6517333ab726591e" -> (known after apply)
+      [2m# (19 unchanged attributes hidden)[0m
+    }
+
+Initializing the backend...
+Acquiring state lock. This may take a few moments...
+Plan: 1 to add, 6 to change, 4 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=c03795fff5372b6f61482ba7f12bec]
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "ec2ccad77073cb9d" -> (known after apply)
+      [2m# (1 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "a723c7ee7cd50a23" -> (known after apply)
+      [2m# (13 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=2bca3a9dea34df6459dcee5f3df0d8]
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "df3a69a007dbc11a" -> (known after apply)
+      [2m# (4 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=353a6e27e076e0c1abcee35cca6f66]
+Initializing the backend...
+Plan: 5 to add, 11 to change, 2 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 16 to add, 4 to change, 0 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (20 unchanged attributes hidden)[0m
+
+- Reusing previous version of hashicorp/aws from the dependency lock file
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "2c86f01d3f7406f4" -> (known after apply)
+      [2m# (14 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "b179779546dde879" -> (known after apply)
+      [2m# (7 unchanged attributes hidden)[0m
+    }
+- Reusing previous version of hashicorp/aws from the dependency lock file
+
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "4293ff791ecf42a4" -> (known after apply)
+      [2m# (19 unchanged attributes hidden)[0m
+    }
+Releasing state lock. This may take a few moments...
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "30ea9072d0221da3" -> (known after apply)
+      [2m# (4 unchanged attributes hidden)[0m
+    }
+Plan: 15 to add, 19 to change, 4 to destroy.
+- Installed hashicorp/aws v5.5.16 (signed by HashiCorp)
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Releasing state lock. This may take a few moments...
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "bfea50d0a30ce3e6" -> (known after apply)
+      [2m# (12 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "0b9d6e2bff242a37" -> (known after apply)
+      [2m# (12 unchanged attributes hidden)[0m
+    }
+- Installing hashicorp/aws v5.13.52...
+
+Plan: 6 to add, 9 to change, 0 to destroy.
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "f1d8e875240321f1" -> (known after apply)
+      [2m# (12 unchanged attributes hidden)[0m
+    }
+      [2m# (47 unchanged attributes hidden)[0m
+Refreshing state... [id=8e16cbfede3bd0f22cad7383edf51b]
+Plan: 19 to add, 13 to change, 3 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "aa361ddab3ba3fb8" -> (known after apply)
+      [2m# (0 unchanged attributes hidden)[0m
+    }
+      [2m# (28 unchanged attributes hidden)[0m
+Initializing the backend...
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "fd4716492356d8c6" -> (known after apply)
+      [2m# (6 unchanged attributes hidden)[0m
+    }
+Plan: 2 to add, 16 to change, 0 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+- Installing hashicorp/aws v5.2.14...
+Acquiring state lock. This may take a few moments...
+- Installing hashicorp/aws v5.29.42...
+[2mNote: Objects have changed outside of Terraform[0m
+- Installing hashicorp/aws v5.13.33...
+- Installing hashicorp/aws v5.7.51...
+      [2m# (8 unchanged attributes hidden)[0m
+Plan: 19 to add, 14 to change, 4 to destroy.
+
+Refreshing state... [id=7ba55cd13603f00ba2392d98990e2a]
+Plan: 8 to add, 1 to change, 4 to destroy.
+Acquiring state lock. This may take a few moments...
+
+
+Initializing the backend...
+Refreshing state... [id=77a08e33559b3f5dd5ae1d609f9de6]
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "a91bd598467c33e9" -> (known after apply)
+      [2m# (17 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+Acquiring state lock. This may take a few moments...
+Plan: 10 to add, 8 to change, 4 to destroy.
+- Installing hashicorp/aws v5.22.40...
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "c319ca46a7709ca8" -> (known after apply)
+      [2m# (11 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "70b53ef33dcc75c2" -> (known after apply)
+      [2m# (14 unchanged attributes hidden)[0m
+    }
+Plan: 15 to add, 11 to change, 4 to destroy.
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "0e8698e90a5b4fc9" -> (known after apply)
+      [2m# (6 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "6154b7e13b86977e" -> (known after apply)
+      [2m# (17 unchanged attributes hidden)[0m
+    }
+- Installing hashicorp/aws v5.24.30...
+
+Plan: 5 to add, 4 to change, 2 to destroy.
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "8e11a9a44a59338e" -> (known after apply)
+      [2m# (11 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "31dcc33247aaf7cf" -> (known after apply)
+      [2m# (11 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=72a769e095846e8264fc693bf522f6]
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "ce1d1144668e9e6f" -> (known after apply)
+      [2m# (15 unchanged attributes hidden)[0m
+    }
+Acquiring state lock. This may take a few moments...
+- Installed hashicorp/aws v5.4.46 (signed by HashiCorp)
+Plan: 3 to add, 9 to change, 0 to destroy.
+      [2m# (11 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Acquiring state lock. This may take a few moments...
+
+Plan: 8 to add, 8 to change, 4 to destroy.
+Plan: 4 to add, 4 to change, 2 to destroy.
+Plan: 19 to add, 5 to change, 2 to destroy.
+      [2m# (43 unchanged attributes hidden)[0m
+Refreshing state... [id=bf542de4ef36fe86ee53791ca646ad]
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Refreshing state... [id=e170d20971c3decdcfad818e7a52fb]
+Plan: 7 to add, 13 to change, 3 to destroy.
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "ab0951114967f134" -> (known after apply)
+      [2m# (19 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=fd3c5f5e05172c5bd785b1e007e771]
+Plan: 4 to add, 11 to change, 2 to destroy.
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "b134bbff80168c81" -> (known after apply)
+      [2m# (18 unchanged attributes hidden)[0m
+    }
+Releasing state lock. This may take a few moments...
+- Installed hashicorp/aws v5.0.1 (signed by HashiCorp)
+Plan: 17 to add, 8 to change, 1 to destroy.
+Initializing the backend...
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "c3c29ffd0b71edec" -> (known after apply)
+      [2m# (18 unchanged attributes hidden)[0m
+    }
+- Installing hashicorp/aws v5.3.33...
+Plan: 5 to add, 1 to change, 3 to destroy.
+Plan: 10 to add, 3 to change, 1 to destroy.
+Plan: 11 to add, 11 to change, 1 to destroy.
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "c94271057cf0f50c" -> (known after apply)
+      [2m# (1 unchanged attributes hidden)[0m
+    }
+Releasing state lock. This may take a few moments...
+
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "da518cbef77f8c2a" -> (known after apply)
+      [2m# (13 unchanged attributes hidden)[0m
+    }
+Plan: 17 to add, 12 to change, 4 to destroy.
+- Installed hashicorp/aws v5.17.17 (signed by HashiCorp)
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 10 to add, 4 to change, 1 to destroy.
+Refreshing state... [id=b0243605185bc257eb53e3881c8a89]
+[2mNote: Objects have changed outside of Terraform[0m
+
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "ee11a1d0c4610fd1" -> (known after apply)
+      [2m# (18 unchanged attributes hidden)[0m
+    }
+Initializing the backend...
+Refreshing state... [id=2fbe4c20f6d499e7d60c4a8a094781]
+
+
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "6248a84da2d5a22e" -> (known after apply)
+      [2m# (19 unchanged attributes hidden)[0m
+    }
+- Installing hashicorp/aws v5.18.51...
+Refreshing state... [id=003af3d1d69a5f87253eb949a3d9e2]
+Acquiring state lock. This may take a few moments...
+      [2m# (30 unchanged attributes hidden)[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "4dcfa968e2b4923a" -> (known after apply)
+      [2m# (7 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "1cf65549931f4401" -> (known after apply)
+      [2m# (11 unchanged attributes hidden)[0m
+    }
+- Reusing previous version of hashicorp/aws from the dependency lock file
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "9db196e8331411a8" -> (known after apply)
+      [2m# (1 unchanged attributes hidden)[0m
+    }
+
+Plan: 14 to add, 14 to change, 2 to destroy.
+- Installed hashicorp/aws v5.4.22 (signed by HashiCorp)
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "de7d3f488700cefd" -> (known after apply)
+      [2m# (16 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "21d216e63b58d255" -> (known after apply)
+      [2m# (8 unchanged attributes hidden)[0m
+    }
+Acquiring state lock. This may take a few moments...
+      [2m# (7 unchanged attributes hidden)[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Initializing the backend...
+      [2m# (16 unchanged attributes hidden)[0m
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "d232914c290f1086" -> (known after apply)
+      [2m# (14 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "7ad95df0ac297661" -> (known after apply)
+      [2m# (8 unchanged attributes hidden)[0m
+    }
+      [2m# (24 unchanged attributes hidden)[0m
+Acquiring state lock. This may take a few moments...
+
+
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "1e4a7db5236bcfd0" -> (known after apply)
+      [2m# (14 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "b6741b7d7f76487b" -> (known after apply)
+      [2m# (3 unchanged attributes hidden)[0m
+    }
+
+[2mNote: Objects have changed outside of Terraform[0m
+- Installed hashicorp/aws v5.24.29 (signed by HashiCorp)
+Plan: 19 to add, 11 to change, 2 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 4 to add, 17 to change, 1 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=2b2406ce1c683cded3f5c777b9b220]
+Releasing state lock. This may take a few moments...
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 1 to add, 11 to change, 4 to destroy.
+Refreshing state... [id=98b12e8dab53f892654088b814c4e3]
+[2mNote: Objects have changed outside of Terraform[0m
+
+- Reusing previous version of hashicorp/aws from the dependency lock file
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "c9992149c1a2f1b8" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=f1baa61fbd599fe4460ba8bd99b384]
+Plan: 18 to add, 17 to change, 3 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Releasing state lock. This may take a few moments...
+[2mNote: Objects have changed outside of Terraform[0m
+
+
+[2mNote: Objects have changed outside of Terraform[0m
+Acquiring state lock. This may take a few moments...
+Plan: 19 to add, 0 to change, 3 to destroy.
+
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "5541ff9c5f956917" -> (known after apply)
+      [2m# (11 unchanged attributes hidden)[0m
+    }
+- Reusing previous version of hashicorp/aws from the dependency lock file
+
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "f0ecd87bbd813721" -> (known after apply)
+      [2m# (15 unchanged attributes hidden)[0m
+    }
+
+Acquiring state lock. This may take a few moments...
+Plan: 5 to add, 7 to change, 4 to destroy.
+- Installed hashicorp/aws v5.25.14 (signed by HashiCorp)
+      [2m# (37 unchanged attributes hidden)[0m
+Refreshing state... [id=6699bc81503f7e0ded258a56c6d17b]
+Refreshing state... [id=f2efec98711970b36452f95e390154]
+- Installing hashicorp/aws v5.1.50...
+
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=50619f23e6b3f14970699cfb0815b9]
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "a68c104d49e7d40e" -> (known after apply)
+      [2m# (19 unchanged attributes hidden)[0m
+    }
+      [2m# (24 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Initializing the backend...
+Plan: 3 to add, 5 to change, 2 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (20 unchanged attributes hidden)[0m
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "2d2b6f035fb79981" -> (known after apply)
+      [2m# (11 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "17e8f4534feb19c8" -> (known after apply)
+      [2m# (1 unchanged attributes hidden)[0m
+    }
+
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "d3d530248ebfb59c" -> (known after apply)
+      [2m# (18 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "ede5496a33057a1c" -> (known after apply)
+      [2m# (17 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "c0db20115eb80d76" -> (known after apply)
+      [2m# (0 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=a8cb6a24a180dc75a332370cef6d63]
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 5 to add, 8 to change, 1 to destroy.
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "85a3d833b26e4993" -> (known after apply)
+      [2m# (9 unchanged attributes hidden)[0m
+    }
+Plan: 10 to add, 8 to change, 3 to destroy.
+Initializing the backend...
+Initializing the backend...
+[2mNote: Objects have changed outside of Terraform[0m
+
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "24f168e30373d8d7" -> (known after apply)
+      [2m# (8 unchanged attributes hidden)[0m
+    }
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Refreshing state... [id=27a0a270f08e450f6f8a6685be859e]
+Plan: 0 to add, 8 to change, 3 to destroy.
+Plan: 19 to add, 10 to change, 1 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+Acquiring state lock. This may take a few moments...
+Refreshing state... [id=8ce695eac0ba45c6dfd08df354fd1f]
+- Installing hashicorp/aws v5.20.31...
+      [2m# (0 unchanged attributes hidden)[0m
+Releasing state lock. This may take a few moments...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "c101208aa0668976" -> (known after apply)
+      [2m# (2 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=9afcf7aed7e63246124f9949734e89]
+      [2m# (4 unchanged attributes hidden)[0m
+Plan: 12 to add, 9 to change, 4 to destroy.
+Plan: 3 to add, 18 to change, 4 to destroy.
+      [2m# (37 unchanged attributes hidden)[0m
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "d5f5b719b545e4fa" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+- Installed hashicorp/aws v5.15.17 (signed by HashiCorp)
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "c337c803850302df" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+      [2m# (48 unchanged attributes hidden)[0m
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "243cb4d936819ab4" -> (known after apply)
+      [2m# (15 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=6d3c2dfffad280ac7df42419ca2889]
+Refreshing state... [id=a35b76cc4421525ded95b4deb990c7]
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "1dfe5616e94b3036" -> (known after apply)
+      [2m# (3 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (18 unchanged attributes hidden)[0m
+- Installing hashicorp/aws v5.22.38...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 10 to add, 12 to change, 0 to destroy.
+Initializing the backend...
+Refreshing state... [id=732d9ac3bf4239cb38ec110730be84]
+
+- Installed hashicorp/aws v5.12.5 (signed by HashiCorp)
+Initializing the backend...
+- Installing hashicorp/aws v5.25.37...
+Releasing state lock. This may take a few moments...
+Plan: 1 to add, 14 to change, 1 to destroy.
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "2defd68dffd3089a" -> (known after apply)
+      [2m# (2 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+- Installed hashicorp/aws v5.19.52 (signed by HashiCorp)
+Initializing the backend...
+Refreshing state... [id=713d5a7dd2e14be7898986f9765260]
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "32471fe4ca77520b" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+Plan: 16 to add, 18 to change, 2 to destroy.
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "c88554c545e96b4b" -> (known after apply)
+      [2m# (1 unchanged attributes hidden)[0m
+    }
+Initializing the backend...
+[2mNote: Objects have changed outside of Terraform[0m
+Initializing the backend...
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=ee0082032a402782b1af67bf288902]
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "4628bbf52b657631" -> (known after apply)
+      [2m# (7 unchanged attributes hidden)[0m
+    }
+Plan: 19 to add, 10 to change, 0 to destroy.
+Plan: 8 to add, 0 to change, 4 to destroy.
+Plan: 10 to add, 7 to change, 1 to destroy.
+Initializing the backend...
+      [2m# (31 unchanged attributes hidden)[0m
+      [2m# (16 unchanged attributes hidden)[0m
+Plan: 12 to add, 10 to change, 2 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=2e40aac87ed542424ea07623694274]
+Refreshing state... [id=426d047bc7ee2a2bf64739abd56241]
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Initializing the backend...
+- Installed hashicorp/aws v5.0.43 (signed by HashiCorp)
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "92d683c87be01e06" -> (known after apply)
+      [2m# (5 unchanged attributes hidden)[0m
+    }
+- Reusing previous version of hashicorp/aws from the dependency lock file
+[2mNote: Objects have changed outside of Terraform[0m
+Initializing the backend...
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Releasing state lock. This may take a few moments...
+Refreshing state... [id=20fa3cfedec046bcf076bdd1092373]
+Plan: 19 to add, 18 to change, 1 to destroy.
+Plan: 0 to add, 1 to change, 1 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=7e84fe54c81cc848dbaa0c1287eacf]
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "fac3e943f5b1b05d" -> (known after apply)
+      [2m# (2 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "c75dfcbabc6e10dd" -> (known after apply)
+      [2m# (13 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 0 to add, 3 to change, 2 to destroy.
+- Installing hashicorp/aws v5.26.25...
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "92aa6439fbd50dff" -> (known after apply)
+      [2m# (3 unchanged attributes hidden)[0m
+    }
+Plan: 13 to add, 5 to change, 3 to destroy.
+
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Initializing the backend...
+Plan: 10 to add, 9 to change, 1 to destroy.
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "4e71fb39c3904539" -> (known after apply)
+      [2m# (15 unchanged attributes hidden)[0m
+    }
+Plan: 12 to add, 12 to change, 2 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+- Installed hashicorp/aws v5.0.30 (signed by HashiCorp)
+Acquiring state lock. This may take a few moments...
+Plan: 2 to add, 3 to change, 4 to destroy.
+Refreshing state... [id=ceb2154c04876b4117362246eeaf7f]
+Refreshing state... [id=630dcf59e835685d7244488d136ec9]
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "8907b8c3460ea396" -> (known after apply)
+      [2m# (7 unchanged attributes hidden)[0m
+    }
+Acquiring state lock. This may take a few moments...
+Releasing state lock. This may take a few moments...
+Refreshing state... [id=b367f4aee5937247ed055331f8152b]
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "e8cf35d9f9e2f799" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+- Installing hashicorp/aws v5.26.49...
+Refreshing state... [id=6feb83ef7c3603b4a7b6533d4b6843]
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Installing hashicorp/aws v5.8.50...
+Initializing the backend...
+
+Initializing the backend...
+      [2m# (39 unchanged attributes hidden)[0m
+- Installed hashicorp/aws v5.23.24 (signed by HashiCorp)
+- Installing hashicorp/aws v5.21.15...
+- Installing hashicorp/aws v5.3.58...
+      [2m# (11 unchanged attributes hidden)[0m
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "6503c67be0c277f2" -> (known after apply)
+      [2m# (6 unchanged attributes hidden)[0m
+    }
+      [2m# (20 unchanged attributes hidden)[0m
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "63c58b9d67776c6a" -> (known after apply)
+      [2m# (18 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+Initializing the backend...
+Refreshing state... [id=ce945841e3b34752eea5c2be16a1b7]
+
+- Installed hashicorp/aws v5.23.29 (signed by HashiCorp)
+Refreshing state... [id=25b0829eae2f2c80fbc7cc2d1c3974]
+- Installed hashicorp/aws v5.17.2 (signed by HashiCorp)
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "2729beff23297d6b" -> (known after apply)
+      [2m# (6 unchanged attributes hidden)[0m
+    }
+Acquiring state lock. This may take a few moments...
+Plan: 9 to add, 0 to change, 4 to destroy.
+      [2m# (26 unchanged attributes hidden)[0m
+Initializing the backend...
+      [2m# (38 unchanged attributes hidden)[0m
+- Installed hashicorp/aws v5.26.0 (signed by HashiCorp)
+
+- Installed hashicorp/aws v5.29.27 (signed by HashiCorp)
+Plan: 16 to add, 10 to change, 0 to destroy.
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Releasing state lock. This may take a few moments...
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "c65db4ff3578d57c" -> (known after apply)
+      [2m# (6 unchanged attributes hidden)[0m
+    }
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 8 to add, 4 to change, 3 to destroy.
+- Installing hashicorp/aws v5.9.37...
+Plan: 11 to add, 11 to change, 1 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 0 to add, 0 to change, 0 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "6bd73d4e32e8ae1d" -> (known after apply)
+      [2m# (8 unchanged attributes hidden)[0m
+    }
+
+      [2m# (44 unchanged attributes hidden)[0m
+      [2m# (7 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "66a3c6dcbdfb6fc7" -> (known after apply)
+      [2m# (18 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "33301b160ca8f6fc" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+- Installed hashicorp/aws v5.24.19 (signed by HashiCorp)
+- Installing hashicorp/aws v5.13.22...
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 6 to add, 7 to change, 4 to destroy.
+
+- Reusing previous version of hashicorp/aws from the dependency lock file
+      [2m# (6 unchanged attributes hidden)[0m
+Plan: 11 to add, 19 to change, 4 to destroy.
+- Installed hashicorp/aws v5.18.11 (signed by HashiCorp)
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "65d85be545292c9c" -> (known after apply)
+      [2m# (6 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+Initializing the backend...
+Acquiring state lock. This may take a few moments...
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "a8ca09686673098f" -> (known after apply)
+      [2m# (0 unchanged attributes hidden)[0m
+    }
+
+Plan: 2 to add, 4 to change, 2 to destroy.
+
+Refreshing state... [id=f31837f0427f667ff195ab04f95534]
+      [2m# (20 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (43 unchanged attributes hidden)[0m
+- Installing hashicorp/aws v5.18.17...
+
+- Installed hashicorp/aws v5.18.13 (signed by HashiCorp)
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (47 unchanged attributes hidden)[0m
+Plan: 3 to add, 6 to change, 0 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 0 to add, 16 to change, 1 to destroy.
+Plan: 4 to add, 8 to change, 3 to destroy.
+Initializing the backend...
+Initializing the backend...
+Plan: 18 to add, 18 to change, 0 to destroy.
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Refreshing state... [id=4e095d4938369ca54d03194ba0878a]
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "12667991f87b8130" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+Releasing state lock. This may take a few moments...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "6a6636c8403e5337" -> (known after apply)
+      [2m# (5 unchanged attributes hidden)[0m
+    }
+Initializing the backend...
+Acquiring state lock. This may take a few moments...
+- Installing hashicorp/aws v5.11.6...
+Refreshing state... [id=1fc87f84fcf73995836da80b9367b7]
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Refreshing state... [id=34a52e1b4d775b32ec7b89601e35d4]
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "378cc777e8d9584a" -> (known after apply)
+      [2m# (4 unchanged attributes hidden)[0m
+    }
+Acquiring state lock. This may take a few moments...
+      [2m# (9 unchanged attributes hidden)[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Installed hashicorp/aws v5.26.46 (signed by HashiCorp)
+Refreshing state... [id=e770dcf062bb697e468287843fd663]
+Plan: 0 to add, 15 to change, 2 to destroy.
+      [2m# (15 unchanged attributes hidden)[0m
+
+
+Plan: 15 to add, 10 to change, 2 to destroy.
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "b021d54fe8057c58" -> (known after apply)
+      [2m# (6 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "647d679e35f26920" -> (known after apply)
+      [2m# (13 unchanged attributes hidden)[0m
+    }
+      [2m# (29 unchanged attributes hidden)[0m
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "7af4bc20ba2a19b3" -> (known after apply)
+      [2m# (5 unchanged attributes hidden)[0m
+    }
+
+Acquiring state lock. This may take a few moments...
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "bd16431ac8c7d694" -> (known after apply)
+      [2m# (11 unchanged attributes hidden)[0m
+    }
+
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "b6e529741ced1792" -> (known after apply)
+      [2m# (8 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "4af2c9df1b9fd11d" -> (known after apply)
+      [2m# (14 unchanged attributes hidden)[0m
+    }
+
+Releasing state lock. This may take a few moments...
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=83954a22c1b5e9297d328733c38d61]
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "6d99f2b2b42ba7ec" -> (known after apply)
+      [2m# (9 unchanged attributes hidden)[0m
+    }
+
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "d65c30e2b03e1741" -> (known after apply)
+      [2m# (19 unchanged attributes hidden)[0m
+    }
+
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "56aa96bdec97e200" -> (known after apply)
+      [2m# (6 unchanged attributes hidden)[0m
+    }
+
+Initializing the backend...
+Releasing state lock. This may take a few moments...
+Plan: 10 to add, 13 to change, 3 to destroy.
+      [2m# (9 unchanged attributes hidden)[0m
+Plan: 5 to add, 12 to change, 0 to destroy.
+Refreshing state... [id=8dfc7888656f921c5fbb81cf1db013]
+Plan: 17 to add, 2 to change, 3 to destroy.
+Plan: 17 to add, 9 to change, 2 to destroy.
+- Reusing previous version of hashicorp/aws from the dependency lock file
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "c9ec965d56598ddf" -> (known after apply)
+      [2m# (3 unchanged attributes hidden)[0m
+    }
+Plan: 12 to add, 19 to change, 2 to destroy.
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "b368ca636406b82b" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+Initializing the backend...
+      [2m# (39 unchanged attributes hidden)[0m
+Refreshing state... [id=dd68ca19ac88b69a4e6e837d58546a]
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "88e77f4e4e13c0ce" -> (known after apply)
+      [2m# (7 unchanged attributes hidden)[0m
+    }
+- Reusing previous version of hashicorp/aws from the dependency lock file
+[2mNote: Objects have changed outside of Terraform[0m
+- Installed hashicorp/aws v5.8.24 (signed by HashiCorp)
+Refreshing state... [id=995aa3434779bf44ee3a65da176345]
+
+Releasing state lock. This may take a few moments...
+      [2m# (44 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+- Installed hashicorp/aws v5.15.5 (signed by HashiCorp)
+Plan: 0 to add, 8 to change, 0 to destroy.
+- Installing hashicorp/aws v5.11.32...
+Releasing state lock. This may take a few moments...
+Refreshing state... [id=1a8fa82be237a41bce86cb7fc9e127]
+Initializing the backend...
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "35f39faa7e08b580" -> (known after apply)
+      [2m# (17 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=0f2bfcce903e8ba78cb6fe7a3bc961]
+      [2m# (48 unchanged attributes hidden)[0m
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "c034a8670d9276fe" -> (known after apply)
+      [2m# (11 unchanged attributes hidden)[0m
+    }
+- Installed hashicorp/aws v5.23.27 (signed by HashiCorp)
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 12 to add, 11 to change, 0 to destroy.
+Releasing state lock. This may take a few moments...
+Plan: 3 to add, 9 to change, 3 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 12 to add, 16 to change, 4 to destroy.
+- Installed hashicorp/aws v5.5.31 (signed by HashiCorp)
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 8 to add, 18 to change, 0 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 1 to add, 5 to change, 0 to destroy.
+
+Releasing state lock. This may take a few moments...
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "c91c3f174d978919" -> (known after apply)
+      [2m# (11 unchanged attributes hidden)[0m
+    }
+
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "cfe2c9bc36a42399" -> (known after apply)
+      [2m# (17 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=abf5dd0dc1810e9aefe2a4543877fe]
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "f516ef53fb6d9dd4" -> (known after apply)
+      [2m# (12 unchanged attributes hidden)[0m
+    }
+- Installing hashicorp/aws v5.10.3...
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "0a3c3e2fb137ea91" -> (known after apply)
+      [2m# (16 unchanged attributes hidden)[0m
+    }
+Plan: 5 to add, 14 to change, 3 to destroy.
+- Installed hashicorp/aws v5.4.33 (signed by HashiCorp)
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 1 to add, 16 to change, 2 to destroy.
+Releasing state lock. This may take a few moments...
+Plan: 18 to add, 16 to change, 3 to destroy.
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "225edb91a1bcc720" -> (known after apply)
+      [2m# (14 unchanged attributes hidden)[0m
+    }
+- Installing hashicorp/aws v5.26.23...
+Releasing state lock. This may take a few moments...
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "33cc7a75021ad4ac" -> (known after apply)
+      [2m# (17 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "a7ccbd9b0e04427c" -> (known after apply)
+      [2m# (13 unchanged attributes hidden)[0m
+    }
+Plan: 17 to add, 2 to change, 0 to destroy.
+      [2m# (3 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 13 to add, 6 to change, 3 to destroy.
+- Installed hashicorp/aws v5.14.46 (signed by HashiCorp)
+      [2m# (10 unchanged attributes hidden)[0m
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "b47db545c0453287" -> (known after apply)
+      [2m# (18 unchanged attributes hidden)[0m
+    }
+
+- Installing hashicorp/aws v5.18.41...
+Acquiring state lock. This may take a few moments...
+      [2m# (39 unchanged attributes hidden)[0m
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "363116c0792b5873" -> (known after apply)
+      [2m# (19 unchanged attributes hidden)[0m
+    }
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Initializing the backend...
+Plan: 16 to add, 2 to change, 2 to destroy.
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "038dd214d06ad0e5" -> (known after apply)
+      [2m# (14 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "67d750a340e05616" -> (known after apply)
+      [2m# (0 unchanged attributes hidden)[0m
+    }
+      [2m# (26 unchanged attributes hidden)[0m
+Plan: 4 to add, 4 to change, 4 to destroy.
+Acquiring state lock. This may take a few moments...
+Initializing the backend...
+Refreshing state... [id=b781ccaa774f2eadee489f77b39a2b]
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 11 to add, 5 to change, 3 to destroy.
+Releasing state lock. This may take a few moments...
+- Installed hashicorp/aws v5.6.14 (signed by HashiCorp)
+Plan: 19 to add, 10 to change, 0 to destroy.
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "c55f040cfb667e2a" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 8 to add, 6 to change, 0 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (12 unchanged attributes hidden)[0m
+Plan: 15 to add, 6 to change, 3 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=c812ceac55aa46ac046a6c9c6cceb0]
+      [2m# (11 unchanged attributes hidden)[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Refreshing state... [id=c1ea6d6e051a2989e9dfe6b4700137]
+Plan: 17 to add, 14 to change, 0 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Refreshing state... [id=ff894a0b8d4e330d2773eab2c4907f]
+Plan: 19 to add, 8 to change, 2 to destroy.
+Initializing the backend...
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 2 to add, 10 to change, 4 to destroy.
+- Installed hashicorp/aws v5.14.33 (signed by HashiCorp)
+Initializing the backend...
+Refreshing state... [id=0bb7ef2cbfcb5fd85a81f6696d0fea]
+Acquiring state lock. This may take a few moments...
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "37df92509afbc61d" -> (known after apply)
+      [2m# (19 unchanged attributes hidden)[0m
+    }
+- Installing hashicorp/aws v5.1.11...
+Initializing the backend...
+Initializing the backend...
+      [2m# (26 unchanged attributes hidden)[0m
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "f1a31448e064d00e" -> (known after apply)
+      [2m# (12 unchanged attributes hidden)[0m
+    }
+Initializing the backend...
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "ac31e48ae057cf44" -> (known after apply)
+      [2m# (2 unchanged attributes hidden)[0m
+    }
+      [2m# (30 unchanged attributes hidden)[0m
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "eab98c048cea115b" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+- Installed hashicorp/aws v5.3.9 (signed by HashiCorp)
+Plan: 7 to add, 16 to change, 3 to destroy.
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "5e452e6ca9ba7248" -> (known after apply)
+      [2m# (19 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "90566e5c167abe39" -> (known after apply)
+      [2m# (13 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "9bc7568eceefdd43" -> (known after apply)
+      [2m# (8 unchanged attributes hidden)[0m
+    }
+
+- Installing hashicorp/aws v5.29.15...
+
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Installed hashicorp/aws v5.28.42 (signed by HashiCorp)
+Initializing the backend...
+Refreshing state... [id=e0494160b440808932e21222249292]
+Refreshing state... [id=65370064a63171e4c4a7b1a23fb1fd]
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (44 unchanged attributes hidden)[0m
+Plan: 5 to add, 12 to change, 3 to destroy.
+      [2m# (9 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=460a57b019ca1dda6dfc58532a1e38]
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "7948ef18c2bfd835" -> (known after apply)
+      [2m# (8 unchanged attributes hidden)[0m
+    }
+- Installing hashicorp/aws v5.24.18...
+Initializing the backend...
+Refreshing state... [id=91857cf1577b1764e10dfcbc5b6c54]
+- Installing hashicorp/aws v5.12.26...
+- Installed hashicorp/aws v5.17.35 (signed by HashiCorp)
+Plan: 8 to add, 2 to change, 2 to destroy.
+Plan: 2 to add, 18 to change, 3 to destroy.
+
+Releasing state lock. This may take a few moments...
+Plan: 8 to add, 7 to change, 3 to destroy.
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "bc75d45f3e7ddf46" -> (known after apply)
+      [2m# (7 unchanged attributes hidden)[0m
+    }
+Plan: 0 to add, 5 to change, 2 to destroy.
+Initializing the backend...
+Initializing the backend...
+Releasing state lock. This may take a few moments...
+Acquiring state lock. This may take a few moments...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 9 to add, 6 to change, 1 to destroy.
+Plan: 4 to add, 14 to change, 1 to destroy.
+
+- Installing hashicorp/aws v5.2.6...
+
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (30 unchanged attributes hidden)[0m
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "6ab042f8caa3b152" -> (known after apply)
+      [2m# (7 unchanged attributes hidden)[0m
+    }
+Plan: 13 to add, 18 to change, 0 to destroy.
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 3 to add, 12 to change, 4 to destroy.
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "ab19c25aedd409e5" -> (known after apply)
+      [2m# (5 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 4 to add, 5 to change, 4 to destroy.
+- Installing hashicorp/aws v5.21.30...
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Initializing the backend...
+      [2m# (31 unchanged attributes hidden)[0m
+      [2m# (31 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 4 to add, 5 to change, 1 to destroy.
+Refreshing state... [id=f57e3c3bb7b8798f4853e2d9bb5781]
+Acquiring state lock. This may take a few moments...
+[2mNote: Objects have changed outside of Terraform[0m
+Acquiring state lock. This may take a few moments...
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 14 to add, 5 to change, 3 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 4 to add, 3 to change, 1 to destroy.
+Initializing the backend...
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 10 to add, 11 to change, 2 to destroy.
+      [2m# (38 unchanged attributes hidden)[0m
+Releasing state lock. This may take a few moments...
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "02452f56df2bc653" -> (known after apply)
+      [2m# (17 unchanged attributes hidden)[0m
+    }
+- Installing hashicorp/aws v5.13.33...
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "444b5d0d7b5b961a" -> (known after apply)
+      [2m# (5 unchanged attributes hidden)[0m
+    }
+Plan: 5 to add, 3 to change, 4 to destroy.
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "90e29c8edc21be4e" -> (known after apply)
+      [2m# (7 unchanged attributes hidden)[0m
+    }
+- Installing hashicorp/aws v5.7.28...
+Acquiring state lock. This may take a few moments...
+Acquiring state lock. This may take a few moments...
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Initializing the backend...
+- Installed hashicorp/aws v5.25.6 (signed by HashiCorp)
+
+Acquiring state lock. This may take a few moments...
+- Installed hashicorp/aws v5.13.23 (signed by HashiCorp)
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=f9491c511210e23e4858c6722a39d6]
+Refreshing state... [id=b87865a40e811f9187e88f0e82bc3a]
+Refreshing state... [id=aaa6df4a0b00515e2a6326bb1b8e93]
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Installed hashicorp/aws v5.25.38 (signed by HashiCorp)
+Refreshing state... [id=0940c720fe0f98963bdac34f1752eb]
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 4 to add, 14 to change, 3 to destroy.
+Plan: 11 to add, 10 to change, 2 to destroy.
+- Reusing previous version of hashicorp/aws from the dependency lock file
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+
+- Reusing previous version of hashicorp/aws from the dependency lock file
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "35ecdc1dbbeb4dde" -> (known after apply)
+      [2m# (17 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=371908df8b737bbe14ff979befe7d1]
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "62e424f112a80b4c" -> (known after apply)
+      [2m# (2 unchanged attributes hidden)[0m
+    }
+Plan: 16 to add, 9 to change, 4 to destroy.
+      [2m# (18 unchanged attributes hidden)[0m
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "b597c5841c35b64c" -> (known after apply)
+      [2m# (14 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "7ce225710d4624a2" -> (known after apply)
+      [2m# (2 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=caa0690eb5e139b79839e4f70c5f11]
+
+Releasing state lock. This may take a few moments...
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "c6823464d7cb3b7f" -> (known after apply)
+      [2m# (1 unchanged attributes hidden)[0m
+    }
+      [2m# (37 unchanged attributes hidden)[0m
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "c9c4faee93f72fb8" -> (known after apply)
+      [2m# (13 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "f56ed931eac4e4e3" -> (known after apply)
+      [2m# (13 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+
+- Reusing previous version of hashicorp/aws from the dependency lock file
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=d874faf4cba0e836f688cab618a34c]
+
+
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "0db1a78ba14e4d63" -> (known after apply)
+      [2m# (15 unchanged attributes hidden)[0m
+    }
+Plan: 11 to add, 12 to change, 4 to destroy.
+
+Refreshing state... [id=68e25af03c3bb3faf7f39c06cf9902]
+      [2m# (22 unchanged attributes hidden)[0m
+Initializing the backend...
+Acquiring state lock. This may take a few moments...
+- Installing hashicorp/aws v5.15.28...
+[2mNote: Objects have changed outside of Terraform[0m
+
+Plan: 2 to add, 18 to change, 2 to destroy.
+Plan: 5 to add, 2 to change, 0 to destroy.
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "3d9f4c3efe193d0a" -> (known after apply)
+      [2m# (3 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=512257615b0d9a9c5911930dc720cf]
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "31c79170b3b99d33" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+Releasing state lock. This may take a few moments...
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "f00e72244c3a2287" -> (known after apply)
+      [2m# (17 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Initializing the backend...
+
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "49bb039319299ad2" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+
+- Installed hashicorp/aws v5.1.26 (signed by HashiCorp)
+Plan: 2 to add, 1 to change, 3 to destroy.
+- Installing hashicorp/aws v5.27.38...
+Refreshing state... [id=499d28e5ac3825dcce7fb88ce169ac]
+Plan: 19 to add, 0 to change, 2 to destroy.
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Reusing previous version of hashicorp/aws from the dependency lock file
+
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 5 to add, 4 to change, 1 to destroy.
+Initializing the backend...
+Initializing the backend...
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=b71c41959d59767b46168c4faf7abd]
+Refreshing state... [id=b315a0717c72bc0884c4f61ebe36a1]
+
+Initializing the backend...
+Plan: 4 to add, 4 to change, 3 to destroy.
+Acquiring state lock. This may take a few moments...
+Acquiring state lock. This may take a few moments...
+- Installed hashicorp/aws v5.6.55 (signed by HashiCorp)
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "7732e5775d9feacb" -> (known after apply)
+      [2m# (12 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "89fe9bf4f09c5581" -> (known after apply)
+      [2m# (12 unchanged attributes hidden)[0m
+    }
+Releasing state lock. This may take a few moments...
+
+Refreshing state... [id=a0e20eb3ead73b65460bc4f2696dbe]
+Refreshing state... [id=09a59c877c504053cf29a06554423e]
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 17 to add, 19 to change, 3 to destroy.
+Refreshing state... [id=ffec90a79c9b9136fa03abb2d05e29]
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "feee8c5a67acdf24" -> (known after apply)
+      [2m# (8 unchanged attributes hidden)[0m
+    }
+
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Installing hashicorp/aws v5.3.19...
+      [2m# (11 unchanged attributes hidden)[0m
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "f96da440e3772383" -> (known after apply)
+      [2m# (18 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 2 to add, 15 to change, 0 to destroy.
+Plan: 9 to add, 0 to change, 3 to destroy.
+Plan: 0 to add, 8 to change, 0 to destroy.
+- Installed hashicorp/aws v5.5.4 (signed by HashiCorp)
+[2mNote: Objects have changed outside of Terraform[0m
+Acquiring state lock. This may take a few moments...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Installing hashicorp/aws v5.25.23...
+- Installing hashicorp/aws v5.12.49...
+[2mNote: Objects have changed outside of Terraform[0m
+Releasing state lock. This may take a few moments...
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "4fe813daab8ee045" -> (known after apply)
+      [2m# (16 unchanged attributes hidden)[0m
+    }
+
+- Installing hashicorp/aws v5.28.13...
+Refreshing state... [id=dccd65996fe695f0611413eb97204a]
+[2mNote: Objects have changed outside of Terraform[0m
+- Installing hashicorp/aws v5.28.12...
+Refreshing state... [id=05fb1d658481626de8e7c39232df10]
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "fbaae433a9281d8a" -> (known after apply)
+      [2m# (13 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "6b49e5d5415463d7" -> (known after apply)
+      [2m# (1 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=47043c12796a2eb38ad6f4a6552e97]
+[2mNote: Objects have changed outside of Terraform[0m
+- Installed hashicorp/aws v5.1.54 (signed by HashiCorp)
+Refreshing state... [id=75327fd693e1e0cd174f6662e5d9f3]
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (16 unchanged attributes hidden)[0m
+Plan: 10 to add, 13 to change, 1 to destroy.
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 1 to add, 8 to change, 4 to destroy.
+Plan: 2 to add, 16 to change, 2 to destroy.
+Initializing the backend...
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (42 unchanged attributes hidden)[0m
+Plan: 1 to add, 12 to change, 1 to destroy.
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "046d1469652e89cc" -> (known after apply)
+      [2m# (15 unchanged attributes hidden)[0m
+    }
+Plan: 1 to add, 12 to change, 0 to destroy.
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 15 to add, 14 to change, 0 to destroy.
+      [2m# (30 unchanged attributes hidden)[0m
+Initializing the backend...
+[2mNote: Objects have changed outside of Terraform[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Installing hashicorp/aws v5.0.37...
+Releasing state lock. This may take a few moments...
+Refreshing state... [id=437035fdf27f57488cd482d6a2ca32]
+Refreshing state... [id=f4b9059958f6a8f9b3f257719f4a73]
+Releasing state lock. This may take a few moments...
+[2mNote: Objects have changed outside of Terraform[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 2 to add, 7 to change, 4 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "51b1c1ee2c80c540" -> (known after apply)
+      [2m# (8 unchanged attributes hidden)[0m
+    }
+Releasing state lock. This may take a few moments...
+Refreshing state... [id=8dd5c7b2b115c50250cb34b1e716d6]
+Refreshing state... [id=ccc2f80752c72962ba7c1cd943bc74]
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "48f116c29f1249ac" -> (known after apply)
+      [2m# (2 unchanged attributes hidden)[0m
+    }
+Plan: 14 to add, 3 to change, 4 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "c6c0bd3f9a7df0d9" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+Plan: 11 to add, 19 to change, 2 to destroy.
+Initializing the backend...
+Refreshing state... [id=d3bb765b3627590aebcee9962cbdf6]
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=5563029b11511f8b9ec76414ed0a77]
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "6727c41ef5cdcacc" -> (known after apply)
+      [2m# (8 unchanged attributes hidden)[0m
+    }
+- Installing hashicorp/aws v5.9.9...
+  [33m~[0m resource "kubernetes_deployment" "api" {
+      [33m~[0m id              = "fb383752b99a9449" -> (known after apply)
+      [2m# (13 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+Initializing the backend...
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=0f60d7a194a3eda2c48cae1d048a53]
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 17 to add, 9 to change, 2 to destroy.
+Refreshing state... [id=f8334b9e8dcde6c6195bd199a3241c]
+Refreshing state... [id=5c18d01a634ce4e1182fc9b61c0942]
+Refreshing state... [id=f8d55e9775b3ddcfc575b8d443280a]
+Plan: 15 to add, 4 to change, 0 to destroy.
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "5d7dee155ce4a0e4" -> (known after apply)
+      [2m# (4 unchanged attributes hidden)[0m
+    }
+Initializing the backend...
+Plan: 7 to add, 8 to change, 1 to destroy.
+- Installing hashicorp/aws v5.13.56...
+Releasing state lock. This may take a few moments...
+Plan: 2 to add, 16 to change, 3 to destroy.
+Plan: 10 to add, 13 to change, 0 to destroy.
+Initializing the backend...
+- Installed hashicorp/aws v5.23.36 (signed by HashiCorp)
+Refreshing state... [id=05ee24f1b6b6ecf76df7bcfe454f24]
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Acquiring state lock. This may take a few moments...
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Initializing the backend...
+      [2m# (13 unchanged attributes hidden)[0m
+      [2m# (12 unchanged attributes hidden)[0m
+Refreshing state... [id=edfca8cf6d992c304528fe0c001163]
+Releasing state lock. This may take a few moments...
+- Installed hashicorp/aws v5.17.3 (signed by HashiCorp)
+Releasing state lock. This may take a few moments...
+- Installed hashicorp/aws v5.0.49 (signed by HashiCorp)
+
+Acquiring state lock. This may take a few moments...
+Releasing state lock. This may take a few moments...
+      [2m# (45 unchanged attributes hidden)[0m
+Refreshing state... [id=4fcedbf3bfe610d7a6034fb951a6c6]
+Releasing state lock. This may take a few moments...
+Acquiring state lock. This may take a few moments...
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "80156febf9df3a5f" -> (known after apply)
+      [2m# (1 unchanged attributes hidden)[0m
+    }
+- Installed hashicorp/aws v5.24.9 (signed by HashiCorp)
+Initializing the backend...
+Refreshing state... [id=8f2e81697afacebba013130556dce9]
+Plan: 3 to add, 3 to change, 2 to destroy.
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "07764817dcccfca4" -> (known after apply)
+      [2m# (2 unchanged attributes hidden)[0m
+    }
+Plan: 6 to add, 2 to change, 0 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 5 to add, 16 to change, 3 to destroy.
+Initializing the backend...
+- Installed hashicorp/aws v5.7.28 (signed by HashiCorp)
+Releasing state lock. This may take a few moments...
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "5fe80de489961b32" -> (known after apply)
+      [2m# (8 unchanged attributes hidden)[0m
+    }
+
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 0 to add, 10 to change, 2 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+
+Initializing the backend...
+
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Refreshing state... [id=13bb9c36728a47e5ce1547991a47b5]
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Initializing the backend...
+- Installing hashicorp/aws v5.23.21...
+Releasing state lock. This may take a few moments...
+
+Plan: 13 to add, 3 to change, 1 to destroy.
+- Installing hashicorp/aws v5.18.30...
+Initializing the backend...
+      [2m# (7 unchanged attributes hidden)[0m
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "f84aa52e944681d9" -> (known after apply)
+      [2m# (18 unchanged attributes hidden)[0m
+    }
+Plan: 13 to add, 1 to change, 0 to destroy.
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "33c72ad50fa2c389" -> (known after apply)
+      [2m# (0 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=0a25443fc628b931ee3a34ac6c3b2a]
+Refreshing state... [id=698baaf7b655c4fc2132167979945a]
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "4bc64da0bb731dff" -> (known after apply)
+      [2m# (16 unchanged attributes hidden)[0m
+    }
+Initializing the backend...
+Plan: 19 to add, 2 to change, 1 to destroy.
+Initializing the backend...
+- Installing hashicorp/aws v5.24.53...
+Initializing the backend...
+- Installing hashicorp/aws v5.12.46...
+      [2m# (4 unchanged attributes hidden)[0m
+Plan: 13 to add, 2 to change, 2 to destroy.
+
+Plan: 15 to add, 3 to change, 3 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=c005200870f63e2ed82ed25ed8d08a]
+- Reusing previous version of hashicorp/aws from the dependency lock file
+
+Releasing state lock. This may take a few moments...
+Acquiring state lock. This may take a few moments...
+Plan: 3 to add, 11 to change, 2 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+- Installed hashicorp/aws v5.17.32 (signed by HashiCorp)
+
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 17 to add, 6 to change, 0 to destroy.
+Initializing the backend...
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "9da2d9b69d1e5e88" -> (known after apply)
+      [2m# (19 unchanged attributes hidden)[0m
+    }
+Acquiring state lock. This may take a few moments...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Installed hashicorp/aws v5.27.14 (signed by HashiCorp)
+
+      [2m# (8 unchanged attributes hidden)[0m
+- Installing hashicorp/aws v5.12.29...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+
+Acquiring state lock. This may take a few moments...
+
+Initializing the backend...
+Plan: 16 to add, 9 to change, 0 to destroy.
+Plan: 3 to add, 2 to change, 4 to destroy.
+- Reusing previous version of hashicorp/aws from the dependency lock file
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=dd575039edf0fe11cc77f98eacd6ef]
+Acquiring state lock. This may take a few moments...
+Acquiring state lock. This may take a few moments...
+Initializing the backend...
+Releasing state lock. This may take a few moments...
+Refreshing state... [id=ec7a4b798a1644bd1297aad9142b41]
+  [33m~[0m resource "aws_s3_bucket" "assets" {
+      [33m~[0m id              = "3e627c7a1c69de35" -> (known after apply)
+      [2m# (2 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "8307f7e375d2aa43" -> (known after apply)
+      [2m# (9 unchanged attributes hidden)[0m
+    }
+      [2m# (21 unchanged attributes hidden)[0m
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+- Installing hashicorp/aws v5.4.3...
+
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "2bfd719444510313" -> (known after apply)
+      [2m# (1 unchanged attributes hidden)[0m
+    }
+      [2m# (43 unchanged attributes hidden)[0m
+      [2m# (9 unchanged attributes hidden)[0m
+
+Refreshing state... [id=9c6b01446166a302d6cf95974bc83c]
+- Installing hashicorp/aws v5.26.8...
+Acquiring state lock. This may take a few moments...
+- Installed hashicorp/aws v5.21.54 (signed by HashiCorp)
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (15 unchanged attributes hidden)[0m
+Acquiring state lock. This may take a few moments...
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "d9a1d8e1ec2e6cf6" -> (known after apply)
+      [2m# (19 unchanged attributes hidden)[0m
+    }
+- Installed hashicorp/aws v5.16.28 (signed by HashiCorp)
+Refreshing state... [id=2b283958863b45fb8842ab67d036ed]
+Acquiring state lock. This may take a few moments...
+Acquiring state lock. This may take a few moments...
+[2mNote: Objects have changed outside of Terraform[0m
+
+Plan: 6 to add, 4 to change, 3 to destroy.
+Refreshing state... [id=bba5563fbe7d5d7e49901a865271db]
+Refreshing state... [id=457674704ed800a51fc1c8f50adef1]
+Plan: 13 to add, 16 to change, 0 to destroy.
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "5553af27d24b2a8e" -> (known after apply)
+      [2m# (18 unchanged attributes hidden)[0m
+    }
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 3 to add, 7 to change, 3 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+
+- Installed hashicorp/aws v5.18.58 (signed by HashiCorp)
+Plan: 12 to add, 2 to change, 2 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 12 to add, 2 to change, 2 to destroy.
+  [33m~[0m resource "aws_instance" "web" {
+      [33m~[0m id              = "b0ef9fad3cddc454" -> (known after apply)
+      [2m# (17 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "4ea588d131852cf5" -> (known after apply)
+      [2m# (1 unchanged attributes hidden)[0m
+    }
+
+Plan: 13 to add, 12 to change, 2 to destroy.
+  [33m~[0m resource "aws_iam_role" "task_exec" {
+      [33m~[0m id              = "2620c31f6d83675d" -> (known after apply)
+      [2m# (12 unchanged attributes hidden)[0m
+    }
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 12 to add, 19 to change, 1 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+- Installing hashicorp/aws v5.18.33...
+Plan: 9 to add, 7 to change, 1 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+- Installed hashicorp/aws v5.0.45 (signed by HashiCorp)
+[2mNote: Objects have changed outside of Terraform[0m
+      [2m# (9 unchanged attributes hidden)[0m
+Plan: 9 to add, 0 to change, 1 to destroy.
+
+- Installed hashicorp/aws v5.28.7 (signed by HashiCorp)
+Plan: 10 to add, 14 to change, 2 to destroy.
+      [2m# (27 unchanged attributes hidden)[0m
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "a9ade8ebe8950470" -> (known after apply)
+      [2m# (0 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "google_compute_instance" "runner" {
+      [33m~[0m id              = "a7d20dfbbad6f3a5" -> (known after apply)
+      [2m# (14 unchanged attributes hidden)[0m
+    }
+- Reusing previous version of hashicorp/aws from the dependency lock file
+      [2m# (31 unchanged attributes hidden)[0m
+Plan: 19 to add, 9 to change, 3 to destroy.
+Plan: 17 to add, 8 to change, 2 to destroy.
+Refreshing state... [id=00d4110a4edc5cc338c64891f2cf00]
+  [33m~[0m resource "aws_dynamodb_table" "sessions" {
+      [33m~[0m id              = "09bb90aab326f8d5" -> (known after apply)
+      [2m# (15 unchanged attributes hidden)[0m
+    }
+      [2m# (9 unchanged attributes hidden)[0m
+Initializing the backend...
+  [33m~[0m resource "aws_lambda_function" "processor" {
+      [33m~[0m id              = "95dadbbd6288275f" -> (known after apply)
+      [2m# (12 unchanged attributes hidden)[0m
+    }
+Releasing state lock. This may take a few moments...
+      [2m# (25 unchanged attributes hidden)[0m
+Acquiring state lock. This may take a few moments...
+Plan: 3 to add, 4 to change, 3 to destroy.
+
+Plan: 9 to add, 9 to change, 1 to destroy.
+Plan: 10 to add, 1 to change, 3 to destroy.
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "4afa430986c3285e" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+Plan: 3 to add, 3 to change, 3 to destroy.
+[2mNote: Objects have changed outside of Terraform[0m
+Plan: 0 to add, 8 to change, 4 to destroy.
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "c93fe9869e900d30" -> (known after apply)
+      [2m# (10 unchanged attributes hidden)[0m
+    }
+Releasing state lock. This may take a few moments...
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=52c147887b2ad5d8e3549fb8cb5cf6]
+      [2m# (34 unchanged attributes hidden)[0m
+- Installed hashicorp/aws v5.26.17 (signed by HashiCorp)
+[2mNote: Objects have changed outside of Terraform[0m
+Refreshing state... [id=051ffe5ad481155c3d0d23747b523c]
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 19 to add, 19 to change, 4 to destroy.
+      [2m# (16 unchanged attributes hidden)[0m
+  [33m~[0m resource "aws_security_group" "allow_https" {
+      [33m~[0m id              = "dd25d231270d55f3" -> (known after apply)
+      [2m# (9 unchanged attributes hidden)[0m
+    }
+Refreshing state... [id=1f571399afde5478ac47a86cd23fec]
+Acquiring state lock. This may take a few moments...
+
+Plan: 5 to add, 2 to change, 2 to destroy.
+      [2m# (3 unchanged attributes hidden)[0m
+      [2m# (49 unchanged attributes hidden)[0m
+Acquiring state lock. This may take a few moments...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 8 to add, 8 to change, 3 to destroy.
+Plan: 3 to add, 8 to change, 0 to destroy.
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "de9ba2d0f9dd3284" -> (known after apply)
+      [2m# (6 unchanged attributes hidden)[0m
+    }
+  [33m~[0m resource "aws_cloudwatch_log_group" "app" {
+      [33m~[0m id              = "a3cc84a5c61779b1" -> (known after apply)
+      [2m# (18 unchanged attributes hidden)[0m
+    }
+[2mNote: Objects have changed outside of Terraform[0m
+Initializing the backend...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 12 to add, 13 to change, 1 to destroy.
+Initializing the backend...
+Plan: 4 to add, 6 to change, 3 to destroy.
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Initializing the backend...
+[2mNote: Objects have changed outside of Terraform[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+Plan: 0 to add, 4 to change, 2 to destroy.
+- Installing hashicorp/aws v5.8.8...
+Plan: 10 to add, 5 to change, 2 to destroy.
+Plan: 2 to add, 14 to change, 0 to destroy.
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Installing hashicorp/aws v5.7.50...
+Releasing state lock. This may take a few moments...
+
+      [2m# (9 unchanged attributes hidden)[0m
+Plan: 10 to add, 0 to change, 3 to destroy.
+Refreshing state... [id=715c006309dd826279893fb3ecbf88]

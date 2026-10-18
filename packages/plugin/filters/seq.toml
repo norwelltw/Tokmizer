@@ -1,0 +1,6 @@
+[filters.seq]
+description = "Cap large seq output"
+match_command = "^seq(\\s|$)"
+priority = 50
+max_lines = 200
+on_empty = "seq: no output"

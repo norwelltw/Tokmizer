@@ -1,0 +1,72 @@
+F401 [*] `os` imported but unused
+ --> app.py:1:8
+  |
+1 | import os
+  |        ^^
+2 | import sys
+3 | from typing import List
+  |
+help: Remove unused import: `os`
+  |
+  - import os
+1 | import sys
+  |
+
+F401 [*] `sys` imported but unused
+ --> app.py:2:8
+  |
+1 | import os
+2 | import sys
+  |        ^^^
+3 | from typing import List
+  |
+help: Remove unused import: `sys`
+  |
+1 | import os
+  - import sys
+2 | from typing import List
+  |
+
+UP035 `typing.List` is deprecated, use `list` instead
+ --> app.py:3:1
+  |
+1 | import os
+2 | import sys
+3 | from typing import List
+  | ^^^^^^^^^^^^^^^^^^^^^^^
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> app.py:10:16
+   |
+10 | def main(argv: List[str]) -> None:
+   |                ^^^^
+11 |     unused = 1
+12 |     total: int = add("1", 2)
+   |
+help: Replace with `list`
+   |
+9  |
+   - def main(argv: List[str]) -> None:
+10 + def main(argv: list[str]) -> None:
+11 |     unused = 1
+   |
+
+F841 Local variable `unused` is assigned to but never used
+  --> app.py:11:5
+   |
+10 | def main(argv: List[str]) -> None:
+11 |     unused = 1
+   |     ^^^^^^
+12 |     total: int = add("1", 2)
+13 |     print(total)
+   |
+help: Remove assignment to unused variable `unused`
+   |
+10 | def main(argv: List[str]) -> None:
+   -     unused = 1
+11 |     total: int = add("1", 2)
+   |
+note: This is an unsafe fix and may change runtime behavior
+
+Found 5 errors.
+[*] 3 fixable with `--fix` (1 unsafe fix available with `--fix --unsafe-fixes`).

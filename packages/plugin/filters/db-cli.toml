@@ -1,0 +1,26 @@
+[filters.psql]
+description = "Cap runaway psql output (query results are data: no stripping)"
+match_command = "^psql(?:\\s|$)"
+priority = 55
+strip_ansi = true
+preserve_exact = true
+scale_with_level = false
+max_lines = 500
+
+[filters.mysql]
+description = "Cap runaway mysql output (query results are data: no stripping)"
+match_command = "^mysql(?:\\s|$)"
+priority = 55
+strip_ansi = true
+preserve_exact = true
+scale_with_level = false
+max_lines = 500
+
+[filters.sqlite3]
+description = "Cap runaway sqlite3 output (query results are data: no stripping)"
+match_command = "^sqlite3(?:\\s|$)"
+priority = 55
+strip_ansi = true
+preserve_exact = true
+scale_with_level = false
+max_lines = 500

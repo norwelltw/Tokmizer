@@ -1,0 +1,72 @@
+
+
+  cart (mocha)
+    ✔ ok 0
+    ✔ ok 1
+    ✔ ok 2
+    ✔ ok 3
+    ✔ ok 4
+    ✔ ok 5
+    1) sums quantities
+    2) deep
+    lookup
+      3) missing key
+
+
+  6 passing (3ms)
+  3 failing
+
+  1) cart (mocha)
+       sums quantities:
+
+      AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+6 !== 11
+
+      + expected - actual
+
+      -6
+      +11
+      
+      at Context.<anonymous> (test/cart.spec.js:5:40)
+      at process.processImmediate (node:internal/timers:504:21)
+
+  2) cart (mocha)
+       deep:
+
+      AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  {
+    a: 1,
+    b: [
+      1,
++     2
+-     3
+    ]
+  }
+
+      + expected - actual
+
+       {
+         "a": 1
+         "b": [
+           1
+      -    2
+      +    3
+         ]
+       }
+      
+      at Context.<anonymous> (test/cart.spec.js:6:29)
+      at process.processImmediate (node:internal/timers:504:21)
+
+  3) cart (mocha)
+       lookup
+         missing key:
+     TypeError: Cannot read properties of undefined (reading 'value')
+      at lookup (src/cart.js:2:41)
+      at Context.<anonymous> (test/cart.spec.js:7:56)
+      at process.processImmediate (node:internal/timers:504:21)
+
+
+

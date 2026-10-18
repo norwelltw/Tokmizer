@@ -1,0 +1,188 @@
+[filters.hadolint]
+description = "Compact hadolint Dockerfile linter"
+match_command = "^hadolint(\\s|$)"
+priority = 55
+max_lines = 60
+on_empty = "hadolint: no issues"
+
+[filters.shellcheck]
+description = "Compact shellcheck output"
+match_command = "^shellcheck(\\s|$)"
+priority = 55
+max_lines = 80
+on_empty = "shellcheck: no issues"
+
+[filters.markdownlint]
+description = "Compact markdownlint output"
+match_command = "^markdownlint(\\s|$)|^mdl(\\s|$)"
+priority = 55
+max_lines = 80
+on_empty = "markdownlint: no issues"
+
+[filters.yamllint]
+description = "Compact yamllint output"
+match_command = "^yamllint(\\s|$)"
+priority = 55
+max_lines = 80
+on_empty = "yamllint: no issues"
+
+[filters.oxlint]
+description = "Compact oxlint output"
+match_command = "^oxlint(\\s|$)"
+priority = 55
+strip_ansi = true
+preserve_exact = true
+max_lines = 80
+on_empty = "oxlint: no issues"
+
+[filters.biome]
+description = "Compact biome output"
+match_command = "^biome(\\s|$)|^npx\\s+biome(\\s|$)"
+priority = 55
+strip_ansi = true
+preserve_exact = true
+max_lines = 100
+on_empty = "biome: no issues"
+
+[filters.basedpyright]
+description = "Compact basedpyright output"
+match_command = "^basedpyright(\\s|$)|^pyright(\\s|$)"
+priority = 55
+strip_ansi = true
+preserve_exact = true
+max_lines = 100
+on_empty = "pyright: no issues"
+
+[filters.ty]
+description = "Compact astral ty output"
+match_command = "^ty(\\s|$)"
+priority = 50
+strip_ansi = true
+preserve_exact = true
+max_lines = 80
+
+[filters.black]
+description = "Compact black formatter output"
+match_command = "^black(\\s|$)|^bash-tool: black\\b"
+priority = 55
+strip_ansi = true
+strip_lines_matching = ["^All done!", "^Oh no!"]
+max_lines = 200
+on_empty = "black: ok"
+
+[filters.ruff]
+description = "Compact ruff check output (drop source snippets, keep every diagnostic, location and help)"
+match_command = "^ruff\\s+check(?!.*\\s--diff\\b)(?:\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^\\s*\\d*\\s*\\|", "^\\s+- ", "^\\s*$"]
+on_empty = "ruff: no issues"
+
+[filters.ruff-format]
+description = "Keep ruff format output exact"
+match_command = "^ruff\\s+format(?:\\s|$)"
+priority = 60
+strip_ansi = true
+preserve_exact = true
+on_empty = "ruff format: ok"
+
+[filters.mypy]
+description = "Compact mypy output (keep every diagnostic and the summary)"
+match_command = "^mypy(?:\\s|$)|^dmypy\\s+(?:run|check)(?:\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^\\s*$"]
+on_empty = "mypy: no output"
+
+[filters.eslint]
+description = "Compact eslint output (keep every problem with its file)"
+match_command = "^eslint(?:\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^\\s*$"]
+on_empty = "eslint: no issues"
+
+[filters.prettier]
+description = "Compact prettier output (drop unchanged files, keep files to fix)"
+match_command = "^prettier(?:\\s|$)"
+priority = 60
+strip_ansi = true
+preserve_exact = true
+strip_lines_matching = ["^\\S.* \\d+ms \\(unchanged\\)$", "^Checking formatting\\.\\.\\.$"]
+on_empty = "prettier: all files unchanged"
+
+[filters.rubocop]
+description = "Compact rubocop output (drop progress, keep offenses and summary)"
+match_command = "^rubocop(?:\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^Inspecting \\d+ files?$", "^[.CWEFR]+$", "^\\s*$"]
+
+[filters.golangci-lint]
+description = "Compact golangci-lint output (drop info logs, keep issues)"
+match_command = "^golangci-lint(?:\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^level=(?:info|debug) ", "^\\s*$"]
+on_empty = "golangci-lint: no issues"
+
+[filters.sqlfluff]
+description = "Compact sqlfluff output (drop passing files and banners, keep violations)"
+match_command = "^sqlfluff(?:\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = [
+  "^== \\[.+\\] PASS$",
+  "^All Finished",
+  "^==== (?:sqlfluff|readout) ====$",
+  "^(?:sqlfluff|implementation|dialect|rules):\\s",
+  "^\\s*$"
+]
+on_empty = "sqlfluff: no violations"
+
+[filters.ast-grep]
+description = "Group ast-grep run matches by file"
+match_command = "^ast-grep(?:\\s+run)?(?:\\s+-|\\s+--pattern)|^ast-grep\\s+run(?:\\s|$)|^sg\\s+(?:run(?:\\s|$)|-p\\s|--pattern[\\s=])"
+priority = 60
+strip_ansi = true
+transform = "smart-grep"
+truncate_lines_at = 200
+max_lines = 120
+on_empty = "ast-grep: no match"
+
+[filters.ast-grep-scan]
+description = "Compact ast-grep scan output (drop gutters, keep every finding)"
+match_command = "^(?:ast-grep|sg)\\s+(?:scan|test)(?:\\s|$)"
+priority = 62
+strip_ansi = true
+strip_lines_matching = ["^\\s*│\\s*$", "^\\s*│\\s*\\^+\\s*$", "^\\s*$"]
+on_empty = "ast-grep: no findings"
+
+[filters.phpstan]
+description = "Compact phpstan output (drop progress and config notes)"
+match_command = "^phpstan(?:\\s|$)|^php\\s+(?:\\S*/)?phpstan(?:\\.phar)?(?:\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^\\s*\\d+/\\d+ \\[[░▓▒█=>\\- ]*\\]\\s+\\d+%$", "^Note: Using configuration file ", "^\\s*-{3,}\\s+-{3,}\\s*$", "^\\s*$"]
+strip_on_failure = true
+
+[filters.pint]
+description = "Compact Laravel Pint output (drop progress dots and rules, keep files with issues)"
+match_command = "^pint(?:\\s|$)|^php\\s+(?:\\S*/)?pint(?:\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^\\s*[.✓⨯]+\\s*$", "^\\s*─+ Laravel\\s*$", "^\\s*$"]
+
+[filters.ecs]
+description = "Compact Easy Coding Standard output (drop progress)"
+match_command = "^ecs(?:\\s|$)|^php\\s+(?:\\S*/)?ecs(?:\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^\\s*\\d+/\\d+ \\[[░▓▒█=>\\- ]*\\]\\s+\\d+%$", "^\\s*$"]
+
+[filters.php-lint]
+description = "Collapse php -l success lines"
+match_command = "^php\\s+-l(?:\\s|$)"
+priority = 66
+strip_lines_matching = ["^No syntax errors detected in "]
+on_empty = "php -l: no syntax errors"
