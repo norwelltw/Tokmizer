@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { redactCommand } from "../learn/redact";
+import { maskSecrets, redactCommand } from "../learn/redact";
 
 describe("redactCommand", () => {
   it("redacts bearer tokens in -H Authorization", () => {
@@ -171,4 +171,58 @@ describe("cross-implementation redaction parity", () => {
       expect(redactCommand(out)).toBe(out);
     });
   }
+});
+
+describe("maskSecrets", () => {
+  const MARK = "[tkr: secret masked]";
+  const gh = "A1b2".repeat(9);
+
+  it("masks high-confidence tokens and keeps their prefix", () => {
+    const cases: Array<[string, string]> = [
+      [`token ghp_${gh} ok`, `token ghp_${MARK} ok`],
+      [`gho_${gh}`, `gho_${MARK}`],
+      [`ghu_${gh}`, `ghu_${MARK}`],
+      [`ghs_${gh}`, `ghs_${MARK}`],
+      [`github_pat_${"11AB_cd".repeat(8)}`, `github_pat_${MARK}`],
+      [`//registry.npmjs.org/:_authToken=npm_${gh}`, `//registry.npmjs.org/:_authToken=npm_${MARK}`],
+      [`aws_access_key_id = AKIA${"IOSFODNN7EXAMPLE"}`, `aws_access_key_id = AKIA${MARK}`],
+      [`ASIA${"ABCDEFGH12345678"}`, `ASIA${MARK}`],
+      [`SLACK=xoxb-${"1234567890-abcdefghij"}`, `SLACK=xoxb-${MARK}`],
+      [`xoxp-${"1234567890-abcdefghij"}`, `xoxp-${MARK}`],
+      [`sk_live_${"AbCdEf0123456789AbCd"}`, `sk_live_${MARK}`],
+      [`rk_live_${"AbCdEf0123456789AbCd"}`, `rk_live_${MARK}`],
+      [`Authorization: Bearer ${"eyJhbGciOiJIUzI1NiPayload"}`, `Authorization: Bearer ${MARK}`],
+      [`"authorization": "Bearer ${"abc.def-ghi_jkl"}"`, `"authorization": "Bearer ${MARK}"`],
+      [`DATABASE_URL=postgres://admin:${"hunter2pass"}@db:5432/app`, `DATABASE_URL=postgres://admin:${MARK}@db:5432/app`],
+      [`redis://:${"s3cretpw"}@cache:6379`, `redis://:${MARK}@cache:6379`]
+    ];
+    for (const [input, expected] of cases) expect(maskSecrets(input)).toBe(expected);
+  });
+
+  it("masks a PEM private key block, terminated or cut short", () => {
+    const body = "MIIEowIBAAKCAQEA" + "x".repeat(48);
+    const full = `before\n-----BEGIN RSA PRIVATE KEY-----\n${body}\n${body}\n-----END RSA PRIVATE KEY-----\nafter`;
+    expect(maskSecrets(full)).toBe(`before\n-----BEGIN RSA PRIVATE KEY-----${MARK}\nafter`);
+    const encrypted = `-----BEGIN RSA PRIVATE KEY-----\nProc-Type: 4,ENCRYPTED\nDEK-Info: AES-128-CBC,ABCDEF\n\n${body}\nAbCd==\n-----END RSA PRIVATE KEY-----\nnext`;
+    expect(maskSecrets(encrypted)).toBe(`-----BEGIN RSA PRIVATE KEY-----${MARK}\nnext`);
+    const cut = `-----BEGIN PRIVATE KEY-----\n${body}\n${body}`;
+    expect(maskSecrets(cut)).toBe(`-----BEGIN PRIVATE KEY-----${MARK}`);
+    const tail = `${body}\n${body}\n-----END OPENSSH PRIVATE KEY-----\nafter`;
+    expect(maskSecrets(tail)).toBe(`${MARK}-----END OPENSSH PRIVATE KEY-----\nafter`);
+  });
+
+  it("leaves ordinary output untouched and is stable", () => {
+    const plain = [
+      "commit 3f9b2c1d4e5f60718293a4b5c6d7e8f901234567",
+      "API_KEY=not-a-known-shape",
+      "remote: https://github.com/org/repo.git",
+      "git@github.com:org/repo.git",
+      "ghp_short",
+      "sk_test_AbCdEf0123456789AbCd",
+      "-----BEGIN PUBLIC KEY-----"
+    ].join("\n");
+    expect(maskSecrets(plain)).toBe(plain);
+    const masked = maskSecrets(`ghp_${gh} Authorization: Bearer abcdefgh123`);
+    expect(maskSecrets(masked)).toBe(masked);
+  });
 });

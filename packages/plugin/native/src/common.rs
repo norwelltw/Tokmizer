@@ -378,6 +378,7 @@ fn hook_response(input: &[u8]) -> Option<(Stream, String)> {
         ("CLAUDE_PROJECT_DIR", "claudeProjectDir", 4096),
         ("CLAUDE_CONFIG_DIR", "claudeConfigDir", 4096),
         ("PATH", "path", 32768),
+        ("CLAUDE_PID", "claudePid", 10),
     ] {
         match env::var(variable) {
             Ok(value) if value.is_empty() => {}

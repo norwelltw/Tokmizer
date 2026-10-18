@@ -1,0 +1,31 @@
+{
+  "command": "cargo test",
+  "exitCode": 101,
+  "stream": "stdout",
+  "failures": [
+    {
+      "test": "money::tests::splits_evenly",
+      "location": "src/money.rs:153",
+      "message": "assertion `left == right` failed",
+      "expected": "right: [333, 333, 334]",
+      "actual": "left: [334, 333, 333]",
+      "assertion": "assertion `left == right` failed"
+    },
+    {
+      "test": "import::tests::maps_currency_column",
+      "location": "src/import.rs:97",
+      "message": "called `Result::unwrap()` on an `Err` value: UnknownColumn(\"devise\")",
+      "expected": "Result::unwrap()",
+      "actual": "UnknownColumn(\"devise\")",
+      "assertion": "called `Result::unwrap()` on an `Err` value"
+    },
+    {
+      "test": "report::tests::quarter_boundaries",
+      "location": "src/report.rs:288",
+      "message": "expected Q2 to start on 2026-04-01, got 2026-03-31",
+      "expected": "2026-04-01",
+      "actual": "got 2026-03-31",
+      "assertion": "expected Q2 to start on 2026-04-01, got 2026-03-31"
+    }
+  ]
+}

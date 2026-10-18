@@ -1,0 +1,62 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.6, pytest-8.3.3, pluggy-1.5.0 -- /home/dev/shop/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/dev/shop
+configfile: pyproject.toml
+plugins: anyio-4.6.0, cov-5.0.0
+collected 19 items
+
+tests/test_orders.py::test_create_order_minimal PASSED                 [  5%]
+tests/test_orders.py::test_create_order_with_note PASSED               [ 10%]
+tests/test_orders.py::test_customer_lookup_by_email PASSED             [ 15%]
+tests/test_orders.py::test_customer_lookup_missing PASSED              [ 21%]
+tests/test_orders.py::test_export_csv_header PASSED                    [ 26%]
+tests/test_orders.py::test_export_csv_rows PASSED                      [ 31%]
+tests/test_orders.py::test_line_quantity_positive PASSED               [ 36%]
+tests/test_orders.py::test_line_quantity_zero_rejected PASSED          [ 42%]
+tests/test_orders.py::test_order_cancel_after_shipping_rejected PASSED [ 47%]
+tests/test_orders.py::test_order_cancel_before_shipping PASSED         [ 52%]
+tests/test_orders.py::test_order_status_initial PASSED                 [ 57%]
+tests/test_orders.py::test_order_summary_fields FAILED                 [ 63%]
+tests/test_orders.py::test_order_total_matches_lines PASSED            [ 68%]
+tests/test_orders.py::test_pagination_first_page PASSED                [ 73%]
+tests/test_orders.py::test_pagination_last_page PASSED                 [ 78%]
+tests/test_orders.py::test_parse_reference_rejects_lowercase FAILED    [ 84%]
+tests/test_orders.py::test_search_by_reference PASSED                  [ 89%]
+tests/test_orders.py::test_search_empty_query PASSED                   [ 94%]
+tests/test_orders.py::test_warehouse_for_region FAILED                 [100%]
+
+=================================== FAILURES ===================================
+__________________________ test_order_summary_fields ___________________________
+
+    def test_order_summary_fields():
+        order = make_order(reference="ORD-2041", lines=2)
+>       assert order.summary() == {"reference": "ORD-2041", "lines": 2, "status": "paid"}
+E       AssertionError: assert {'lines': 2, 'reference': 'ORD-2041', 'status': 'pending'} == {'lines': 2, 'reference': 'ORD-2041', 'status': 'paid'}
+E         
+E         Omitting 2 identical items, use -vv to show
+E         Differing items:
+E         {'status': 'pending'} != {'status': 'paid'}
+E         Use -v to get more diff
+
+tests/test_orders.py:88: AssertionError
+_____________________ test_parse_reference_rejects_lowercase _____________________
+
+    def test_parse_reference_rejects_lowercase():
+>       with pytest.raises(ValueError, match="uppercase"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_orders.py:112: Failed
+___________________________ test_warehouse_for_region ____________________________
+
+    def test_warehouse_for_region():
+        routing = load_routing("fixtures/routing.yaml")
+>       assert routing["nordics"] == "WH-OSLO"
+E       KeyError: 'nordics'
+
+tests/test_orders.py:131: KeyError
+=========================== short test summary info ============================
+FAILED tests/test_orders.py::test_order_summary_fields - AssertionError: assert {'lines': 2, 'reference': 'ORD-2041', 'status': 'pending'} == {'lines': 2, 'reference': 'ORD-2041', 'status': 'paid'}
+FAILED tests/test_orders.py::test_parse_reference_rejects_lowercase - Failed: DID NOT RAISE <class 'ValueError'>
+FAILED tests/test_orders.py::test_warehouse_for_region - KeyError: 'nordics'
+=================== 3 failed, 16 passed in 0.41s ====================

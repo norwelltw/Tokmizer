@@ -1,0 +1,31 @@
+{
+  "command": "go test -v ./...",
+  "exitCode": 1,
+  "stream": "stdout",
+  "failures": [
+    {
+      "test": "TestSplitEvenly",
+      "location": "money_test.go:77",
+      "message": "Split(1000, 3) mismatch (-want +got):",
+      "expected": "- \t333, 333, 334,",
+      "actual": "+ \t334, 333, 333,",
+      "assertion": "Split(1000, 3) mismatch"
+    },
+    {
+      "test": "TestQuarterBounds/Q2",
+      "location": "report_test.go:118",
+      "message": "QuarterStart(2026, 2) = 2026-03-31, want 2026-04-01",
+      "expected": "want 2026-04-01",
+      "actual": "= 2026-03-31",
+      "assertion": "QuarterStart(2026, 2) = 2026-03-31, want 2026-04-01"
+    },
+    {
+      "test": "TestImportRejectsEmptyFile",
+      "location": "import_test.go:64",
+      "message": "ImportCSV(empty.csv) error = <nil>, want ErrEmptyFile",
+      "expected": "want ErrEmptyFile",
+      "actual": "error = <nil>",
+      "assertion": "ImportCSV(empty.csv) error = <nil>, want ErrEmptyFile"
+    }
+  ]
+}

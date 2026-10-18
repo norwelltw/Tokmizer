@@ -1,0 +1,32 @@
+{
+  "command": "npx vitest run",
+  "exitCode": 1,
+  "stream": "stdout",
+  "failures": [
+    {
+      "test": "shippingQuote > uses the heavy tier above 20 kg",
+      "location": "src/checkout/shipping.test.ts:44",
+      "message": "AssertionError: expected 1290 to be 2490",
+      "expected": "2490",
+      "actual": "1290",
+      "assertion": "expect(quote.amountCents).toBe(2490);"
+    },
+    {
+      "test": "shippingQuote > lists carriers sorted by price",
+      "location": "src/checkout/shipping.test.ts:63",
+      "message": "AssertionError: expected [ 'colissimo', 'dhl', 'ups' ] to deeply equal [ 'dhl', 'colissimo', 'ups' ]",
+      "expected": "[ 'dhl', 'colissimo', 'ups' ]",
+      "actual": "[ 'colissimo', 'dhl', 'ups' ]",
+      "assertion": "expect(carriers.map((c) => c.code)).toEqual([\"dhl\", \"colissimo\", \"ups\"]);",
+      "diff": "- \"dhl\", \"colissimo\", + \"dhl\","
+    },
+    {
+      "test": "updateProfile > throws when the email is invalid",
+      "location": "src/account/profile.test.ts:31",
+      "message": "to throw error including 'invalid email' but got 'missing field: email'",
+      "expected": "invalid email",
+      "actual": "missing field: email",
+      "assertion": "expect(() => updateProfile(\"u-118\", input)).toThrow(\"invalid email\");"
+    }
+  ]
+}

@@ -55,3 +55,47 @@ export function redactCommand(cmd: string): string {
   }
   return out;
 }
+
+const MASK = "[tkr: secret masked]";
+
+const SECRET_PATTERNS: Array<[RegExp, string]> = [
+  [/(-----BEGIN [A-Z0-9 ]*PRIVATE KEY-----)(?:\r?\n(?:[A-Za-z0-9+/=]{16,}|[A-Za-z-]+: [^\r\n]*|\r?(?=\n)))*(?:(?:\r?\n[A-Za-z0-9+/=]{1,15})?\r?\n-----END [A-Z0-9 ]*PRIVATE KEY-----)?/g, `$1${MASK}`],
+  [/(?<![A-Za-z0-9_])(gh[pousr])_[A-Za-z0-9]{36,255}(?![A-Za-z0-9])/g, `$1_${MASK}`],
+  [/(?<![A-Za-z0-9_])github_pat_[A-Za-z0-9_]{22,255}/g, `github_pat_${MASK}`],
+  [/(?<![A-Za-z0-9_])npm_[A-Za-z0-9]{36}(?![A-Za-z0-9])/g, `npm_${MASK}`],
+  [/(?<![A-Z0-9])(AKIA|ASIA)[A-Z0-9]{16}(?![A-Z0-9])/g, `$1${MASK}`],
+  [/(?<![A-Za-z0-9])(xox[abpors]-)[A-Za-z0-9-]{10,}/g, `$1${MASK}`],
+  [/(?<![A-Za-z0-9])((?:sk|rk)_live_)[A-Za-z0-9]{16,}/g, `$1${MASK}`],
+  [/(authorization["']?\s*[:=]\s*["']?bearer\s+)[A-Za-z0-9._~+/=-]{8,}/gi, `$1${MASK}`],
+  [/(?<![A-Za-z0-9+.-])([a-zA-Z][a-zA-Z0-9+.-]{0,31}:\/\/[^\s:/@]*:)[^\s@/]+(@[^\s@/]+)/g, `$1${MASK}$2`]
+];
+
+const KEY_END_RE = /^-----END [A-Z0-9 ]*PRIVATE KEY-----/;
+const KEY_BODY_RE = /^[A-Za-z0-9+/=]{16,}\r?$/;
+
+function maskKeyTails(text: string): string {
+  if (!text.includes("PRIVATE KEY-----")) return text;
+  const lines = text.split("\n");
+  const out: string[] = [];
+  for (const line of lines) {
+    if (KEY_END_RE.test(line)) {
+      let start = out.length;
+      while (start > 0 && KEY_BODY_RE.test(out[start - 1]!)) start -= 1;
+      if (start < out.length) {
+        out.length = start;
+        out.push(`${MASK}${line}`);
+        continue;
+      }
+    }
+    out.push(line);
+  }
+  return out.join("\n");
+}
+
+export function maskSecrets(text: string): string {
+  let out = text;
+  for (const [re, rep] of SECRET_PATTERNS) {
+    out = out.replace(re, rep);
+  }
+  return maskKeyTails(out);
+}

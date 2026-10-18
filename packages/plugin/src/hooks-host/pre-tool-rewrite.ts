@@ -1,3 +1,4 @@
+import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { homedir } from "node:os";
 import { fileURLToPath } from "node:url";
@@ -441,9 +442,11 @@ export function buildPreToolUseOutput(
   exec: string | null = execInvocation(host),
   recordUsage: (sessionId: string, routed: boolean) => void = recordUsageSync,
   claudeDirs: ClaudeDirs = currentClaudeDirs(),
-  pathEnv: string | undefined = process.env.PATH
+  pathEnv: string | undefined = process.env.PATH,
+  launchArgs: () => string | null = claudeLaunchArgs
 ): string | null {
   if (!isRecord(payload) || payload.tool_name !== "Bash") return null;
+  if (host === "claude-code" && claudeLaunchRestricted(launchArgs())) return null;
   const input = payload.tool_input;
   if (!isRecord(input) || input.run_in_background) return null;
   const cmd = input.command;
@@ -464,6 +467,23 @@ export function buildPreToolUseOutput(
           ? { hookEventName: "PreToolUse", permissionDecision: "allow", permissionDecisionReason: `Tokmizer: allowed by your rule ${decision.allowedBy}`, updatedInput }
           : { hookEventName: "PreToolUse", updatedInput }
   });
+}
+
+const RESTRICTING_LAUNCH_FLAG_RE = /(?:^|\s)--(?:disallowedTools|disallowed-tools|settings|setting-sources)(?:[=\s]|$)/;
+
+export function claudeLaunchArgs(env: NodeJS.ProcessEnv = process.env, platform: NodeJS.Platform = process.platform): string | null {
+  const pid = Number(env.CLAUDE_PID) || process.ppid;
+  if (platform === "win32" || !Number.isInteger(pid) || pid <= 1) return null;
+  try {
+    const ps = spawnSync("ps", ["-ww", "-o", "args=", "-p", String(pid)], { encoding: "utf8", timeout: 2000 });
+    return ps.status === 0 && ps.stdout.trim() ? ps.stdout : null;
+  } catch {
+    return null;
+  }
+}
+
+export function claudeLaunchRestricted(args: string | null): boolean {
+  return args === null || RESTRICTING_LAUNCH_FLAG_RE.test(args);
 }
 
 type Matcher = (cmd: string) => boolean;

@@ -1,0 +1,15 @@
+{
+  "command": "pytest -v",
+  "exitCode": 1,
+  "stream": "stdout",
+  "failures": [
+    {
+      "test": "test_apply_discount_rounds_down",
+      "location": "tests/test_pricing.py:47",
+      "message": "assert 1700 == 1699",
+      "expected": "== 1699",
+      "actual": "where 1700 = apply_discount(1999, percent=15)",
+      "assertion": "assert apply_discount(price_cents, percent=15) == 1699"
+    }
+  ]
+}

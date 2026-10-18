@@ -1,0 +1,44 @@
+   Compiling ledger v0.4.1 (/home/dev/ledger)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.84s
+     Running unittests src/lib.rs (target/debug/deps/ledger-5d1c0a7e9b2f3c41)
+
+running 21 tests
+test account::tests::closes_empty ... ok
+test account::tests::opens_with_zero ... ok
+test account::tests::rejects_duplicate_name ... ok
+test import::tests::reads_bank_csv ... ok
+test import::tests::skips_duplicates ... ok
+test ledger::tests::balance_after_refund ... FAILED
+test ledger::tests::lists_by_date ... ok
+test ledger::tests::posts_balanced_entry ... ok
+test ledger::tests::rejects_unbalanced_entry ... ok
+test money::tests::adds_cents ... ok
+test money::tests::formats_negative ... ok
+test money::tests::parses_with_symbol ... ok
+test money::tests::rounds_half_even ... ok
+test parser::tests::handles_crlf ... ok
+test parser::tests::parses_empty_journal ... ok
+test parser::tests::parses_single_entry ... ok
+test parser::tests::reads_comments ... ok
+test parser::tests::rejects_bad_date ... ok
+test report::tests::csv_export_header ... ok
+test report::tests::monthly_totals ... ok
+test report::tests::trial_balance_sums_to_zero ... ok
+
+failures:
+
+---- ledger::tests::balance_after_refund stdout ----
+
+thread 'ledger::tests::balance_after_refund' panicked at src/ledger.rs:214:9:
+assertion `left == right` failed: balance mismatch after refund
+  left: 4250
+ right: 4200
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    ledger::tests::balance_after_refund
+
+test result: FAILED. 20 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `--lib`

@@ -1,0 +1,23 @@
+{
+  "command": "php vendor/bin/pest",
+  "exitCode": 1,
+  "stream": "stdout",
+  "failures": [
+    {
+      "test": "it never goes below zero",
+      "location": "tests/Unit/StockTest.php:18",
+      "message": "Failed asserting that -2 is equal to 0 or is greater than 0.",
+      "expected": "equal to 0 or is greater than 0",
+      "actual": "that -2",
+      "assertion": "expect($stock->quantity)->toBeGreaterThanOrEqual(0);"
+    },
+    {
+      "test": "it sends the welcome mail once",
+      "location": "tests/Feature/NewsletterTest.php:41",
+      "message": "The expected [App\\Mail\\WelcomeMail] mailable was sent 2 times instead of 1 times.",
+      "expected": "identical to 1",
+      "actual": "sent 2 times",
+      "assertion": "Mail::assertSent(WelcomeMail::class, 1);"
+    }
+  ]
+}

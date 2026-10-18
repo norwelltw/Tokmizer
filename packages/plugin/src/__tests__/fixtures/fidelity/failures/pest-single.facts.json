@@ -1,0 +1,15 @@
+{
+  "command": "php vendor/bin/pest",
+  "exitCode": 1,
+  "stream": "stdout",
+  "failures": [
+    {
+      "test": "it rejects an expired coupon",
+      "location": "tests/Feature/CheckoutTest.php:33",
+      "message": "Failed asserting that 200 is identical to 422.",
+      "expected": "identical to 422",
+      "actual": "that 200",
+      "assertion": "expect($response->status())->toBe(422);"
+    }
+  ]
+}

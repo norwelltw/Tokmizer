@@ -7,7 +7,7 @@ import { maxBundleAgeMs, type DaemonRuntime } from "../daemon/runtime";
 import { tokmizerHome } from "../paths";
 import { yoloEnabled } from "../yolo-mode";
 import { kickBackgroundEnroll, processCapturedOutput } from "./wrapper";
-import { buildPreToolUseOutput, execInvocation, type PreToolUsePayload } from "../hooks-host/pre-tool-rewrite";
+import { buildPreToolUseOutput, claudeLaunchArgs, execInvocation, type PreToolUsePayload } from "../hooks-host/pre-tool-rewrite";
 import { postToolUseResponse, type PostToolUsePayload } from "../hooks-host/post-tool-process";
 import { routePreToolUse } from "../hooks-host/hook-router";
 import { recordUsageSync } from "../usage";
@@ -58,7 +58,8 @@ const PrepareHook = z.object({
   payload: z.record(z.string(), z.unknown()),
   claudeProjectDir: z.string().min(1).max(4096).optional(),
   claudeConfigDir: z.string().min(1).max(4096).optional(),
-  path: z.string().min(1).max(32768).optional()
+  path: z.string().min(1).max(32768).optional(),
+  claudePid: z.string().regex(/^[1-9]\d{0,9}$/).optional()
 }).strict();
 
 const PreparePostHook = z.object({
@@ -221,7 +222,7 @@ export async function startProcessingServer(opts: {
             }
             opts.onActivity?.();
             let usage: { sessionId: string; routed: boolean } | undefined;
-            const output = routePreToolUse(candidate.payload, candidate.host, { recordUsage: (sessionId, routed) => { usage = { sessionId, routed }; }, claudeDirs: { projectDir: candidate.claudeProjectDir, configDir: candidate.claudeConfigDir }, pathEnv: candidate.path ?? "" });
+            const output = routePreToolUse(candidate.payload, candidate.host, { recordUsage: (sessionId, routed) => { usage = { sessionId, routed }; }, claudeDirs: { projectDir: candidate.claudeProjectDir, configDir: candidate.claudeConfigDir }, pathEnv: candidate.path ?? "", launchArgs: () => (candidate.claudePid ? claudeLaunchArgs({ CLAUDE_PID: candidate.claudePid }) : null) });
             const response = Buffer.from(JSON.stringify({ ok: true, protocol: 2, output }));
             if (response.length > 1024 * 1024) throw new Error("hook response limit");
             account = async () => {

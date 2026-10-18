@@ -232,17 +232,18 @@ The percentages in `tkr gain` measure byte reduction. A byte percentage can diff
 
 ## Restoring shortened output
 
-When Tokmizer shortens an output it can add a `[tkr restore <hash>]` hint. `tkr restore <hash>` prints the complete original output when it is at most 8 MB; for a larger output, the entry holds only the part that was left out and `tkr restore` says so. A unique prefix of the hash is enough.
+When Tokmizer shortens an output it can add a `[tkr restore <hash>]` hint. `tkr restore <hash>` prints the complete original output when it is at most 8 MB, except detected secrets, which are masked; for a larger output, the entry holds only the part that was left out and `tkr restore` says so. A unique prefix of the hash is enough.
 
 | Command | Effect |
 | --- | --- |
 | `tkr restore <hash>` | Print the cached output |
 | `tkr restore <hash> --lines 120:180` | Print only lines 120 to 180 (`120:`, `:40` and `57` also work) |
 | `tkr restore <hash> --grep <pattern>` | Print matching lines with their line numbers |
-| `tkr restore --grep <pattern>` | Search every cached output |
-| `tkr restore --list` | List cached outputs with age, size, line count and command |
+| `tkr restore --grep <pattern>` | Search the cached outputs of the current project |
+| `tkr restore --grep <pattern> --all-projects` | Search the cached outputs of every project |
+| `tkr restore --list` | List this project's cached outputs with age, size, line count and command (`--all-projects` for every project) |
 
-Entries are kept 30 days, up to 8 MB each and 200 MB in total; the oldest go first. `TOKMIZER_CCR_MAX_AGE_MS`, `TOKMIZER_CCR_ENTRY_MAX_BYTES` and `TOKMIZER_CCR_DIR_CAP_BYTES` change these limits, `TOKMIZER_CCR_DISABLED=1` turns copies off. `tkr gain` shows the restored tokens and the cache size.
+Before a copy is saved, private keys, GitHub, npm, AWS, Slack and Stripe live tokens, `Authorization: Bearer` values and passwords in URLs are replaced by `[tkr: secret masked]`; the output your agent sees is unchanged. Entries are kept 30 days, up to 8 MB each and 200 MB in total; the oldest go first. `TOKMIZER_CCR_MAX_AGE_MS`, `TOKMIZER_CCR_ENTRY_MAX_BYTES` and `TOKMIZER_CCR_DIR_CAP_BYTES` change these limits, `TOKMIZER_CCR_DISABLED=1` turns copies off. `tkr gain` shows the restored tokens and the cache size.
 
 ## Measured comparison
 

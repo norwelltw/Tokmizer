@@ -11,10 +11,10 @@ type Parsed = { failures: Failure[]; summary: SummaryLine[]; reported: number | 
 export const TEST_COMMAND_RE =
   /^(?:(?:npx|bunx|pnpm(?:\s+(?:exec|dlx))?|yarn(?:\s+exec)?|uv\s+run|poetry\s+run|pipenv\s+run|hatch\s+run|python3?\s+-m)\s+)?(?:\S*\/)?(?:vitest|jest|mocha|pytest|py\.test|playwright\s+test)(?:\s|$)|^(?:npm|pnpm|yarn|bun)\s+(?:run\s+)?(?:test|t)(?:[:-]\S+)?(?:\s|$)|^cargo\s+test(?:\s|$)|^go\s+test(?:\s|$)/;
 
-const LIMITS: Record<Level, { msg: number; diff: number; frames: number; code: boolean; out: number; bulk: number; repeats: number; trimDiff: boolean; changedOnly: boolean }> = {
-  normal: { msg: 40, diff: 60, frames: 6, code: true, out: 20, bulk: 50, repeats: 10, trimDiff: false, changedOnly: false },
-  compact: { msg: 12, diff: 24, frames: 2, code: false, out: 5, bulk: 20, repeats: 2, trimDiff: true, changedOnly: false },
-  minimal: { msg: 6, diff: 8, frames: 0, code: false, out: 0, bulk: 10, repeats: 1, trimDiff: true, changedOnly: true }
+const LIMITS: Record<Level, { msg: number; diff: number; frames: number; out: number; bulk: number; repeats: number; trimDiff: boolean; changedOnly: boolean }> = {
+  normal: { msg: 40, diff: 60, frames: 6, out: 20, bulk: 50, repeats: 10, trimDiff: false, changedOnly: false },
+  compact: { msg: 12, diff: 24, frames: 2, out: 5, bulk: 20, repeats: 2, trimDiff: true, changedOnly: false },
+  minimal: { msg: 6, diff: 8, frames: 0, out: 0, bulk: 10, repeats: 1, trimDiff: true, changedOnly: true }
 };
 
 const LIBRARY_PATH_RE = /node_modules|^node:|^internal\/|site-packages|dist-packages|\/lib\/python\d|\/rustc\/|\.cargo\/registry|\.rustup\/|\/go\/src\/|\/go\/pkg\/mod\/|\/libexec\/src\/|<anonymous>/;
@@ -98,7 +98,10 @@ function classifyJs(lines: string[], isOut: (line: string) => boolean = () => fa
   }
   for (const e of kept) {
     if (e.kind === "diff") e.text = e.text.slice(indent.get(e.segment!) ?? 0);
-    if (e.kind === "code") e.text = e.text.replace(/^>\s*/, "");
+    if (e.kind === "code") {
+      e.kind = "source";
+      e.text = e.text.replace(/^>\s*/, "");
+    }
   }
   return { body: kept, loc };
 }
@@ -552,6 +555,8 @@ function parsePytest(lines: string[]): Parsed | null {
   return { failures, summary, reported, counted: failures.length };
 }
 
+const SHORT_DIFF_LINES = 12;
+
 const PARSERS = [parseCargo, parseGo, parsePytest, parseJest, parseVitest, parseMocha, parsePlaywright];
 
 function diffIsRedundant(diff: Entry[], messages: string): boolean {
@@ -572,11 +577,15 @@ function renderBody(f: Failure, full: boolean, level: Level): string[] {
   const dropDiff = lv.trimDiff && diffIsRedundant(diff, messages.map((e) => e.text).join("\n"));
   const used: Record<Kind, number> = { msg: 0, legend: 0, diff: 0, frame: 0, code: 0, source: 0, out: 0 };
   const skipped: Record<Kind, number> = { msg: 0, legend: 0, diff: 0, frame: 0, code: 0, source: 0, out: 0 };
-  const cap: Record<Kind, number> = { msg: lv.msg, legend: Infinity, diff: lv.diff, frame: f.exact ? Infinity : lv.frames, code: lv.code ? 1 : 0, source: Infinity, out: lv.out };
+  const cap: Record<Kind, number> = { msg: lv.msg, legend: Infinity, diff: lv.diff, frame: f.exact ? Infinity : lv.frames, code: 0, source: Infinity, out: lv.out };
+  const changedOnly = lv.changedOnly && diff.length > SHORT_DIFF_LINES;
   const out: string[] = [];
   for (const e of f.body) {
     if ((e.kind === "diff" || e.kind === "legend") && dropDiff) continue;
-    if (e.kind === "diff" && lv.changedOnly && !/^[-+]/.test(e.text.trim())) continue;
+    if (e.kind === "diff" && changedOnly && !/^[-+]/.test(e.text.trim())) {
+      skipped.diff += 1;
+      continue;
+    }
     const kind = e.kind === "legend" ? "diff" : e.kind;
     if (used[kind] >= cap[kind] && e.kind !== "legend") {
       skipped[kind] += 1;

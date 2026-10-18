@@ -25,7 +25,7 @@ describe("Max repeated diagnostic output", () => {
     expect(result.output).toContain("49 additional times");
     expect(result.filteredBytes).toBeLessThan(result.rawBytes / 4);
     expect(result.debugBypass).toBe(true);
-    expect(result.droppedTail ?? null).toBeNull();
+    expect(result.droppedTail).toBe(input);
   });
 
   it.each(["normal", "compact"] as const)("keeps the complete failure output in %s", async (verbosity) => {

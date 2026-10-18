@@ -1,0 +1,92 @@
+
+ RUN  v2.1.4 /home/dev/storefront
+
+ ✓ src/format/money.test.ts (9 tests) 6ms
+ ✓ src/format/date.test.ts (7 tests) 5ms
+ ✓ src/catalog/search.test.ts (14 tests) 21ms
+ ✓ src/catalog/filters.test.ts (11 tests) 12ms
+ ✓ src/account/session.test.ts (6 tests) 9ms
+ ✓ src/account/address.test.ts (8 tests) 7ms
+ ✓ src/checkout/steps.test.ts (12 tests) 15ms
+ ❯ src/checkout/shipping.test.ts (9 tests | 2 failed) 19ms
+   ✓ shippingQuote > returns the flat rate for light parcels
+   × shippingQuote > uses the heavy tier above 20 kg 7ms
+     → expected 1290 to be 2490 // Object.is equality
+   ✓ shippingQuote > is free above the threshold
+   × shippingQuote > lists carriers sorted by price 4ms
+     → expected [ 'colissimo', 'dhl', 'ups' ] to deeply equal [ 'dhl', 'colissimo', 'ups' ]
+   ✓ shippingQuote > rejects an unknown country
+   ✓ shippingQuote > rounds to the cent
+   ✓ shippingQuote > caches identical requests
+   ✓ shippingQuote > handles islands surcharge
+   ✓ shippingQuote > exposes the delivery window
+ ❯ src/account/profile.test.ts (6 tests | 1 failed) 11ms
+   ✓ updateProfile > saves the display name
+   × updateProfile > throws when the email is invalid 3ms
+     → expected [Function] to throw error including 'invalid email' but got 'missing field: email'
+   ✓ updateProfile > trims whitespace
+   ✓ updateProfile > keeps the newsletter flag
+   ✓ updateProfile > lowercases the email
+   ✓ updateProfile > records the update time
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/checkout/shipping.test.ts > shippingQuote > uses the heavy tier above 20 kg
+AssertionError: expected 1290 to be 2490 // Object.is equality
+
+- Expected
++ Received
+
+- 2490
++ 1290
+
+ ❯ src/checkout/shipping.test.ts:44:38
+     42|   it("uses the heavy tier above 20 kg", () => {
+     43|     const quote = shippingQuote({ country: "FR", weightGrams: 23500 });
+     44|     expect(quote.amountCents).toBe(2490);
+       |                                      ^
+     45|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/checkout/shipping.test.ts > shippingQuote > lists carriers sorted by price
+AssertionError: expected [ 'colissimo', 'dhl', 'ups' ] to deeply equal [ 'dhl', 'colissimo', 'ups' ]
+
+- Expected
++ Received
+
+  [
+-   "dhl",
+    "colissimo",
++   "dhl",
+    "ups",
+  ]
+
+ ❯ src/checkout/shipping.test.ts:63:52
+     61|   it("lists carriers sorted by price", () => {
+     62|     const carriers = shippingQuote({ country: "BE", weightGrams: 900 }).carriers;
+     63|     expect(carriers.map((c) => c.code)).toEqual(["dhl", "colissimo", "ups"]);
+       |                                                    ^
+     64|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/account/profile.test.ts > updateProfile > throws when the email is invalid
+AssertionError: expected [Function] to throw error including 'invalid email' but got 'missing field: email'
+
+Expected: "invalid email"
+Received: "missing field: email"
+
+ ❯ src/account/profile.test.ts:31:60
+     29|   it("throws when the email is invalid", () => {
+     30|     const input = { displayName: "Ada", email: "ada.example" };
+     31|     expect(() => updateProfile("u-118", input)).toThrow("invalid email");
+       |                                                            ^
+     32|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+ Test Files  2 failed | 7 passed (9)
+      Tests  3 failed | 89 passed (92)
+   Start at  10:22:51
+   Duration  1.58s (transform 455ms, setup 0ms, collect 1.21s, tests 131ms, environment 3ms, prepare 1.34s)

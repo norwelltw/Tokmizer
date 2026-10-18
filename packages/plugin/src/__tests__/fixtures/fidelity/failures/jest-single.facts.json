@@ -1,0 +1,15 @@
+{
+  "command": "npx jest",
+  "exitCode": 1,
+  "stream": "stderr",
+  "failures": [
+    {
+      "test": "formatInvoice › renders the due date in ISO form",
+      "location": "src/invoice/format.test.js:14",
+      "message": "expect(received).toBe(expected) // Object.is equality",
+      "expected": "Expected: \"2026-11-30\"",
+      "actual": "Received: \"30/11/2026\"",
+      "assertion": "expect(out.dueDate).toBe(\"2026-11-30\");"
+    }
+  ]
+}

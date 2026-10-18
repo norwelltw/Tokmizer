@@ -139,6 +139,10 @@ describe("dedupeAdjacent", () => {
   it("singleton not annotated", () => {
     expect(dedupeAdjacent(["x"])).toEqual(["x"]);
   });
+
+  it("keeps a run of blank lines as one blank line, without a repeat count", () => {
+    expect(dedupeAdjacent(["a", "", "", "b", "  ", "  ", "  "])).toEqual(["a", "", "b", "  "]);
+  });
 });
 
 describe("collapseBlankRuns", () => {

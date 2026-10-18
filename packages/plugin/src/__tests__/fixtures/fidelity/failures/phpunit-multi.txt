@@ -1,0 +1,40 @@
+PHPUnit 11.4.3 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.3.12
+Configuration: /home/dev/shop/phpunit.xml
+
+...........F...................................................  63 / 142 ( 44%)
+..........................F.......................E............ 126 / 142 ( 88%)
+................                                                142 / 142 (100%)
+
+Time: 00:01.307, Memory: 26.00 MB
+
+There was 1 error:
+
+1) Tests\Feature\InvoicePdfTest::testRendersLogo
+RuntimeException: Image file not found: storage/app/brand/logo.png
+
+/home/dev/shop/app/Pdf/InvoiceRenderer.php:88
+/home/dev/shop/tests/Feature/InvoicePdfTest.php:27
+
+--
+
+There were 2 failures:
+
+1) Tests\Unit\OrderTest::testStatusLabel
+Failed asserting that two strings are identical.
+--- Expected
++++ Actual
+@@ @@
+-'Shipped'
++'Pending'
+
+/home/dev/shop/tests/Unit/OrderTest.php:64
+
+2) Tests\Unit\CouponTest::testExpiredCouponIsRejected
+Failed asserting that true is false.
+
+/home/dev/shop/tests/Unit/CouponTest.php:119
+
+ERRORS!
+Tests: 142, Assertions: 386, Errors: 1, Failures: 2.

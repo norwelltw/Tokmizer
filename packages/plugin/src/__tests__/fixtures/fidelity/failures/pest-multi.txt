@@ -1,0 +1,48 @@
+
+   PASS  Tests\Unit\SlugTest
+  ✓ it lowercases titles                                       0.01s
+  ✓ it strips accents                                          0.01s
+
+   PASS  Tests\Unit\MoneyTest
+  ✓ it formats euros                                           0.01s
+  ✓ it rounds half to even                                     0.01s
+  ✓ it adds amounts                                            0.01s
+
+   FAIL  Tests\Unit\StockTest
+  ✓ it decrements on sale                                    0.01s
+  ⨯ it never goes below zero                                 0.01s
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Unit\StockTest > it never goes below zero
+  Failed asserting that -2 is equal to 0 or is greater than 0.
+
+  at tests/Unit/StockTest.php:18
+     14▕ it('never goes below zero', function () {
+     15▕     $stock = new Stock(sku: 'LAMP-04', quantity: 1);
+     16▕     $stock->sell(3);
+     17▕
+  ➜  18▕     expect($stock->quantity)->toBeGreaterThanOrEqual(0);
+     19▕ });
+
+  1   tests/Unit/StockTest.php:18
+
+   FAIL  Tests\Feature\NewsletterTest
+  ⨯ it sends the welcome mail once                           0.09s
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\NewsletterTest > it sends the welcome mail once
+  The expected [App\Mail\WelcomeMail] mailable was sent 2 times instead of 1 times.
+  Failed asserting that 2 is identical to 1.
+
+  at tests/Feature/NewsletterTest.php:41
+     37▕     Mail::fake();
+     38▕     $this->post('/newsletter', ['email' => 'reader@example.test']);
+     39▕     $this->post('/newsletter', ['email' => 'reader@example.test']);
+     40▕
+  ➜  41▕     Mail::assertSent(WelcomeMail::class, 1);
+     42▕ });
+
+  1   tests/Feature/NewsletterTest.php:41
+
+
+  Tests:    2 failed, 6 passed (17 assertions)
+  Duration: 0.48s
+

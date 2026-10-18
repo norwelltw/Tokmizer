@@ -1,7 +1,8 @@
 import { chmod, mkdir, readFile, writeFile, stat, readdir, rm, rename } from "node:fs/promises";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync, realpathSync } from "node:fs";
 import { createHash } from "node:crypto";
-import { join } from "node:path";
+import { dirname, join, resolve } from "node:path";
+import { maskSecrets } from "./learn/redact";
 import { contentCacheDir, contentCacheFile, restoreConfigFile, tokmizerHome } from "./paths";
 import { yoloEnabled } from "./yolo-mode";
 
@@ -16,14 +17,14 @@ const LIST_LIMIT = 30;
 const GREP_LIMIT = 200;
 const RESTORE_USAGE = [
   "usage: tkr restore <hash> [--lines a:b] [--grep pattern]",
-  "       tkr restore --list",
-  "       tkr restore --grep <pattern>",
+  "       tkr restore --list [--all-projects]",
+  "       tkr restore --grep <pattern> [--all-projects]",
   ""
 ].join("\n");
 
-export type CacheEntryMeta = { at: number; bytes: number; lines: number; partial: boolean; label?: string };
+export type CacheEntryMeta = { at: number; bytes: number; lines: number; partial: boolean; label?: string; project?: string };
 
-export type CacheEntry = { hash: string; at: number; bytes: number; lines: number | null; partial: boolean | null; label: string | null };
+export type CacheEntry = { hash: string; at: number; bytes: number; lines: number | null; partial: boolean | null; label: string | null; project: string | null };
 
 type RestoreResult = { stdout?: string; stderr?: string; code: number; restoredTokens?: number };
 
@@ -71,6 +72,19 @@ async function ensurePrivateDir(dir: string): Promise<void> {
   } catch {}
 }
 
+function projectRoot(cwd: string = process.cwd()): string {
+  let dir: string;
+  try {
+    dir = realpathSync(resolve(cwd));
+  } catch {
+    dir = resolve(cwd);
+  }
+  for (let cur = dir; ; cur = dirname(cur)) {
+    if (existsSync(join(cur, ".git"))) return cur;
+    if (dirname(cur) === cur) return dir;
+  }
+}
+
 function splitLines(content: string): string[] {
   if (content === "") return [];
   return (content.endsWith("\n") ? content.slice(0, -1) : content).split("\n");
@@ -80,10 +94,11 @@ export async function writeContentCache(
   hash: string,
   content: string,
   env: NodeJS.ProcessEnv = process.env,
-  info: { partial?: boolean; label?: string | undefined } = {}
+  info: { partial?: boolean; label?: string | undefined; cwd?: string } = {}
 ): Promise<boolean> {
   if (yoloEnabled()) return false;
   if (!HASH_RE.test(hash)) return false;
+  content = maskSecrets(content);
   const bytes = Buffer.byteLength(content, "utf8");
   if (bytes > envInt("TOKMIZER_CCR_ENTRY_MAX_BYTES", DEFAULT_ENTRY_MAX_BYTES, env)) {
     return false;
@@ -112,7 +127,8 @@ export async function writeContentCache(
     bytes,
     lines: splitLines(content).length,
     partial: info.partial === true,
-    ...(info.label ? { label: info.label.slice(0, 40) } : {})
+    ...(info.label ? { label: info.label.slice(0, 40) } : {}),
+    project: projectRoot(info.cwd)
   };
   try {
     await writeFile(metaFile(hash), JSON.stringify(meta), { mode: 0o600 });
@@ -177,7 +193,8 @@ async function readMeta(hash: string): Promise<CacheEntryMeta | null> {
       bytes: parsed.bytes,
       lines: parsed.lines,
       partial: parsed.partial,
-      ...(typeof parsed.label === "string" && parsed.label ? { label: parsed.label } : {})
+      ...(typeof parsed.label === "string" && parsed.label ? { label: parsed.label } : {}),
+      ...(typeof parsed.project === "string" && parsed.project ? { project: parsed.project } : {})
     };
   } catch {
     return null;
@@ -206,7 +223,8 @@ export async function listContentCache(): Promise<CacheEntry[]> {
         bytes: s.size,
         lines: meta?.lines ?? null,
         partial: meta?.partial ?? null,
-        label: meta?.label ?? null
+        label: meta?.label ?? null,
+        project: meta?.project ?? null
       });
     } catch {}
   }
@@ -299,10 +317,11 @@ function compilePattern(pattern: string): RegExp | null {
   }
 }
 
-async function grepAll(re: RegExp, pattern: string): Promise<RestoreResult> {
+async function grepAll(re: RegExp, pattern: string, project: string | null): Promise<RestoreResult> {
   const out: string[] = [];
   let more = 0;
   for (const entry of await listContentCache()) {
+    if (project != null && entry.project !== project) continue;
     const content = await readContentCache(entry.hash);
     if (content == null) continue;
     splitLines(content).forEach((line, i) => {
@@ -311,7 +330,10 @@ async function grepAll(re: RegExp, pattern: string): Promise<RestoreResult> {
       else more += 1;
     });
   }
-  if (out.length === 0) return { stderr: `tkr restore: no cached line matches ${pattern}\n`, code: 1 };
+  if (out.length === 0) {
+    const scope = project != null ? " in this project (add --all-projects to search every project)" : "";
+    return { stderr: `tkr restore: no cached line matches ${pattern}${scope}\n`, code: 1 };
+  }
   const stdout = out.join("\n") + "\n";
   return {
     stdout,
@@ -321,14 +343,16 @@ async function grepAll(re: RegExp, pattern: string): Promise<RestoreResult> {
   };
 }
 
-export async function restoreCommand(argv: string[]): Promise<RestoreResult> {
+export async function restoreCommand(argv: string[], cwd: string = process.cwd()): Promise<RestoreResult> {
   let hash: string | undefined;
   let list = false;
+  let allProjects = false;
   let pattern: string | undefined;
   let range: string | undefined;
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i]!;
     if (arg === "--list" && !list) list = true;
+    else if (arg === "--all-projects" && !allProjects) allProjects = true;
     else if (arg === "--grep" && pattern == null && argv[i + 1] != null) pattern = argv[++i];
     else if (arg === "--lines" && range == null && argv[i + 1] != null) range = argv[++i];
     else if (!arg.startsWith("--") && hash == null) hash = arg;
@@ -336,14 +360,17 @@ export async function restoreCommand(argv: string[]): Promise<RestoreResult> {
   }
   if (list) {
     if (hash != null || pattern != null || range != null) return { stderr: RESTORE_USAGE, code: 1 };
-    return { stdout: renderList(await listContentCache()), code: 0 };
+    const project = allProjects ? null : projectRoot(cwd);
+    const entries = (await listContentCache()).filter((e) => project == null || e.project === project);
+    return { stdout: renderList(entries), code: 0 };
   }
   const re = pattern != null ? compilePattern(pattern) : null;
   if (pattern != null && !re) return { stderr: `tkr restore: invalid pattern ${pattern}\n`, code: 1 };
   if (hash == null) {
-    if (re && range == null) return grepAll(re, pattern!);
+    if (re && range == null) return grepAll(re, pattern!, allProjects ? null : projectRoot(cwd));
     return { stderr: RESTORE_USAGE, code: 1 };
   }
+  if (allProjects) return { stderr: RESTORE_USAGE, code: 1 };
   const resolved = await resolveHash(hash);
   if ("error" in resolved) return { stderr: resolved.error, code: 1, restoredTokens: 0 };
   const content = await readContentCache(resolved.hash);

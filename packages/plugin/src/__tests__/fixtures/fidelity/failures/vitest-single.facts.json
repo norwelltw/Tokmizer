@@ -1,0 +1,15 @@
+{
+  "command": "npx vitest run",
+  "exitCode": 1,
+  "stream": "stdout",
+  "failures": [
+    {
+      "test": "cartTotal > applies the bulk discount above ten units",
+      "location": "src/cart/total.test.ts:28",
+      "message": "AssertionError: expected 'EUR 180.00' to be 'EUR 162.00'",
+      "expected": "EUR 162.00",
+      "actual": "EUR 180.00",
+      "assertion": "expect(formatMoney(cartTotal(cart), \"EUR\")).toBe(\"EUR 162.00\");"
+    }
+  ]
+}

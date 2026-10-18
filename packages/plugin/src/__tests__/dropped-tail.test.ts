@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { applyFilterWithTail } from "../engine/pipeline";
+import { processOutput } from "../engine/index";
 import { FilterDef } from "../engine/schema";
 import type { LoadedFilter } from "../engine/loader";
 
@@ -28,5 +29,15 @@ describe("applyFilterWithTail", () => {
     const r = applyFilterWithTail(input, filter({ max_lines: 5, keep_failures: true }), {});
     expect(r.text).toContain("Error: boom");
     expect(r.droppedTail ?? "").not.toContain("Error: boom");
+  });
+});
+
+describe("processOutput", () => {
+  it("keeps the original as the restore source when a failing run is stripped", async () => {
+    const def = filter({ strip_on_failure: true, strip_lines_matching: ["^PASS "] });
+    const input = `${Array.from({ length: 20 }, (_, i) => `PASS test ${i}`).join("\n")}\nFAIL test 20\n`;
+    const r = await processOutput("x run", input, null, { exitCode: 1, resolver: async () => def });
+    expect(r.output).toBe("FAIL test 20\n");
+    expect(r.droppedTail).toBe(input);
   });
 });

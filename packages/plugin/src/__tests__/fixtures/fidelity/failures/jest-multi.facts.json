@@ -1,0 +1,31 @@
+{
+  "command": "npx jest",
+  "exitCode": 1,
+  "stream": "stderr",
+  "failures": [
+    {
+      "test": "inventory › reserves stock for an order",
+      "location": "src/store/inventory.test.js:23",
+      "message": "expect(received).toEqual(expected) // deep equality",
+      "expected": "-   \"available\": 7,",
+      "actual": "+   \"available\": 10,",
+      "assertion": "expect(stock.get(\"SKU-778\")).toEqual({ available: 7, reserved: 3 });"
+    },
+    {
+      "test": "inventory › reports low stock items",
+      "location": "src/store/inventory.test.js:38",
+      "message": "expect(received).toHaveLength(expected)",
+      "expected": "Expected length: 2",
+      "actual": "Received length: 0",
+      "assertion": "expect(low).toHaveLength(2);"
+    },
+    {
+      "test": "orders API › returns 404 for an unknown order",
+      "location": "src/api/orders.test.js:50",
+      "message": "expect(received).toBe(expected) // Object.is equality",
+      "expected": "Expected: 404",
+      "actual": "Received: 500",
+      "assertion": "expect(res.status).toBe(404);"
+    }
+  ]
+}

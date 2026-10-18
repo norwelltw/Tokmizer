@@ -1,0 +1,40 @@
+PASS src/utils/slugify.test.js
+PASS src/utils/currency.test.js
+PASS src/api/client.test.js
+PASS src/api/retry.test.js
+PASS src/store/cart.test.js
+FAIL src/invoice/format.test.js
+  formatInvoice
+    ✓ renders the customer name (3 ms)
+    ✓ renders line totals (2 ms)
+    ✕ renders the due date in ISO form (5 ms)
+    ✓ renders the tax summary (1 ms)
+
+  ● formatInvoice › renders the due date in ISO form
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "2026-11-30"
+    Received: "30/11/2026"
+
+      12 |   test("renders the due date in ISO form", () => {
+      13 |     const out = formatInvoice(sampleInvoice);
+    > 14 |     expect(out.dueDate).toBe("2026-11-30");
+         |                         ^
+      15 |   });
+      16 |
+      17 |   test("renders the tax summary", () => {
+
+      at Object.toBe (src/invoice/format.test.js:14:25)
+
+PASS src/store/wishlist.test.js
+PASS src/components/Button.test.jsx
+PASS src/components/PriceTag.test.jsx
+PASS src/components/Header.test.jsx
+PASS src/hooks/useDebounce.test.js
+
+Test Suites: 1 failed, 10 passed, 11 total
+Tests:       1 failed, 87 passed, 88 total
+Snapshots:   0 total
+Time:        2.416 s
+Ran all test suites.

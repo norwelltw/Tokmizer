@@ -1,6 +1,6 @@
 {
   "name": "@tokmizer/plugin",
-  "version": "0.9.64",
+  "version": "0.9.65",
   "description": "Tokmizer reduces token consumption for AI coding tools (Claude Code, Codex, Cursor, Aider, Gemini CLI, Cline, Windsurf, Copilot). Cross-OS.",
   "type": "module",
   "engines": {
@@ -48,7 +48,7 @@
     "build": "tsc -p tsconfig.json --noEmit && node scripts/bundle.mjs",
     "build:native": "node scripts/build-native.mjs",
     "postinstall": "node scripts/install-native.mjs",
-    "prepublishOnly": "npm run build && node scripts/check-native-artifacts.mjs && ( cd ../.. && npx vitest run packages/plugin ) && npx tsx scripts/benchmark-quality.ts --check && node scripts/check-upgrade-safety.mjs && node scripts/check-prod-key.mjs && node scripts/check-version.mjs && node scripts/check-dist-clean.mjs && node scripts/check-pack-clean.mjs && node scripts/smoke-dist.mjs",
+    "prepublishOnly": "npm run build && node scripts/check-native-artifacts.mjs && ( cd ../.. && npx vitest run packages/plugin ) && npx tsx scripts/benchmark-quality.ts --check && npx tsx scripts/fidelity-bench.ts --strict --check && node scripts/check-upgrade-safety.mjs && node scripts/check-prod-key.mjs && node scripts/check-version.mjs && node scripts/check-dist-clean.mjs && node scripts/check-pack-clean.mjs && node scripts/smoke-dist.mjs",
     "build:single": "node scripts/build-single.mjs",
     "pack:single": "node scripts/pack-single.mjs"
   },
@@ -60,12 +60,12 @@
     "zod": "^3.23.8"
   },
   "optionalDependencies": {
-    "@tokmizer/plugin-darwin-arm64": "0.9.64",
-    "@tokmizer/plugin-darwin-x64": "0.9.64",
-    "@tokmizer/plugin-linux-arm64": "0.9.64",
-    "@tokmizer/plugin-linux-x64": "0.9.64",
-    "@tokmizer/plugin-win32-arm64": "0.9.64",
-    "@tokmizer/plugin-win32-x64": "0.9.64"
+    "@tokmizer/plugin-darwin-arm64": "0.9.65",
+    "@tokmizer/plugin-darwin-x64": "0.9.65",
+    "@tokmizer/plugin-linux-arm64": "0.9.65",
+    "@tokmizer/plugin-linux-x64": "0.9.65",
+    "@tokmizer/plugin-win32-arm64": "0.9.65",
+    "@tokmizer/plugin-win32-x64": "0.9.65"
   },
   "publishConfig": {
     "access": "public"

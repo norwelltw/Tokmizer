@@ -1,0 +1,31 @@
+{
+  "command": "vendor/bin/phpunit",
+  "exitCode": 2,
+  "stream": "stdout",
+  "failures": [
+    {
+      "test": "Tests\\Feature\\InvoicePdfTest::testRendersLogo",
+      "location": "tests/Feature/InvoicePdfTest.php:27",
+      "message": "RuntimeException: Image file not found: storage/app/brand/logo.png",
+      "expected": "storage/app/brand/logo.png",
+      "actual": "Image file not found",
+      "assertion": "app/Pdf/InvoiceRenderer.php:88"
+    },
+    {
+      "test": "Tests\\Unit\\OrderTest::testStatusLabel",
+      "location": "tests/Unit/OrderTest.php:64",
+      "message": "Failed asserting that two strings are identical.",
+      "expected": "-'Shipped'",
+      "actual": "+'Pending'",
+      "assertion": "Failed asserting that two strings are identical."
+    },
+    {
+      "test": "Tests\\Unit\\CouponTest::testExpiredCouponIsRejected",
+      "location": "tests/Unit/CouponTest.php:119",
+      "message": "Failed asserting that true is false.",
+      "expected": "is false",
+      "actual": "that true",
+      "assertion": "Failed asserting that true is false."
+    }
+  ]
+}

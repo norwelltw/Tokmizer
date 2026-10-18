@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createConnection, type Socket } from "node:net";
 import { once } from "node:events";
+import { spawn } from "node:child_process";
 import { chmodSync, mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -21,6 +22,7 @@ const sockets: Socket[] = [];
 const token = "b".repeat(64);
 
 beforeEach(async () => {
+  vi.stubEnv("CLAUDE_PID", String(process.pid));
   home = realpathSync(mkdtempSync(join(tmpdir(), "tkr-hook-ipc-")));
   vi.stubEnv("TOKMIZER_HOME", home);
   vi.mocked(recordUsageSync).mockClear();
@@ -54,11 +56,37 @@ function receive(socket: Socket): Promise<Buffer> {
   });
 }
 
-function request(payload: unknown, host = "claude-code", extra = {}) {
-  return encodeProcessingFrame(Buffer.from(JSON.stringify({ kind: "pre-tool-use", protocol: 2, version: "test", token, home, host, payload, ...extra })));
+function request(payload: unknown, host = "claude-code", extra: Record<string, unknown> = {}) {
+  return encodeProcessingFrame(Buffer.from(JSON.stringify({ kind: "pre-tool-use", protocol: 2, version: "test", token, home, host, payload, claudePid: String(process.pid), ...extra })));
 }
 
 describe.skipIf(process.platform === "win32")("persistent hook processing", () => {
+  const bypassPayload = { hook_event_name: "PreToolUse", tool_name: "Bash", permission_mode: "bypassPermissions", tool_input: { command: "cat file" }, session_id: "launch", prompt_id: "p1", tool_use_id: "toolu_01" };
+
+  it("rewrites for the calling Claude Code session only when it can read that session's launch options", async () => {
+    const socket = await client();
+    const response = receive(socket);
+    socket.write(request(bypassPayload, "claude-code", { path: process.env.PATH }));
+    expect(JSON.parse((await response).toString()).output).toContain("tkr-exec");
+    const unknown = await client();
+    const unknownResponse = receive(unknown);
+    socket.destroy();
+    unknown.write(request(bypassPayload, "claude-code", { path: process.env.PATH, claudePid: undefined }));
+    expect(JSON.parse((await unknownResponse).toString())).toEqual({ ok: true, protocol: 2, output: "" });
+  });
+
+  it("never rewrites for a Claude Code session launched with --disallowedTools", async () => {
+    const child = spawn(process.execPath, ["-e", "setTimeout(() => {}, 10000)", "--", "--disallowedTools", "Bash(git push:*)"], { stdio: "ignore" });
+    try {
+      const socket = await client();
+      const response = receive(socket);
+      socket.write(request(bypassPayload, "claude-code", { path: process.env.PATH, claudePid: String(child.pid) }));
+      expect(JSON.parse((await response).toString())).toEqual({ ok: true, protocol: 2, output: "" });
+    } finally {
+      child.kill();
+    }
+  });
+
   it("never resolves commands with the processor's own PATH", async () => {
     const socket = await client();
     const response = receive(socket);

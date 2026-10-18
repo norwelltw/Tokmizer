@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { chmodSync, existsSync, mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildPreToolUseOutput, rewriteShellCommand, rewriteShellDecision } from "../hooks-host/pre-tool-rewrite";
+import { buildPreToolUseOutput, claudeLaunchArgs, claudeLaunchRestricted, rewriteShellCommand, rewriteShellDecision } from "../hooks-host/pre-tool-rewrite";
 import { routePreToolUse } from "../hooks-host/hook-router";
 
 const pluginRoot = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
@@ -52,6 +52,7 @@ beforeEach(() => {
   vi.stubEnv("USERPROFILE", home);
   vi.stubEnv("CLAUDE_CONFIG_DIR", "");
   vi.stubEnv("CLAUDE_PROJECT_DIR", "");
+  vi.stubEnv("CLAUDE_PID", "");
   vi.stubEnv("TOKMIZER_HOME", join(home, ".tokmizer"));
 });
 
@@ -271,5 +272,49 @@ describe.skipIf(process.platform === "win32" || !existsSync(distHook))("installe
       const r = run(cmd!, mode);
       expect([r.status, r.stdout, r.stderr], cmd).toEqual([0, "", ""]);
     }
+  });
+});
+
+describe("Claude Code launched with command-line permission flags", () => {
+  const launched = (args: string | null) => (tool_input: Record<string, unknown>) => {
+    const out = buildPreToolUseOutput({ tool_name: "Bash", permission_mode: "default", session_id: "s", cwd: project, tool_input }, "claude-code", "tkr-exec", () => {}, { configDir: config }, pathEnv, () => args);
+    return out === null ? null : JSON.parse(out);
+  };
+
+  it("leaves the command to Claude Code when --disallowedTools, --settings or --setting-sources is set", () => {
+    settings({ allow: ["Bash(git:*)"] });
+    for (const args of [
+      "claude -p push --disallowedTools Bash(git push:*)",
+      "claude --disallowed-tools=Bash(git push:*) -p push",
+      "node /x/cli.js --settings {\"permissions\":{\"deny\":[\"Bash(git push:*)\"]}}",
+      "claude --settings=/tmp/s.json",
+      "claude --setting-sources project",
+      null
+    ]) expect(launched(args)({ command: "git push origin main" }), String(args)).toBeNull();
+    expect(launched("claude -p push --allowedTools Bash")({ command: "git push origin main" })?.hookSpecificOutput).toMatchObject({ permissionDecision: "allow", updatedInput: { command: "tkr-exec git push origin main" } });
+  });
+
+  it("also skips the blanket-allow and bypass rewrites", () => {
+    settings({ allow: ["Bash"] });
+    expect(launched("claude")({ command: "git push origin main" })?.hookSpecificOutput.updatedInput.command).toBe("tkr-exec git push origin main");
+    expect(launched("claude --disallowedTools Bash(git push:*)")({ command: "git push origin main" })).toBeNull();
+  });
+
+  it("matches whole flags only", () => {
+    expect(claudeLaunchRestricted("claude -p 'see --settingsfile' --allowedTools Bash")).toBe(false);
+    expect(claudeLaunchRestricted("claude --settings x")).toBe(true);
+  });
+
+  it.skipIf(process.platform === "win32")("reads the command line of the Claude Code process", () => {
+    const child = spawn(process.execPath, ["-e", "setTimeout(() => {}, 10000)", "--", "--disallowedTools", "Bash(git push:*)"], { stdio: "ignore" });
+    const pid = String(child.pid);
+    try {
+      const args = claudeLaunchArgs({ CLAUDE_PID: pid }, "linux");
+      expect(args).toContain("--disallowedTools Bash(git push:*)");
+      expect(claudeLaunchRestricted(args)).toBe(true);
+    } finally {
+      child.kill();
+    }
+    expect(claudeLaunchArgs({ CLAUDE_PID: pid }, "win32")).toBeNull();
   });
 });

@@ -1,0 +1,15 @@
+{
+  "command": "go test -v ./...",
+  "exitCode": 1,
+  "stream": "stdout",
+  "failures": [
+    {
+      "test": "TestBalanceAfterRefund",
+      "location": "ledger_test.go:52",
+      "message": "Balance() = 4250, want 4200",
+      "expected": "want 4200",
+      "actual": "Balance() = 4250",
+      "assertion": "Balance() = 4250, want 4200"
+    }
+  ]
+}

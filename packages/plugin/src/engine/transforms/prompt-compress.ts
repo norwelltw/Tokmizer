@@ -71,11 +71,11 @@ export function dedupeAdjacent(lines: string[]): string[] {
       run += 1;
       continue;
     }
-    out.push(run > 1 ? `${prev} ×${run}` : prev);
+    out.push(run > 1 && prev.trim() ? `${prev} ×${run}` : prev);
     prev = lines[i]!;
     run = 1;
   }
-  out.push(run > 1 ? `${prev} ×${run}` : prev);
+  out.push(run > 1 && prev.trim() ? `${prev} ×${run}` : prev);
   return out;
 }
 

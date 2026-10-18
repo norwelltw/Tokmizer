@@ -1,0 +1,52 @@
+   Compiling ledger v0.4.1 (/home/dev/ledger)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.84s
+     Running unittests src/lib.rs (target/debug/deps/ledger-5d1c0a7e9b2f3c41)
+
+running 17 tests
+test account::tests::closes_empty ... ok
+test account::tests::opens_with_zero ... ok
+test account::tests::rejects_duplicate_name ... ok
+test import::tests::maps_currency_column ... FAILED
+test ledger::tests::posts_balanced_entry ... ok
+test ledger::tests::rejects_unbalanced_entry ... ok
+test money::tests::adds_cents ... ok
+test money::tests::formats_negative ... ok
+test money::tests::parses_with_symbol ... ok
+test money::tests::rounds_half_even ... ok
+test money::tests::splits_evenly ... FAILED
+test parser::tests::handles_crlf ... ok
+test parser::tests::parses_empty_journal ... ok
+test parser::tests::parses_single_entry ... ok
+test parser::tests::reads_comments ... ok
+test parser::tests::rejects_bad_date ... ok
+test report::tests::quarter_boundaries ... FAILED
+
+failures:
+
+---- import::tests::maps_currency_column stdout ----
+
+thread 'import::tests::maps_currency_column' panicked at src/import.rs:97:14:
+called `Result::unwrap()` on an `Err` value: UnknownColumn("devise")
+
+---- money::tests::splits_evenly stdout ----
+
+thread 'money::tests::splits_evenly' panicked at src/money.rs:153:9:
+assertion `left == right` failed
+  left: [334, 333, 333]
+ right: [333, 333, 334]
+
+---- report::tests::quarter_boundaries stdout ----
+
+thread 'report::tests::quarter_boundaries' panicked at src/report.rs:288:9:
+expected Q2 to start on 2026-04-01, got 2026-03-31
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    money::tests::splits_evenly
+    import::tests::maps_currency_column
+    report::tests::quarter_boundaries
+
+test result: FAILED. 14 passed; 3 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `--lib`

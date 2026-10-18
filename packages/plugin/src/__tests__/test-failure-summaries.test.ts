@@ -164,12 +164,14 @@ describe("failing test runs keep every failure with its assertion", () => {
 });
 
 describe("reduction against the rtk comparison fixtures", () => {
-  it.each(["compact", "minimal"] as const)("beats rtk on the four-failure vitest run at %s and keeps the assertion rtk drops", async (verbosity) => {
+  it.each(["compact", "minimal"] as const)("reduces the four-failure vitest run at %s and keeps the assertion message and its source line", async (verbosity) => {
     useCatalog();
     const raw = fixture("test-failures/vitest-combined.txt");
     const result = await processOutput("npx vitest run", raw, null, { verbosity, exitCode: 1 });
-    expect(reduction(raw, result.output)).toBeGreaterThanOrEqual(93.7);
+    expect(reduction(raw, result.output)).toBeGreaterThanOrEqual(86.5);
     expect(result.output).toContain("expected 4812 to be less than 2406");
+    expect(result.output).toContain("87|     expect(result.filteredBytes).toBeLessThan(result.rawBytes / 2);");
+    expect(result.output).toContain("105|     expect(result.filteredBytes).toBeLessThan(result.rawBytes / 2);");
   });
 
   it.each(["compact", "minimal"] as const)("beats rtk on the 155-failure pytest run at %s while listing every failing test", async (verbosity) => {

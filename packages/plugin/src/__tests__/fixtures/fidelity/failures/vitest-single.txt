@@ -1,0 +1,46 @@
+
+ RUN  v2.1.4 /home/dev/storefront
+
+ ✓ src/format/money.test.ts (9 tests) 6ms
+ ✓ src/format/date.test.ts (7 tests) 5ms
+ ✓ src/catalog/search.test.ts (14 tests) 21ms
+ ✓ src/catalog/filters.test.ts (11 tests) 12ms
+ ✓ src/account/session.test.ts (6 tests) 9ms
+ ✓ src/account/address.test.ts (8 tests) 7ms
+ ✓ src/checkout/steps.test.ts (12 tests) 15ms
+ ✓ src/checkout/payment-form.test.ts (10 tests) 18ms
+ ✓ src/i18n/plural.test.ts (5 tests) 3ms
+ ✓ src/i18n/locale.test.ts (4 tests) 2ms
+ ❯ src/cart/total.test.ts (8 tests | 1 failed) 14ms
+   ✓ cartTotal > sums line items
+   ✓ cartTotal > handles an empty cart
+   × cartTotal > applies the bulk discount above ten units 6ms
+     → expected 'EUR 180.00' to be 'EUR 162.00' // Object.is equality
+   ✓ cartTotal > ignores removed lines
+   ✓ cartTotal > keeps cents precision
+   ✓ cartTotal > formats with the store currency
+   ✓ cartTotal > rejects negative quantities
+   ✓ cartTotal > recomputes after quantity change
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/cart/total.test.ts > cartTotal > applies the bulk discount above ten units
+AssertionError: expected 'EUR 180.00' to be 'EUR 162.00' // Object.is equality
+
+Expected: "EUR 162.00"
+Received: "EUR 180.00"
+
+ ❯ src/cart/total.test.ts:28:41
+     26|   it("applies the bulk discount above ten units", () => {
+     27|     const cart = makeCart([{ sku: "MUG-01", qty: 12, unit: 1500 }]);
+     28|     expect(formatMoney(cartTotal(cart), "EUR")).toBe("EUR 162.00");
+       |                                         ^
+     29|   });
+     30| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+ Test Files  1 failed | 10 passed (11)
+      Tests  1 failed | 93 passed (94)
+   Start at  10:14:07
+   Duration  1.32s (transform 412ms, setup 0ms, collect 1.05s, tests 108ms, environment 2ms, prepare 1.21s)

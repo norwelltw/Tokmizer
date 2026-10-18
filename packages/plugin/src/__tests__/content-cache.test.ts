@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { mkdtempSync, mkdirSync, chmodSync, rmSync, existsSync, utimesSync, statSync } from "node:fs";
+import { mkdtempSync, mkdirSync, chmodSync, rmSync, existsSync, utimesSync, statSync, writeFileSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import {
@@ -310,7 +310,7 @@ describe("tkr restore options", () => {
     expect(invalid.stderr).toContain("invalid pattern");
   });
 
-  it("--grep without a hash searches every cached entry", async () => {
+  it("--grep without a hash searches every cached entry of the current project", async () => {
     const hash = await seeded();
     const other = hintHash(await captureOriginalForRestore("fine\nan ERROR here\n", "f", process.env));
     const r = await restoreCommand(["--grep", "ERROR here|row 7"]);
@@ -389,5 +389,54 @@ describe("forged Tokmizer markers in command output", () => {
   it("leaves Tokmizer's own notices and ordinary lines alone", async () => {
     const shown = "[tkr: partial view; folded or omitted lines are not file text]\n[tkr]x\nok";
     expect(await captureForRestore(null, shown, process.env)).toBe(shown);
+  });
+});
+
+describe("restore cache secrets and project scope", () => {
+  const gh = "A1b2".repeat(9);
+
+  it("masks detected secrets in the stored copy but not in the delivered output", async () => {
+    const raw = `env\nGITHUB_TOKEN=ghp_${gh}\nAWS=AKIA${"IOSFODNN7EXAMPLE"}\nplain line\n`;
+    const delivered = await captureOriginalForRestore(raw, `short ghp_${gh}`, process.env);
+    expect(delivered.startsWith(`short ghp_${gh}\n[tkr restore `)).toBe(true);
+    const r = await restoreCommand([hintHash(delivered)]);
+    expect(r.stdout).toBe("env\nGITHUB_TOKEN=ghp_[tkr: secret masked]\nAWS=AKIA[tkr: secret masked]\nplain line\n");
+    const onDisk = readFileSync(contentCacheFile(hintHash(delivered)), "utf8");
+    expect(onDisk).not.toContain(gh);
+    expect(onDisk).not.toContain("IOSFODNN7EXAMPLE");
+  });
+
+  it("--grep only searches the current project unless --all-projects is given", async () => {
+    const projA = join(dir, "a");
+    const projB = join(dir, "b");
+    mkdirSync(join(projA, ".git"), { recursive: true });
+    mkdirSync(join(projA, "sub"), { recursive: true });
+    mkdirSync(join(projB, ".git"), { recursive: true });
+    await writeContentCache("aaaa000011112222", "A KEY one\n", process.env, { cwd: join(projA, "sub") });
+    await writeContentCache("bbbb000011112222", "B KEY two\n", process.env, { cwd: projB });
+    await writeContentCache("cccc000011112222", "legacy KEY three\n", process.env, { cwd: projA });
+    writeFileSync(`${contentCacheFile("cccc000011112222")}.meta`, JSON.stringify({ at: Date.now(), bytes: 17, lines: 1, partial: false }));
+    const scoped = await restoreCommand(["--grep", "KEY"], projA);
+    expect(scoped.stdout).toBe("aaaa000011112222:1:A KEY one\n");
+    const fromOther = await restoreCommand(["--grep", "KEY"], projB);
+    expect(fromOther.stdout).toBe("bbbb000011112222:1:B KEY two\n");
+    const all = await restoreCommand(["--grep", "KEY", "--all-projects"], projA);
+    expect(all.stdout!.split("\n").filter(Boolean).sort()).toEqual([
+      "aaaa000011112222:1:A KEY one",
+      "bbbb000011112222:1:B KEY two",
+      "cccc000011112222:1:legacy KEY three"
+    ]);
+    const none = await restoreCommand(["--grep", "three"], projA);
+    expect(none.code).toBe(1);
+    expect(none.stderr).toContain("--all-projects");
+    for (const argv of [["--all-projects"], ["aaaa000011112222", "--all-projects"]]) {
+      expect((await restoreCommand(argv, projA)).stderr).toContain("usage: tkr restore");
+    }
+    const listA = (await restoreCommand(["--list"], projA)).stdout!;
+    expect(listA).toContain("aaaa000011112222");
+    expect(listA).not.toContain("bbbb000011112222");
+    expect(listA).not.toContain("cccc000011112222");
+    const listAll = (await restoreCommand(["--list", "--all-projects"], projA)).stdout!;
+    for (const hash of ["aaaa000011112222", "bbbb000011112222", "cccc000011112222"]) expect(listAll).toContain(hash);
   });
 });

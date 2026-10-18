@@ -13,6 +13,7 @@ import { loadState, saveState, clearState, detectTimeZone, type State } from "./
 import { fetchSigned, consumeSignedJson } from "./transport";
 import { enrollCooldownFile, tokmizerHome } from "./paths";
 import { fetchAndVerifyBundles } from "./bundle";
+import { ALLOWED_COMMAND_NAMES, ALLOWED_SKILL_SLUGS, unsafeBundleContent } from "./bundle-policy";
 import {
   writeSkill,
   isFresh,
@@ -43,25 +44,26 @@ async function reloadDaemon(): Promise<void> {
   } catch {}
 }
 
-async function refreshBundles(baseUrl: string, force: boolean): Promise<void> {
+export async function refreshBundles(baseUrl: string, force: boolean): Promise<void> {
   if (!force && (await isFresh("power"))) return;
   try {
     const bundles = await fetchAndVerifyBundles(baseUrl);
     const skillSlugs: string[] = [];
     const commandNames: string[] = [];
+    const rejected: string[] = [];
     for (const b of bundles) {
-      if (b.slug.endsWith(COMMAND_SLUG_SUFFIX)) {
-        const name = b.slug.slice(0, -COMMAND_SLUG_SUFFIX.length);
-        await installCommand(name, b.body);
-        commandNames.push(name);
-      } else {
-        await writeSkill(b.slug, b.body);
-        skillSlugs.push(b.slug);
-      }
+      const isCommand = b.slug.endsWith(COMMAND_SLUG_SUFFIX);
+      const name = isCommand ? b.slug.slice(0, -COMMAND_SLUG_SUFFIX.length) : b.slug;
+      if (!(isCommand ? ALLOWED_COMMAND_NAMES : ALLOWED_SKILL_SLUGS).includes(name)) continue;
+      const unsafe = unsafeBundleContent(b.body);
+      if (unsafe) rejected.push(`${b.slug} (${unsafe})`);
+      else if (isCommand) await installCommand(name, b.body);
+      else await writeSkill(name, b.body);
+      (isCommand ? commandNames : skillSlugs).push(name);
     }
     await pruneSkills(skillSlugs);
     await pruneCommands(commandNames);
-    await recordBundleRefresh(null);
+    await recordBundleRefresh(rejected.length ? `unsafe bundle skipped: ${rejected.join(", ")}` : null);
   } catch (err) {
     await recordBundleRefresh(err instanceof Error ? err.message : String(err));
   }

@@ -1,0 +1,31 @@
+{
+  "command": "pytest -v",
+  "exitCode": 1,
+  "stream": "stdout",
+  "failures": [
+    {
+      "test": "test_order_summary_fields",
+      "location": "tests/test_orders.py:88",
+      "message": "AssertionError: assert {'lines': 2, 'reference': 'ORD-2041', 'status': 'pending'} == {'lines': 2, 'reference': 'ORD-2041', 'status': 'paid'}",
+      "expected": "'status': 'paid'",
+      "actual": "'status': 'pending'",
+      "assertion": "assert order.summary() == {\"reference\": \"ORD-2041\", \"lines\": 2, \"status\": \"paid\"}"
+    },
+    {
+      "test": "test_parse_reference_rejects_lowercase",
+      "location": "tests/test_orders.py:112",
+      "message": "Failed: DID NOT RAISE <class 'ValueError'>",
+      "expected": "pytest.raises(ValueError, match=\"uppercase\")",
+      "actual": "DID NOT RAISE",
+      "assertion": "with pytest.raises(ValueError, match=\"uppercase\"):"
+    },
+    {
+      "test": "test_warehouse_for_region",
+      "location": "tests/test_orders.py:131",
+      "message": "KeyError: 'nordics'",
+      "expected": "== \"WH-OSLO\"",
+      "actual": "KeyError: 'nordics'",
+      "assertion": "assert routing[\"nordics\"] == \"WH-OSLO\""
+    }
+  ]
+}

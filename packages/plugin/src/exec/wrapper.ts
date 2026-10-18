@@ -260,6 +260,11 @@ export async function processCapturedOutput(
         exitCode
       });
       stderrOut = errProcessed.output;
+      if (!yolo && errProcessed.output !== stderr) {
+        try {
+          stderrOut = await captureForRestore(errProcessed.droppedTail ?? null, errProcessed.output, env, { raw: stderrTruncated ? null : stderr, label: statCmdLabel(cmdLine) });
+        } catch {}
+      }
       stderrRawBytes = errProcessed.rawBytes;
       stderrFilteredBytes = errProcessed.filteredBytes;
     } else if (!yolo && exitCode !== 0 && Buffer.byteLength(stderr, "utf8") >= MIN_STDERR_FILTER_BYTES) {

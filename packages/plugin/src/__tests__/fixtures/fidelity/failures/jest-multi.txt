@@ -1,0 +1,76 @@
+PASS src/utils/slugify.test.js
+PASS src/utils/currency.test.js
+PASS src/api/client.test.js
+PASS src/api/retry.test.js
+FAIL src/store/inventory.test.js
+  inventory
+    ✓ adds stock (2 ms)
+    ✕ reserves stock for an order (6 ms)
+    ✓ releases a reservation (1 ms)
+    ✕ reports low stock items (3 ms)
+
+  ● inventory › reserves stock for an order
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "available": 7,
+    +   "available": 10,
+        "reserved": 3,
+      }
+
+      21 |     const stock = createInventory({ "SKU-778": 10 });
+      22 |     reserve(stock, "SKU-778", 3);
+    > 23 |     expect(stock.get("SKU-778")).toEqual({ available: 7, reserved: 3 });
+         |                                   ^
+      24 |   });
+
+      at Object.toEqual (src/store/inventory.test.js:23:35)
+
+  ● inventory › reports low stock items
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 2
+    Received length: 0
+    Received array:  []
+
+      36 |     const stock = createInventory({ "SKU-101": 1, "SKU-102": 2, "SKU-103": 40 });
+      37 |     const low = lowStock(stock, { threshold: 3 });
+    > 38 |     expect(low).toHaveLength(2);
+         |                 ^
+      39 |   });
+
+      at Object.toHaveLength (src/store/inventory.test.js:38:17)
+
+FAIL src/api/orders.test.js
+  ● orders API › returns 404 for an unknown order
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 404
+    Received: 500
+
+      48 |   it("returns 404 for an unknown order", async () => {
+      49 |     const res = await request(app).get("/orders/ORD-0000");
+    > 50 |     expect(res.status).toBe(404);
+         |                        ^
+      51 |   });
+
+      at Object.toBe (src/api/orders.test.js:50:24)
+
+PASS src/store/cart.test.js
+PASS src/store/wishlist.test.js
+PASS src/components/Button.test.jsx
+PASS src/components/PriceTag.test.jsx
+PASS src/components/Header.test.jsx
+PASS src/hooks/useDebounce.test.js
+
+Test Suites: 2 failed, 10 passed, 12 total
+Tests:       3 failed, 91 passed, 94 total
+Snapshots:   0 total
+Time:        3.087 s
+Ran all test suites.

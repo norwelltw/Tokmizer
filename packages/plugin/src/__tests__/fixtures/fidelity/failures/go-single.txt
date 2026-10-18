@@ -1,0 +1,36 @@
+=== RUN   TestParseAmount
+--- PASS: TestParseAmount (0.00s)
+=== RUN   TestParseAmountNegative
+--- PASS: TestParseAmountNegative (0.00s)
+=== RUN   TestFormatAmount
+--- PASS: TestFormatAmount (0.00s)
+=== RUN   TestOpenAccount
+--- PASS: TestOpenAccount (0.00s)
+=== RUN   TestCloseAccount
+--- PASS: TestCloseAccount (0.00s)
+=== RUN   TestPostEntry
+--- PASS: TestPostEntry (0.00s)
+=== RUN   TestRejectUnbalanced
+--- PASS: TestRejectUnbalanced (0.00s)
+=== RUN   TestListByDate
+--- PASS: TestListByDate (0.00s)
+=== RUN   TestBalanceAfterRefund
+    ledger_test.go:52: Balance() = 4250, want 4200
+--- FAIL: TestBalanceAfterRefund (0.00s)
+=== RUN   TestTrialBalance
+--- PASS: TestTrialBalance (0.00s)
+=== RUN   TestMonthlyTotals
+--- PASS: TestMonthlyTotals (0.00s)
+=== RUN   TestImportCSV
+--- PASS: TestImportCSV (0.00s)
+=== RUN   TestSkipDuplicates
+--- PASS: TestSkipDuplicates (0.00s)
+=== RUN   TestExportCSV
+--- PASS: TestExportCSV (0.00s)
+=== RUN   TestCurrencyRates
+--- PASS: TestCurrencyRates (0.00s)
+FAIL
+FAIL	example.com/ledger	0.014s
+ok  	example.com/ledger/money	0.006s
+ok  	example.com/ledger/report	0.009s
+FAIL

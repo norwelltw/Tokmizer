@@ -113,7 +113,7 @@ export async function processOutput(
     return { output, filterId: null, rawBytes, filteredBytes: rawBytes, debugBypass: knownFailure || suspectedFailure, ...(yolo ? { droppedTail: null } : {}) };
   }
   const finalize = (result: RunResult): RunResult => {
-    if (!yolo) return result;
+    if (!yolo) return result.output !== output && !result.droppedTail ? { ...result, droppedTail: output } : result;
     const baseline = result.filteredBytes > rawBytes || (rawBytes > 0 && result.output.length === 0) ? output : result.output;
     const compact = !result.debugBypass && !chosen?.preserve_exact
       ? compactStructuredOutput(baseline, "minimal", result.filterId ?? "")

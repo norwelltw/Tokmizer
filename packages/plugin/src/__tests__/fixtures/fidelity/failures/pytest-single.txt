@@ -1,0 +1,46 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.6, pytest-8.3.3, pluggy-1.5.0 -- /home/dev/shop/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/dev/shop
+configfile: pyproject.toml
+plugins: anyio-4.6.0, cov-5.0.0
+collected 24 items
+
+tests/test_pricing.py::test_apply_discount_full PASSED                 [  4%]
+tests/test_pricing.py::test_apply_discount_negative_rejected PASSED    [  8%]
+tests/test_pricing.py::test_apply_discount_rounds_down FAILED          [ 12%]
+tests/test_pricing.py::test_apply_discount_zero PASSED                 [ 16%]
+tests/test_pricing.py::test_bundle_price_empty PASSED                  [ 20%]
+tests/test_pricing.py::test_bundle_price_sums_items PASSED             [ 25%]
+tests/test_pricing.py::test_coupon_case_insensitive PASSED             [ 29%]
+tests/test_pricing.py::test_coupon_expired PASSED                      [ 33%]
+tests/test_pricing.py::test_coupon_single_use PASSED                   [ 37%]
+tests/test_pricing.py::test_currency_symbol_eur PASSED                 [ 41%]
+tests/test_pricing.py::test_currency_symbol_usd PASSED                 [ 45%]
+tests/test_pricing.py::test_invoice_number_prefix PASSED               [ 50%]
+tests/test_pricing.py::test_invoice_number_sequence PASSED             [ 54%]
+tests/test_pricing.py::test_price_display_thousands_separator PASSED   [ 58%]
+tests/test_pricing.py::test_price_display_two_decimals PASSED          [ 62%]
+tests/test_pricing.py::test_refund_full PASSED                         [ 66%]
+tests/test_pricing.py::test_refund_partial PASSED                      [ 70%]
+tests/test_pricing.py::test_round_half_even PASSED                     [ 75%]
+tests/test_pricing.py::test_shipping_flat_rate PASSED                  [ 79%]
+tests/test_pricing.py::test_shipping_free_above_threshold PASSED       [ 83%]
+tests/test_pricing.py::test_shipping_weight_tiers PASSED               [ 87%]
+tests/test_pricing.py::test_vat_rate_france PASSED                     [ 91%]
+tests/test_pricing.py::test_vat_rate_germany PASSED                    [ 95%]
+tests/test_pricing.py::test_vat_rate_unknown_country PASSED            [100%]
+
+=================================== FAILURES ===================================
+_______________________ test_apply_discount_rounds_down ________________________
+
+    def test_apply_discount_rounds_down():
+        price_cents = 1999
+>       assert apply_discount(price_cents, percent=15) == 1699
+E       assert 1700 == 1699
+E        +  where 1700 = apply_discount(1999, percent=15)
+
+tests/test_pricing.py:47: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_pricing.py::test_apply_discount_rounds_down - assert 1700 == 1699
+========================= 1 failed, 23 passed in 0.18s =========================

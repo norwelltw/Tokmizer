@@ -1,0 +1,40 @@
+
+   PASS  Tests\Unit\SlugTest
+  ✓ it lowercases titles                                       0.01s
+  ✓ it strips accents                                          0.01s
+  ✓ it collapses dashes                                        0.01s
+
+   PASS  Tests\Unit\MoneyTest
+  ✓ it formats euros                                           0.01s
+  ✓ it rounds half to even                                     0.01s
+  ✓ it adds amounts                                            0.01s
+  ✓ it rejects mixed currencies                                0.02s
+
+   PASS  Tests\Feature\CatalogTest
+  ✓ it lists published products                                0.08s
+  ✓ it hides drafts                                            0.05s
+  ✓ it paginates by twenty                                     0.06s
+
+   FAIL  Tests\Feature\CheckoutTest
+  ✓ it accepts a valid coupon                                0.07s
+  ⨯ it rejects an expired coupon                             0.04s
+  ✓ it computes shipping for France                          0.05s
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\CheckoutTest > it rejects an expired coupon
+  Failed asserting that 200 is identical to 422.
+
+  at tests/Feature/CheckoutTest.php:33
+     29▕     $response = $this->postJson('/checkout', [
+     30▕         'coupon' => 'AUTUMN10',
+     31▕         'cart' => $cart->id,
+     32▕     ]);
+  ➜  33▕     expect($response->status())->toBe(422);
+     34▕ });
+     35▕
+
+  1   tests/Feature/CheckoutTest.php:33
+
+
+  Tests:    1 failed, 12 passed (31 assertions)
+  Duration: 0.62s
+

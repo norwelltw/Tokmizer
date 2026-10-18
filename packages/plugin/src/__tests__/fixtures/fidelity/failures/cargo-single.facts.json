@@ -1,0 +1,15 @@
+{
+  "command": "cargo test",
+  "exitCode": 101,
+  "stream": "stdout",
+  "failures": [
+    {
+      "test": "ledger::tests::balance_after_refund",
+      "location": "src/ledger.rs:214",
+      "message": "balance mismatch after refund",
+      "expected": "right: 4200",
+      "actual": "left: 4250",
+      "assertion": "assertion `left == right` failed"
+    }
+  ]
+}

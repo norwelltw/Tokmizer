@@ -1,0 +1,15 @@
+{
+  "command": "vendor/bin/phpunit",
+  "exitCode": 1,
+  "stream": "stdout",
+  "failures": [
+    {
+      "test": "Tests\\Unit\\CartTest::testTotalIncludesShipping",
+      "location": "tests/Unit/CartTest.php:41",
+      "message": "Failed asserting that 54.9 matches expected 59.9.",
+      "expected": "expected 59.9",
+      "actual": "54.9",
+      "assertion": "Failed asserting that 54.9 matches expected 59.9."
+    }
+  ]
+}
