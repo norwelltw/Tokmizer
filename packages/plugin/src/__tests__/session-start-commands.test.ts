@@ -129,3 +129,42 @@ describe("static command names are pruned-safe", () => {
     }
   });
 });
+
+describe("update nudge and Claude Code automatic updates", () => {
+  const AUTO = "Run /tkr-update once: it updates now and turns on automatic updates.";
+
+  function nudge(root: string, settings?: unknown): string {
+    mkdirSync(join(root, ".claude-plugin"), { recursive: true });
+    writeFileSync(join(root, ".claude-plugin", "plugin.json"), JSON.stringify({ version: "0.9.33" }));
+    writeFileSync(join(home, "state.json"), JSON.stringify({ latestPluginVersion: "0.9.34" }));
+    writeFileSync(join(home, "onboarded"), String(Date.now()));
+    writeFileSync(join(home, "network-notice-shown"), String(Date.now()));
+    if (settings !== undefined) {
+      mkdirSync(join(home, ".claude"), { recursive: true });
+      writeFileSync(join(home, ".claude", "settings.json"), JSON.stringify(settings));
+    }
+    return execFileSync(process.execPath, [hookPath], {
+      env: { ...process.env, HOME: home, TOKMIZER_HOME: home, TOKMIZER_NETWORK: "0", CLAUDE_PLUGIN_ROOT: root, TOKMIZER_CLAUDE_COMMANDS_DIR: commandsDir, CLAUDE_CONFIG_DIR: "" },
+      stdio: ["ignore", "pipe", "pipe"]
+    }).toString("utf8");
+  }
+
+  const catalogRoot = (): string => join(home, ".claude", "plugins", "cache", "tokmizer", "tokmizer", "0.9.33");
+
+  it("tells a catalogue install how to turn on automatic updates", () => {
+    const out = JSON.parse(nudge(catalogRoot())).systemMessage;
+    expect(out).toBe(`Tokmizer 0.9.34 is available. ${AUTO}`);
+  });
+
+  it("skips the hint once automatic updates are already on", () => {
+    const out = JSON.parse(nudge(catalogRoot(), { extraKnownMarketplaces: { tokmizer: { autoUpdate: true } } })).systemMessage;
+    expect(out).toContain("Tokmizer 0.9.34 is available");
+    expect(out).not.toContain(AUTO);
+  });
+
+  it("does not add the hint outside the Claude Code catalogue", () => {
+    const out = JSON.parse(nudge(pluginRoot)).systemMessage;
+    expect(out).toContain("Tokmizer 0.9.34 is available");
+    expect(out).not.toContain(AUTO);
+  });
+});

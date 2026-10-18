@@ -495,6 +495,10 @@ async function doctorFix(): Promise<void> {
 async function main(): Promise<void> {
   let cmd = process.argv[2] ?? "help";
   let rest = process.argv.slice(3);
+  if (["--version", "-v", "version"].includes(cmd)) {
+    process.stdout.write(`${PLUGIN_VERSION}\n`);
+    return;
+  }
   if (cmd === "reducer" && rest[0] === "--context") {
     const kind = rest[1] === "prompt" ? "prompt" : "session";
     const { reducerContext } = await import("../bonuses");

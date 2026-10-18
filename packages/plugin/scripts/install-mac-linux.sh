@@ -11,6 +11,52 @@ node_ready() {
 
 work=""
 
+RELEASE_KEY_PEM='-----BEGIN PUBLIC KEY-----
+MCowBQYDK2VwAyEAQqaFzuV5RhhcjaYgECQqM1faOtWjIE5U54zyPADPSgM=
+-----END PUBLIC KEY-----'
+RELEASE_KEY_SSH='ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEKmhc7leUYYXI2mIBAkKjNX2jrVoyBOVOeM8jwAz0oD'
+
+openssl_ed25519() {
+  local help
+  command -v openssl >/dev/null 2>&1 || return 1
+  openssl pkey -pubin -in "$1" -noout >/dev/null 2>&1 || return 1
+  help="$(openssl pkeyutl -help 2>&1 || true)"
+  case "$help" in *-rawin*) return 0 ;; esac
+  return 1
+}
+
+ssh_keygen_sig() {
+  local out
+  command -v ssh-keygen >/dev/null 2>&1 || return 1
+  out="$(ssh-keygen -Y verify </dev/null 2>&1 || true)"
+  case "$out" in *"unknown option"*|*"illegal option"*|*"invalid option"*) return 1 ;; esac
+  return 0
+}
+
+verify_sums() {
+  local dir="$1" base="$2"
+  printf '%s\n' "$RELEASE_KEY_PEM" > "$dir/release.pem"
+  if openssl_ed25519 "$dir/release.pem"; then
+    curl -fsSL "$base/SHA256SUMS.sig" -o "$dir/SHA256SUMS.sig" || err "The release is not signed (SHA256SUMS.sig is missing). Do not install this build."
+    openssl pkeyutl -verify -pubin -inkey "$dir/release.pem" -rawin -in "$dir/SHA256SUMS" -sigfile "$dir/SHA256SUMS.sig" >/dev/null 2>&1 ||
+      err "Release signature check failed. Do not install this build."
+    log "Release signature verified (openssl)."
+    return 0
+  fi
+  if ssh_keygen_sig; then
+    curl -fsSL "$base/SHA256SUMS.sshsig" -o "$dir/SHA256SUMS.sshsig" || err "The release is not signed (SHA256SUMS.sshsig is missing). Do not install this build."
+    printf 'tokmizer-release %s\n' "$RELEASE_KEY_SSH" > "$dir/allowed_signers"
+    ssh-keygen -Y verify -f "$dir/allowed_signers" -I tokmizer-release -n tokmizer-release -s "$dir/SHA256SUMS.sshsig" < "$dir/SHA256SUMS" >/dev/null 2>&1 ||
+      err "Release signature check failed. Do not install this build."
+    log "Release signature verified (ssh-keygen)."
+    return 0
+  fi
+  if [ "${TOKMIZER_REQUIRE_SIG:-}" = "1" ]; then
+    err "Cannot verify the release signature: install OpenSSL 3 or OpenSSH 8.1+, or unset TOKMIZER_REQUIRE_SIG."
+  fi
+  log "Warning: cannot verify the release signature (no OpenSSL 3 with Ed25519, no ssh-keygen -Y). Relying on SHA256SUMS only."
+}
+
 sha256_of() {
   if command -v sha256sum >/dev/null 2>&1; then sha256sum "$1" | cut -d' ' -f1
   else shasum -a 256 "$1" | cut -d' ' -f1
@@ -39,6 +85,7 @@ install_standalone() {
   work="$(mktemp -d)"
   trap 'rm -rf "${work:-}"' EXIT
   curl -fsSL "$base/SHA256SUMS" -o "$work/SHA256SUMS" || err "Could not download the standalone build. $unavailable"
+  verify_sums "$work" "$base"
   line="$(grep -E "^[0-9a-f]{64}  tokmizer-[0-9][^ /]*-$key\.tar\.gz$" "$work/SHA256SUMS" | head -n 1)" || true
   [ -n "$line" ] || err "No standalone build for $key. $unavailable"
   sum="${line%%  *}"

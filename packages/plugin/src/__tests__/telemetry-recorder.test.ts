@@ -127,4 +127,39 @@ describe("recordTelemetry — savings survive name redaction", () => {
       process.env.TOKMIZER_HOME = prev;
     }
   });
+
+  it("sends a first word only when it is a known program, otherwise 'other'", async () => {
+    const { mkdtempSync, readFileSync } = await import("node:fs");
+    const { tmpdir } = await import("node:os");
+    const { join } = await import("node:path");
+    const home = mkdtempSync(join(tmpdir(), "tkr-telem-"));
+    const prev = process.env.TOKMIZER_HOME;
+    process.env.TOKMIZER_HOME = home;
+    try {
+      const { recordTelemetry } = await import("../learn/telemetry");
+      const cases: Array<[string, string]> = [
+        ["hunter2pw", "other"],
+        ["mypassword123 ls", "other"],
+        ["deploy client-acme-staging", "other"],
+        ["Hunter2 --flag", "other"],
+        ["ls -la", "ls"],
+        ["pytest -q tests", "pytest"],
+        ["terraform plan", "terraform plan"],
+        ["git push origin main", "git push"],
+        ["/usr/bin/git status", "git status"],
+        ["Docker build .", "Docker build"],
+        ["cargo test", "cargo test"],
+        ["reducer", "reducer"],
+        ["restore", "restore"],
+        ["read-tool", "read-tool"],
+        ["grep-tool", "grep-tool"],
+        ["glob-tool", "glob-tool"]
+      ];
+      for (const [cmd] of cases) await recordTelemetry({ cmd, tokensSaved: 1, optimized: true, telemetryOptIn: true });
+      const sent = readFileSync(join(home, "spool", "telemetry.jsonl"), "utf8").trim().split("\n").map((l) => JSON.parse(l).cmd);
+      expect(sent).toEqual(cases.map(([, label]) => label));
+    } finally {
+      process.env.TOKMIZER_HOME = prev;
+    }
+  });
 });

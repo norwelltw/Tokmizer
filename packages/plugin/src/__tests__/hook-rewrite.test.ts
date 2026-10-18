@@ -1,4 +1,4 @@
-import { chmodSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { chmodSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -318,5 +318,68 @@ describe("Codex rewrite is limited to read-only commands", () => {
 
   it("does not restrict Claude Code, which never grants a permission", () => {
     expect(buildPreToolUseOutput(p("git log && git push"), "claude-code", "tkr-exec")).not.toBeNull();
+  });
+});
+
+describe("Codex rewrite respects the user's Codex rules", () => {
+  const p = (command: string) => ({ tool_name: "Bash", permission_mode: "bypassPermissions", session_id: "s-rules", tool_input: { command } });
+  const withRules = (rules: string, run: (bin: string) => void): void => {
+    const home = mkdtempSync(join(tmpdir(), "tkr-codex-home-"));
+    const bin = mkdtempSync(join(tmpdir(), "tkr-codex-bin-"));
+    for (const name of ["jq", "rg", "git", "cat"]) {
+      writeFileSync(join(bin, name), "#!/bin/sh\n");
+      chmodSync(join(bin, name), 0o755);
+    }
+    const prev = process.env.CODEX_HOME;
+    process.env.CODEX_HOME = home;
+    try {
+      if (rules) {
+        mkdirSync(join(home, "rules"));
+        writeFileSync(join(home, "rules", "default.rules"), rules);
+      }
+      run(bin);
+    } finally {
+      if (prev === undefined) delete process.env.CODEX_HOME;
+      else process.env.CODEX_HOME = prev;
+      rmSync(home, { recursive: true, force: true });
+      rmSync(bin, { recursive: true, force: true });
+    }
+  };
+
+  it("does not approve a command a prompt or forbidden rule covers", () => {
+    const rules = [
+      "prefix_rule(",
+      "    pattern = [\"jq\"],",
+      "    decision = \"prompt\",",
+      "    justification = \"jq can read the environment\",",
+      "    match = [\"jq -n env\", [\"jq\", \".a\"]],  # examples",
+      "    not_match = [],",
+      ")",
+      "prefix_rule(pattern=[\"git\", [\"log\", \"show\"]], decision=\"forbidden\")",
+      "prefix_rule(pattern=[\"cat\"])"
+    ].join("\n");
+    withRules(rules, (bin) => {
+      for (const c of ["jq -n env", "cd /x && jq .a f.json", "git show HEAD", "git log -n 3"]) {
+        expect(buildPreToolUseOutput(p(c), "codex", "tkr-exec", () => {}, {}, bin), c).toBeNull();
+      }
+      for (const c of ["cat a.md", "git diff", "rg -n foo src"]) {
+        expect(buildPreToolUseOutput(p(c), "codex", "tkr-exec", () => {}, {}, bin), c).not.toBeNull();
+      }
+    });
+  });
+
+  it("does not approve anything when a rules file cannot be understood", () => {
+    withRules("prefix_rule(pattern=GIT_PATTERN, decision=\"prompt\")", (bin) => {
+      expect(buildPreToolUseOutput(p("cat a.md"), "codex", "tkr-exec", () => {}, {}, bin)).toBeNull();
+    });
+  });
+
+  it("does not approve rg with an external host name program", () => {
+    withRules("", (bin) => {
+      for (const c of ["rg --hostname-bin=x pattern", "rg --hostname-bin x pattern", "rg --pre=x pattern"]) {
+        expect(buildPreToolUseOutput(p(c), "codex", "tkr-exec", () => {}, {}, bin), c).toBeNull();
+      }
+      expect(buildPreToolUseOutput(p("jq -n env"), "codex", "tkr-exec", () => {}, {}, bin)).not.toBeNull();
+    });
   });
 });

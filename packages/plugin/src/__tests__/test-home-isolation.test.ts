@@ -86,6 +86,20 @@ describe("tests never use the real Tokmizer home", () => {
     expect(offenders).toEqual([]);
   });
 
+  it("drops an inherited TOKMIZER_NETWORK so the server-mock tests keep their network", async () => {
+    const saved = { ...process.env };
+    process.env.TOKMIZER_NETWORK = "0";
+    const { default: setup } = await import(join(repo, "vitest.global-setup.ts"));
+    const teardown = setup();
+    try {
+      expect(process.env.TOKMIZER_NETWORK).toBeUndefined();
+    } finally {
+      teardown();
+      for (const key of Object.keys(process.env)) if (!(key in saved)) delete process.env[key];
+      Object.assign(process.env, saved);
+    }
+  });
+
   it("smokes the published bundle with an isolated home", () => {
     const pkg = JSON.parse(readFileSync(join(repo, "packages", "plugin", "package.json"), "utf8")) as { scripts: Record<string, string> };
     expect(pkg.scripts.prepublishOnly).toContain("node scripts/smoke-dist.mjs");

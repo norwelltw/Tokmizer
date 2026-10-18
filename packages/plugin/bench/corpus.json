@@ -1,0 +1,619 @@
+{
+ "schemaVersion": 1,
+ "cases": [
+  {
+   "id": "v4-bun-test-real",
+   "file": "src/__tests__/fixtures/v4/bun-test-real.txt",
+   "command": "bun test",
+   "exit": 1
+  },
+  {
+   "id": "v4-bun-test-fail",
+   "file": "src/__tests__/fixtures/v4/bun-test-fail.txt",
+   "command": "bun test",
+   "exit": 1
+  },
+  {
+   "id": "v4-bun-test-green",
+   "file": "src/__tests__/fixtures/v4/bun-test-green.txt",
+   "command": "bun test",
+   "exit": 0
+  },
+  {
+   "id": "v4-bun-install",
+   "file": "src/__tests__/fixtures/v4/bun-install.txt",
+   "command": "bun install",
+   "exit": 0
+  },
+  {
+   "id": "v4-deno-test-fail",
+   "file": "src/__tests__/fixtures/v4/deno-test-fail.txt",
+   "command": "deno test",
+   "exit": 1
+  },
+  {
+   "id": "v4-deno-test-green",
+   "file": "src/__tests__/fixtures/v4/deno-test-green.txt",
+   "command": "deno test",
+   "exit": 0
+  },
+  {
+   "id": "v4-deno-lint",
+   "file": "src/__tests__/fixtures/v4/deno-lint.txt",
+   "command": "deno lint",
+   "exit": 1
+  },
+  {
+   "id": "v4-pulumi-preview",
+   "file": "src/__tests__/fixtures/v4/pulumi-preview.txt",
+   "command": "pulumi preview",
+   "exit": 0
+  },
+  {
+   "id": "v4-pulumi-up-fail",
+   "file": "src/__tests__/fixtures/v4/pulumi-up-fail.txt",
+   "command": "pulumi up --yes",
+   "exit": 255
+  },
+  {
+   "id": "v4-composer-install-fail",
+   "file": "src/__tests__/fixtures/v4/composer-install-fail.txt",
+   "command": "composer install",
+   "exit": 1
+  },
+  {
+   "id": "v4-phpunit-fail",
+   "file": "src/__tests__/fixtures/v4/phpunit-fail.txt",
+   "command": "phpunit",
+   "exit": 1
+  },
+  {
+   "id": "v4-phpstan",
+   "file": "src/__tests__/fixtures/v4/phpstan.txt",
+   "command": "phpstan analyse src",
+   "exit": 1
+  },
+  {
+   "id": "v4-ctest-mixed",
+   "file": "src/__tests__/fixtures/v4/ctest-mixed.txt",
+   "command": "ctest",
+   "exit": 8
+  },
+  {
+   "id": "v4-ctest-noisy-fail",
+   "file": "src/__tests__/fixtures/v4/ctest-noisy-fail.txt",
+   "command": "ctest --output-on-failure",
+   "exit": 8
+  },
+  {
+   "id": "v4-ctest-200",
+   "file": "src/__tests__/fixtures/v4/ctest-200.txt",
+   "command": "ctest",
+   "exit": 8
+  },
+  {
+   "id": "v4-mvnd-test-fail",
+   "file": "src/__tests__/fixtures/v4/mvnd-test-fail.txt",
+   "command": "mvnd test",
+   "exit": 1
+  },
+  {
+   "id": "v4-mvnd-reactor-fail",
+   "file": "src/__tests__/fixtures/v4/mvnd-reactor-fail.txt",
+   "command": "mvnd test",
+   "exit": 1
+  },
+  {
+   "id": "v4-mvnd-reactor-pass",
+   "file": "src/__tests__/fixtures/v4/mvnd-reactor-pass.txt",
+   "command": "mvnd install",
+   "exit": 0
+  },
+  {
+   "id": "v4-mvnd-compile-error",
+   "file": "src/__tests__/fixtures/v4/mvnd-compile-error.txt",
+   "command": "mvnd compile",
+   "exit": 1
+  },
+  {
+   "id": "v4-sbt-test-fail",
+   "file": "src/__tests__/fixtures/v4/sbt-test-fail.txt",
+   "command": "sbt test",
+   "exit": 1
+  },
+  {
+   "id": "v4-sbt-test-pass",
+   "file": "src/__tests__/fixtures/v4/sbt-test-pass.txt",
+   "command": "sbt test",
+   "exit": 0
+  },
+  {
+   "id": "v4-sbt-compile-error",
+   "file": "src/__tests__/fixtures/v4/sbt-compile-error.txt",
+   "command": "sbt compile",
+   "exit": 1
+  },
+  {
+   "id": "v4-sqlfluff-lint",
+   "file": "src/__tests__/fixtures/v4/sqlfluff-lint.txt",
+   "command": "sqlfluff lint models/",
+   "exit": 1
+  },
+  {
+   "id": "v4-uv-pytest-fail",
+   "file": "src/__tests__/fixtures/v4/uv-pytest-fail.txt",
+   "command": "uv run pytest",
+   "exit": 1
+  },
+  {
+   "id": "v4-oc-get-pods",
+   "file": "src/__tests__/fixtures/v4/oc-get-pods.txt",
+   "command": "oc get pods",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-artisan-migrate",
+   "file": "src/__tests__/fixtures/rtk10/artisan-migrate.txt",
+   "command": "php artisan migrate",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-ast-grep-run",
+   "file": "src/__tests__/fixtures/rtk10/ast-grep-run.txt",
+   "command": "ast-grep run -p 'console.log($$$A)' src",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-ast-grep-scan-fail",
+   "file": "src/__tests__/fixtures/rtk10/ast-grep-scan-fail.txt",
+   "command": "ast-grep scan",
+   "exit": 1
+  },
+  {
+   "id": "rtk10-bun-add",
+   "file": "src/__tests__/fixtures/rtk10/bun-add.txt",
+   "command": "bun add zod",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-bun-test-fail",
+   "file": "src/__tests__/fixtures/rtk10/bun-test-fail.txt",
+   "command": "bun test",
+   "exit": 1
+  },
+  {
+   "id": "rtk10-bun-test-ok",
+   "file": "src/__tests__/fixtures/rtk10/bun-test-ok.txt",
+   "command": "bun test",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-composer-require",
+   "file": "src/__tests__/fixtures/rtk10/composer-require.txt",
+   "command": "composer require --dev pestphp/pest",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-ctest-fail",
+   "file": "src/__tests__/fixtures/rtk10/ctest-fail.txt",
+   "command": "ctest",
+   "exit": 8
+  },
+  {
+   "id": "rtk10-ctest-ok",
+   "file": "src/__tests__/fixtures/rtk10/ctest-ok.txt",
+   "command": "ctest",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-deno-test-ok",
+   "file": "src/__tests__/fixtures/rtk10/deno-test-ok.txt",
+   "command": "deno test",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-ecs-ok",
+   "file": "src/__tests__/fixtures/rtk10/ecs-ok.txt",
+   "command": "vendor/bin/ecs check src",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-eslint-fail",
+   "file": "src/__tests__/fixtures/rtk10/eslint-fail.txt",
+   "command": "npx eslint src",
+   "exit": 1
+  },
+  {
+   "id": "rtk10-golangci-lint-fail",
+   "file": "src/__tests__/fixtures/rtk10/golangci-lint-fail.txt",
+   "command": "golangci-lint run",
+   "exit": 1
+  },
+  {
+   "id": "rtk10-golangci-lint-ok",
+   "file": "src/__tests__/fixtures/rtk10/golangci-lint-ok.txt",
+   "command": "golangci-lint run -v",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-gt-log",
+   "file": "src/__tests__/fixtures/rtk10/gt-log.txt",
+   "command": "gt log",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-mvnd-ok",
+   "file": "src/__tests__/fixtures/rtk10/mvnd-ok.txt",
+   "command": "mvnd clean verify",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-mypy-fail",
+   "file": "src/__tests__/fixtures/rtk10/mypy-fail.txt",
+   "command": "mypy app.py",
+   "exit": 1
+  },
+  {
+   "id": "rtk10-mypy-ok",
+   "file": "src/__tests__/fixtures/rtk10/mypy-ok.txt",
+   "command": "mypy app.py",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-paratest-ok",
+   "file": "src/__tests__/fixtures/rtk10/paratest-ok.txt",
+   "command": "vendor/bin/paratest",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-pest-fail",
+   "file": "src/__tests__/fixtures/rtk10/pest-fail.txt",
+   "command": "php artisan test",
+   "exit": 1
+  },
+  {
+   "id": "rtk10-pest-ok",
+   "file": "src/__tests__/fixtures/rtk10/pest-ok.txt",
+   "command": "./vendor/bin/pest",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-php-lint-fail",
+   "file": "src/__tests__/fixtures/rtk10/php-lint-fail.txt",
+   "command": "php -l src/Bad.php",
+   "exit": 255
+  },
+  {
+   "id": "rtk10-phpstan-fail",
+   "file": "src/__tests__/fixtures/rtk10/phpstan-fail.txt",
+   "command": "vendor/bin/phpstan analyse",
+   "exit": 1
+  },
+  {
+   "id": "rtk10-phpstan-ok",
+   "file": "src/__tests__/fixtures/rtk10/phpstan-ok.txt",
+   "command": "vendor/bin/phpstan analyse",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-phpt-fail",
+   "file": "src/__tests__/fixtures/rtk10/phpt-fail.txt",
+   "command": "php run-tests.php -q tests",
+   "exit": 1
+  },
+  {
+   "id": "rtk10-phpt-ok",
+   "file": "src/__tests__/fixtures/rtk10/phpt-ok.txt",
+   "command": "php run-tests.php -q tests",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-phpunit-ok",
+   "file": "src/__tests__/fixtures/rtk10/phpunit-ok.txt",
+   "command": "php vendor/bin/phpunit",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-pint-ok",
+   "file": "src/__tests__/fixtures/rtk10/pint-ok.txt",
+   "command": "./vendor/bin/pint --test",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-pint-test-fail",
+   "file": "src/__tests__/fixtures/rtk10/pint-test-fail.txt",
+   "command": "./vendor/bin/pint --test",
+   "exit": 1
+  },
+  {
+   "id": "rtk10-prettier-check-fail",
+   "file": "src/__tests__/fixtures/rtk10/prettier-check-fail.txt",
+   "command": "npx prettier --check src",
+   "exit": 1
+  },
+  {
+   "id": "rtk10-prettier-write",
+   "file": "src/__tests__/fixtures/rtk10/prettier-write.txt",
+   "command": "pnpm exec prettier --write src",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-pulumi-preview-ok",
+   "file": "src/__tests__/fixtures/rtk10/pulumi-preview-ok.txt",
+   "command": "pulumi preview",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-pulumi-up-fail",
+   "file": "src/__tests__/fixtures/rtk10/pulumi-up-fail.txt",
+   "command": "pulumi up --yes",
+   "exit": 255
+  },
+  {
+   "id": "rtk10-pulumi-up-ok",
+   "file": "src/__tests__/fixtures/rtk10/pulumi-up-ok.txt",
+   "command": "pulumi up --yes",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-rubocop-fail",
+   "file": "src/__tests__/fixtures/rtk10/rubocop-fail.txt",
+   "command": "bundle exec rubocop",
+   "exit": 1
+  },
+  {
+   "id": "rtk10-rubocop-ok",
+   "file": "src/__tests__/fixtures/rtk10/rubocop-ok.txt",
+   "command": "bundle exec rubocop",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-ruff-check-fail",
+   "file": "src/__tests__/fixtures/rtk10/ruff-check-fail.txt",
+   "command": "ruff check .",
+   "exit": 1
+  },
+  {
+   "id": "rtk10-ruff-check-legacy-fail",
+   "file": "src/__tests__/fixtures/rtk10/ruff-check-legacy-fail.txt",
+   "command": "ruff check .",
+   "exit": 1
+  },
+  {
+   "id": "rtk10-ruff-check-ok",
+   "file": "src/__tests__/fixtures/rtk10/ruff-check-ok.txt",
+   "command": "ruff check .",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-ruff-format-ok",
+   "file": "src/__tests__/fixtures/rtk10/ruff-format-ok.txt",
+   "command": "ruff format .",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-sqlfluff-lint-fail",
+   "file": "src/__tests__/fixtures/rtk10/sqlfluff-lint-fail.txt",
+   "command": "sqlfluff lint sql/bad.sql",
+   "exit": 1
+  },
+  {
+   "id": "rtk10-sqlfluff-lint-ok",
+   "file": "src/__tests__/fixtures/rtk10/sqlfluff-lint-ok.txt",
+   "command": "sqlfluff lint sql -v --dialect ansi",
+   "exit": 0
+  },
+  {
+   "id": "rtk10-uv-sync-fail",
+   "file": "src/__tests__/fixtures/rtk10/uv-sync-fail.txt",
+   "command": "uv sync",
+   "exit": 1
+  },
+  {
+   "id": "rtk10-uv-sync-ok",
+   "file": "src/__tests__/fixtures/rtk10/uv-sync-ok.txt",
+   "command": "uv sync",
+   "exit": 0
+  },
+  {
+   "id": "test-failures-vitest-combined",
+   "file": "src/__tests__/fixtures/test-failures/vitest-combined.txt",
+   "command": "npx vitest run",
+   "exit": 1
+  },
+  {
+   "id": "test-failures-vitest-stderr",
+   "file": "src/__tests__/fixtures/test-failures/vitest-stderr.txt",
+   "command": "vitest run",
+   "exit": 1
+  },
+  {
+   "id": "test-failures-vitest-stdout",
+   "file": "src/__tests__/fixtures/test-failures/vitest-stdout.txt",
+   "command": "npx vitest run",
+   "exit": 1
+  },
+  {
+   "id": "test-failures-jest",
+   "file": "src/__tests__/fixtures/test-failures/jest.txt",
+   "command": "npx jest --ci",
+   "exit": 1
+  },
+  {
+   "id": "test-failures-jest-verbose",
+   "file": "src/__tests__/fixtures/test-failures/jest-verbose.txt",
+   "command": "jest --verbose",
+   "exit": 1
+  },
+  {
+   "id": "test-failures-mocha",
+   "file": "src/__tests__/fixtures/test-failures/mocha.txt",
+   "command": "npx mocha test",
+   "exit": 1
+  },
+  {
+   "id": "test-failures-pytest-verbose",
+   "file": "src/__tests__/fixtures/test-failures/pytest-verbose.txt",
+   "command": "pytest -v",
+   "exit": 1
+  },
+  {
+   "id": "test-failures-pytest-quiet",
+   "file": "src/__tests__/fixtures/test-failures/pytest-quiet.txt",
+   "command": "python -m pytest -q",
+   "exit": 1
+  },
+  {
+   "id": "test-failures-cargo",
+   "file": "src/__tests__/fixtures/test-failures/cargo.txt",
+   "command": "cargo test",
+   "exit": 1
+  },
+  {
+   "id": "test-failures-go",
+   "file": "src/__tests__/fixtures/test-failures/go.txt",
+   "command": "go test -v ./...",
+   "exit": 1
+  },
+  {
+   "id": "test-failures-playwright",
+   "file": "src/__tests__/fixtures/test-failures/playwright.txt",
+   "command": "npx playwright test",
+   "exit": 1
+  },
+  {
+   "id": "fidelity-failures-cargo-multi",
+   "file": "src/__tests__/fixtures/fidelity/failures/cargo-multi.txt",
+   "command": "cargo test",
+   "exit": 101
+  },
+  {
+   "id": "fidelity-failures-cargo-single",
+   "file": "src/__tests__/fixtures/fidelity/failures/cargo-single.txt",
+   "command": "cargo test",
+   "exit": 101
+  },
+  {
+   "id": "fidelity-failures-go-multi",
+   "file": "src/__tests__/fixtures/fidelity/failures/go-multi.txt",
+   "command": "go test -v ./...",
+   "exit": 1
+  },
+  {
+   "id": "fidelity-failures-go-single",
+   "file": "src/__tests__/fixtures/fidelity/failures/go-single.txt",
+   "command": "go test -v ./...",
+   "exit": 1
+  },
+  {
+   "id": "fidelity-failures-jest-multi",
+   "file": "src/__tests__/fixtures/fidelity/failures/jest-multi.txt",
+   "command": "npx jest",
+   "exit": 1,
+   "stream": "stderr"
+  },
+  {
+   "id": "fidelity-failures-jest-single",
+   "file": "src/__tests__/fixtures/fidelity/failures/jest-single.txt",
+   "command": "npx jest",
+   "exit": 1,
+   "stream": "stderr"
+  },
+  {
+   "id": "fidelity-failures-pest-multi",
+   "file": "src/__tests__/fixtures/fidelity/failures/pest-multi.txt",
+   "command": "php vendor/bin/pest",
+   "exit": 1
+  },
+  {
+   "id": "fidelity-failures-pest-single",
+   "file": "src/__tests__/fixtures/fidelity/failures/pest-single.txt",
+   "command": "php vendor/bin/pest",
+   "exit": 1
+  },
+  {
+   "id": "fidelity-failures-phpunit-multi",
+   "file": "src/__tests__/fixtures/fidelity/failures/phpunit-multi.txt",
+   "command": "vendor/bin/phpunit",
+   "exit": 2
+  },
+  {
+   "id": "fidelity-failures-phpunit-single",
+   "file": "src/__tests__/fixtures/fidelity/failures/phpunit-single.txt",
+   "command": "vendor/bin/phpunit",
+   "exit": 1
+  },
+  {
+   "id": "fidelity-failures-pytest-multi",
+   "file": "src/__tests__/fixtures/fidelity/failures/pytest-multi.txt",
+   "command": "pytest -v",
+   "exit": 1
+  },
+  {
+   "id": "fidelity-failures-pytest-single",
+   "file": "src/__tests__/fixtures/fidelity/failures/pytest-single.txt",
+   "command": "pytest -v",
+   "exit": 1
+  },
+  {
+   "id": "fidelity-failures-vitest-multi",
+   "file": "src/__tests__/fixtures/fidelity/failures/vitest-multi.txt",
+   "command": "npx vitest run",
+   "exit": 1
+  },
+  {
+   "id": "fidelity-failures-vitest-single",
+   "file": "src/__tests__/fixtures/fidelity/failures/vitest-single.txt",
+   "command": "npx vitest run",
+   "exit": 1
+  },
+  {
+   "id": "audit-cargo",
+   "file": "src/__tests__/fixtures/audit/cargo.txt",
+   "command": "cargo build --verbose",
+   "exit": 0
+  },
+  {
+   "id": "audit-gcloud",
+   "file": "src/__tests__/fixtures/audit/gcloud.txt",
+   "command": "gcloud compute instances list",
+   "exit": 0
+  },
+  {
+   "id": "audit-next",
+   "file": "src/__tests__/fixtures/audit/next.txt",
+   "command": "next build",
+   "exit": 0
+  },
+  {
+   "id": "audit-pytest",
+   "file": "src/__tests__/fixtures/audit/pytest.txt",
+   "command": "pytest -v",
+   "exit": 0
+  },
+  {
+   "id": "audit-terraform",
+   "file": "src/__tests__/fixtures/audit/terraform.txt",
+   "command": "terraform plan",
+   "exit": 0
+  },
+  {
+   "id": "synthetic-git-log-stat",
+   "generate": "git-log-stat",
+   "command": "git log --stat -n 400",
+   "exit": 0
+  },
+  {
+   "id": "synthetic-find",
+   "generate": "find",
+   "command": "find .",
+   "exit": 0
+  },
+  {
+   "id": "synthetic-grep",
+   "generate": "grep",
+   "command": "grep -rn TODO src",
+   "exit": 0
+  }
+ ]
+}

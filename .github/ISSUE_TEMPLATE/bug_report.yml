@@ -1,0 +1,55 @@
+name: Bug report
+description: Something does not work as expected
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Remove any secret, token, private path or customer data from what you paste. Security problems go to contact@tokmizer.com, not here.
+  - type: input
+    id: version
+    attributes:
+      label: Tokmizer version
+      description: Output of `tkr --version`
+    validations:
+      required: true
+  - type: dropdown
+    id: agent
+    attributes:
+      label: Agent
+      options:
+        - Claude Code
+        - Codex
+        - Cursor
+        - Gemini CLI
+        - GitHub Copilot
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: System
+      options:
+        - macOS
+        - Linux
+        - Windows
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: The command, what Tokmizer showed and what you expected.
+    validations:
+      required: true
+  - type: textarea
+    id: sample
+    attributes:
+      label: Output sample
+      description: A reduced sample if it helps. Optional.
+      render: text
+  - type: textarea
+    id: fix
+    attributes:
+      label: Suggested fix
+      description: Optional. A description or a diff. The maintainer reviews it and applies changes himself; by sharing it you agree it may be used under the project's licences.

@@ -1,9 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { generateKeyPairSync, createPrivateKey, sign } from "node:crypto";
-import { fetchAndVerifyBundles } from "../bundle";
+import { generateKeyPairSync, createPrivateKey, sign, type KeyObject } from "node:crypto";
+import { contentSigningMessage, fetchAndVerifyBundles } from "../bundle";
 import { consumeSignedJson } from "../transport";
 
+const h = vi.hoisted(() => ({ contentPem: "" }));
+
 vi.mock("../prod-public-key", () => ({ TOKMIZER_PROD_PUBLIC_KEY_PEM: "" }));
+vi.mock("../content-public-key", () => ({
+  get TOKMIZER_CONTENT_PUBLIC_KEY_PEM() {
+    return h.contentPem;
+  }
+}));
 vi.mock("../transport", () => ({
   fetchSigned: vi.fn().mockResolvedValue({ ok: true, status: 200 }),
   consumeSignedJson: vi.fn(),
@@ -19,6 +26,7 @@ vi.mock("../fingerprint", () => ({
 
 let origPub: string | undefined;
 let privatePem: string;
+let contentKey: KeyObject;
 
 beforeEach(() => {
   origPub = process.env.TOKMIZER_RESP_SIGNING_PUBLIC_KEY_PEM;
@@ -27,6 +35,9 @@ beforeEach(() => {
     .export({ type: "spki", format: "pem" })
     .toString();
   privatePem = privateKey.export({ type: "pkcs8", format: "pem" }).toString();
+  const content = generateKeyPairSync("ed25519");
+  contentKey = content.privateKey;
+  h.contentPem = content.publicKey.export({ type: "spki", format: "pem" }).toString();
 });
 
 afterEach(() => {
@@ -43,7 +54,18 @@ function signBody(body: string): string {
 function envelope(slug: string, body: string) {
   return {
     bundles: [
-      { slug, version: 1, fragments: [{ position: 0, body, hash: signBody(body) }] }
+      {
+        slug,
+        version: 1,
+        fragments: [
+          {
+            position: 0,
+            body,
+            hash: signBody(body),
+            contentSig: sign(null, contentSigningMessage(slug, 1, 0, 1, body), contentKey).toString("base64url")
+          }
+        ]
+      }
     ]
   };
 }

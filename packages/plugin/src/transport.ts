@@ -4,6 +4,7 @@ import { TOKMIZER_PROD_PUBLIC_KEY_PEM } from "./prod-public-key";
 import { assertNetworkEnabled } from "./network";
 
 const RESP_MAX_AGE_MS = 5 * 60 * 1000;
+const RESP_MAX_SKEW_MS = 2 * 60 * 1000;
 
 export function respPublicKeyPem(): string {
   const devOverride =
@@ -28,7 +29,7 @@ export async function consumeSignedJson<T>(res: Response): Promise<T> {
   const tsHeader = res.headers?.get?.("x-tokmizer-resp-ts") ?? null;
   if (tsHeader !== null) {
     const ts = Number(tsHeader);
-    if (!Number.isFinite(ts) || Date.now() - ts > RESP_MAX_AGE_MS) {
+    if (!Number.isFinite(ts) || Date.now() - ts > RESP_MAX_AGE_MS || ts - Date.now() > RESP_MAX_SKEW_MS) {
       throw new TransportError("http", "stale server response (resp-ts outside freshness window)");
     }
   }
@@ -65,8 +66,13 @@ export class TransportError extends Error {
   }
 }
 
-function hmacHex(body: string, ts: number, secret: string): string {
-  return createHmac("sha256", secret).update(`${ts}.${body}`).digest("hex");
+function hmacHex(method: string, target: string, body: string, ts: number, secret: string): string {
+  return createHmac("sha256", secret).update(`${method}\n${target}\n${ts}\n${body}`).digest("hex");
+}
+
+function requestTarget(url: string): string {
+  const parsed = new URL(url);
+  return `${parsed.pathname}${parsed.search}`;
 }
 
 export async function fetchSigned(
@@ -78,7 +84,8 @@ export async function fetchSigned(
   assertNetworkEnabled();
   const ts = Date.now();
   const text = body === undefined ? "" : JSON.stringify(body);
-  const sig = opts.signingSecret ? hmacHex(text, ts, opts.signingSecret) : "0".repeat(64);
+  const url = `${opts.baseUrl}${path}`;
+  const sig = opts.signingSecret ? hmacHex(method, requestTarget(url), text, ts, opts.signingSecret) : "0".repeat(64);
   const headers: Record<string, string> = {
     "content-type": "application/json",
     "x-tokmizer-fingerprint": opts.fingerprint,
@@ -93,7 +100,7 @@ export async function fetchSigned(
   const init: RequestInit = { method, headers, signal: AbortSignal.timeout(timeoutMs) };
   if (hasBody) init.body = text;
   try {
-    return await fetch(`${opts.baseUrl}${path}`, init);
+    return await fetch(url, init);
   } catch (err) {
     const name = (err as { name?: string }).name;
     if (name === "TimeoutError" || name === "AbortError") {

@@ -136,7 +136,15 @@ try {
   if (latest && manifest.version && latest !== manifest.version) {
     const nudgeFile = join(home, `update-nudge-${latest}`);
     if (!existsSync(nudgeFile)) {
-      userMessages.push(`Tokmizer ${latest} is available. Update with: /tkr-update`);
+      const claudeDir = join(homedir(), ".claude");
+      const fromCatalog = /[\\/]plugins[\\/]cache[\\/]tokmizer[\\/]/.test(pluginRoot) && (process.env.CLAUDE_CONFIG_DIR || claudeDir) === claudeDir;
+      let autoOn = false;
+      try {
+        autoOn = JSON.parse(readFileSync(join(claudeDir, "settings.json"), "utf8"))?.extraKnownMarketplaces?.tokmizer?.autoUpdate === true;
+      } catch {}
+      userMessages.push(fromCatalog && !autoOn
+        ? `Tokmizer ${latest} is available. Run /tkr-update once: it updates now and turns on automatic updates.`
+        : `Tokmizer ${latest} is available. Update with: /tkr-update`);
       writeFileSync(nudgeFile, String(Date.now()));
     }
   }

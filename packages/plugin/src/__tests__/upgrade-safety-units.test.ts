@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { spawnSync } from "node:child_process";
-import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
+import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { rewriteForAgent } from "../agent-rewrite";
@@ -152,9 +152,15 @@ describe.skipIf(process.platform === "win32")("Unix installer and Claude Code", 
     expect(spawnSync("tar", ["-czf", join(release, `${name}.tar.gz`), "-C", join(root, "stage"), name]).status).toBe(0);
     const sum = spawnSync("shasum", ["-a", "256", join(release, `${name}.tar.gz`)], { encoding: "utf8" }).stdout.split(" ")[0];
     writeFileSync(join(release, "SHA256SUMS"), `${sum}  ${name}.tar.gz\n`);
+    const tools = join(root, "tools");
+    mkdirSync(tools);
+    for (const cmd of ["uname", "curl", "tar", "gzip", "mktemp", "rm", "grep", "head", "sha256sum", "shasum", "cut", "mkdir", "mv", "ln", "sh", "perl"]) {
+      const found = ["/usr/bin", "/bin"].map((d) => join(d, cmd)).find((p) => existsSync(p));
+      if (found && !existsSync(join(tools, cmd))) symlinkSync(found, join(tools, cmd));
+    }
     const r = spawnSync("/bin/bash", [join(pkg, "scripts", "install-mac-linux.sh")], {
       encoding: "utf8",
-      env: { ...env(), PATH: "/usr/bin:/bin", TOKMIZER_STANDALONE: "1", TOKMIZER_DOWNLOAD_BASE: `file://${release}` }
+      env: { ...env(), PATH: tools, TOKMIZER_STANDALONE: "1", TOKMIZER_DOWNLOAD_BASE: `file://${release}` }
     });
     expect(r.status, r.stderr).toBe(0);
     expect(readFileSync(log, "utf8")).toContain("shim install");

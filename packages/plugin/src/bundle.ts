@@ -1,9 +1,15 @@
 import { createPublicKey, verify } from "node:crypto";
+import { mkdir, writeFile } from "node:fs/promises";
+import { join } from "node:path";
 import type { SkillBundleResponse } from "./contracts";
+import { contentSigningMessage, verifyContentSignature } from "./content-signing";
+import { tokmizerHome } from "./paths";
 import { fetchSigned, consumeSignedJson, respPublicKeyPem } from "./transport";
 import { loadState } from "./state";
 import { buildFingerprint } from "./fingerprint";
 import { assertNetworkEnabled } from "./network";
+
+export { contentSigningMessage, verifyContentSignature };
 
 export function verifyFragmentSignature(body: string, sigB64u: string): boolean {
   const pem = respPublicKeyPem();
@@ -19,6 +25,27 @@ export function verifyFragmentSignature(body: string, sigB64u: string): boolean 
   } catch {
     return false;
   }
+}
+
+type ServedFragment = SkillBundleResponse["bundles"][number]["fragments"][number] & { contentSig?: string | null };
+
+function assertContentSigned(slug: string, version: number, fragments: ServedFragment[]): void {
+  if (fragments.length === 0 || fragments.some((f, i) => f.position !== i)) {
+    throw new Error(`incomplete or inconsistent fragments on ${slug}`);
+  }
+  for (const f of fragments) {
+    const message = contentSigningMessage(slug, version, f.position, fragments.length, f.body);
+    if (!verifyContentSignature(message, f.contentSig)) {
+      throw new Error(`content signature mismatch on ${slug}[${f.position}]`);
+    }
+  }
+}
+
+async function recordContentSignature(status: "verified"): Promise<void> {
+  try {
+    await mkdir(tokmizerHome(), { recursive: true });
+    await writeFile(join(tokmizerHome(), "content-signature.json"), JSON.stringify({ at: Date.now(), status }), { mode: 0o600 });
+  } catch {}
 }
 
 const SLUG_RE = /^[a-z0-9][a-z0-9-]*$/;
@@ -56,11 +83,13 @@ export async function fetchAndVerifyBundles(baseUrl: string): Promise<AssembledB
         throw new Error(`fragment signature mismatch on ${b.slug}[${f.position}]`);
       }
     }
+    assertContentSigned(b.slug, b.version, sorted);
     assembled.push({
       slug: b.slug,
       version: b.version,
       body: sorted.map((f) => f.body).join("\n\n")
     });
   }
+  await recordContentSignature("verified");
   return assembled;
 }

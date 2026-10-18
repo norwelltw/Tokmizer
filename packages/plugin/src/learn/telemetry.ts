@@ -26,6 +26,26 @@ const PATHED_KNOWN_BINS = new Set([
   "playwright", "rails", "rake"
 ]);
 
+const KNOWN_PROGRAMS = new Set([
+  ...PATHED_KNOWN_BINS,
+  "cd", "cat", "head", "tail", "ls", "tree", "find", "grep", "wc", "nl", "sort", "cut", "uniq", "tr",
+  "diff", "stat", "file", "du", "df", "ps", "yq", "pwd", "which", "echo", "printf", "seq", "sed", "awk",
+  "gawk", "xargs", "sleep", "tar", "zip", "unzip", "rsync", "scp", "ssh", "curl", "wget", "dig", "host",
+  "nslookup", "ping", "lsof", "journalctl", "iptables", "ip6tables", "open", "md5", "md5sum", "sha1sum",
+  "sha224sum", "sha256sum", "sha384sum", "sha512sum", "shasum", "sudo", "env", "command", "time",
+  "nodejs", "bunx", "pytest", "mypy", "dmypy", "pyright", "basedpyright", "ruff", "black", "ty",
+  "gradlew", "mvnw", "mvnd", "ninja", "cmake", "bazel", "bazelisk", "sbt", "gcc", "clang", "gmake",
+  "swift", "xcodebuild", "pod", "flutter", "nx", "turbo", "next", "eslint", "prettier", "biome",
+  "oxlint", "golangci-lint", "shellcheck", "hadolint", "yamllint", "markdownlint", "mdl", "sqlfluff",
+  "rubocop", "rspec", "bundler", "php", "artisan", "composer", "phpunit", "phpstan", "pest", "paratest",
+  "pint", "mix", "javap", "jar", "docker-compose", "skopeo", "oc", "ecs", "nomad", "consul",
+  "packer", "pulumi", "tofu", "ansible", "ansible-playbook", "vault", "sops", "vercel", "netlify",
+  "wrangler", "firebase", "supabase", "stripe", "shopify", "theme-check", "redis-cli", "liquibase",
+  "ollama", "ast-grep", "just", "task", "mise", "trunk", "pre-commit", "jj", "yadm", "gt", "quarto",
+  "act", "jira", "fail2ban-client", "ctest", "pio", "platformio",
+  "reducer", "restore", "read-tool", "grep-tool", "glob-tool", "bash-tool"
+]);
+
 const FORGE_VERBS = new Map<string, ReadonlySet<string>>([
   ["git", new Set([
     "status", "diff", "log", "show", "blame", "ls-files", "rev-parse", "branch", "fetch", "pull", "push",
@@ -74,6 +94,10 @@ export function commandName(raw: string): string {
   return out.slice(0, 64);
 }
 
+function isKnownProgram(name: string): boolean {
+  return KNOWN_PROGRAMS.has((name.split(" ")[0] ?? "").toLowerCase());
+}
+
 export type TelemetryInput = {
   cmd: string;
   tokensSaved: number;
@@ -88,7 +112,7 @@ export type TelemetryInput = {
 export async function recordTelemetry(input: TelemetryInput): Promise<void> {
   if (!input.telemetryOptIn) return;
   const name = commandName(input.cmd);
-  const safe = name && redactCommand(name) === name ? name : "other";
+  const safe = name && redactCommand(name) === name && isKnownProgram(name) ? name : "other";
   const sid = input.sessionId ? input.sessionId.replace(/[^A-Za-z0-9._-]/g, "").slice(0, 64) : "";
   appendSpool("telemetry", {
     cmd: safe,

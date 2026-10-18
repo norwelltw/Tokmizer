@@ -388,7 +388,7 @@ const READONLY_GIT = new Set([
 const UNSAFE_OPTIONS: Record<string, RegExp> = {
   find: /^-(?:delete|exec|execdir|ok|okdir|fprint|fls)/,
   sort: /^(?:-[^-]*o|--output|--compress-program)/,
-  rg: /^(?:--pre|-[^-]*z|--search-zip)/,
+  rg: /^(?:--pre|--hostname-bin|-[^-]*z|--search-zip)/,
   yq: /^(?:-[^-]*[is]|--inplace|--split-exp)/,
   file: /^(?:-C|--compile)/,
   tree: /^(?:-o|--output|-R$|-H$)/,
@@ -890,6 +890,108 @@ function antigravityRules(): RuleSet {
   }, false);
 }
 
+type StarlarkValue = string | StarlarkValue[] | null;
+
+function starlarkTokens(raw: string): string[] | null {
+  const tokens: string[] = [];
+  const re = /\s+|#[^\n]*|("(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*')|([A-Za-z_][A-Za-z0-9_]*|[()[\],=])|(.)/gy;
+  for (let m = re.exec(raw); m && m[0]; m = re.exec(raw)) {
+    if (m[3] !== undefined) return null;
+    if (m[1] !== undefined || m[2] !== undefined) tokens.push(m[1] ?? m[2]!);
+  }
+  return tokens;
+}
+
+function starlarkValue(tokens: string[], at: { i: number }): StarlarkValue | undefined {
+  const token = tokens[at.i++];
+  if (token === undefined) return undefined;
+  if (/^["']/.test(token)) {
+    try {
+      return token.startsWith('"') ? JSON.parse(token) as string : JSON.parse(`"${token.slice(1, -1).replace(/\\'/g, "'").replace(/"/g, '\\"')}"`) as string;
+    } catch {
+      return undefined;
+    }
+  }
+  if (token !== "[") return /^[A-Za-z_]/.test(token) ? null : undefined;
+  const list: StarlarkValue[] = [];
+  while (tokens[at.i] !== "]") {
+    const item = starlarkValue(tokens, at);
+    if (item === undefined) return undefined;
+    list.push(item);
+    if (tokens[at.i] === ",") at.i++;
+    else if (tokens[at.i] !== "]") return undefined;
+  }
+  at.i++;
+  return list;
+}
+
+function codexPatternMatcher(pattern: StarlarkValue | undefined): Matcher | null {
+  if (!Array.isArray(pattern) || pattern.length === 0) return null;
+  const parts: string[] = [];
+  for (const item of pattern) {
+    const alternatives = typeof item === "string" ? [item] : Array.isArray(item) ? item : null;
+    if (!alternatives || alternatives.length === 0 || !alternatives.every((alt): alt is string => typeof alt === "string" && alt !== "")) return null;
+    parts.push(`(?:${alternatives.map(escapeRegex).join("|")})`);
+  }
+  const re = new RegExp(`^${parts.join(" ")}(?= |$)`);
+  return (cmd) => matchesAnyStart(re, cmd);
+}
+
+function codexRuleMatchers(raw: string, matchers: Matcher[]): boolean {
+  const tokens = starlarkTokens(raw);
+  if (!tokens) return false;
+  for (let i = 0; i < tokens.length; i++) {
+    if (tokens[i] !== "prefix_rule" || tokens[i + 1] !== "(") continue;
+    const at = { i: i + 2 };
+    const args: Record<string, StarlarkValue | undefined> = {};
+    while (tokens[at.i] !== ")") {
+      const name = tokens[at.i];
+      if (!name || !/^[A-Za-z_]/.test(name) || tokens[at.i + 1] !== "=") return false;
+      at.i += 2;
+      args[name] = starlarkValue(tokens, at);
+      if (args[name] === undefined && (name === "pattern" || name === "decision")) return false;
+      if (tokens[at.i] === ",") at.i++;
+      else if (tokens[at.i] !== ")") return false;
+    }
+    i = at.i;
+    const decision = "decision" in args ? args.decision : "allow";
+    if (decision !== "allow" && decision !== "prompt" && decision !== "forbidden") return false;
+    const matcher = codexPatternMatcher(args.pattern);
+    if (!matcher) return false;
+    if (decision !== "allow") matchers.push(matcher);
+  }
+  return true;
+}
+
+function codexRuleFiles(dir: string): string[] | "unreadable" {
+  if (!existsSync(dir)) return [];
+  try {
+    return readdirSync(dir).filter((name) => name.endsWith(".rules")).sort().map((name) => join(dir, name));
+  } catch {
+    return "unreadable";
+  }
+}
+
+function codexRules(cwd: string): RuleSet {
+  const home = process.env.CODEX_HOME || join(homedir(), ".codex");
+  const dirs = [join(home, "rules"), ...ancestors(cwd).map((dir) => join(dir, ".codex", "rules"))];
+  const matchers: Matcher[] = [];
+  for (const dir of [...new Set(dirs)]) {
+    const files = codexRuleFiles(dir);
+    if (files === "unreadable") return "unreadable";
+    for (const file of files) {
+      let raw: string;
+      try {
+        raw = readFileSync(file, "utf8");
+      } catch {
+        return "unreadable";
+      }
+      if (!codexRuleMatchers(raw, matchers)) return "unreadable";
+    }
+  }
+  return { matchers, complete: false };
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return value != null && typeof value === "object" && !Array.isArray(value);
 }
@@ -946,7 +1048,8 @@ const RULE_READERS: Partial<Record<HookHost, (cwd: string, dirs: ClaudeDirs) => 
   cursor: cursorRules,
   "gemini-cli": geminiRules,
   opencode: opencodeRules,
-  antigravity: antigravityRules
+  antigravity: antigravityRules,
+  codex: codexRules
 };
 
 const INSPECTION_ONLY_HOSTS = new Set<HookHost>(["codex"]);

@@ -26,4 +26,4 @@ Rules you write yourself, in your project or user configuration, are yours. Writ
 
 ## Contributions
 
-Contributions are accepted under the Tokmizer Contributor License Agreement, which grants Impulse Creation the right to distribute them under the licence of the directory they change and under other licences, including commercial ones. The agreement is `CLA.md` at the root of the public repository; the process is described in its `CONTRIBUTING.md`.
+The source is published to be read, built and checked. Bug reports and suggested fixes are welcome as issues; pull requests are closed and the maintainer applies changes himself. A suggested fix may be used, changed and published under the licences above, see `CONTRIBUTING.md` at the root of the public repository.

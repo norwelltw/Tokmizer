@@ -3,6 +3,7 @@ import { existsSync, readFileSync, realpathSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { dirname, join, resolve } from "node:path";
 import { maskSecrets } from "./learn/redact";
+import { READ_EDIT_NOTICE } from "./engine/read-notice";
 import { contentCacheDir, contentCacheFile, restoreConfigFile, tokmizerHome } from "./paths";
 import { yoloEnabled } from "./yolo-mode";
 
@@ -142,9 +143,22 @@ function ccrDisabled(env: NodeJS.ProcessEnv): boolean {
 }
 
 const MARKER_LOOKALIKE_RE = /^(?=\[tkr |\[tokmizer\])/gm;
+const NOTICE_LINE_RE = /^\[tkr:/;
+const NOTICE_KINDS: ReadonlyArray<(line: string) => boolean> = [
+  (line) => line === READ_EDIT_NOTICE,
+  (line) => /^\[tkr: previous log line repeated \d+ additional times\]$/.test(line)
+];
 
-function neutralizeMarkers(text: string): string {
-  return text.replace(MARKER_LOOKALIKE_RE, "> ");
+function neutralizeMarkers(text: string, input: string | null | undefined): string {
+  const marked = text.replace(MARKER_LOOKALIKE_RE, "> ");
+  if (!marked.includes("[tkr:")) return marked;
+  const inputLines = input == null ? null : input.split("\n").map((line) => line.replace(/\r$/, "")).filter((line) => NOTICE_LINE_RE.test(line));
+  const genuine = (line: string): boolean => {
+    if (inputLines == null) return false;
+    const kind = NOTICE_KINDS.find((matches) => matches(line));
+    return kind != null && !inputLines.some(kind);
+  };
+  return marked.split("\n").map((line) => (NOTICE_LINE_RE.test(line) && !genuine(line) ? `> ${line}` : line)).join("\n");
 }
 
 async function storeEntry(content: string, partial: boolean, label: string | undefined, env: NodeJS.ProcessEnv): Promise<string | null> {
@@ -158,7 +172,7 @@ export async function captureForRestore(
   env: NodeJS.ProcessEnv = process.env,
   source: { raw?: string | null | undefined; label?: string | undefined } = {}
 ): Promise<string> {
-  compressed = neutralizeMarkers(compressed);
+  compressed = neutralizeMarkers(compressed, source.raw);
   if (ccrDisabled(env)) return compressed;
   if (!droppedTail) return compressed;
   const hint = (hash: string): string => `\n[tkr restore ${hash}]`;
@@ -177,7 +191,7 @@ export async function captureOriginalForRestore(
   env: NodeJS.ProcessEnv = process.env,
   source: { label?: string | undefined } = {}
 ): Promise<string> {
-  compressed = neutralizeMarkers(compressed);
+  compressed = neutralizeMarkers(compressed, original);
   if (ccrDisabled(env)) return compressed;
   if (!original) return compressed;
   const hash = await storeEntry(original, false, source.label, env);

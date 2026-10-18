@@ -7,6 +7,7 @@ import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSyn
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
+import { contentSigningMessage } from "../content-signing";
 import { Settings } from "../contracts";
 
 const cli = resolve("packages/plugin/src/bin/tkr.ts");
@@ -126,6 +127,7 @@ describe("settings worker diagnostics", () => {
 
 async function online(args: string[], options: { heartbeatStatus?: number; skillStatus?: number; answers?: string[]; env?: Record<string, string> } = {}) {
   const { publicKey, privateKey } = generateKeyPairSync("ed25519");
+  const content = generateKeyPairSync("ed25519");
   const requests: string[] = [];
   let serverSettings = Settings.parse({ telemetryOptIn: false });
   const server = createServer(async (req, res) => {
@@ -145,7 +147,7 @@ async function online(args: string[], options: { heartbeatStatus?: number; skill
     } else if (req.url === "/api/v1/skills/bundle") {
       if (options.skillStatus && options.skillStatus !== 200) { res.writeHead(options.skillStatus); res.end(); return; }
       const rules = "Reducer test ruleset for light.";
-      body = { bundles: [{ slug: "reducer-light", version: 1, fragments: [{ position: 0, body: rules, hash: sign(null, Buffer.from(rules), privateKey).toString("base64url") }] }] };
+      body = { bundles: [{ slug: "reducer-light", version: 1, fragments: [{ position: 0, body: rules, hash: sign(null, Buffer.from(rules), privateKey).toString("base64url"), contentSig: sign(null, contentSigningMessage("reducer-light", 1, 0, 1, rules), content.privateKey).toString("base64url") }] }] };
     } else {
       body = {};
     }
@@ -165,7 +167,7 @@ async function online(args: string[], options: { heartbeatStatus?: number; skill
     const result = await new Promise<{ status: number | null; stdout: string; stderr: string }>((resolve, reject) => {
       const child = spawn(process.execPath, ["--import", "tsx", cli, ...args], {
         timeout: 10000,
-        env: { ...env(), TOKMIZER_BASE_URL: `http://127.0.0.1:${address.port}`, TOKMIZER_DEV: "1", TOKMIZER_RESP_SIGNING_PUBLIC_KEY_PEM: publicKey.export({ type: "spki", format: "pem" }).toString(), ...options.env }
+        env: { ...env(), TOKMIZER_BASE_URL: `http://127.0.0.1:${address.port}`, TOKMIZER_DEV: "1", TOKMIZER_RESP_SIGNING_PUBLIC_KEY_PEM: publicKey.export({ type: "spki", format: "pem" }).toString(), TOKMIZER_CONTENT_PUBLIC_KEY_PEM: content.publicKey.export({ type: "spki", format: "pem" }).toString(), ...options.env }
       });
       let stdout = "";
       let stderr = "";

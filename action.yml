@@ -1,0 +1,122 @@
+name: Tokmizer
+description: Shorter command output for Claude Code in CI. Runs on the runner, network off by default.
+author: Tokmizer
+branding:
+  icon: minimize-2
+  color: orange
+
+inputs:
+  version:
+    description: "@tokmizer/plugin version to install."
+    required: false
+    default: latest
+  network:
+    description: "off keeps Tokmizer offline for the rest of the job. on lets it update rules and send usage stats."
+    required: false
+    default: "off"
+  summary:
+    description: "true writes the tkr gain totals to the job summary instead of installing. Use it as a last step."
+    required: false
+    default: "false"
+
+outputs:
+  plugin_marketplaces:
+    description: Pass to the plugin_marketplaces input of anthropics/claude-code-action.
+    value: ${{ steps.setup.outputs.plugin_marketplaces }}
+  plugins:
+    description: Pass to the plugins input of anthropics/claude-code-action.
+    value: ${{ steps.setup.outputs.plugins }}
+  version:
+    description: Installed @tokmizer/plugin version.
+    value: ${{ steps.setup.outputs.version }}
+
+runs:
+  using: composite
+  steps:
+    - id: setup
+      if: inputs.summary != 'true'
+      shell: bash
+      env:
+        INPUT_VERSION: ${{ inputs.version }}
+        INPUT_NETWORK: ${{ inputs.network }}
+      run: |
+        set -euo pipefail
+        case "$(printf '%s' "$INPUT_NETWORK" | tr '[:upper:]' '[:lower:]')" in
+          on|1|true|yes) network=1 ;;
+          off|0|false|no) network=0 ;;
+          *) echo "::error::network must be on or off, got: $INPUT_NETWORK"; exit 1 ;;
+        esac
+        if ! printf '%s' "$INPUT_VERSION" | grep -Eq '^[A-Za-z0-9._-]+$'; then
+          echo "::error::invalid version: $INPUT_VERSION"
+          exit 1
+        fi
+        export TOKMIZER_NETWORK="$network"
+        echo "TOKMIZER_NETWORK=$network" >> "$GITHUB_ENV"
+
+        base="${RUNNER_TEMP:-/tmp}/tokmizer"
+        prefix="$base/npm"
+        market="$base/marketplace"
+        rm -rf "$base"
+        mkdir -p "$prefix" "$market/.claude-plugin"
+        npm install --global --prefix "$prefix" --no-fund --no-audit --loglevel=error "@tokmizer/plugin@$INPUT_VERSION"
+        if [ "${RUNNER_OS:-}" = "Windows" ]; then
+          bin="$prefix"
+          root="$prefix/node_modules/@tokmizer/plugin"
+        else
+          bin="$prefix/bin"
+          root="$prefix/lib/node_modules/@tokmizer/plugin"
+        fi
+        echo "$bin" >> "$GITHUB_PATH"
+
+        cp -R "$root" "$market/tokmizer"
+        version="$(node -p "require(process.argv[1]).version" "$root/package.json")"
+        node -e '
+          const [file, version] = process.argv.slice(1);
+          const plugin = {name: "tokmizer", description: "Shorter command output for Claude Code.", version, source: "./tokmizer"};
+          const market = {name: "tokmizer", owner: {name: "Tokmizer", email: "contact@tokmizer.com"}, metadata: {description: "Tokmizer for this CI job.", version}, plugins: [plugin]};
+          require("node:fs").writeFileSync(file, JSON.stringify(market, null, 2) + "\n");
+        ' "$market/.claude-plugin/marketplace.json" "$version"
+
+        {
+          echo "plugin_marketplaces=$market"
+          echo "plugins=tokmizer@tokmizer"
+          echo "version=$version"
+        } >> "$GITHUB_OUTPUT"
+        echo "Tokmizer $version ready. Network: $([ "$network" = 1 ] && echo on || echo off)."
+
+    - if: inputs.summary == 'true'
+      shell: bash
+      run: |
+        set -uo pipefail
+        out="${GITHUB_STEP_SUMMARY:-/dev/stdout}"
+        if ! command -v tkr >/dev/null 2>&1; then
+          printf '### Tokmizer\n\nNot installed in this job.\n' >> "$out"
+          exit 0
+        fi
+        if ! json="$(TOKMIZER_NETWORK=0 tkr gain --json 2>/dev/null)"; then
+          printf '### Tokmizer\n\nNo report available.\n' >> "$out"
+          exit 0
+        fi
+        printf '%s' "$json" | node -e '
+          let raw = "";
+          process.stdin.on("data", chunk => raw += chunk).on("end", () => {
+            const fmt = n => Number(n || 0).toLocaleString("en-US");
+            let gain;
+            try { gain = JSON.parse(raw); } catch { gain = null; }
+            if (!gain) {
+              process.stdout.write("### Tokmizer\n\nNo report available.\n");
+              return;
+            }
+            const scope = gain.agent || {count: gain.count, rawTokens: (gain.observed || gain).rawTokens, filteredTokens: (gain.observed || gain).filteredTokens};
+            const saved = (scope.rawTokens || 0) - (scope.filteredTokens || 0);
+            const pct = scope.rawTokens ? Math.round(saved / scope.rawTokens * 1000) / 10 : 0;
+            const rows = [
+              ["Command outputs", fmt(scope.count)],
+              ["Shortened", fmt(gain.compressedCount)],
+              ["Tokens saved (estimate)", `${fmt(saved)} (${pct}%)`],
+              ["Restored with tkr restore", fmt(gain.restoration && gain.restoration.count)]
+            ];
+            const table = rows.map(([label, value]) => `| ${label} | ${value} |`).join("\n");
+            process.stdout.write(`### Tokmizer\n\n| | |\n|---|---|\n${table}\n\nComputed on the runner by tkr gain.\n`);
+          });
+        ' >> "$out"

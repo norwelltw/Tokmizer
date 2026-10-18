@@ -49,6 +49,7 @@ function deps(over: Partial<SelfUpdateDeps> & { versions?: Record<string, string
     ensureCodexHook: async () => "added",
     ...over
   };
+  if (d.latest && !over.now) writeFileSync(join(home, "self-update-seen"), JSON.stringify({ version: d.latest, at: 0 }));
   return { d, calls };
 }
 
@@ -117,6 +118,31 @@ describe("selfUpdate", () => {
     expect(autoUpdateEnabled()).toBe(true);
     process.env.TOKMIZER_AUTO_UPDATE = "0";
     expect(autoUpdateEnabled()).toBe(false);
+  });
+});
+
+describe("selfUpdate waits 24 hours after a version is first announced", () => {
+  it("does not install a version announced less than 24 hours ago, then installs it", async () => {
+    let now = 1_000_000_000;
+    const { d, calls } = deps({ now: () => now, versions: { npm: "0.9.33", brew: "0.9.33" } });
+    expect(await selfUpdate(d)).toEqual(["waiting: 0.9.34 is less than 24h old"]);
+    now += 23 * 3600_000;
+    expect(await selfUpdate(d)).toEqual(["waiting: 0.9.34 is less than 24h old"]);
+    expect(calls.some((c) => c.args[0] === "i" || c.args[0] === "upgrade")).toBe(false);
+    now += 3600_000;
+    const actions = await selfUpdate(d);
+    expect(actions).toContain("npm 0.9.33 -> 0.9.34");
+    expect(actions).toContain("brew 0.9.33 -> 0.9.34");
+  });
+
+  it("restarts the wait when a different version is announced", async () => {
+    let now = 1_000_000_000;
+    const first = deps({ now: () => now });
+    await selfUpdate(first.d);
+    now += 25 * 3600_000;
+    const second = deps({ now: () => now, latest: "0.9.35" });
+    expect(await selfUpdate(second.d)).toEqual(["waiting: 0.9.35 is less than 24h old"]);
+    expect(second.calls.some((c) => c.args[0] === "i")).toBe(false);
   });
 });
 

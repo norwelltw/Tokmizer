@@ -1,6 +1,6 @@
 {
   "name": "tokmizer",
-  "version": "0.9.65",
+  "version": "0.9.66",
   "description": "Tokmizer reduces token consumption for OpenAI Codex.",
   "author": {
     "name": "Tokmizer",

@@ -272,3 +272,12 @@ describe("agent hook setup commands", () => {
     expect(discover).toMatch(/Junie CLI\s+⚠️ {2}not covered — run: tkr setup-junie/);
   });
 });
+
+describe("version", () => {
+  it.each(["--version", "-v", "version"])("prints the plugin version for %s", (flag) => {
+    const pkg = JSON.parse(readFileSync(resolve("packages/plugin/package.json"), "utf8")) as { version: string };
+    const result = run(flag);
+    expect(result.status).toBe(0);
+    expect(result.stdout).toBe(`${pkg.version}\n`);
+  });
+});

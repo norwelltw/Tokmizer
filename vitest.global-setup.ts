@@ -18,6 +18,7 @@ export default function setup(): () => void {
   process.env.USERPROFILE = sandbox;
   process.env.TOKMIZER_HOME = join(sandbox, ".tokmizer");
   process.env.TOKMIZER_BASE_URL ??= "http://127.0.0.1:9";
+  delete process.env.TOKMIZER_NETWORK;
   process.env.PATH = (process.env.PATH ?? "").split(delimiter).filter((entry) => entry && !SHIM_DIR_RE.test(entry)).join(delimiter);
   process.env.NODE_OPTIONS = [process.env.NODE_OPTIONS, `--import=${pathToFileURL(guard).href}`].filter(Boolean).join(" ");
   return () => {
