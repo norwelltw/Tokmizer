@@ -360,7 +360,7 @@ describe.skipIf(process.platform === "win32" || !existsSync(distHook))("installe
     expect(kept.stderr).toBe("");
     const updated = JSON.parse(kept.stdout).hookSpecificOutput.updatedInput;
     expect(updated).toMatchObject({ description: "log", timeout: 333333, dangerouslyDisableSandbox: true });
-    expect(updated.command).toMatch(/tkr-exec' git log -n 1$|' exec git log -n 1$/);
+    expect(updated.command).toMatch(/tkr-(exec|run)' git log -n 1$|' exec git log -n 1$/);
 
     for (const cmd of ["git status", "myfn arg", "ll", "cd sub", "source x"]) {
       const r = run(payload({ command: cmd }));

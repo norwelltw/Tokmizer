@@ -159,12 +159,14 @@ strip_lines_matching = ["^\\s*│\\s*$", "^\\s*│\\s*\\^+\\s*$", "^\\s*$"]
 on_empty = "ast-grep: no findings"
 
 [filters.phpstan]
-description = "Compact phpstan output (drop progress and config notes)"
+description = "Compact phpstan output (drop progress and config notes; JSON reports become one line per error)"
 match_command = "^phpstan(?:\\s|$)|^php\\s+(?:\\S*/)?phpstan(?:\\.phar)?(?:\\s|$)"
 priority = 60
 strip_ansi = true
 strip_lines_matching = ["^\\s*\\d+/\\d+ \\[[░▓▒█=>\\- ]*\\]\\s+\\d+%$", "^Note: Using configuration file ", "^\\s*-{3,}\\s+-{3,}\\s*$", "^\\s*$"]
 strip_on_failure = true
+transform = "smart-phpstan"
+transform_on_failure = true
 
 [filters.pint]
 description = "Compact Laravel Pint output (drop progress dots and rules, keep files with issues)"

@@ -22,6 +22,10 @@ export function hookLauncherFile(): string {
   return join(tokmizerHome(), "bin", "tkr-hook");
 }
 
+export function runLauncherFile(): string {
+  return join(tokmizerHome(), "bin", "tkr-run");
+}
+
 export function claudePluginCacheDir(): string {
   return join(process.env.CLAUDE_CONFIG_DIR || join(os.homedir(), ".claude"), "plugins", "cache", "tokmizer", "tokmizer");
 }
@@ -175,6 +179,50 @@ export function hookLauncherScript(target: LaunchTarget): string {
     "exit 0",
     ""
   ].join("\n");
+}
+
+export function runLauncherScript(target: LaunchTarget): string {
+  return [
+    "#!/bin/sh",
+    `_tk_f=${LAUNCHER_FORMAT}`,
+    `_tk_s=${shQuote(target.single)}`,
+    `_tk_j=${shQuote(target.js)}`,
+    `_tk_k=${shQuote(target.cache)}`,
+    `_tk_n=${shQuote(target.node)}`,
+    '[ "$#" -gt 0 ] || exit 0',
+    `if ! ${failOpenShellTest()}; then`,
+    '  if [ -n "$_tk_s" ] && [ -x "$_tk_s" ]; then exec "$_tk_s" exec "$@"; fi',
+    ...findLines("tkr-exec.js", "${_tk_j%/*}/tkr-exec.js").map((l) => `  ${l}`),
+    '  if [ -n "$_tk_t" ]; then',
+    '    _tk_r=${_tk_t%/*}',
+    '    if [ -f "$_tk_r/tkr-exec" ] && [ -s "$_tk_r/tkr-exec" ] && [ -x "$_tk_r/tkr-exec" ]; then exec "$_tk_r/tkr-exec" "$@"; fi',
+    '    if [ -n "$_tk_x" ] && [ -s "$_tk_t" ]; then exec "$_tk_x" "$_tk_t" "$@"; fi',
+    "  fi",
+    "fi",
+    'exec "$@"',
+    ""
+  ].join("\n");
+}
+
+export function ensureRunLauncherSync(execJs: string): string | null {
+  const file = runLauncherFile();
+  const target = launchTargetFor(join(dirname(execJs), "tkr-shim.js"));
+  const current = readLauncher(file);
+  if (current && current.format === LAUNCHER_FORMAT && targetUsable(current.target) && JSON.stringify(current.target) === JSON.stringify(target)) return file;
+  if (!targetUsable(target)) return current && targetUsable(current.target) ? file : null;
+  const tmp = `${file}.${process.pid}.tmp`;
+  try {
+    mkdirSync(dirname(file), { recursive: true, mode: 0o700 });
+    writeFileSync(tmp, runLauncherScript(target), { mode: 0o755 });
+    chmodSync(tmp, 0o755);
+    renameSync(tmp, file);
+    return file;
+  } catch {
+    try {
+      unlinkSync(tmp);
+    } catch {}
+    return null;
+  }
 }
 
 export type LauncherInfo = { format: number; target: LaunchTarget } | null;

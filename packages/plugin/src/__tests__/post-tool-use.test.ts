@@ -48,6 +48,26 @@ describe("processToolOutput", () => {
     expect(r).toBeNull();
   });
 
+  it("never hands back an output longer than the original once the restore line is added", async () => {
+    const raw = [
+      "bun test v1.2.20 (6ad208bc)",
+      "error: optional dep resolution failed",
+      "  detail: registry timeout",
+      "error: caught and handled",
+      "    at <anonymous> (/home/user/project/green.test.ts:9:11)",
+      "checklist: a ✓ b ✗",
+      "✗ optional dep missing",
+      "",
+      " 3 pass",
+      " 0 fail",
+      " 3 expect() calls",
+      "Ran 3 tests across 1 file. [5.00ms]",
+      ""
+    ].join("\n").padEnd(1100, " ");
+    const r = await processToolOutput({ tool_name: "Bash", tool_input: { command: "bun test" }, tool_response: { stdout: raw, stderr: "", interrupted: false, isImage: false } });
+    if (r != null) expect(Buffer.byteLength(r)).toBeLessThan(Buffer.byteLength(raw));
+  });
+
   it("skips Bash already routed through tkr-exec", async () => {
     const r = await processToolOutput({
       tool_name: "Bash",

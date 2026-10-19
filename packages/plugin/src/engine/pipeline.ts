@@ -16,6 +16,9 @@ import "./transforms/smart-ls";
 import "./transforms/smart-read";
 import "./transforms/smart-find";
 import "./transforms/smart-wc";
+import "./transforms/smart-ctest";
+import "./transforms/smart-phpstan";
+import "./transforms/bun-frames";
 import "./transforms/smart-grep";
 import "./transforms/smart-log";
 import "./transforms/strip-banners";
@@ -46,6 +49,7 @@ function compactTestSummary(lines: string[]): string[] {
 type Compiled = {
   def: FilterDef;
   stripRegexes: RegExp[];
+  dropRegexes: RegExp[];
 };
 
 const COMPILED = new WeakMap<FilterDef, Compiled>();
@@ -54,7 +58,8 @@ function compile(def: FilterDef): Compiled {
   const cached = COMPILED.get(def);
   if (cached) return cached;
   const stripRegexes = def.strip_lines_matching.map((p) => new RegExp(p));
-  const c: Compiled = { def, stripRegexes };
+  const dropRegexes = (def.drop_lines_matching ?? []).map((p) => new RegExp(p));
+  const c: Compiled = { def, stripRegexes, dropRegexes };
   COMPILED.set(def, c);
   return c;
 }
@@ -75,14 +80,14 @@ export function applyFilterWithTail(
 ): { text: string; droppedTail: string | null } {
   const verbosity = opts.verbosity ?? "normal";
   if (
-    !def.strip_ansi && def.strip_lines_matching.length === 0 && !def.transform &&
+    !def.strip_ansi && def.strip_lines_matching.length === 0 && (def.drop_lines_matching ?? []).length === 0 && !def.transform &&
     !def.mask_abs_paths && !def.fold_passing && !def.truncate_lines_at &&
     !def.max_lines && !def.on_empty && !opts.smartCode && verbosity === "normal"
   ) {
     return { text: input, droppedTail: null };
   }
   const c = compile(def);
-  let text = input;
+  let text = !def.preserve_exact && input.includes("\r\n") ? input.replace(/\r\n/g, "\n") : input;
   if (def.strip_ansi) text = stripAnsi(text);
 
   const trailingNewline = text.endsWith("\n");
@@ -93,6 +98,7 @@ export function applyFilterWithTail(
       ? lines.filter((l) => FAILURE.test(l) || !c.stripRegexes.some((p) => p.test(l)))
       : stripLinesMatching(lines, c.stripRegexes);
   }
+  if (c.dropRegexes.length) lines = stripLinesMatching(lines, c.dropRegexes);
 
   if (verbosity !== "normal" && !def.preserve_exact) {
     lines = dedupeAdjacent(lines);

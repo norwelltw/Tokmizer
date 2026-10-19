@@ -296,6 +296,7 @@ export async function processCapturedOutput(
           : await captureForRestore(processed.droppedTail ?? null, shown, env, { raw: truncated ? null : stdout, label: statCmdLabel(cmdLine) });
       } catch {}
     }
+    if (!truncated && stdout.length > 0 && Buffer.byteLength(delivered, "utf8") >= Buffer.byteLength(stdout, "utf8")) delivered = neutralizeMarkers(stdout, stdout);
     const deliveredStdout = delivered + truncMarker;
     const deliveredStderr = stderrOut + stderrTruncMarker;
     const host = detectHost(env).host;

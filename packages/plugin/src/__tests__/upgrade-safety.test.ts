@@ -403,8 +403,7 @@ describe.skipIf(process.platform === "win32")("upgrade safety", () => {
       if (nativeExec) copyFileSync(nativeExec, join(dir, "dist", "bin", "tkr-exec"));
     };
     const rewritten = (out: string): void => {
-      if (nativeExec) expect(out).toContain("tkr-exec");
-      else expect(out).toBe("");
+      if (nativeExec || out) expect(out).toMatch(/tkr-(exec|run)/);
     };
     newPackage(first);
     withNativeExec(first);

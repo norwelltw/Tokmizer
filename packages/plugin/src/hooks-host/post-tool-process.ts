@@ -318,7 +318,7 @@ async function processAsExec(run: ExecEquivalent, payload: Payload, yolo: boolea
     if (options.deferAccounting) options.deferAccounting(commit);
     else await commit();
   }
-  if (unchanged) return null;
+  if (unchanged || (rawBytes > 0 && Buffer.byteLength(merged, "utf8") >= rawBytes)) return null;
   maybeNoteFirstSave(rawBytes, Buffer.byteLength(merged, "utf8"));
   return merged;
 }
@@ -449,6 +449,7 @@ async function processPayload(payload: Payload, options: PostToolUseOptions, max
     if (yolo && output != null) {
       output = extractOutput(buildUpdatedToolOutput(payload.tool_response, output, payload.tool_name) as Payload["tool_response"]);
     }
+    if (output != null && Buffer.byteLength(output, "utf8") >= result.rawBytes) output = null;
     if (maxChars != null && (output == null || output.length > maxChars)) return null;
     const deliveredBytes = output == null ? result.rawBytes : Buffer.byteLength(output, "utf8");
     const host = detectHost().host;

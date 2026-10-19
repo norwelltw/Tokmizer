@@ -1,3 +1,4 @@
+import { getTransform } from "./transforms/registry";
 import { loadFilters, type LoadedFilter } from "./loader";
 import { selectFilter } from "./matcher";
 import { withUserFilters } from "./user-filters";
@@ -141,6 +142,10 @@ export async function processOutput(
       : chosen.strip_on_failure && !chosen.preserve_exact
         ? failureStripped(output, chosen, pipelineOpts.verbosity)
         : chosen.strip_ansi && !chosen.preserve_exact ? stripAnsi(output) : output;
+    if (!yolo && chosen.transform && chosen.transform_on_failure && !chosen.preserve_exact) {
+      const tf = getTransform(chosen.transform);
+      if (tf) filtered = tf(filtered.split("\n")).join("\n");
+    }
     if (!yolo && pipelineOpts.verbosity === "minimal" && chosen.transform !== "smart-read") {
       filtered = compactRepeatedDiagnostics(filtered);
     }

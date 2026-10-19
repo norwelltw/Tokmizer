@@ -18,7 +18,7 @@ max_lines = 120
 on_empty = "cargo: ok"
 
 [filters.gradle]
-description = "Compact gradle output"
+description = "Compact gradle output (drop passing tests, finished tasks and framework stack frames)"
 match_command = "^gradle(\\s|$)|^(?:\\./)?gradlew(?:\\.bat)?(\\s|$)"
 priority = 60
 strip_ansi = true
@@ -27,11 +27,26 @@ strip_lines_matching = [
   "^Welcome to Gradle",
   "^Daemon",
   "^Calculating task graph",
-  "^> Task :.*UP-TO-DATE$",
+  "^> Task :\\S+(?: (?:UP-TO-DATE|NO-SOURCE|SKIPPED|FROM-CACHE))?$",
+  "^\\S.* > \\S.* PASSED$",
+  "^\\s+at (?:java\\.base/|java\\.|javax\\.|jdk\\.|sun\\.|org\\.junit\\.|junit\\.|org\\.opentest4j\\.|org\\.apache\\.maven\\.|org\\.gradle\\.|worker\\.org\\.gradle\\.|org\\.codehaus\\.|kotlin\\.coroutines\\.|kotlin\\.reflect\\.|org\\.mockito\\.|net\\.bytebuddy\\.|org\\.robolectric\\.|androidx\\.test\\.)",
+  "^\\s+\\.\\.\\. \\d+ more$",
   "^\\s*$"
 ]
 max_lines = 150
 on_empty = "gradle: ok"
+strip_on_failure = true
+drop_lines_matching = [
+  "^INSTRUMENTATION_(?:STATUS|STATUS_CODE|RESULT|CODE):",
+  "^\\.$",
+  "^Installing APK '",
+  "^> Configure project ",
+  "^\\* Try:$",
+  "^> Run with --(?:stacktrace|info|debug|scan) ",
+  "^\\* Get more help at https://help\\.gradle\\.org$",
+  "^> A failure occurred while executing org\\.jetbrains\\.kotlin\\.compilerRunner\\.",
+  "^\\s+> Compilation error\\. See log for more details$"
+]
 
 [filters.mvn]
 description = "Compact Maven build output"
@@ -52,6 +67,11 @@ strip_lines_matching = [
   "^(?:\\[[^\\]\\s]+\\] )?\\[INFO\\] (?:Scanning for projects|Using the SmartBuilder |Task segments :|Build maximum degree of concurrency|Total concurrency projects|Deleting \\S|Copying \\d+ resources? |Recompiling the module |Using auto detected provider |Finished at: |skip non existing resourceDirectory |Installing \\S+ to |Nothing to compile|No sources to compile|No tests to run)",
   "^(?:\\[[^\\]\\s]+\\] )?\\[INFO\\]  T E S T S$",
   "^(?:\\[[^\\]\\s]+\\] )?\\[INFO\\] Running [\\w.$]+$",
+  "^(?:\\[[^\\]\\s]+\\] )?\\[INFO\\] Tests run: \\d+, Failures: 0, Errors: 0, Skipped: \\d+, Time elapsed: .+ -- in \\S+$",
+  "^\\s+at (?:java\\.base/|java\\.|javax\\.|jdk\\.|sun\\.|org\\.junit\\.|junit\\.|org\\.opentest4j\\.|org\\.apache\\.maven\\.|org\\.gradle\\.|worker\\.org\\.gradle\\.|org\\.codehaus\\.|kotlin\\.coroutines\\.|kotlin\\.reflect\\.|org\\.mockito\\.|net\\.bytebuddy\\.|org\\.robolectric\\.|androidx\\.test\\.)",
+  "^\\s+\\.\\.\\. \\d+ more$",
+]
+drop_lines_matching = [
   "^(?:\\[[^\\]\\s]+\\] )?\\[INFO\\] Tests run: \\d+, Failures: 0, Errors: 0, Skipped: \\d+, Time elapsed: .+ -- in \\S+$"
 ]
 max_lines = 200

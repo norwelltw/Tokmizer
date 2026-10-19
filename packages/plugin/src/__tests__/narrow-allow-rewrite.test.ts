@@ -86,16 +86,16 @@ describe("Claude Code default modes rewrite commands covered by a narrow allow r
     expect(decide("npx vitest run --reporter=dot")?.command).toBe("tkr-exec npx vitest run --reporter=dot");
     expect(decide("cargo build --release")?.command).toBe("tkr-exec cargo build --release");
     expect(decide("make test")?.command).toBe("tkr-exec make test");
-    expect(decide("make test-all")).toBeNull();
-    expect(decide("make test -j4")).toBeNull();
-    expect(decide("npx vitestx")).toBeNull();
-    expect(decide("cargo test")).toBeNull();
+    expect(decide("make test-all")?.allowedBy).toBeUndefined();
+    expect(decide("make test -j4")?.allowedBy).toBeUndefined();
+    expect(decide("npx vitestx")?.allowedBy).toBeUndefined();
+    expect(decide("cargo test")?.allowedBy).toBeUndefined();
   });
 
   it("keeps commands without a matching allow rule on PostToolUse", () => {
-    expect(decide("pytest -x")).toBeNull();
+    expect(decide("pytest -x")).toEqual({ command: "tkr-exec pytest -x", ask: true });
     settings({ allow: ["Bash(cargo build:*)", "Read(*)"] });
-    expect(decide("pytest -x")).toBeNull();
+    expect(decide("pytest -x")).toEqual({ command: "tkr-exec pytest -x", ask: true });
     expect(decide("git status")).toBeNull();
   });
 
@@ -267,8 +267,14 @@ describe.skipIf(process.platform === "win32" || !existsSync(distHook))("installe
     const out = JSON.parse(allowed.stdout).hookSpecificOutput;
     expect(out).toMatchObject({ hookEventName: "PreToolUse", permissionDecision: "allow", permissionDecisionReason: "Tokmizer: allowed by your rule Bash(pytest:*)" });
     expect(out.updatedInput).toMatchObject({ timeout: 7, description: "d" });
-    expect(out.updatedInput.command).toMatch(/tkr-exec' pytest -x$|' exec pytest -x$/);
-    for (const [cmd, mode] of [["pytest --lf", "default"], ["cargo build", "default"], ["pytest && true", "default"], ["pytest", "plan"]]) {
+    expect(out.updatedInput.command).toMatch(/(tkr-exec|tkr-run)' pytest -x$|' exec pytest -x$/);
+    const asked = run("cargo build");
+    expect([asked.status, asked.stderr]).toEqual([0, ""]);
+    const askOut = JSON.parse(asked.stdout).hookSpecificOutput;
+    expect(askOut).toMatchObject({ hookEventName: "PreToolUse", permissionDecision: "ask" });
+    expect(askOut.updatedInput).toMatchObject({ timeout: 7, description: "d" });
+    expect(askOut.updatedInput.command).toMatch(/(tkr-exec|tkr-run)' cargo build$|' exec cargo build$/);
+    for (const [cmd, mode] of [["pytest --lf", "default"], ["pytest && true", "default"], ["pytest", "plan"]]) {
       const r = run(cmd!, mode);
       expect([r.status, r.stdout, r.stderr], cmd).toEqual([0, "", ""]);
     }
@@ -316,5 +322,30 @@ describe("Claude Code launched with command-line permission flags", () => {
       child.kill();
     }
     expect(claudeLaunchArgs({ CLAUDE_PID: pid }, "win32")).toBeNull();
+  });
+});
+
+describe("default mode build and test commands", () => {
+  const fire = (tool_input: Record<string, unknown>, permission_mode = "default") => {
+    const out = buildPreToolUseOutput({ tool_name: "Bash", permission_mode, session_id: "s", cwd: project, tool_input }, "claude-code", "tkr-exec", () => {}, { configDir: config }, pathEnv, () => "claude");
+    return out === null ? null : JSON.parse(out).hookSpecificOutput;
+  };
+
+  it("asks once with the shortened command and keeps every other field", () => {
+    settings({});
+    expect(fire({ command: "cargo test", timeout: 9, description: "t" })).toEqual({
+      hookEventName: "PreToolUse",
+      permissionDecision: "ask",
+      permissionDecisionReason: "Tokmizer shortens this command's output; nothing else changes.",
+      updatedInput: { command: "tkr-exec cargo test", timeout: 9, description: "t" }
+    });
+  });
+
+  it("leaves denied, asked and read-only commands to Claude Code", () => {
+    settings({ deny: ["Bash(cargo test:*)"], ask: ["Bash(npm test:*)"] });
+    expect(fire({ command: "cargo test" })).toBeNull();
+    expect(fire({ command: "npm test" })).toBeNull();
+    expect(fire({ command: "git status" })).toBeNull();
+    expect(fire({ command: "cargo test" }, "plan")).toBeNull();
   });
 });

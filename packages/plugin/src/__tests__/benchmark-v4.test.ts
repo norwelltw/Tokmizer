@@ -29,16 +29,17 @@ afterEach(() => {
 
 const FAILURE_MARK = /FAIL|ERROR|Error|error|✗|\(fail\)|Exception|Expected|Received|\*\*\*/;
 const PASSING_SUMMARY = /Failures: 0, Errors: 0/;
-const MVN_NOISE = /^(?:\[[^\]\s]+\] )?\[INFO\]/;
+const JVM_FRAMES = /^\s+at (?:java\.base\/|java\.|javax\.|jdk\.|sun\.|org\.junit\.|junit\.|org\.opentest4j\.|org\.apache\.maven\.|org\.gradle\.)/;
+const MVN_NOISE = new RegExp(`^(?:\\[[^\\]\\s]+\\] )?\\[INFO\\]|${JVM_FRAMES.source}`);
 
 type Case = { name: string; cmd: string; exit: number; slug: string; minSaved: number; noise: RegExp | null };
 
 const CASES: Case[] = [
-  { name: "bun-test-real", cmd: "bun test", exit: 1, slug: "bun-test", minSaved: 0.8, noise: /^\(pass\) |^\S+\.test\.ts:$|^\s*$/ },
-  { name: "bun-test-fail", cmd: "bun test", exit: 1, slug: "bun-test", minSaved: 0, noise: /^\(pass\) |^\s*$/ },
-  { name: "bun-test-green", cmd: "bun test", exit: 0, slug: "bun-test", minSaved: 0, noise: /^\s*$/ },
+  { name: "bun-test-real", cmd: "bun test", exit: 1, slug: "bun-test", minSaved: 0.8, noise: /^\(pass\) |^\S+\.test\.ts:$|^\s*$|^bun test v\d+\.\d+\.\d+ \([0-9a-f]+\)$|^\s+\^\s*$|^\d+ \| / },
+  { name: "bun-test-fail", cmd: "bun test", exit: 1, slug: "bun-test", minSaved: 0, noise: /^\(pass\) |^\s*$|^bun test v\d+\.\d+\.\d+ \([0-9a-f]+\)$|^\d+ \| |^\s+\^\s*$/ },
+  { name: "bun-test-green", cmd: "bun test", exit: 0, slug: "bun-test", minSaved: 0, noise: /^\s*$|^bun test v\d+\.\d+\.\d+ \([0-9a-f]+\)$/ },
   { name: "bun-install", cmd: "bun install", exit: 0, slug: "bun", minSaved: 0.6, noise: /^\s*$|^Resolving dependencies|^Resolved, downloaded and extracted|^Saved lockfile/ },
-  { name: "deno-test-fail", cmd: "deno test", exit: 1, slug: "deno", minSaved: 0.5, noise: /^\s*$|^Check |^running \d+ tests? from |\.\.\. ok \(/ },
+  { name: "deno-test-fail", cmd: "deno test", exit: 1, slug: "deno", minSaved: 0.5, noise: /^\s*$|^Check |^running \d+ tests? from |\.\.\. ok \(|^\s+\^\s*$|^\s+at .*https:\/\/(?:jsr\.io\/@std\/|deno\.land\/std@)/ },
   { name: "deno-test-green", cmd: "deno test", exit: 0, slug: "deno", minSaved: 0.45, noise: /^\s*$|^Check |^running \d+ tests? from |\.\.\. ok \(/ },
   { name: "deno-lint", cmd: "deno lint", exit: 1, slug: "deno", minSaved: 0.4, noise: /^\s*$/ },
   { name: "pulumi-preview", cmd: "pulumi preview", exit: 0, slug: "pulumi", minSaved: 0.02, noise: /^\s*$|^View in Browser|^\s*Type\s+Name\s+Plan/ },
@@ -47,7 +48,7 @@ const CASES: Case[] = [
   { name: "phpunit-fail", cmd: "phpunit", exit: 1, slug: "phpunit", minSaved: 0.4, noise: /^(?:Runtime|Configuration):\s|^[.SIRDWFEN]+\s+\d+ \/ \d+ \(\s*\d+%\)$|^\s*$/ },
   { name: "phpstan", cmd: "phpstan analyse src", exit: 1, slug: "phpstan", minSaved: 0.38, noise: /^\s*\d+\/\d+ \[|^\s*-{3,}\s+-{3,}\s*$|^\s*$/ },
   { name: "ctest-mixed", cmd: "ctest", exit: 8, slug: "ctest", minSaved: 0.2, noise: /^\s+Start\s+\d+: |\s+Passed\s+[\d.]+ sec$|^\s*$/ },
-  { name: "ctest-noisy-fail", cmd: "ctest --output-on-failure", exit: 8, slug: "ctest", minSaved: 0.05, noise: /^\s+Start\s+\d+: |\s+Passed\s+[\d.]+ sec$|^\s*$/ },
+  { name: "ctest-noisy-fail", cmd: "ctest --output-on-failure", exit: 8, slug: "ctest", minSaved: 0.05, noise: /^\s+Start\s+\d+: |\s+Passed\s+[\d.]+ sec$|^\s*$|^noise line \d+$/ },
   { name: "ctest-200", cmd: "ctest", exit: 8, slug: "ctest", minSaved: 0.95, noise: /^\s+Start\s+\d+: |\s+Passed\s+[\d.]+ sec$|^\s*$/ },
   { name: "mvnd-test-fail", cmd: "mvnd test", exit: 1, slug: "mvn", minSaved: 0.3, noise: MVN_NOISE },
   { name: "mvnd-reactor-fail", cmd: "mvnd test", exit: 1, slug: "mvn", minSaved: 0.55, noise: MVN_NOISE },

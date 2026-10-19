@@ -121,27 +121,40 @@ describe("runWrapped skips compression on failed commands", () => {
     expect(r.stdout).toBe("a\nb\nc\nd\n");
   });
 
-  it("adds a restore hint holding the lines it cut", async () => {
+  it("hands back the original output when cutting it would not make it shorter", async () => {
     setFilterResolver(null);
     const resolver = await import("../daemon/resolver");
     vi.mocked(resolver.installDaemonResolver).mockImplementationOnce(() => {
       setFilterResolver(async () => ({ ...stubFilter, strip_lines_matching: [], max_lines: 2 }));
     });
     const r = await runWrapped(["/bin/sh", ...printf("for i in 1 2 3 4 5 6 7 8; do echo line$i; done")]);
+    expect(r.stdout).toBe("line1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\n");
+    expect(r.stdout).not.toContain("[tkr restore");
+  });
+
+  it("adds a restore hint holding the lines it cut", async () => {
+    setFilterResolver(null);
+    const resolver = await import("../daemon/resolver");
+    vi.mocked(resolver.installDaemonResolver).mockImplementationOnce(() => {
+      setFilterResolver(async () => ({ ...stubFilter, strip_lines_matching: [], max_lines: 2 }));
+    });
+    const r = await runWrapped(["/bin/sh", ...printf("for i in 1 2 3 4 5 6 7 8; do echo line$i-of-a-longer-command-output; done")]);
     const m = /\[tkr restore ([0-9a-f]{16})\]/.exec(r.stdout);
     expect(m).not.toBeNull();
     const { restoreCommand } = await import("../content-cache");
     const restored = await restoreCommand([m![1]]);
-    expect(restored.stdout).toBe("line1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\n");
+    expect(restored.stdout).toBe([1, 2, 3, 4, 5, 6, 7, 8].map((i) => `line${i}-of-a-longer-command-output\n`).join(""));
     expect(restored.stderr).toBeUndefined();
     const { recordStat } = await import("../stats");
     const { recordTelemetry } = await import("../learn/telemetry");
     const deliveredBytes = Buffer.byteLength(r.stdout, "utf8");
     expect(deliveredBytes).toBeGreaterThan(r.filteredBytes);
-    expect(recordStat).toHaveBeenCalledWith(48, deliveredBytes, undefined, false, expect.any(String), "sh", expect.any(String), expect.any(String), { s: "b" });
+    const rawBytes = Buffer.byteLength(restored.stdout!, "utf8");
+    expect(deliveredBytes).toBeLessThan(rawBytes);
+    expect(recordStat).toHaveBeenCalledWith(rawBytes, deliveredBytes, undefined, false, expect.any(String), "sh", expect.any(String), expect.any(String), { s: "b" });
     expect(recordTelemetry).toHaveBeenCalledWith(expect.objectContaining({
-      tokensSaved: Math.max(0, Math.round((48 - deliveredBytes) / 4)),
-      rawTokens: 12
+      tokensSaved: Math.max(0, Math.round((rawBytes - deliveredBytes) / 4)),
+      rawTokens: Math.round(rawBytes / 4)
     }));
   });
 

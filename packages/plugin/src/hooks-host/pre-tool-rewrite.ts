@@ -1,3 +1,4 @@
+import { ensureRunLauncherSync } from "../shim/launcher";
 import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { homedir } from "node:os";
@@ -288,7 +289,13 @@ export function execInvocation(host?: HookHost, platform: NodeJS.Platform = proc
       if (existsSync(native)) return execUsable(native, platform) ? `'${native.replace(/\\/g, "/").replace(/'/g, "'\\''")}'` : null;
     }
     const executable = join(here, "..", "bin", "tkr-exec");
-    if (!windows && existsSync(executable)) return execUsable(executable, platform) ? `${prefix}'${executable.replace(/'/g, "'\\''")}'` : null;
+    const native = !windows && existsSync(executable);
+    if (native && !execUsable(executable, platform)) return null;
+    if (!windows && process.env.TOKMIZER_STABLE_RUN !== "0") {
+      const run = ensureRunLauncherSync(join(here, "..", "bin", "tkr-exec.js"));
+      if (run && (native || existsSync(join(here, "..", "bin", "tkr-exec.js")))) return `${prefix}'${run.replace(/'/g, "'\\''")}'`;
+    }
+    if (native) return `${prefix}'${executable.replace(/'/g, "'\\''")}'`;
     if (singleBinary()) {
       const self = windows ? process.execPath.replace(/\\/g, "/") : process.execPath;
       return `${prefix}'${self.replace(/'/g, "'\\''")}' exec`;
@@ -466,7 +473,9 @@ export function buildPreToolUseOutput(
         ? { hookEventName: "PreToolUse", permissionDecision: "allow", updatedInput }
         : decision.allowedBy
           ? { hookEventName: "PreToolUse", permissionDecision: "allow", permissionDecisionReason: `Tokmizer: allowed by your rule ${decision.allowedBy}`, updatedInput }
-          : { hookEventName: "PreToolUse", updatedInput }
+          : decision.ask
+            ? { hookEventName: "PreToolUse", permissionDecision: "ask", permissionDecisionReason: "Tokmizer shortens this command's output; nothing else changes.", updatedInput }
+            : { hookEventName: "PreToolUse", updatedInput }
   });
 }
 
@@ -1156,7 +1165,13 @@ function narrowAllowRule(rules: RuleSet, cmd: string, context: RewriteContext): 
   return (rules.trustedAllow ?? []).find((allow) => allow.matches(cmd))?.rule ?? null;
 }
 
-export type ShellRewrite = { command: string; allowedBy?: string };
+export type ShellRewrite = { command: string; allowedBy?: string; ask?: boolean };
+
+const ASKED_ANYWAY_RE = /^(?:\S+=\S*\s+)*(?:(?:npx|bunx|pnpm\s+exec|yarn\s+exec|uv\s+run|poetry\s+run)\s+)?(?:\.\/)?(?:ctest|gradlew|gradle|mvnw|mvnd|mvn|make|cmake|sbt|phpstan|phpunit|pest|pytest|py\.test|tox|nox|vitest|jest|mocha|playwright\s+test|tsc|(?:cargo|go)\s+(?:build|test|check|clippy|vet)|(?:bun|deno)\s+(?:test|check|lint|install)|(?:npm|pnpm|yarn)\s+(?:test|t|ci|install|run\s+\S+)|dotnet\s+(?:build|test)|swift\s+(?:build|test)|composer\s+(?:install|update|test))(?:\s|$)/;
+
+function askedAnyway(cmd: string, context: RewriteContext): boolean {
+  return context.host === "claude-code" && context.permissionMode === "default" && ASKED_ANYWAY_RE.test(cmd.trim());
+}
 
 export function rewriteShellDecision(
   cmd: string,
@@ -1175,7 +1190,10 @@ export function rewriteShellDecision(
   recordUsage(context.sessionId, rewritten !== cmd);
   if (rewritten === cmd) return null;
   if (allowedBy) return { command: rewritten, allowedBy };
-  return rewriteWithoutPrompt(rules, context) ? { command: rewritten } : null;
+  if (rewriteWithoutPrompt(rules, context)) return { command: rewritten };
+  return rules !== "unreadable" && askedAnyway(cmd, context) && !(rules.allow ?? []).some((matches) => matches(cmd)) && !(rules.trustedAllow ?? []).some((allow) => allow.matches(cmd))
+    ? { command: rewritten, ask: true }
+    : null;
 }
 
 export function rewriteShellCommand(
@@ -1184,5 +1202,6 @@ export function rewriteShellCommand(
   exec: string | null,
   recordUsage: (sessionId: string, routed: boolean) => void
 ): string | null {
-  return rewriteShellDecision(cmd, context, exec, recordUsage)?.command ?? null;
+  const decision = rewriteShellDecision(cmd, context, exec, recordUsage);
+  return decision && !decision.ask ? decision.command : null;
 }

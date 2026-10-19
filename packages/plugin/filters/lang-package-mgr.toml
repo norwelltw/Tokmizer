@@ -90,6 +90,12 @@ strip_lines_matching = ["^\\s*$", "^Download ", "^Check (?:file:)?\\S+$", "^runn
 max_lines = 150
 keep_failures = true
 strip_on_failure = true
+drop_lines_matching = [
+  "^\\s+\\^\\s*$",
+  "^\\s+at .*\\(https://(?:jsr\\.io/@std/|deno\\.land/std@)",
+  "^\\s+at .*https://(?:jsr\\.io/@std/|deno\\.land/std@)\\S*$",
+  "^\\s+at (?:\\S+ )?\\(?ext:"
+]
 
 [filters.npx]
 description = "Squeeze uncovered npx tool output"

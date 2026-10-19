@@ -19,18 +19,18 @@ describe("installed hook entrypoint", () => {
 
   it.skipIf(process.platform === "win32")("selects the installed executable without a Node process", () => {
     exists.mockReturnValue(true);
-    expect(execInvocation()).toMatch(/^'.*\/bin\/tkr-exec'$/);
+    expect(execInvocation()).toMatch(/^'.*\/bin\/tkr-(exec|run)'$/);
   });
 
   it.skipIf(process.platform === "win32")("labels Cursor and Gemini runs through an explicit host prefix", () => {
     exists.mockReturnValue(true);
-    expect(execInvocation("cursor")).toMatch(/^TOKMIZER_HOST=cursor '.*\/bin\/tkr-exec'$/);
-    expect(execInvocation("gemini-cli")).toMatch(/^TOKMIZER_HOST=gemini-cli '.*\/bin\/tkr-exec'$/);
+    expect(execInvocation("cursor")).toMatch(/^TOKMIZER_HOST=cursor '.*\/bin\/tkr-(exec|run)'$/);
+    expect(execInvocation("gemini-cli")).toMatch(/^TOKMIZER_HOST=gemini-cli '.*\/bin\/tkr-(exec|run)'$/);
     for (const host of ["copilot", "droid", "trae", "qwen-code", "crush", "junie"] as const) {
-      expect(execInvocation(host)).toMatch(new RegExp(`^TOKMIZER_HOST=${host} '.*/bin/tkr-exec'$`));
+      expect(execInvocation(host)).toMatch(new RegExp(`^TOKMIZER_HOST=${host} '.*/bin/tkr-(exec|run)'$`));
     }
-    expect(execInvocation("claude-code")).toMatch(/^'.*\/bin\/tkr-exec'$/);
-    expect(execInvocation("codex")).toMatch(/^'.*\/bin\/tkr-exec'$/);
+    expect(execInvocation("claude-code")).toMatch(/^'.*\/bin\/tkr-(exec|run)'$/);
+    expect(execInvocation("codex")).toMatch(/^'.*\/bin\/tkr-(exec|run)'$/);
   });
 
   it("selects the Windows launcher with forward slashes for Claude Code only", () => {

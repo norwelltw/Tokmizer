@@ -7,6 +7,7 @@ export const FilterDef = z.object({
   priority: z.number().int().default(50),
   strip_ansi: z.boolean().default(false),
   strip_lines_matching: z.array(z.string()).default([]),
+  drop_lines_matching: z.array(z.string()).default([]),
   keep_failures: z.boolean().default(false),
   strip_on_failure: z.boolean().default(false),
   fold_passing: z.boolean().default(false),
@@ -17,6 +18,7 @@ export const FilterDef = z.object({
   max_lines: z.number().int().positive().max(100000).optional(),
   scale_with_level: z.boolean().default(true),
   transform: z.string().max(64).optional(),
+  transform_on_failure: z.boolean().default(false),
   on_empty: z.string().max(255).optional()
 });
 
