@@ -13,21 +13,24 @@ const shells = ["sh", "bash", "zsh", "dash"].filter((s) => existsSync(`/bin/${s}
 const python = ["/usr/bin/python3", "/usr/local/bin/python3", "/opt/homebrew/bin/python3"].find(existsSync);
 const HINT = "tokmizer: shim target missing, running command directly; run `tkr doctor --fix`";
 const NEW = "0.9.59";
+// Keeps the pty's slave end open until the shell has exited and the output is
+// drained: closing it first lets macOS drop output still buffered in the pty.
 const PTY = [
-  "import os, pty, subprocess, sys",
+  "import os, pty, select, subprocess, sys",
   "m, s = pty.openpty()",
   "p = subprocess.Popen(sys.argv[1:], stdin=subprocess.DEVNULL, stdout=s, stderr=s)",
-  "os.close(s)",
   "out = b''",
-  "while True:",
-  "    try:",
+  "def drain(wait):",
+  "    global out",
+  "    while select.select([m], [], [], wait)[0]:",
   "        d = os.read(m, 4096)",
-  "    except OSError:",
-  "        break",
-  "    if not d:",
-  "        break",
-  "    out += d",
-  "p.wait()",
+  "        if not d:",
+  "            break",
+  "        out += d",
+  "while p.poll() is None:",
+  "    drain(0.05)",
+  "drain(0.2)",
+  "os.close(s)",
   "sys.stdout.write(out.decode())"
 ].join("\n");
 

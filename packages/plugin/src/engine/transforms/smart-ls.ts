@@ -124,6 +124,16 @@ export function lsHasSortFlag(cmd: string | undefined): boolean {
   return false;
 }
 
+/** The mode shared by most entries (at least two), written once in the summary instead of on every line. */
+function commonMode(entries: Entry[]): string | null {
+  const counts = new Map<string, number>();
+  for (const e of entries) counts.set(e.mode, (counts.get(e.mode) ?? 0) + 1);
+  let best: string | null = null;
+  let n = 0;
+  for (const [mode, c] of counts) if (c > n) [best, n] = [mode, c];
+  return n >= 2 ? best : null;
+}
+
 export function smartLs(lines: string[], cmd?: string): string[] {
   if (lsHasSortFlag(cmd)) return lines;
   const plain = plainLs(lines);
@@ -154,9 +164,13 @@ export function smartLs(lines: string[], cmd?: string): string[] {
   const shown = [...dirs, ...files];
   const owner = shown.every((e) => e.owner === shown[0]!.owner) ? shown[0]!.owner : null;
 
+  const dirMode = commonMode(dirs);
+  const fileMode = commonMode(files);
   let out: string[] = [];
   for (const e of shown) {
-    const label = `${e.mode} ${owner === null ? `${e.owner} ` : ""}${e.isDir ? `${e.name}/` : e.name}`;
+    const usual = e.isDir ? dirMode : fileMode;
+    const mode = e.mode === usual ? "" : `${e.mode} `;
+    const label = `${mode}${owner === null ? `${e.owner} ` : ""}${e.isDir ? `${e.name}/` : e.name}`;
     out.push(e.isDir ? label : `${label}  ${e.size}`);
   }
   if (out.length > MAX_OUTPUT_LINES) {
@@ -168,7 +182,8 @@ export function smartLs(lines: string[], cmd?: string): string[] {
   const dirWord = dirs.length === 1 ? "dir" : "dirs";
   const dom = dominantExt(files);
   const summary =
-    `${files.length} ${fileWord}, ${dirs.length} ${dirWord}` + (dom ? ` (${dom})` : "") + (owner === null ? "" : `, owner ${owner.replace(" ", ":")}`);
+    `${files.length} ${fileWord}, ${dirs.length} ${dirWord}` + (dom ? ` (${dom})` : "") + (owner === null ? "" : `, owner ${owner.replace(" ", ":")}`) +
+    (dirMode || fileMode ? `, mode ${[dirMode && `dirs ${dirMode}`, fileMode && `files ${fileMode}`].filter(Boolean).join(", ")} unless shown` : "");
   out.push(summary);
 
   return out;

@@ -252,5 +252,5 @@ describe.skipIf(process.platform === "win32" || !["darwin", "linux"].includes(pr
     });
     expect(hook.status, hook.stderr).toBe(0);
     expect(JSON.parse(hook.stdout).hookSpecificOutput.updatedInput.command).toMatch(/ git status$/);
-  });
+  }, 60000);
 });

@@ -53,7 +53,7 @@ Captures of private repositories are not part of the corpus.
 
 ## Relation to the published results
 
-The results published on 2026-10-17 (`/benchmarks/2026-10-17.json`, 68 cases, Tokmizer 0.9.60 against rtk 1.0.1) were measured on a corpus that is not in this repository: part of it replayed outputs of private repositories. This harness does not reproduce those figures. It measures Tokmizer only, on a different and public corpus, and does not compare with rtk or measure latency.
+The results published on 2026-10-19 (`/benchmarks/2026-10-19.json`, 68 cases, Tokmizer 0.9.71 against rtk 1.0.1) were measured on a corpus that is not in this repository: part of it replayed outputs of private repositories. This harness does not reproduce those figures. It measures Tokmizer only, on a different and public corpus, and does not compare with rtk or measure latency.
 
 Results of this harness on 2026-10-18, Tokmizer 0.9.65, macOS on Apple Silicon, Node.js 24:
 

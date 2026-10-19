@@ -8,6 +8,58 @@ import { smartFind } from "../engine/transforms/smart-find";
 
 const fixture = (name: string): string => readFileSync(fileURLToPath(new URL(`./fixtures/${name}`, import.meta.url)), "utf8");
 const bytes = (s: string): number => Buffer.byteLength(s, "utf8");
+
+type LsRow = { name: string; isDir: boolean; size: string | null; mode: string; owner: string | null };
+const LS_MODE = String.raw`[-dlbcps][rwxsStT-]{9}[@.+]?`;
+
+/** Recover every entry (mode, owner, name, dir marker, size) from smart-ls output, filling in the summary's shared mode/owner. */
+function decodeLs(output: string): { rows: LsRow[]; summary: string } {
+  const lines = output.split("\n").filter((l) => l !== "");
+  const summary = lines[lines.length - 1]!;
+  const sharedOwner = /, owner ([^\s,]+:[^\s,]+)/.exec(summary)?.[1]?.replace(":", " ") ?? null;
+  const dirMode = new RegExp(`, mode (?:dirs (${LS_MODE}))?`).exec(summary)?.[1] ?? null;
+  const fileMode = new RegExp(`, mode (?:dirs ${LS_MODE}, )?files (${LS_MODE}) unless shown$`).exec(summary)?.[1] ?? null;
+  const rows = lines.slice(0, -1).map((line): LsRow => {
+    const m = new RegExp(`^(${LS_MODE}) `).exec(line);
+    let rest = m ? line.slice(m[1]!.length + 1) : line;
+    let owner = sharedOwner;
+    if (!sharedOwner) {
+      const o = /^(\S+) (\S+) /.exec(rest)!;
+      owner = `${o[1]} ${o[2]}`;
+      rest = rest.slice(o[0].length);
+    }
+    const isDir = rest.endsWith("/") && !/  \S+$/.test(rest);
+    if (isDir) return { name: rest.slice(0, -1), isDir, size: null, mode: m?.[1] ?? dirMode ?? "?", owner };
+    const cut = rest.lastIndexOf("  ");
+    return { name: rest.slice(0, cut), isDir, size: rest.slice(cut + 2), mode: m?.[1] ?? fileMode ?? "?", owner };
+  });
+  return { rows, summary };
+}
+
+/** Parse a raw `ls -l` listing (skipping total, . and ..); sizes are humanized like smart-ls does for plain byte counts. */
+function parseRawLs(raw: string): LsRow[] {
+  const human = (n: number): string => {
+    if (n < 1024) return String(n);
+    let v = n / 1024;
+    let u = 0;
+    while (v >= 1024 && u < 3) { v /= 1024; u += 1; }
+    return `${v.toFixed(1)}${"KMGT"[u]}`;
+  };
+  return raw.split("\n").flatMap((line) => {
+    const m = new RegExp(`^(${LS_MODE})\\s+\\d+\\s+(\\S+)\\s+(\\S+)\\s+(\\d+|[\\d.]+[KMGT]?B?)\\s+(?:\\S+\\s+\\S+\\s+\\S+)\\s+(.+)$`).exec(line);
+    if (!m || m[5] === "." || m[5] === "..") return [];
+    const isDir = m[1]![0] === "d";
+    return [{ name: m[5]!, isDir, size: isDir ? null : /^\d+$/.test(m[4]!) ? human(Number(m[4])) : m[4]!, mode: m[1]!, owner: `${m[2]} ${m[3]}` }];
+  });
+}
+
+/** Fidelity contract: every raw entry is recoverable from the output (same set, name, dir marker, size, mode, owner). */
+function expectLsFidelity(raw: string, output: string): void {
+  const key = (r: LsRow): string => `${r.name}\u0000${r.isDir}`;
+  const byKey = (rows: LsRow[]): LsRow[] => [...rows].sort((a, b) => key(a).localeCompare(key(b)));
+  expect(byKey(decodeLs(output).rows)).toEqual(byKey(parseRawLs(raw)));
+}
+
 const NEXT = fixture("audit/next.txt");
 const GCLOUD = fixture("audit/gcloud.txt");
 const TERRAFORM = fixture("audit/terraform.txt");
@@ -77,7 +129,8 @@ describe("cargo build", () => {
 describe("ls -la", () => {
   it("separates name and size without alignment padding", async () => {
     const r = await processOutput("ls -la packages/plugin/src", LS_LA, null, { verbosity: "compact", exitCode: 0 });
-    expect(r.output).toContain("-rw-r--r--@ stats.ts  22.9K\n");
+    expect(r.output).toContain("\nstats.ts  22.9K\n");
+    expectLsFidelity(LS_LA, r.output);
     expect(r.output).not.toMatch(/\S {3,}\S/);
     expect(bytes(r.output)).toBeLessThan(1300);
   });

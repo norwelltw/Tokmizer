@@ -3,6 +3,58 @@ import { smartLs } from "../engine/transforms/smart-ls";
 import { processOutput } from "../engine";
 import { __resetCache } from "../engine/loader";
 
+type LsRow = { name: string; isDir: boolean; size: string | null; mode: string; owner: string | null };
+const LS_MODE = String.raw`[-dlbcps][rwxsStT-]{9}[@.+]?`;
+
+/** Recover every entry (mode, owner, name, dir marker, size) from smart-ls output, filling in the summary's shared mode/owner. */
+function decodeLs(output: string): { rows: LsRow[]; summary: string } {
+  const lines = output.split("\n").filter((l) => l !== "");
+  const summary = lines[lines.length - 1]!;
+  const sharedOwner = /, owner ([^\s,]+:[^\s,]+)/.exec(summary)?.[1]?.replace(":", " ") ?? null;
+  const dirMode = new RegExp(`, mode (?:dirs (${LS_MODE}))?`).exec(summary)?.[1] ?? null;
+  const fileMode = new RegExp(`, mode (?:dirs ${LS_MODE}, )?files (${LS_MODE}) unless shown$`).exec(summary)?.[1] ?? null;
+  const rows = lines.slice(0, -1).map((line): LsRow => {
+    const m = new RegExp(`^(${LS_MODE}) `).exec(line);
+    let rest = m ? line.slice(m[1]!.length + 1) : line;
+    let owner = sharedOwner;
+    if (!sharedOwner) {
+      const o = /^(\S+) (\S+) /.exec(rest)!;
+      owner = `${o[1]} ${o[2]}`;
+      rest = rest.slice(o[0].length);
+    }
+    const isDir = rest.endsWith("/") && !/  \S+$/.test(rest);
+    if (isDir) return { name: rest.slice(0, -1), isDir, size: null, mode: m?.[1] ?? dirMode ?? "?", owner };
+    const cut = rest.lastIndexOf("  ");
+    return { name: rest.slice(0, cut), isDir, size: rest.slice(cut + 2), mode: m?.[1] ?? fileMode ?? "?", owner };
+  });
+  return { rows, summary };
+}
+
+/** Parse a raw `ls -l` listing (skipping total, . and ..); sizes are humanized like smart-ls does for plain byte counts. */
+function parseRawLs(raw: string): LsRow[] {
+  const human = (n: number): string => {
+    if (n < 1024) return String(n);
+    let v = n / 1024;
+    let u = 0;
+    while (v >= 1024 && u < 3) { v /= 1024; u += 1; }
+    return `${v.toFixed(1)}${"KMGT"[u]}`;
+  };
+  return raw.split("\n").flatMap((line) => {
+    const m = new RegExp(`^(${LS_MODE})\\s+\\d+\\s+(\\S+)\\s+(\\S+)\\s+(\\d+|[\\d.]+[KMGT]?B?)\\s+(?:\\S+\\s+\\S+\\s+\\S+)\\s+(.+)$`).exec(line);
+    if (!m || m[5] === "." || m[5] === "..") return [];
+    const isDir = m[1]![0] === "d";
+    return [{ name: m[5]!, isDir, size: isDir ? null : /^\d+$/.test(m[4]!) ? human(Number(m[4])) : m[4]!, mode: m[1]!, owner: `${m[2]} ${m[3]}` }];
+  });
+}
+
+/** Fidelity contract: every raw entry is recoverable from the output (same set, name, dir marker, size, mode, owner). */
+function expectLsFidelity(raw: string, output: string): void {
+  const key = (r: LsRow): string => `${r.name}\u0000${r.isDir}`;
+  const byKey = (rows: LsRow[]): LsRow[] => [...rows].sort((a, b) => key(a).localeCompare(key(b)));
+  expect(byKey(decodeLs(output).rows)).toEqual(byKey(parseRawLs(raw)));
+}
+
+
 const LS_LA_SAMPLE = [
   "total 144",
   "drwxr-xr-x  12 tester  staff    384 28 mai   11:42 .",
@@ -37,16 +89,14 @@ describe("smartLs", () => {
   });
 
   it("marks directories with a trailing slash and omits their size", () => {
-    expect(out).toContain("drwxr-xr-x src/");
-    expect(out).toContain("drwxr-xr-x target/");
+    expect(out).toContain("src/");
+    expect(out).toContain("target/");
+    expect(out[out.length - 1]).toContain("mode dirs drwxr-xr-x");
   });
 
   it("orders directories before files", () => {
-    const firstFileIdx = out.findIndex((l) => l.includes(" Cargo.lock "));
-    const lastDirIdx = Math.max(
-      out.indexOf("drwxr-xr-x src/"),
-      out.indexOf("drwxr-xr-x target/")
-    );
+    const firstFileIdx = out.findIndex((l) => l.startsWith("Cargo.lock "));
+    const lastDirIdx = Math.max(out.indexOf("src/"), out.indexOf("target/"));
     expect(firstFileIdx).toBeGreaterThanOrEqual(0);
     expect(lastDirIdx).toBeLessThan(firstFileIdx);
   });
@@ -55,7 +105,11 @@ describe("smartLs", () => {
     expect(out[out.length - 1]).toMatch(/^\d+ files?, \d+ dirs?/);
     expect(out[out.length - 1]).toContain("3 files");
     expect(out[out.length - 1]).toContain("2 dirs");
-    expect(out[out.length - 1]).toMatch(/, owner tester:staff$/);
+    expect(out[out.length - 1]).toMatch(/, owner tester:staff, mode dirs drwxr-xr-x, files -rw-r--r-- unless shown$/);
+  });
+
+  it("keeps every entry's name, marker, size, mode and owner recoverable", () => {
+    expectLsFidelity(LS_LA_SAMPLE, text);
   });
 
   it("notes a dominant extension when one leads", () => {
@@ -103,9 +157,37 @@ describe("smartLs long-format fidelity", () => {
       "-rw-r--r--   1 tester  wheel   1.2K Oct 15 10:23 bundle.ts"
     ];
     const out = smartLs(sample);
-    expect(out[0]).toBe("-rw-r--r--@ stats.ts  22K");
-    expect(out[1]).toBe("-rw-r--r-- bundle.ts  1.2K");
-    expect(out[2]).toBe("-rw-r--r--@ brew.ts  694B");
+    expect(out.slice(0, 3)).toEqual(["stats.ts  22K", "-rw-r--r-- bundle.ts  1.2K", "brew.ts  694B"]);
+    expect(out[3]).toBe("3 files, 0 dirs (3 .ts), owner tester:wheel, mode files -rw-r--r--@ unless shown");
+    expectLsFidelity(sample.join("\n"), out.join("\n"));
+  });
+
+  it("keeps the mode on lines that differ from the common one (executable, symlink)", () => {
+    const sample = [
+      "-rw-r--r--@  1 tester  staff  1200 Oct 15 10:23 a.ts",
+      "-rw-r--r--@  1 tester  staff  2200 Oct 15 10:23 b.ts",
+      "-rw-r--r--@  1 tester  staff   300 Oct 15 10:23 c.ts",
+      "-rwxr-xr-x@  1 tester  staff  1300 Oct 15 10:23 run.sh",
+      "lrwxr-xr-x   1 tester  staff    11 Oct 15 10:23 current -> releases/3"
+    ];
+    const out = smartLs(sample);
+    expect(out).toContain("-rwxr-xr-x@ run.sh  1.3K");
+    expect(out).toContain("lrwxr-xr-x current -> releases/3  11");
+    expect(out).toContain("b.ts  2.1K");
+    expect(out.filter((l) => /^[-dl][rwxsStT-]{9}/.test(l))).toHaveLength(2);
+    expect(out[out.length - 1]).toBe("5 files, 0 dirs (3 .ts), owner tester:staff, mode files -rw-r--r--@ unless shown");
+    expectLsFidelity(sample.join("\n"), out.join("\n"));
+  });
+
+  it("keeps modes on every line and adds no mode suffix when there is no common mode (one file, one dir)", () => {
+    const sample = [
+      "drwxr-xr-x  3 tester  staff    96 Oct 15 10:23 src",
+      "-rw-r--r--  1 tester  staff  1200 Oct 15 10:23 a.ts"
+    ];
+    const out = smartLs(sample);
+    expect(out).toEqual(["drwxr-xr-x src/", "-rw-r--r-- a.ts  1.2K", "1 file, 1 dir, owner tester:staff"]);
+    expect(out.join("\n")).not.toMatch(/unless shown|mode (dirs|files)/);
+    expectLsFidelity(sample.join("\n"), out.join("\n"));
   });
 
   it("parses GNU long-iso and full-time date columns without eating the name", () => {
@@ -163,7 +245,9 @@ describe("long listings keep permissions and ownership", () => {
       expect(lines).toContain("-rwsrwxrwx root wheel backdoor  8.2K");
       expect(lines).toContain("-rw-rw-rw- tester staff shared.env  512");
       expect(lines).toContain("drwx------ tester staff private/");
-      expect(lines).toContain("-rw-r--r-- tester staff file-109.txt  1.1K");
+      expect(lines).toContain("tester staff file-109.txt  1.1K");
+      expect(lines.filter((l) => l !== "").pop()).toMatch(/mode files -rw-r--r-- unless shown$/);
+      expectLsFidelity(listing, result.output);
       expect(result.filteredBytes).toBeLessThan(result.rawBytes);
     } finally {
       vi.unstubAllEnvs();

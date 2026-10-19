@@ -94,7 +94,7 @@ dependencies = [
 
 [[package]]
 name = "tokmizer-launcher"
-version = "0.9.71"
+version = "0.9.72"
 dependencies = [
  "libc",
  "serde",
