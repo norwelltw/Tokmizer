@@ -24,7 +24,7 @@ afterEach(() => {
 });
 
 function splitHint(delivered: string): { body: string; hash: string | null } {
-  const hint = /\n\[tkr restore ([0-9a-f]+)\]$/.exec(delivered);
+  const hint = /\n\[tkr restore ([0-9a-f]+)\]\n?$/.exec(delivered);
   return hint ? { body: delivered.slice(0, hint.index), hash: hint[1]! } : { body: delivered, hash: null };
 }
 
@@ -146,7 +146,7 @@ describe("Glob output", () => {
     expect(await readContentCache(hash!)).toBe(filenames.join("\n"));
     const envelope = JSON.parse(buildHookEnvelope(payload, delivered!));
     expect(envelope.hookSpecificOutput.updatedToolOutput).toMatchObject({ numFiles: 229, truncated: false });
-    expect(envelope.hookSpecificOutput.updatedToolOutput.filenames).toEqual(delivered!.split("\n"));
+    expect(envelope.hookSpecificOutput.updatedToolOutput.filenames).toEqual(delivered!.replace(/\n$/, "").split("\n"));
   });
 
   it("leaves a short Glob result untouched", async () => {

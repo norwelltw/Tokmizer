@@ -162,9 +162,28 @@ export function neutralizeMarkers(text: string, input: string | null | undefined
   return marked.split("\n").map((line) => (NOTICE_LINE_RE.test(line) && !genuine(line) ? `> ${line}` : line)).join("\n");
 }
 
+/** Note appended when the original is too large to keep, so the omission is not mistaken for a recoverable one. */
+function tooLargeNote(compressed: string, bytes: number, env: NodeJS.ProcessEnv): string {
+  const limit = contentCacheLimits(env).entryMaxBytes;
+  const lead = compressed === "" || compressed.endsWith("\n") ? "" : "\n";
+  const mb = (n: number): string => `${Math.ceil(n / (1024 * 1024))} MB`;
+  return `${lead}[tkr: full output too large to keep (${mb(bytes)} > ${mb(limit)} limit), no restore available]\n`;
+}
+
+function exceedsEntryLimit(content: string, env: NodeJS.ProcessEnv): number | null {
+  const bytes = Buffer.byteLength(content, "utf8");
+  return bytes > contentCacheLimits(env).entryMaxBytes ? bytes : null;
+}
+
 async function storeEntry(content: string, partial: boolean, label: string | undefined, env: NodeJS.ProcessEnv): Promise<string | null> {
   const hash = createHash("sha256").update(content).digest("hex").slice(0, 16);
   return (await writeContentCache(hash, content, env, { partial, label })) ? hash : null;
+}
+
+/** Restore hint on its own line, always newline-terminated, with no leading blank line. */
+function restoreHint(compressed: string, hash: string): string {
+  const lead = compressed === "" || compressed.endsWith("\n") ? "" : "\n";
+  return `${lead}[tkr restore ${hash}]\n`;
 }
 
 export async function captureForRestore(
@@ -176,14 +195,16 @@ export async function captureForRestore(
   compressed = neutralizeMarkers(compressed, source.raw);
   if (ccrDisabled(env)) return compressed;
   if (!droppedTail) return compressed;
-  const hint = (hash: string): string => `\n[tkr restore ${hash}]`;
+  const hint = (hash: string): string => restoreHint(compressed, hash);
   if (Buffer.byteLength(droppedTail, "utf8") <= Buffer.byteLength(hint("0".repeat(16)), "utf8")) return compressed;
   if (source.raw) {
     const full = await storeEntry(source.raw, false, source.label, env);
     if (full) return `${compressed}${hint(full)}`;
   }
   const tail = await storeEntry(droppedTail, true, source.label, env);
-  return tail ? `${compressed}${hint(tail)}` : compressed;
+  if (tail) return `${compressed}${hint(tail)}`;
+  const big = exceedsEntryLimit(source.raw || droppedTail, env);
+  return big && !yoloEnabled() ? `${compressed}${tooLargeNote(compressed, big, env)}` : compressed;
 }
 
 export async function captureOriginalForRestore(
@@ -196,7 +217,9 @@ export async function captureOriginalForRestore(
   if (ccrDisabled(env)) return compressed;
   if (!original) return compressed;
   const hash = await storeEntry(original, false, source.label, env);
-  return hash ? `${compressed}\n[tkr restore ${hash}]` : compressed;
+  if (hash) return `${compressed}${restoreHint(compressed, hash)}`;
+  const big = exceedsEntryLimit(original, env);
+  return big && !yoloEnabled() ? `${compressed}${tooLargeNote(compressed, big, env)}` : compressed;
 }
 
 async function readMeta(hash: string): Promise<CacheEntryMeta | null> {

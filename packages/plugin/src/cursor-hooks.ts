@@ -1,4 +1,5 @@
 import { existsSync, readFileSync } from "node:fs";
+import { parseJsonText } from "./json-text";
 import { join } from "node:path";
 import os from "node:os";
 import { hookCommandFor, isJsonObject, isTokmizerHookCommand, keepFirstHook, readJsonConfig, writeJsonConfig, type HookInstall, type HookRemoval } from "./hook-config";
@@ -26,7 +27,7 @@ function preToolUse(parsed: CursorHooksFile): { hooks: Record<string, unknown>; 
 
 export function cursorHookInstalled(): boolean {
   try {
-    const parsed = JSON.parse(readFileSync(cursorHooksFile(), "utf8")) as CursorHooksFile;
+    const parsed = parseJsonText(readFileSync(cursorHooksFile(), "utf8")) as CursorHooksFile;
     return preToolUse(parsed).entries.some(ours);
   } catch {
     return false;

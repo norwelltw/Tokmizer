@@ -78,12 +78,57 @@ function pendingFile(name: SpoolName): string {
   return join(spoolDir(), `${name}.pending.jsonl`);
 }
 
+const MAX_DROPPED_MARKER_BYTES = 1024 * 1024;
+
+function droppedFile(name: SpoolName): string {
+  return join(spoolDir(), `${name}.dropped`);
+}
+
+// One byte is appended per event refused because the queue is full. Appends are atomic,
+// so concurrent processes cannot lose a count; the file size is the count.
+function recordDropped(name: SpoolName): void {
+  try {
+    const file = droppedFile(name);
+    if (existsSync(file) && statSync(file).size >= MAX_DROPPED_MARKER_BYTES) return;
+    appendFileSync(file, ".", { mode: 0o600 });
+  } catch {
+    return;
+  }
+}
+
+/** Usage events (learn + telemetry) refused because the local queue was full, since the last reset. */
+export function droppedEventsCount(): number {
+  let total = 0;
+  for (const name of ["learn", "telemetry"] as const) {
+    try {
+      total += statSync(droppedFile(name)).size;
+    } catch {
+      continue;
+    }
+  }
+  return total;
+}
+
+/** Forget the dropped-event count, e.g. once the user has seen it. */
+export function resetDroppedEvents(): void {
+  for (const name of ["learn", "telemetry"] as const) {
+    try {
+      unlinkSync(droppedFile(name));
+    } catch {
+      continue;
+    }
+  }
+}
+
 export function appendSpool(name: SpoolName, event: unknown): void {
   if (!networkEnabled()) return;
   try {
     mkdirSync(spoolDir(), { recursive: true, mode: 0o700 });
     const file = spoolFile(name);
-    if (existsSync(file) && statSync(file).size >= MAX_SPOOL_BYTES) return;
+    if (existsSync(file) && statSync(file).size >= MAX_SPOOL_BYTES) {
+      recordDropped(name);
+      return;
+    }
     appendFileSync(file, JSON.stringify(event) + "\n", { mode: 0o600 });
     chmodSync(file, 0o600);
   } catch {

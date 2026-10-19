@@ -3,7 +3,6 @@ description = "Compact git log/status/diff output"
 match_command = "^git(\\s|$)"
 priority = 60
 strip_ansi = true
-strip_lines_matching = ["^\\s*$"]
 max_lines = 80
 on_empty = "git: no output"
 
@@ -16,11 +15,11 @@ strip_lines_matching = ["^\\s*$", "^\\s*\\(use \"git [^)]*\\)$", "^no changes ad
 on_empty = "git status: clean"
 
 [filters.git-log]
-description = "Compact git log output (drop blank lines and commit trailers, keep every commit header)"
+description = "Compact git log output (drop empty lines, keep every commit header, trailer and patch context line)"
 match_command = "^git\\s+log(\\s|$)"
 priority = 65
 strip_ansi = true
-strip_lines_matching = ["^\\s*$", "^\\s*(?:Co-[Aa]uthored-[Bb]y|Signed-off-by):"]
+strip_lines_matching = ["^$"]
 transform = "smart-log"
 max_lines = 160
 on_empty = "git log: no commits"

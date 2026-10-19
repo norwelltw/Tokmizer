@@ -218,8 +218,8 @@ describe("runWrapped empty-output accounting", () => {
       setFilterResolver(async () => ({ ...stubFilter, on_empty: "No results found" }));
     });
     const r = await runWrapped([process.execPath, "-e", ""]);
-    expect(r.stdout).toBe("No results found");
-    expect(recordStat).toHaveBeenCalledWith(0, 16, undefined, false, expect.any(String), "sh", expect.any(String), expect.any(String), expect.any(Object));
+    expect(r.stdout).toBe("No results found\n");
+    expect(recordStat).toHaveBeenCalledWith(0, 17, undefined, false, expect.any(String), "sh", expect.any(String), expect.any(String), expect.any(Object));
     expect(recordTelemetry).toHaveBeenCalledWith(expect.objectContaining({ tokensSaved: 0, rawTokens: 0 }));
   });
 });

@@ -1,8 +1,7 @@
-import { getTransform } from "./transforms/registry";
 import { loadFilters, type LoadedFilter } from "./loader";
 import { selectFilter } from "./matcher";
 import { withUserFilters } from "./user-filters";
-import { applyFilter, applyFilterWithTail, type PipelineOpts } from "./pipeline";
+import { applyFilter, applyFilterWithTail, runLineTransform, suppressesOnEmpty, type PipelineOpts } from "./pipeline";
 import { looksLikeFailure } from "./debug-detect";
 import { routingCandidates, normalizeHead, lastSegment, producingSegment, unwrapRunner, TOOL_SYNTHETIC_RE } from "./routing";
 import { yoloExcerpt } from "./yolo";
@@ -143,8 +142,7 @@ export async function processOutput(
         ? failureStripped(output, chosen, pipelineOpts.verbosity)
         : chosen.strip_ansi && !chosen.preserve_exact ? stripAnsi(output) : output;
     if (!yolo && chosen.transform && chosen.transform_on_failure && !chosen.preserve_exact) {
-      const tf = getTransform(chosen.transform);
-      if (tf) filtered = tf(filtered.split("\n")).join("\n");
+      filtered = runLineTransform(chosen.transform, filtered.split("\n"), cmd).join("\n");
     }
     if (!yolo && pipelineOpts.verbosity === "minimal" && chosen.transform !== "smart-read") {
       filtered = compactRepeatedDiagnostics(filtered);
@@ -166,18 +164,23 @@ export async function processOutput(
       ...(noiseDropped ? { droppedTail: output } : {})
     });
   }
+  const filterOpts: PipelineOpts = { ...pipelineOpts, cmd, exitCode };
   const { text, droppedTail } = applyFilterWithTail(output, chosen, yolo
-    ? { ...pipelineOpts, verbosity: "minimal", ...(chosen.transform === "smart-read" ? { smartCode: true } : {}) }
-    : pipelineOpts);
+    ? { ...filterOpts, verbosity: "minimal", ...(chosen.transform === "smart-read" ? { smartCode: true } : {}) }
+    : filterOpts);
   const filtered = !yolo && !chosen.preserve_exact
     ? compactStructuredOutput(text, pipelineOpts.verbosity, chosen.slug)
     : text;
-  const filteredBytes = Buffer.byteLength(filtered, "utf8");
-  if (output.trim().length > 0 && filteredBytes >= rawBytes) {
+  // on_empty placeholder ends with a newline so later output does not glue onto it
+  const terminated = chosen.on_empty && filtered === chosen.on_empty && !filtered.endsWith("\n") ? `${filtered}\n` : filtered;
+  const filteredBytes = Buffer.byteLength(terminated, "utf8");
+  const lostEverything = terminated.trim().length === 0 && output.trim().length > 0 &&
+    ((exitCode != null && exitCode !== 0) || suppressesOnEmpty(cmd));
+  if (output.trim().length > 0 && (filteredBytes >= rawBytes || lostEverything)) {
     return finalize({ output, filterId: chosen.slug, rawBytes, filteredBytes: rawBytes, debugBypass: false, droppedTail: null });
   }
   return finalize({
-    output: filtered,
+    output: terminated,
     filterId: chosen.slug,
     rawBytes,
     filteredBytes,

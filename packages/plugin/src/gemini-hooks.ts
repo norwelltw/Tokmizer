@@ -1,4 +1,5 @@
 import { existsSync, readFileSync } from "node:fs";
+import { parseJsonText } from "./json-text";
 import { join } from "node:path";
 import os from "node:os";
 import { hookCommandFor, isJsonObject, isTokmizerHookCommand, keepFirstHook, readJsonConfig, writeJsonConfig, type HookInstall, type HookRemoval } from "./hook-config";
@@ -31,7 +32,7 @@ function beforeTool(parsed: GeminiSettings): { hooks: Record<string, unknown>; g
 
 export function geminiHookInstalled(): boolean {
   try {
-    const parsed = JSON.parse(readFileSync(geminiSettingsFile(), "utf8")) as GeminiSettings;
+    const parsed = parseJsonText(readFileSync(geminiSettingsFile(), "utf8")) as GeminiSettings;
     return beforeTool(parsed).groups.some((g) => ours(g) != null);
   } catch {
     return false;

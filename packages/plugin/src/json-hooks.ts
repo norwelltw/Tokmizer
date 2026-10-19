@@ -1,4 +1,5 @@
 import { existsSync, readFileSync } from "node:fs";
+import { parseJsonText } from "./json-text";
 import { isJsonObject, isTokmizerHookCommand, keepFirstHook, readJsonConfig, writeJsonConfig, type HookInstall, type HookRemoval, type JsonObject } from "./hook-config";
 
 export type JsonHookSpec = {
@@ -53,7 +54,7 @@ export function jsonHookPresent(parsed: JsonObject, spec: JsonHookSpec): boolean
 
 export function jsonHookInstalledIn(file: string, spec: JsonHookSpec): boolean {
   try {
-    const parsed: unknown = JSON.parse(readFileSync(file, "utf8"));
+    const parsed: unknown = parseJsonText(readFileSync(file, "utf8"));
     return isJsonObject(parsed) && jsonHookPresent(parsed, spec);
   } catch {
     return false;

@@ -48,7 +48,7 @@ function statRows(): Array<{ r: number; f: number }> {
 }
 
 function restoreHash(output: string): string {
-  const hash = /\[tkr restore ([0-9a-f]{8,64})\]$/.exec(output)?.[1];
+  const hash = /\[tkr restore ([0-9a-f]{8,64})\]\n?$/.exec(output)?.[1];
   expect(hash).toBeDefined();
   return hash!;
 }

@@ -1,4 +1,5 @@
 import { execFileSync } from "node:child_process";
+import { parseJsonText } from "../json-text";
 import { mkdirSync, readFileSync, renameSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tokmizerHome } from "../paths";
@@ -16,7 +17,7 @@ function probeFile(): string {
 
 function readRecord(file: string): ProbeRecord | null {
   try {
-    const parsed: unknown = JSON.parse(readFileSync(file, "utf8"));
+    const parsed: unknown = parseJsonText(readFileSync(file, "utf8"));
     if (parsed == null || typeof parsed !== "object") return null;
     const r = parsed as Partial<ProbeRecord>;
     if (typeof r.key !== "string" || typeof r.ok !== "boolean") return null;

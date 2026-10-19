@@ -89,7 +89,7 @@ describe.skipIf(process.platform === "win32")("removeCodexHook", () => {
     const { removeCodexHook, codexHooksFile } = await import("../codex-hooks");
     const { mkdirSync, writeFileSync: wf, readFileSync: rf } = await import("node:fs");
     mkdirSync(join(codexHooksFile(), ".."), { recursive: true });
-    wf(codexHooksFile(), JSON.stringify({ hooks: { PreToolUse: [{ matcher: "Bash", hooks: [{ type: "command", command: "mine" }, { type: "command", command: "x tkr-codex-hook" }] }] } }));
+    wf(codexHooksFile(), JSON.stringify({ hooks: { PreToolUse: [{ matcher: "Bash", hooks: [{ type: "command", command: "mine" }, { type: "command", command: "/x/tkr-codex-hook" }] }] } }));
     expect(await removeCodexHook()).toBe("removed");
     expect(JSON.parse(rf(codexHooksFile(), "utf8")).hooks.PreToolUse).toEqual([{ matcher: "Bash", hooks: [{ type: "command", command: "mine" }] }]);
     expect(await removeCodexHook()).toBe("absent");

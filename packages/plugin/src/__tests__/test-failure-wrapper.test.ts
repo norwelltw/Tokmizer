@@ -26,7 +26,7 @@ function fixture(name: string): string {
 }
 
 function restored(text: string): Promise<string | null> {
-  const hash = /\[tkr restore ([0-9a-f]+)\]$/.exec(text.trimEnd())?.[1];
+  const hash = /\[tkr restore ([0-9a-f]+)\]\n?$/.exec(text.trimEnd())?.[1];
   expect(hash).toBeDefined();
   return readContentCache(hash!);
 }

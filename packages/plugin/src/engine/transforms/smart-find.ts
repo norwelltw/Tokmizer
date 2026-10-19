@@ -46,7 +46,7 @@ export function smartFind(lines: string[]): string[] {
     }
     const norm = p.replace(/^\.\//, "").replace(/\/+$/, "");
     const slash = norm.lastIndexOf("/");
-    const dir = slash >= 0 ? norm.slice(0, slash) : "";
+    const dir = slash > 0 ? norm.slice(0, slash) : slash === 0 ? "/" : "";
     const base = slash >= 0 ? norm.slice(slash + 1) : norm;
     if (!base) continue;
     const arr = filesByDir.get(dir) ?? [];
@@ -57,15 +57,15 @@ export function smartFind(lines: string[]): string[] {
   if (fileCount === 0) return lines;
 
   const dirs = [...filesByDir.keys()].sort();
-  const root = dirs.every((d) => d !== "") ? commonDir(dirs) : "";
+  const root = dirs.every((d) => d !== "") && !dirs.includes("/") ? commonDir(dirs) : "";
 
   const out: string[] = [`${fileCount}F ${dirs.length}D${root ? ` in ${root}/` : ""}:`];
   for (const d of dirs) {
-    const rel = root ? d.slice(root.length).replace(/^\//, "") : d;
+    const rel = d === "/" ? "/" : root ? d.slice(root.length).replace(/^\//, "") : d;
     const files = filesByDir.get(d)!;
     const ext = sharedExtension(files);
     const names = ext ? files.map((f) => f.slice(0, -ext.length)) : files;
-    out.push(`${rel ? `${rel}/` : "./"} (${files.length}${ext ? `, *${ext}` : ""}): ${names.join(" ")}`);
+    out.push(`${rel === "/" ? "/" : rel ? `${rel}/` : "./"} (${files.length}${ext ? `, *${ext}` : ""}): ${names.join(" ")}`);
   }
   if (out.length + errors.length > MAX_OUTPUT_LINES) {
     const keep = Math.max(0, MAX_OUTPUT_LINES - errors.length);

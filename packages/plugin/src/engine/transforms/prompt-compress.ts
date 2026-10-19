@@ -61,8 +61,15 @@ export function condenseLogNoise(lines: string[]): string[] {
   return out;
 }
 
+const HUNK_HEADER_RE = /^@@ -\d+(?:,\d+)? \+\d+(?:,\d+)? @@/;
+
+/** Unified diffs depend on exact line counts per hunk, so blank/duplicate collapsing must not touch them. */
+export function looksLikeUnifiedDiff(lines: string[]): boolean {
+  return lines.some((l) => HUNK_HEADER_RE.test(l));
+}
+
 export function dedupeAdjacent(lines: string[]): string[] {
-  if (lines.length === 0) return lines;
+  if (lines.length === 0 || looksLikeUnifiedDiff(lines)) return lines;
   const out: string[] = [];
   let run = 1;
   let prev = lines[0]!;
@@ -80,6 +87,7 @@ export function dedupeAdjacent(lines: string[]): string[] {
 }
 
 export function collapseBlankRuns(lines: string[]): string[] {
+  if (looksLikeUnifiedDiff(lines)) return lines;
   const out: string[] = [];
   let blanks = 0;
   for (const l of lines) {

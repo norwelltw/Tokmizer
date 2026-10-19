@@ -1,6 +1,7 @@
 import spawn from "cross-spawn";
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
+import { constants as osConstants } from "node:os";
 import { fileURLToPath } from "node:url";
 import { StringDecoder } from "node:string_decoder";
 import { processOutput, type FilterResolver } from "../engine";
@@ -24,10 +25,16 @@ import { normalizeHead, producingSegment } from "../engine/routing";
 import { yoloEnabled } from "../yolo-mode";
 import { selfInvocation, singleBinary } from "../self-command";
 import { networkEnabled, networkNoticeMarker } from "../network";
+import { shQuote } from "../shim/sh";
 
 const MAX_BUFFER_BYTES = 10 * 1024 * 1024;
 const MIN_STDERR_FILTER_BYTES = 1024;
 const ENROLL_KICK_THROTTLE_MS = 60_000;
+// Once the direct child has exited, a background descendant may still hold the
+// pipes open. Like a shell, stop waiting after a short quiet period (or a hard
+// cap if it keeps writing) and keep the child's exit code.
+export const POST_EXIT_IDLE_MS = 200;
+export const POST_EXIT_MAX_MS = 1000;
 export const CAPTURING_ENV = "TOKMIZER_EXEC_CAPTURING";
 
 export function underCapturingExec(env: NodeJS.ProcessEnv = process.env): boolean {
@@ -55,7 +62,8 @@ export function kickBackgroundEnroll(): void {
     const [command, ...args] = selfInvocation(tkrBin);
     const child = spawn(command!, [...args, "heartbeat"], {
       detached: true,
-      stdio: "ignore"
+      stdio: "ignore",
+      windowsHide: true
     });
     child.unref();
   } catch {}
@@ -76,7 +84,16 @@ const SIGNALS: Record<string, number> = {
   SIGALRM: 14, SIGTERM: 15
 };
 export function signalNumber(sig: string): number {
-  return SIGNALS[sig] ?? 15;
+  return (osConstants.signals as Record<string, number | undefined>)[sig] ?? SIGNALS[sig] ?? 15;
+}
+
+const SAFE_WORD_RE = /^[A-Za-z0-9_@%+=:,./-]+$/;
+
+// Rebuild a command line from argv for routing/labels without losing the
+// word boundaries: arguments holding shell metacharacters (`|`, `;`, spaces…)
+// are single-quoted so they are not mistaken for pipelines or separators.
+export function commandLine(argv: string[]): string {
+  return argv.map((arg) => (SAFE_WORD_RE.test(arg) ? arg : shQuote(arg))).join(" ");
 }
 
 function readsFile(cmdLine: string): boolean {
@@ -103,7 +120,8 @@ export async function runWrapped(argv: string[]): Promise<WrapResult> {
 
   const child = spawn(cmd, args, {
     stdio: ["inherit", "pipe", "pipe"],
-    env: { ...envWithoutShimDir(), [CAPTURING_ENV]: "1" }
+    env: { ...envWithoutShimDir(), [CAPTURING_ENV]: "1" },
+    windowsHide: true
   });
 
   let spawned = false;
@@ -152,6 +170,8 @@ export async function runWrapped(argv: string[]): Promise<WrapResult> {
 
   let killTimer: NodeJS.Timeout | undefined;
   let forceKillTimer: NodeJS.Timeout | undefined;
+  let idleTimer: NodeJS.Timeout | undefined;
+  let capTimer: NodeJS.Timeout | undefined;
   let exitCode: number;
   try {
     exitCode = await new Promise<number>((resolve, reject) => {
@@ -163,9 +183,37 @@ export async function runWrapped(argv: string[]): Promise<WrapResult> {
           reject(err);
         }
       });
-      child.on("close", (c, signal) => {
+      let exited: number | null = null;
+      const finish = (): void => {
+        if (exited == null) return;
         if (killTimer) clearTimeout(killTimer);
-        resolve(c != null ? c : signal ? 128 + signalNumber(signal) : 0);
+        if (idleTimer) clearTimeout(idleTimer);
+        if (capTimer) clearTimeout(capTimer);
+        resolve(exited);
+      };
+      const release = (): void => {
+        // A background descendant still holds the pipes: stop reading and
+        // deliver what the command printed, without killing the descendant.
+        child.stdout?.destroy();
+        child.stderr?.destroy();
+        finish();
+      };
+      const armIdle = (): void => {
+        if (idleTimer) clearTimeout(idleTimer);
+        idleTimer = setTimeout(release, POST_EXIT_IDLE_MS);
+      };
+      child.on("exit", (c, signal) => {
+        if (killTimer) clearTimeout(killTimer);
+        if (forceKillTimer) clearTimeout(forceKillTimer);
+        exited = c != null ? c : signal ? 128 + signalNumber(signal) : 0;
+        armIdle();
+        capTimer = setTimeout(release, POST_EXIT_MAX_MS);
+        child.stdout?.on("data", armIdle);
+        child.stderr?.on("data", armIdle);
+      });
+      child.on("close", (c, signal) => {
+        if (exited == null) exited = c != null ? c : signal ? 128 + signalNumber(signal) : 0;
+        finish();
       });
       killTimer = setTimeout(() => {
         child.kill("SIGTERM");
@@ -176,6 +224,8 @@ export async function runWrapped(argv: string[]): Promise<WrapResult> {
   } finally {
     if (killTimer) clearTimeout(killTimer);
     if (forceKillTimer) clearTimeout(forceKillTimer);
+    if (idleTimer) clearTimeout(idleTimer);
+    if (capTimer) clearTimeout(capTimer);
     process.off("SIGINT", onSigint);
     process.off("SIGTERM", onSigterm);
   }
@@ -241,7 +291,7 @@ export async function processCapturedOutput(
     const allowed = baseAllowed && disabledKeys.size > 0
       ? new Set([...baseAllowed].filter((s) => !disabledKeys.has(s)))
       : baseAllowed;
-    const cmdLine = argv.join(" ");
+    const cmdLine = commandLine(argv);
     if (state && !resolver) installDaemonResolver(plan!);
     const processed = await processOutput(cmdLine, stdout, allowed, {
       verbosity: settings.outputVerbosity,

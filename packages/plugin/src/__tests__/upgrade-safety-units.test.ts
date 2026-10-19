@@ -213,9 +213,9 @@ describe.skipIf(process.platform === "win32")("config writes", () => {
   it("refresh every field of an existing hook entry on upgrade", async () => {
     const { upsertJsonHook } = await import("../json-hooks");
     const spec = { event: "PreToolUse", mark: "tkr-x-hook", nested: true, entry: (command: string) => ({ type: "command", command, timeout: 10 }) } as never;
-    const parsed = { hooks: { PreToolUse: [{ type: "command", command: "old tkr-x-hook", timeout: 3, user: true }] } };
-    expect(upsertJsonHook(parsed, spec, "new tkr-x-hook")).toBe("updated");
-    expect(parsed.hooks.PreToolUse[0]).toEqual({ type: "command", command: "new tkr-x-hook", timeout: 10, user: true });
-    expect(upsertJsonHook(parsed, spec, "new tkr-x-hook")).toBe("present");
+    const parsed = { hooks: { PreToolUse: [{ type: "command", command: "/old/tkr-x-hook", timeout: 3, user: true }] } };
+    expect(upsertJsonHook(parsed, spec, "/new/tkr-x-hook")).toBe("updated");
+    expect(parsed.hooks.PreToolUse[0]).toEqual({ type: "command", command: "/new/tkr-x-hook", timeout: 10, user: true });
+    expect(upsertJsonHook(parsed, spec, "/new/tkr-x-hook")).toBe("present");
   });
 });

@@ -1,4 +1,5 @@
 import { existsSync, readFileSync } from "node:fs";
+import { parseJsonText } from "./json-text";
 import { readFile, unlink } from "node:fs/promises";
 import { join } from "node:path";
 import os from "node:os";
@@ -328,7 +329,7 @@ function realPath(file: string): string {
 
 function readRulesState(): RulesState {
   try {
-    const parsed: unknown = JSON.parse(readFileSync(reducerRulesStateFile(), "utf8"));
+    const parsed: unknown = parseJsonText(readFileSync(reducerRulesStateFile(), "utf8"));
     if (!isJsonObject(parsed)) return { agents: {}, created: [] };
     const agents = isJsonObject(parsed.agents) ? Object.fromEntries(Object.entries(parsed.agents).filter((e): e is [string, string] => typeof e[1] === "string")) : {};
     const created = Array.isArray(parsed.created) ? parsed.created.filter((c): c is string => typeof c === "string") : [];
@@ -511,7 +512,7 @@ export function reducerInstalled(bonus: AgentBonus): boolean {
   }
   if (r.kind === "antigravity") {
     try {
-      const parsed: unknown = JSON.parse(readFileSync(antigravityHooksFile(), "utf8"));
+      const parsed: unknown = parseJsonText(readFileSync(antigravityHooksFile(), "utf8"));
       return isJsonObject(parsed) && isJsonObject((parsed as JsonObject)[ANTIGRAVITY_KEY]);
     } catch {
       return false;

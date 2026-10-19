@@ -1,6 +1,6 @@
 use crate::common::{
-    invalid, launch_candidates, native_environment_supported, processor_descriptor_name, remaining,
-    Capture, Channel, Descriptor, SPAWN_FRESH,
+    invalid, launch_candidates, native_environment_supported, post_exit_released,
+    processor_descriptor_name, remaining, Capture, Channel, Descriptor, SPAWN_FRESH,
 };
 use std::env;
 use std::ffi::{OsStr, OsString};
@@ -499,9 +499,44 @@ pub fn capture(
     let stderr = drain(child.stderr.take().unwrap(), sender);
     let deadline = Instant::now() + Duration::from_millis(timeout);
     let mut finished = 0;
-    wait_streams(&receiver, &mut finished, deadline);
     let mut status = None;
-    if finished == 2 {
+    let mut exited: Option<Instant> = None;
+    let mut last_data = Instant::now();
+    let mut seen = 0usize;
+    let mut released = false;
+    while finished < 2 {
+        let now = Instant::now();
+        if now >= deadline {
+            break;
+        }
+        wait_streams(
+            &receiver,
+            &mut finished,
+            deadline.min(now + Duration::from_millis(10)),
+        );
+        if finished == 2 {
+            break;
+        }
+        let now = Instant::now();
+        if status.is_none() {
+            if let Ok(Some(value)) = child.try_wait() {
+                status = Some(value);
+                exited = Some(now);
+            }
+        }
+        let total = stdout.lock().unwrap().bytes.len() + stderr.lock().unwrap().bytes.len();
+        if total != seen {
+            seen = total;
+            last_data = now;
+        }
+        if exited.is_some_and(|time| post_exit_released(time, last_data, now)) {
+            // A background descendant keeps the pipes open: deliver what was
+            // read without waiting for (or killing) it.
+            released = true;
+            break;
+        }
+    }
+    if finished == 2 && status.is_none() {
         let wait = deadline
             .checked_duration_since(Instant::now())
             .map_or(0, |value| {
@@ -522,7 +557,7 @@ pub fn capture(
             Instant::now() + Duration::from_secs(2),
         );
     }
-    let incomplete = finished < 2;
+    let incomplete = finished < 2 && !released;
     let code = if timed_out {
         TIMED_OUT_CODE
     } else {

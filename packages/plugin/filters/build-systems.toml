@@ -4,14 +4,14 @@ match_command = "^cargo(\\s|$)"
 priority = 60
 strip_ansi = true
 strip_lines_matching = [
-  "^\\s*Compiling\\s",
-  "^\\s*Updating\\s",
-  "^\\s*Downloaded\\s",
-  "^\\s*Downloading\\s",
-  "^\\s*Fresh\\s",
-  "^\\s*Locking\\s",
-  "^\\s*Adding \\S+ v\\S+ \\(available: v\\S+\\)$",
-  "^\\s*Running `",
+  "^ {3}Compiling\\s",
+  "^ {4}Updating\\s",
+  "^ {2}Downloaded\\s",
+  "^ {1}Downloading\\s",
+  "^ {7}Fresh\\s",
+  "^ {5}Locking\\s",
+  "^ {6}Adding \\S+ v\\S+ \\(available: v\\S+\\)$",
+  "^ {5}Running `",
   "^\\s*$"
 ]
 max_lines = 120

@@ -328,7 +328,7 @@ describe("runShim piped and raw-byte behavior", () => {
       expect(r.exitCode).toBe(1);
       expect(r.filteredErr).toContain("cart › lookup missing src/cart.js:2:41");
       expect(r.filteredErr).toContain("Expected: 11");
-      const hash = /\[tkr restore ([0-9a-f]{16})\]$/.exec(r.filteredErr.trimEnd())?.[1];
+      const hash = /\[tkr restore ([0-9a-f]{16})\]\n?$/.exec(r.filteredErr.trimEnd())?.[1];
       expect(hash).toBeDefined();
       const { readFileSync } = await import("node:fs");
       expect(await readContentCache(hash!)).toBe(readFileSync(fixture, "utf8"));

@@ -1,6 +1,6 @@
 use crate::common::{
-    invalid, launch_candidates, native_environment_supported, processor_descriptor_name, remaining,
-    Capture, Channel, Descriptor, SPAWN_FRESH,
+    invalid, launch_candidates, native_environment_supported, post_exit_released,
+    processor_descriptor_name, remaining, Capture, Channel, Descriptor, SPAWN_FRESH,
 };
 use std::env;
 use std::ffi::OsString;
@@ -346,6 +346,8 @@ pub fn capture(
     let start = Instant::now();
     let mut terminated = None;
     let mut status = None;
+    let mut exited: Option<Instant> = None;
+    let mut last_data = start;
     while status.is_none() || polls.iter().any(|poll| poll.fd >= 0) {
         if status.is_none() {
             match child.try_wait() {
@@ -355,6 +357,17 @@ pub fn capture(
                     status = child.wait().ok();
                 }
             }
+        }
+        if status.is_some() && exited.is_none() {
+            exited = Some(Instant::now());
+        }
+        if exited.is_some_and(|time| post_exit_released(time, last_data, Instant::now())) {
+            // A background descendant keeps the pipes open: deliver what was
+            // read without waiting for (or killing) it.
+            for poll in &mut polls {
+                poll.fd = -1;
+            }
+            break;
         }
         let signal = SIGNAL.swap(0, Ordering::SeqCst);
         if signal != 0 && status.is_none() {
@@ -403,6 +416,7 @@ pub fn capture(
             let count = unsafe { libc::read(poll.fd, buffer.as_mut_ptr() as *mut _, buffer.len()) };
             if count > 0 {
                 capture.append(&buffer[..count as usize]);
+                last_data = Instant::now();
             } else if count == 0 {
                 poll.fd = -1;
             } else if !matches!(
@@ -493,5 +507,50 @@ mod tests {
         assert!(started.elapsed() < Duration::from_millis(100));
         drop(reader);
         sending.join().unwrap();
+    }
+
+    fn run(script: &str) -> (Capture, Capture, i32, Duration) {
+        let args = ["sh", "-c", script].map(OsString::from);
+        let started = Instant::now();
+        let (stdout, stderr, code) =
+            capture(&args, Path::new("/nonexistent-tokmizer-home"), 60_000).unwrap();
+        (stdout, stderr, code, started.elapsed())
+    }
+
+    #[test]
+    fn background_descendant_holding_pipes_does_not_block_capture() {
+        let (stdout, stderr, code, elapsed) = run("sleep 15 & echo started; echo oops >&2; exit 3");
+        assert!(elapsed < Duration::from_secs(2), "took {elapsed:?}");
+        assert_eq!(code, 3);
+        assert_eq!(stdout.bytes, b"started\n");
+        assert_eq!(stderr.bytes, b"oops\n");
+        assert!(!stdout.truncated && !stderr.truncated);
+    }
+
+    #[test]
+    fn output_written_right_before_exit_is_kept() {
+        let (stdout, _, code, _) =
+            run("i=0; while [ $i -lt 2000 ]; do echo line$i; i=$((i+1)); done; printf tail");
+        assert_eq!(code, 0);
+        let text = String::from_utf8(stdout.bytes).unwrap();
+        let lines: Vec<&str> = text.split('\n').collect();
+        assert_eq!(lines.len(), 2001);
+        assert_eq!(lines[1999], "line1999");
+        assert_eq!(lines[2000], "tail");
+    }
+
+    #[test]
+    fn output_a_descendant_writes_shortly_after_exit_is_kept() {
+        let (stdout, _, code, _) = run("(sleep 0.05; echo late) & echo early");
+        assert_eq!(code, 0);
+        assert_eq!(stdout.bytes, b"early\nlate\n");
+    }
+
+    #[test]
+    fn running_commands_are_still_awaited() {
+        let (stdout, _, code, elapsed) = run("sleep 0.5; echo done");
+        assert_eq!(code, 0);
+        assert_eq!(stdout.bytes, b"done\n");
+        assert!(elapsed >= Duration::from_millis(500));
     }
 }

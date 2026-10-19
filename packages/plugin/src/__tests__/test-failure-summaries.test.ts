@@ -5,7 +5,7 @@ import { processOutput, selectFilter, setFilterResolver, type LoadedFilter } fro
 import { readFilterDir } from "../engine/loader";
 
 const levels = ["normal", "compact", "minimal"] as const;
-const HINT_BYTES = Buffer.byteLength("\n[tkr restore 0123456789abcdef]");
+const HINT_BYTES = Buffer.byteLength("\n[tkr restore 0123456789abcdef]\n");
 let filters: Map<string, LoadedFilter>;
 
 function fixture(name: string): string {

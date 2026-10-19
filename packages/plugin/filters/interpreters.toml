@@ -1,15 +1,11 @@
 [filters.python]
-description = "Strip Python traceback and pip noise, keep every error and frame"
+description = "Strip Python traceback noise, keep every error and frame"
 match_command = "^python3?(?:\\.\\d+)?(?!\\s+-m\\s+pytest\\b)(\\s|$)|^bash-tool: python3?(?:\\.\\d+)?(?!\\s+-m\\s+pytest\\b)\\b"
 priority = 65
 strip_ansi = true
 strip_lines_matching = [
   "^\\s*[\\^~]+\\s*$",
-  "^  File \"<frozen [^\"]*>\", line \\d+",
-  "^\\s*Requirement already satisfied: ",
-  "^\\s*Using cached ",
-  "^\\s*Downloading ",
-  "^\\s*Preparing metadata "
+  "^  File \"<frozen [^\"]*>\", line \\d+"
 ]
 transform = "squeeze-output"
 on_empty = "python: ok"

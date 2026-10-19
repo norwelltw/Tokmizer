@@ -11,11 +11,14 @@ describe("exitOnBrokenPipe", () => {
     expect(exit).toHaveBeenCalledWith(141);
   });
 
-  it("rethrows any other stream error", () => {
+  it("does not throw on other stream errors and reports once", () => {
     const stream = new EventEmitter();
     const exit = vi.fn();
-    exitOnBrokenPipe(stream, exit);
-    expect(() => stream.emit("error", Object.assign(new Error("boom"), { code: "EIO" }))).toThrow("boom");
+    const warn = vi.fn();
+    exitOnBrokenPipe(stream, exit, warn);
+    expect(() => stream.emit("error", Object.assign(new Error("boom"), { code: "EIO" }))).not.toThrow();
+    expect(() => stream.emit("error", Object.assign(new Error("boom"), { code: "EIO" }))).not.toThrow();
     expect(exit).not.toHaveBeenCalled();
+    expect(warn).toHaveBeenCalledTimes(1);
   });
 });

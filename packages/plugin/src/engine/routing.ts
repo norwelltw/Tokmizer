@@ -2,6 +2,26 @@ const WRAPPER_TOKENS = new Set(["sudo", "command", "time", "nice", "nohup", "env
 const ASSIGNMENT_RE = /^[A-Za-z_][A-Za-z0-9_]*=/;
 export const TOOL_SYNTHETIC_RE = /^([a-z]+)-tool(?::\s|$)/;
 
+const GIT_OPTS_WITH_VALUE = new Set(["-C", "-c", "--git-dir", "--work-tree", "--namespace", "--exec-path", "--super-prefix", "--config-env"]);
+const GIT_FLAG_OPTS = new Set([
+  "-p", "--paginate", "-P", "--no-pager", "--bare", "--no-replace-objects", "--literal-pathspecs", "--glob-pathspecs",
+  "--noglob-pathspecs", "--icase-pathspecs", "--no-optional-locks", "--no-lazy-fetch", "--no-advice"
+]);
+
+// Drop git global options so `git -C repo diff` routes like `git diff`.
+function stripGitGlobalOptions(rest: string[]): string[] {
+  let i = 0;
+  while (i < rest.length) {
+    const t = rest[i]!;
+    if (GIT_OPTS_WITH_VALUE.has(t)) i += 2;
+    else if (GIT_FLAG_OPTS.has(t)) i += 1;
+    else if (/^--(?:git-dir|work-tree|namespace|exec-path|super-prefix|config-env)=/.test(t)) i += 1;
+    else if (/^-[Cc]\S/.test(t)) i += 1;
+    else break;
+  }
+  return rest.slice(i);
+}
+
 export function normalizeHead(segment: string): string {
   const trimmed = segment.trim();
   const tokens = trimmed.split(/\s+/);
@@ -22,8 +42,14 @@ export function normalizeHead(segment: string): string {
   }
   if (i >= tokens.length) return trimmed;
   const head = tokens[i]!;
-  const base = head.includes("/") ? head.slice(head.lastIndexOf("/") + 1) : head;
-  const rest = tokens.slice(i + 1);
+  let base = head.slice(Math.max(head.lastIndexOf("/"), head.lastIndexOf("\\")) + 1) || head;
+  base = base.replace(/\.(?:exe|cmd|bat|ps1)$/i, "") || base;
+  let restTokens = tokens.slice(i + 1);
+  if (base.toLowerCase() === "py") {
+    base = "python";
+    if (restTokens.length && /^-\d(?:\.\d+)?(?:-\d+)?$/.test(restTokens[0]!)) restTokens = restTokens.slice(1);
+  }
+  const rest = base === "git" ? stripGitGlobalOptions(restTokens) : restTokens;
   return rest.length ? `${base} ${rest.join(" ")}` : base;
 }
 

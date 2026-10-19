@@ -64,7 +64,7 @@ describe("Read fold end to end (real engine, real filter, real cache)", () => {
       tool_response: { file: { content: source } }
     });
     expect(delivered).not.toBeNull();
-    const hint = /\n\[tkr restore ([0-9a-f]+)\]$/.exec(delivered!);
+    const hint = /\n\[tkr restore ([0-9a-f]+)\]\n?$/.exec(delivered!);
     expect(hint).not.toBeNull();
     const body = delivered!.slice(0, hint!.index);
     expect(body.split("\n").length).toBe(source.split("\n").length);
@@ -101,7 +101,7 @@ describe("Read fold end to end (real engine, real filter, real cache)", () => {
       tool_response: { file: { content: source } }
     });
     expect(delivered).not.toBeNull();
-    const hint = /\n\[tkr restore ([0-9a-f]+)\]$/.exec(delivered!);
+    const hint = /\n\[tkr restore ([0-9a-f]+)\]\n?$/.exec(delivered!);
     const text = hint ? delivered!.slice(0, hint.index) : delivered!;
     expect(text).not.toMatch(/ ×\d+/);
     const lines = text.split("\n");

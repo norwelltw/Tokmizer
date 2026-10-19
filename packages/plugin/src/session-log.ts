@@ -11,6 +11,7 @@ import {
 } from "node:fs";
 import { join } from "node:path";
 import { tokmizerHome } from "./paths";
+import { maskSecrets, redactCommand } from "./learn/redact";
 
 export type SessionEvent = { t?: number; tool: string; target: string; fail?: 1 };
 
@@ -28,6 +29,12 @@ export function sessionFile(sessionId: string): string {
   return join(sessionsDir(), `${safe}.jsonl`);
 }
 
+/** Redact secrets (tokens, passwords, bearer headers, attached `-pSECRET`) before truncating, so a cut can't leave a token prefix. */
+export function redactTarget(target: string): string {
+  const attachedPassword = redactCommand(target).replace(/(^|\s)(-p)(?=\S)\S+/g, "$1$2[REDACTED]");
+  return maskSecrets(attachedPassword).slice(0, TARGET_MAX);
+}
+
 export function recordSessionEvent(sessionId: string, ev: SessionEvent): void {
   try {
     const file = sessionFile(sessionId);
@@ -35,7 +42,7 @@ export function recordSessionEvent(sessionId: string, ev: SessionEvent): void {
     const line = JSON.stringify({
       t: ev.t ?? Math.floor(Date.now() / 1000),
       tool: ev.tool,
-      target: ev.target.slice(0, TARGET_MAX),
+      target: redactTarget(ev.target),
       ...(ev.fail ? { fail: 1 } : {})
     });
     appendFileSync(file, `${line}\n`, { mode: 0o600 });

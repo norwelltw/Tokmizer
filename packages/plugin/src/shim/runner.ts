@@ -1,4 +1,5 @@
 import spawn from "cross-spawn";
+import { constants as osConstants } from "node:os";
 import { processOutput } from "../engine";
 import { slugKey } from "../contracts";
 import { resolveAllowedFilters } from "../default-rules";
@@ -17,6 +18,15 @@ import { yoloEnabled } from "../yolo-mode";
 import { failOpenActive } from "./sh";
 
 const MAX_BUFFER_BYTES = 16 * 1024 * 1024;
+
+// Same convention as tkr-exec and POSIX shells: a child killed by a signal
+// exits with 128 + the signal number.
+function closeExitCode(code: number | null, signal: NodeJS.Signals | null): number {
+  if (typeof code === "number") return code;
+  if (!signal) return 1;
+  const signals = osConstants.signals as Record<string, number | undefined>;
+  return 128 + (signals[signal] ?? 15);
+}
 const DEFAULT_TIMEOUT_MS = 600_000;
 const DEFAULT_STREAM_AFTER_MS = 1_500;
 
@@ -106,7 +116,7 @@ function runUnfiltered(cmdName: string, args: string[]): Promise<ShimResult> {
       process.stderr.write(`tkr-shim: ${err.message}\n`);
       done(127);
     });
-    child.on("close", (code, signal) => done(typeof code === "number" ? code : signal === "SIGINT" ? 130 : signal === "SIGTERM" ? 143 : 1));
+    child.on("close", (code, signal) => done(closeExitCode(code, signal)));
   });
 }
 
@@ -251,14 +261,7 @@ export async function runShim(invocation: ShimInvocation): Promise<ShimResult> {
 
     child.on("close", async (code, signal) => {
       clearTimers();
-      const exitCode =
-        typeof code === "number"
-          ? code
-          : signal === "SIGTERM"
-            ? 143
-            : signal === "SIGINT"
-              ? 130
-              : 1;
+      const exitCode = closeExitCode(code, signal);
 
       const outRaw = Buffer.concat(outChunks);
       const errRaw = Buffer.concat(errChunks);

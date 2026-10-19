@@ -1,7 +1,8 @@
+import { claudeConfigDir } from "./claude-config-dir";
 import { existsSync, realpathSync } from "node:fs";
 import { dirname, join } from "node:path";
 import os from "node:os";
-import { failOpenHook, isJsonObject, readJsonConfig, writeJsonConfig, type HookInstall, type HookRemoval, type JsonObject } from "./hook-config";
+import { failOpenHook, isJsonObject, isTokmizerProgramCommand, readJsonConfig, writeJsonConfig, type HookInstall, type HookRemoval, type JsonObject } from "./hook-config";
 import { stableSelfPath } from "./self-command";
 
 type ClaudeHookSpec = { event: string; matcher: string; words: string; exec: boolean; timeout: number };
@@ -25,7 +26,7 @@ type Group = { matcher?: unknown; hooks?: unknown } & JsonObject;
 export type ClaudeExecutables = { tkr: string; exec: string };
 
 export function claudeSettingsFile(): string {
-  return join(process.env.CLAUDE_CONFIG_DIR || join(os.homedir(), ".claude"), "settings.json");
+  return join(claudeConfigDir(), "settings.json");
 }
 
 function quote(path: string, platform: NodeJS.Platform): string {
@@ -55,8 +56,7 @@ function commandFor(spec: ClaudeHookSpec, executables: ClaudeExecutables, platfo
 }
 
 function isOurs(hook: unknown, spec: ClaudeHookSpec): hook is Hook {
-  return isJsonObject(hook) && typeof hook.command === "string" &&
-    hook.command.endsWith(` ${spec.words}`) && /tkr(?:-exec)?(?:\.exe)?['"]? /.test(hook.command);
+  return isJsonObject(hook) && isTokmizerProgramCommand(hook.command, spec.exec ? ["tkr-exec"] : ["tkr"], spec.words);
 }
 
 function groupsOf(parsed: JsonObject, event: string): Group[] {

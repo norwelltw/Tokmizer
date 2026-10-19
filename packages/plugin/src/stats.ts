@@ -3,6 +3,7 @@ import { appendFileSync, chmodSync, mkdirSync, readFileSync, realpathSync, renam
 import { basename, dirname, join, resolve, sep } from "node:path";
 import type { Plan } from "./contracts";
 import { tokmizerHome } from "./paths";
+import { droppedEventsCount } from "./learn/spool";
 import { providerForHost, type Provider } from "./pricing";
 
 const STATS_FILE = "stats.jsonl";
@@ -378,6 +379,12 @@ export type GainAgg = {
     savedPct: number | null;
     expandedCount: number;
   };
+  /** Every recorded output, net of restores. Same scope as `observed`, under an unambiguous name. */
+  allCommands?: { count: number; rawTokens: number; savedTokens: number; savedPct: number | null };
+  /** Only the outputs Tokmizer actually shortened (not the overall rate). */
+  shortenedOnly?: { count: number; rawTokens: number; savedTokens: number; savedPct: number | null };
+  /** Usage events refused because the local upload queue was full. */
+  droppedEvents?: number;
   agent?: { count: number; rawTokens: number; filteredTokens: number; savedPct: number | null };
   shortened?: { count: number; rawTokens: number; filteredTokens: number; savedPct: number | null };
   terminal?: { count: number; rawTokens: number; savedTokens: number };
@@ -679,6 +686,17 @@ export async function readGain(file = statsPath(), sinceTs = 0, project?: string
       filteredTokens: bytesToTokens(shortenedFinal),
       savedPct: shortenedRaw > 0 ? Math.round(((shortenedRaw - shortenedFinal) / shortenedRaw) * 1000) / 10 : null
     },
+    allCommands: {
+      count: acc.n, rawTokens: observedRawTokens, savedTokens: observedRawTokens - observedFilteredTokens,
+      savedPct: acc.or ? Math.round((acc.or - acc.of) / acc.or * 10000) / 100 : null
+    },
+    shortenedOnly: {
+      count: shortenedCount,
+      rawTokens: bytesToTokens(shortenedRaw),
+      savedTokens: bytesToTokens(shortenedRaw) - bytesToTokens(shortenedFinal),
+      savedPct: shortenedRaw > 0 ? Math.round(((shortenedRaw - shortenedFinal) / shortenedRaw) * 1000) / 10 : null
+    },
+    droppedEvents: droppedEventsCount(),
     agent: {
       count: acc.n - acc.tn,
       rawTokens: bytesToTokens(acc.or - acc.tr),
@@ -748,7 +766,7 @@ export function renderGain(agg: GainAgg, opts: { color: boolean; pricePerMtok: n
     `${label("Tokens in")}${formatTokens(scope.rawTokens)}`,
     `${label("Tokens out")}${formatTokens(scope.filteredTokens)}`,
     `${label(saved >= 0 ? "Tokens saved" : "Tokens added")}${formatTokens(Math.abs(saved))} (${Math.abs(pct)} % of all commands)`,
-    ...(agg.shortened?.savedPct != null && agg.shortened.count > 0 ? [`${label("Shortened only")}−${agg.shortened.savedPct} % on the ${formatCount(agg.shortened.count)} output${agg.shortened.count === 1 ? "" : "s"} Tokmizer shortened`] : []),
+    ...(agg.shortened?.savedPct != null && agg.shortened.count > 0 ? [`${label("Shortened only")}−${agg.shortened.savedPct} % on the ${formatCount(agg.shortened.count)} output${agg.shortened.count === 1 ? "" : "s"} Tokmizer shortened, not the overall rate`] : []),
     `${label("Efficiency")}${meter} ${Math.max(0, pct)} %`,
     ...(opts.periods?.length ? [
       "",
@@ -761,6 +779,7 @@ export function renderGain(agg: GainAgg, opts: { color: boolean; pricePerMtok: n
     ...renderByCommand(agg.byCommand, opts.color),
     "",
     "  Estimates from output size (bytes ÷ 4), not provider-counted tokens.",
+    ...(agg.droppedEvents ? [`  ${formatCount(agg.droppedEvents)} usage event${agg.droppedEvents === 1 ? " was" : "s were"} not uploaded because the queue was full.`] : []),
     ...(terminal ? [`  ${formatCount(terminal)} terminal commands with no agent are not counted.`] : []),
     ...(agg.oversizedExcluded ? [`  ${formatCount(agg.oversizedExcluded)} Bash outputs over ${formatCount(OVERSIZED_SHELL_BYTES)} characters are not counted: Claude Code shows at most that much.`] : []),
     ""

@@ -14,6 +14,18 @@ pub const CAPTURING_ENV: &str = "TOKMIZER_EXEC_CAPTURING";
 const POST_CAP: usize = CAP + 2 * 1024 * 1024;
 const SPAWN_WAIT: Duration = Duration::from_millis(80);
 pub const SPAWN_FRESH: Duration = Duration::from_secs(1);
+/// Once the direct child has exited, a background descendant may still hold
+/// the pipes open. Like a shell, stop reading after this much silence (or the
+/// hard cap if it keeps writing) and keep the child's exit code.
+pub const POST_EXIT_IDLE: Duration = Duration::from_millis(200);
+pub const POST_EXIT_MAX: Duration = Duration::from_millis(1000);
+
+/// Whether a capture should stop waiting for pipes the exited child left open.
+pub fn post_exit_released(exited: Instant, last_data: Instant, now: Instant) -> bool {
+    let quiet_since = exited.max(last_data);
+    now.saturating_duration_since(quiet_since) >= POST_EXIT_IDLE
+        || now.saturating_duration_since(exited) >= POST_EXIT_MAX
+}
 
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -716,6 +728,24 @@ pub fn run(args: &[OsString]) -> Option<i32> {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn post_exit_release_waits_for_quiet_or_cap() {
+        let exited = std::time::Instant::now();
+        let ms = std::time::Duration::from_millis;
+        assert!(!super::post_exit_released(exited, exited, exited + ms(100)));
+        assert!(super::post_exit_released(exited, exited, exited + ms(200)));
+        assert!(!super::post_exit_released(
+            exited,
+            exited + ms(150),
+            exited + ms(300)
+        ));
+        assert!(super::post_exit_released(
+            exited,
+            exited + ms(950),
+            exited + ms(1000)
+        ));
+    }
+
     #[cfg(unix)]
     #[test]
     fn resolved_follows_a_symlink_to_the_real_launcher_directory() {

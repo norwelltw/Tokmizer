@@ -1,3 +1,4 @@
+import { claudeConfigDir } from "../claude-config-dir";
 import { accessSync, chmodSync, constants, existsSync, mkdirSync, readdirSync, readFileSync, realpathSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { chmod, mkdir, rename, unlink, writeFile } from "node:fs/promises";
 import { basename, dirname, join, sep } from "node:path";
@@ -27,7 +28,7 @@ export function runLauncherFile(): string {
 }
 
 export function claudePluginCacheDir(): string {
-  return join(process.env.CLAUDE_CONFIG_DIR || join(os.homedir(), ".claude"), "plugins", "cache", "tokmizer", "tokmizer");
+  return join(claudeConfigDir(), "plugins", "cache", "tokmizer", "tokmizer");
 }
 
 function pluginCacheParent(shimJs: string): string | null {

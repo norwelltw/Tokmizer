@@ -175,7 +175,7 @@ describe("success output is compressed and keeps its result", () => {
     const r = await run("pnpm exec prettier --write src", raw, 0);
     expect(r.output.trim()).toBe("src2/ugly.js 0ms");
     const clean = raw.split("\n").filter((l) => l.includes("(unchanged)")).join("\n");
-    expect((await run("prettier --write src", clean, 0)).output).toBe("prettier: all files unchanged");
+    expect((await run("prettier --write src", clean, 0)).output).toBe("prettier: all files unchanged\n");
   });
 
   it("golangci-lint drops info logs and keeps the verdict", async () => {
@@ -255,7 +255,7 @@ describe("success output is compressed and keeps its result", () => {
   });
 
   it("php -l collapses a clean lint", async () => {
-    expect((await run("php -l src/F1.php", "No syntax errors detected in src/F1.php\n", 0)).output).toBe("php -l: no syntax errors");
+    expect((await run("php -l src/F1.php", "No syntax errors detected in src/F1.php\n", 0)).output).toBe("php -l: no syntax errors\n");
   });
 
   it("git show of a blob is read like a file", async () => {
@@ -369,7 +369,7 @@ describe("huge outputs", () => {
   it("sqlfluff over 4000 clean files collapses", async () => {
     const raw = Array.from({ length: 4000 }, (_, i) => `== [models/m${i}.sql] PASS`).join("\n") + "\nAll Finished!\n";
     const r = await run("sqlfluff lint models", raw, 0);
-    expect(r.output).toBe("sqlfluff: no violations");
+    expect(r.output).toBe("sqlfluff: no violations\n");
   });
 
   it("prettier --write over 6000 files keeps the 3 it changed", async () => {

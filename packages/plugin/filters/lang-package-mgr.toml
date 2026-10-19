@@ -90,6 +90,7 @@ strip_lines_matching = ["^\\s*$", "^Download ", "^Check (?:file:)?\\S+$", "^runn
 max_lines = 150
 keep_failures = true
 strip_on_failure = true
+on_empty = "deno: ok"
 drop_lines_matching = [
   "^\\s+\\^\\s*$",
   "^\\s+at .*\\(https://(?:jsr\\.io/@std/|deno\\.land/std@)",

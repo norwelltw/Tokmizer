@@ -1,4 +1,5 @@
 import { existsSync, readFileSync } from "node:fs";
+import { parseJsonText } from "./json-text";
 import { join } from "node:path";
 import os from "node:os";
 import { hookCommandFor, isTokmizerHookCommand, keepFirstHook, readJsonConfig, writeJsonConfig, type HookInstall, type HookRemoval } from "./hook-config";
@@ -24,7 +25,7 @@ function ours(group: HookGroup): HookCommand | undefined {
 
 function hooksJsonHasOurs(): boolean {
   try {
-    const parsed = JSON.parse(readFileSync(codexHooksFile(), "utf8")) as HooksFile;
+    const parsed = parseJsonText(readFileSync(codexHooksFile(), "utf8")) as HooksFile;
     return (parsed.hooks?.PreToolUse ?? []).some((g) => ours(g) != null);
   } catch {
     return false;

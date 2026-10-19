@@ -398,11 +398,11 @@ describe("restore settings imported from rtk", () => {
     const plan = await buildPlan(e);
     expect(plan.config.restoreDisabled).toBe(true);
     const tail = "dropped line\n".repeat(50);
-    expect(await captureForRestore(tail, "kept", {})).toMatch(/\[tkr restore [0-9a-f]{16}\]$/);
+    expect(await captureForRestore(tail, "kept", {})).toMatch(/\[tkr restore [0-9a-f]{16}\]\n?$/);
     await applyPlan(plan);
     expect(await captureForRestore(tail, "kept", {})).toBe("kept");
     await undoMigration();
-    expect(await captureForRestore(tail, "kept", {})).toMatch(/\[tkr restore [0-9a-f]{16}\]$/);
+    expect(await captureForRestore(tail, "kept", {})).toMatch(/\[tkr restore [0-9a-f]{16}\]\n?$/);
   });
 });
 

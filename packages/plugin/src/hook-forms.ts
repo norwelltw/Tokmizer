@@ -1,13 +1,18 @@
-import { isTokmizerHookCommand } from "./hook-config";
+import { isTokmizerHookCommand, parseHookCommand } from "./hook-config";
 import { CONTEXT_MARK } from "./context-hooks";
 import type { RouteHost } from "./hooks-host/payload-host";
 
-const CLAUDE_EXEC_FORM = /tkr-exec(?:\.exe)?['"]?\s+--(?:pre-tool-use|post-tool-use|session-start)(?=\s|['"]|$)/i;
-const CLAUDE_HOOK_FORM = /(?:^|[\s'"\\/])tkr(?:\.exe)?['"]?\s+hook\s+(?:pre-tool-use|post-tool-use|session-start|session-recap|reducer-session-start|reducer-prompt-submit|reducer-stop|command-expansion)(?=\s|['"]|$)/i;
+const CLAUDE_EXEC_FLAGS = new Set(["--pre-tool-use", "--post-tool-use", "--session-start"]);
+const CLAUDE_HOOK_WORDS = new Set(["pre-tool-use", "post-tool-use", "session-start", "session-recap", "reducer-session-start", "reducer-prompt-submit", "reducer-stop", "command-expansion"]);
+const CLAUDE_SCRIPT_NAMES = new Set(["pre-tool-use", "post-tool-use", "session-recap", "reducer-session-start", "reducer-prompt-submit", "reducer-stop", "command-expansion", "on-session-start"]);
 const CLAUDE_SCRIPT_FORM = /(?:tokmizer|\$\{?CLAUDE_PLUGIN_ROOT\}?)[^'"\n]*?[\\/]+(?:dist[\\/]+hooks-host[\\/]+(?:pre-tool-use|post-tool-use|session-recap|reducer-session-start|reducer-prompt-submit|reducer-stop|command-expansion)\.js|hooks[\\/]+on-session-start\.mjs)/i;
 
 export function claudeFormHook(command: unknown): boolean {
-  return typeof command === "string" && (CLAUDE_EXEC_FORM.test(command) || CLAUDE_HOOK_FORM.test(command) || CLAUDE_SCRIPT_FORM.test(command));
+  const parsed = parseHookCommand(command);
+  if (!parsed || parsed.launcherMark !== undefined) return false;
+  if (parsed.program === "tkr-exec") return parsed.args.length === 1 && CLAUDE_EXEC_FLAGS.has(parsed.args[0]!);
+  if (parsed.program === "tkr") return parsed.args.length === 2 && parsed.args[0] === "hook" && CLAUDE_HOOK_WORDS.has(parsed.args[1]!);
+  return CLAUDE_SCRIPT_NAMES.has(parsed.program) && CLAUDE_SCRIPT_FORM.test(command as string);
 }
 
 const MARKS: readonly [string, RouteHost][] = [

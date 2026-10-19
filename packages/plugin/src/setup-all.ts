@@ -1,3 +1,4 @@
+import { claudeConfigDir } from "./claude-config-dir";
 import { accessSync, constants, existsSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { delimiter, join } from "node:path";
@@ -9,7 +10,7 @@ const home = (): string => os.homedir();
 const xdg = (): string => process.env.XDG_CONFIG_HOME || join(home(), ".config");
 
 export const AGENT_PROBES: readonly AgentProbe[] = [
-  { id: "claude", label: "Claude Code", command: "setup-claude", dirs: () => [process.env.CLAUDE_CONFIG_DIR || join(home(), ".claude")], bins: ["claude"] },
+  { id: "claude", label: "Claude Code", command: "setup-claude", dirs: () => [claudeConfigDir(process.env, home())], bins: ["claude"] },
   { id: "codex", label: "Codex", command: "setup-codex", dirs: () => [process.env.CODEX_HOME || join(home(), ".codex")], bins: ["codex"] },
   { id: "cursor", label: "Cursor", command: "setup-cursor", dirs: () => [join(home(), ".cursor")], bins: ["cursor-agent", "cursor"] },
   { id: "gemini", label: "Gemini CLI", command: "setup-gemini", dirs: () => [join(process.env.GEMINI_CLI_HOME || home(), ".gemini", "settings.json")], bins: ["gemini"] },

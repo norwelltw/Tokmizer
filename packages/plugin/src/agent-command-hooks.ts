@@ -1,4 +1,5 @@
 import { readFile, mkdir } from "node:fs/promises";
+import { parseJsonText } from "./json-text";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import os from "node:os";
@@ -116,7 +117,7 @@ function antigravityEntry(command: string): Record<string, unknown> {
 
 export function antigravityHookInstalled(): boolean {
   try {
-    const parsed: unknown = JSON.parse(readFileSync(antigravityHooksFile(), "utf8"));
+    const parsed: unknown = parseJsonText(readFileSync(antigravityHooksFile(), "utf8"));
     return isJsonObject(parsed) && isJsonObject(parsed[ANTIGRAVITY_KEY]);
   } catch {
     return false;

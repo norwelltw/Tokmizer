@@ -145,7 +145,7 @@ description = "Group ast-grep run matches by file"
 match_command = "^ast-grep(?:\\s+run)?(?:\\s+-|\\s+--pattern)|^ast-grep\\s+run(?:\\s|$)|^sg\\s+(?:run(?:\\s|$)|-p\\s|--pattern[\\s=])"
 priority = 60
 strip_ansi = true
-transform = "smart-grep"
+transform = "smart-grep-ast"
 truncate_lines_at = 200
 max_lines = 120
 on_empty = "ast-grep: no match"

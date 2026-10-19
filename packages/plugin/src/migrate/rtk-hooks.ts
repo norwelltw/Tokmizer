@@ -1,4 +1,6 @@
+import { claudeConfigDir } from "../claude-config-dir";
 import { existsSync, readFileSync } from "node:fs";
+import { parseJsonText } from "../json-text";
 import { basename, join } from "node:path";
 import { codexHookInstalled } from "../codex-hooks";
 import { cursorHookInstalled } from "../cursor-hooks";
@@ -44,7 +46,7 @@ export function isRtkHookCommand(cmd: unknown, agent: string): boolean {
 
 function readJson(file: string): Json | null {
   try {
-    const parsed: unknown = JSON.parse(readFileSync(file, "utf8"));
+    const parsed: unknown = parseJsonText(readFileSync(file, "utf8"));
     return isObj(parsed) ? parsed : null;
   } catch {
     return null;
@@ -155,7 +157,7 @@ function jsonAgentInstalled(id: JsonHookAgentId): boolean {
 }
 
 export function claudeDir(e: RtkEnv): string {
-  return e.env.CLAUDE_CONFIG_DIR || join(e.home, ".claude");
+  return claudeConfigDir(e.env, e.home);
 }
 
 export function tokmizerInClaude(e: RtkEnv): boolean {

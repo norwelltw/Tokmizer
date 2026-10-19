@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { parseJsonText } from "./json-text";
 import { isJsonObject, readJsonConfig, writeJsonConfig } from "./hook-config";
 import { foreignTo } from "./hook-forms";
 import { claudeSettingsFile } from "./claude-hooks";
@@ -58,7 +59,7 @@ export function foreignFindings(targets: readonly HealTarget[] = healTargets()):
     for (const file of new Set(target.files())) {
       let parsed: unknown;
       try {
-        parsed = JSON.parse(readFileSync(file, "utf8"));
+        parsed = parseJsonText(readFileSync(file, "utf8"));
       } catch {
         continue;
       }

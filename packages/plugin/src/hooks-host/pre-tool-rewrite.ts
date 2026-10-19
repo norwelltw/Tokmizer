@@ -1,6 +1,7 @@
 import { ensureRunLauncherSync } from "../shim/launcher";
+import { claudeConfigDir } from "../claude-config-dir";
 import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { homedir } from "node:os";
 import { fileURLToPath } from "node:url";
 import { dirname, join, resolve } from "node:path";
@@ -89,7 +90,7 @@ function scriptChainsOutput(script: string): boolean {
   return producing.length > 1;
 }
 
-type HeadCheck = (head: string) => boolean;
+type HeadCheck = (head: string, segment?: string) => boolean;
 
 function unwrapShellScript(trimmed: string, exec: string, depth: number, headOk: HeadCheck, onWrap?: WrapSink): string | null {
   if (depth >= MAX_SHELL_DEPTH) return null;
@@ -108,14 +109,70 @@ function unwrapShellScript(trimmed: string, exec: string, depth: number, headOk:
 }
 
 const STREAM_FOLLOW_RE = /(?:^|\s)(?:--follow|-[0-9a-zA-Z]*f[a-zA-Z]*)(?:\s|=|$)/;
+const TAIL_FOLLOW_RE = /(?:^|\s)(?:--follow|-[0-9a-zA-Z]*[fF][a-zA-Z]*)(?:\s|=|$)/;
 const STREAM_LOG_HEADS = new Set(["docker", "podman", "kubectl", "nerdctl", "docker-compose", "stern", "flyctl"]);
+// Mirrors shim/runner.ts PACKAGE_MANAGERS / LONG_RUNNING_SCRIPTS: tkr-exec buffers until exit.
+const PACKAGE_MANAGERS = new Set(["npm", "pnpm", "yarn", "bun"]);
+const LONG_RUNNING_SCRIPT_RE = /^(?:dev|start|serve|preview|watch)(?::\S*)?$/;
+const PM_VALUE_FLAGS = new Set(["--filter", "-F", "--dir", "-C", "--prefix", "--workspace", "-w", "--cwd"]);
+const PACKAGE_RUNNERS = new Set(["npx", "pnpx", "bunx"]);
+const ALWAYS_INTERACTIVE = new Set(["nodemon", "top", "htop", "btop", "watch"]);
+const SHORT_WATCH_HEADS = new Set([
+  "tsc", "vitest", "jest", "webpack", "rollup", "esbuild", "tsup", "babel", "sass", "tailwindcss", "mocha", "swc", "parcel", "nest"
+]);
+const WATCH_OPTION_RE = /(?:^|\s)--watch(?:All)?(?:\s|=(?!false(?:\s|$))|$)/;
+const SHORT_WATCH_RE = /(?:^|\s)-w(?:\s|$)/;
+
+function isLongRunningCommand(words: string[]): boolean {
+  let w = words.map((word) => word.replace(/['"]/g, ""));
+  while (w.length > 1 && (w[0] === "env" || /^[A-Za-z_][A-Za-z0-9_]*=/.test(w[0]!))) w = w.slice(1);
+  let base = basename(w[0] ?? "");
+  if (PACKAGE_RUNNERS.has(base) || (PACKAGE_MANAGERS.has(base) && (w[1] === "exec" || w[1] === "dlx"))) {
+    w = w.slice(PACKAGE_RUNNERS.has(base) ? 1 : 2).filter((word, i, all) => !(word.startsWith("-") && all.slice(0, i).every((x) => x.startsWith("-"))));
+    base = basename(w[0] ?? "");
+  } else if (PACKAGE_MANAGERS.has(base)) {
+    const positional = w.slice(1).filter((a, i, all) => !a.startsWith("-") && !PM_VALUE_FLAGS.has(all[i - 1] ?? ""));
+    if (positional[0] === "workspace") positional.splice(0, 2);
+    const script = positional[0] === "run" || positional[0] === "run-script" ? positional[1] : positional[0];
+    return script !== undefined && LONG_RUNNING_SCRIPT_RE.test(script);
+  }
+  const args = w.slice(1);
+  const line = args.join(" ");
+  const sub = args.find((a) => !a.startsWith("-"));
+  if (ALWAYS_INTERACTIVE.has(base)) return true;
+  if (WATCH_OPTION_RE.test(line)) return true;
+  if (SHORT_WATCH_HEADS.has(base) && SHORT_WATCH_RE.test(line)) return true;
+  switch (base) {
+    case "next": return sub === "dev" || sub === "start";
+    case "vite": return !args.includes("build") && !args.includes("optimize");
+    case "vitest": return sub === "watch" || sub === "dev";
+    case "cargo": case "dotnet": return sub === "watch";
+    case "turbo": {
+      const task = sub === "run" ? args.filter((a) => !a.startsWith("-"))[1] : sub;
+      return task !== undefined && LONG_RUNNING_SCRIPT_RE.test(task);
+    }
+    case "nx": {
+      const target = sub === "run" ? args.filter((a) => !a.startsWith("-"))[1]?.split(":")[1] : sub;
+      return target !== undefined && /^(?:serve|dev|start|watch)$/.test(target);
+    }
+    case "ping": return !args.some((a) => /^-[a-zA-Z]*c/.test(a));
+    case "docker": case "podman": case "nerdctl": case "docker-compose": {
+      const compose = base === "docker-compose" ? args : sub === "compose" ? args.slice(args.indexOf("compose") + 1) : null;
+      if (compose) return compose.includes("up") && !compose.some((a) => a === "--detach" || /^-[a-zA-Z]*d[a-zA-Z]*$/.test(a));
+      return (sub === "stats" && !args.includes("--no-stream")) || sub === "events";
+    }
+    case "kubectl": return sub === "port-forward" || ((sub === "get" || sub === "rollout") && SHORT_WATCH_RE.test(line)) || /(?:^|\s)--watch-only(?:\s|=|$)/.test(line);
+    default: return false;
+  }
+}
 
 function isStreamingCommand(trimmed: string, head: string): boolean {
   const base = basename(head);
-  if (base === "tail" || base === "journalctl") return STREAM_FOLLOW_RE.test(trimmed);
+  if (base === "tail") return TAIL_FOLLOW_RE.test(trimmed);
+  if (base === "journalctl") return STREAM_FOLLOW_RE.test(trimmed);
   if (base === "stern") return true;
-  if (STREAM_LOG_HEADS.has(base)) return /\blogs?\b/.test(trimmed) && STREAM_FOLLOW_RE.test(trimmed);
-  return false;
+  if (STREAM_LOG_HEADS.has(base) && /\blogs?\b/.test(trimmed) && STREAM_FOLLOW_RE.test(trimmed)) return true;
+  return isLongRunningCommand(trimmed.split(/\s+/));
 }
 
 const ASSIGN_RE = /^[A-Za-z_][A-Za-z0-9_]*\+?=/;
@@ -314,14 +371,45 @@ export function rewrite(cmd: string, exec = "tkr-exec", headOk: HeadCheck = () =
   return rewriteAt(cmd, exec, 0, headOk, onWrap);
 }
 
+const COMPOUND_OPEN = new Set(["{", "for", "while", "until", "if", "case", "select"]);
+const COMPOUND_CLOSE = new Set(["}", "done", "fi", "esac"]);
+const COMPOUND_PREFIX = new Set(["then", "do", "else", "elif", "!", "time", "{", "if", "while", "until"]);
+
+function outputCaptured(segs: Segment[], s: number): boolean {
+  const next = segs[s + 1];
+  return hasTopLevelRedirect(segs[s]!.text) || (next?.kind === "sep" && (next.text === "|" || next.text === "|&"));
+}
+
+// Segments inside a { } / loop / if / case whose combined output is redirected or piped:
+// wrapping an inner command would shorten what the file or the next command receives.
+function capturedCompoundSegments(segs: Segment[]): Set<number> {
+  const frozen = new Set<number>();
+  const open: number[] = [];
+  for (let s = 0; s < segs.length; s++) {
+    const seg = segs[s]!;
+    if (seg.kind !== "cmd" || seg.unsafe) continue;
+    for (const word of seg.text.trim().split(/\s+/)) {
+      if (COMPOUND_CLOSE.has(word)) {
+        const start = open.pop();
+        if (start !== undefined && outputCaptured(segs, s)) for (let i = start; i <= s; i++) frozen.add(i);
+        continue;
+      }
+      if (COMPOUND_OPEN.has(word)) open.push(s);
+      if (!COMPOUND_PREFIX.has(word)) break;
+    }
+  }
+  return frozen;
+}
+
 function rewriteAt(cmd: string, exec: string, depth: number, headOk: HeadCheck, onWrap?: WrapSink): string {
   if (cmd.includes("<<")) return cmd;
   if (FUNC_DEF_ANYWHERE.test(cmd)) return cmd;
   const segs = splitTopLevel(cmd);
+  const frozen = capturedCompoundSegments(segs);
   const out: string[] = [];
   for (let s = 0; s < segs.length; s++) {
     const seg = segs[s]!;
-    if (seg.kind === "sep" || seg.unsafe) {
+    if (seg.kind === "sep" || seg.unsafe || frozen.has(s)) {
       out.push(seg.text);
       continue;
     }
@@ -361,7 +449,7 @@ function rewriteAt(cmd: string, exec: string, depth: number, headOk: HeadCheck, 
       seg.text.includes("<(") ||
       seg.text.includes(">(") ||
       (head === "node" && trimmed.includes("tkr-exec.js")) ||
-      !headOk(head)
+      !headOk(head, trimmed)
     ) {
       out.push(seg.text);
       continue;
@@ -503,7 +591,8 @@ type RuleSet = { matchers: Matcher[]; complete: boolean; allow?: Matcher[]; allo
 function readConfig(path: string, jsonc: boolean): unknown | "missing" | "unreadable" {
   if (!existsSync(path)) return "missing";
   try {
-    const raw = readFileSync(path, "utf8");
+    const raw = readFileSync(path, "utf8").replace(/^\uFEFF/, "");
+    if (raw.trim() === "") return {};
     return JSON.parse(jsonc ? stripJsonComments(raw) : raw);
   } catch {
     return "unreadable";
@@ -582,7 +671,7 @@ function stringList(value: unknown): string[] | null {
 export type ClaudeDirs = { projectDir?: string | undefined; configDir?: string | undefined };
 
 export function currentClaudeDirs(): ClaudeDirs {
-  return { projectDir: process.env.CLAUDE_PROJECT_DIR, configDir: process.env.CLAUDE_CONFIG_DIR };
+  return { projectDir: process.env.CLAUDE_PROJECT_DIR, configDir: process.env.CLAUDE_CONFIG_DIR?.trim() ? claudeConfigDir() : undefined };
 }
 
 function claudeRules(cwd: string, dirs: ClaudeDirs): RuleSet {
@@ -1144,11 +1233,31 @@ function rewriteWithoutPrompt(rules: RuleSet, context: RewriteContext): boolean 
   return rules !== "unreadable" && rules.allowsEverything === true && ALLOW_RULE_MODES.has(context.permissionMode ?? "");
 }
 
+// In a linked worktree (.git is a file), Claude Code's isolation guard refuses a
+// command whose launcher it does not know when a git word is among its operands.
+// Such segments stay as typed; their output is still shortened after the run.
+const GIT_WORD_RE = /(?:^|[\s/])git(?:\.exe|\.real|-[a-z][\w-]*)?(?=\s|$)/;
+
+function inLinkedWorktree(cwd: string | undefined): boolean {
+  if (!cwd) return false;
+  try {
+    for (const dir of ancestors(cwd)) {
+      const dotGit = join(dir, ".git");
+      if (existsSync(dotGit)) return statSync(dotGit).isFile();
+    }
+  } catch {
+    return true;
+  }
+  return false;
+}
+
 function headCheck(context: RewriteContext, dirs: ClaudeDirs): HeadCheck {
   const pathEnv = "pathEnv" in context ? context.pathEnv : process.env.PATH;
   let names: ShellNames | undefined;
-  return (head) => {
+  let linked: boolean | undefined;
+  return (head, segment) => {
     if (context.host !== "claude-code") return resolvableHead(head, context.cwd, pathEnv);
+    if (segment !== undefined && GIT_WORD_RE.test(segment) && (linked ??= inLinkedWorktree(context.cwd))) return false;
     names ??= claudeShellNames(dirs.configDir);
     if (!resolvableHead(head, context.cwd, pathEnv) && !names.paths.some((path) => resolvableHead(head, context.cwd, path))) return false;
     return head.includes("/") || !shadowedByShell(head, names);

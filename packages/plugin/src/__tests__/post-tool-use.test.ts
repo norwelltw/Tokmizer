@@ -295,7 +295,7 @@ describe("processToolOutput", () => {
       tool_input: { path: "/x" },
       tool_response: { filenames: Array.from({ length: 45 }, (_, i) => `/x/f${i}.ts`), durationMs: 3, numFiles: 45, truncated: false }
     });
-    expect(r).toMatch(/^\/x\/f0\.ts\n\/x\/f1\.ts\n\/x\/f2\.ts\n\[tkr restore [0-9a-f]{16}\]$/);
+    expect(r).toMatch(/^\/x\/f0\.ts\n\/x\/f1\.ts\n\/x\/f2\.ts\n\[tkr restore [0-9a-f]{16}\]\n?$/);
   });
 
   it("leaves a short Glob result untouched", async () => {
@@ -426,7 +426,7 @@ describe("processToolOutput", () => {
     });
     const full = filenames.join("\n");
     const hash = createHash("sha256").update(full).digest("hex").slice(0, 16);
-    expect(r).toBe(`${filenames.slice(0, 3).join("\n")}\n[tkr restore ${hash}]`);
+    expect(r).toBe(`${filenames.slice(0, 3).join("\n")}\n[tkr restore ${hash}]\n`);
     expect(await readContentCache(hash)).toBe(full);
   });
 });
@@ -653,7 +653,7 @@ describe("fold restore hint", () => {
       tool_input: { file_path: "/a/f.ts" },
       tool_response: { file: { content: original } }
     });
-    expect(r).toMatch(/\[tkr restore [0-9a-f]{8,64}\]$/);
+    expect(r).toMatch(/\[tkr restore [0-9a-f]{8,64}\]\n?$/);
     const hash = /\[tkr restore ([0-9a-f]+)\]/.exec(r!)![1]!;
     const { readContentCache } = await import("../content-cache");
     expect(await readContentCache(hash)).toBe(original);

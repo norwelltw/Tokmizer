@@ -111,7 +111,21 @@ function plainLs(lines: string[]): string[] | null {
   return out.join("\n").length < names.join("\n").length ? out : null;
 }
 
-export function smartLs(lines: string[]): string[] {
+/** True when the ls command line carries a flag that changes entry order (-t -S -U -f -r -v -X, --sort, --reverse). */
+export function lsHasSortFlag(cmd: string | undefined): boolean {
+  if (!cmd) return false;
+  const m = /(?:^|[\s;&|(])ls(?=\s|$)([^|;&]*)/.exec(cmd);
+  if (!m) return false;
+  for (const tok of m[1]!.trim().split(/\s+/)) {
+    if (tok === "--") break;
+    if (/^--(?:sort|reverse|time)(?:=|$)/.test(tok)) return true;
+    if (/^-[A-Za-z0-9]+$/.test(tok) && /[tSUfrvX]/.test(tok)) return true;
+  }
+  return false;
+}
+
+export function smartLs(lines: string[], cmd?: string): string[] {
+  if (lsHasSortFlag(cmd)) return lines;
   const plain = plainLs(lines);
   if (plain) return plain;
   const dirs: Entry[] = [];

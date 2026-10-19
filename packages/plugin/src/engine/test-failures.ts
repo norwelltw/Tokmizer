@@ -37,6 +37,17 @@ function libraryPath(path: string): boolean {
   return LIBRARY_PATH_RE.test(path);
 }
 
+function fileUrlToPath(raw: string): string {
+  if (!/^file:\/\//i.test(raw)) return raw;
+  let p = raw.replace(/^file:\/\/(?:localhost)?/i, "");
+  try {
+    p = decodeURIComponent(p);
+  } catch {
+    // keep the raw text when it is not valid percent-encoding
+  }
+  return p.replace(/^\/([A-Za-z]:[\\/])/, "$1");
+}
+
 function addFrame(body: Entry[], at: string, loc: string | null): string {
   if (loc === null) return at;
   if (at !== loc && !body.some((e) => e.kind === "frame" && e.text === at)) body.push({ kind: "frame", text: at });
@@ -64,7 +75,7 @@ function classifyJs(lines: string[], isOut: (line: string) => boolean = () => fa
     const frame = JS_FRAME_RE.exec(line) ?? VITEST_FRAME_RE.exec(line);
     if (frame) {
       segment = -1;
-      const path = frame[1]!.replace(/^file:\/\//, "");
+      const path = fileUrlToPath(frame[1]!);
       if (!libraryPath(path)) loc = addFrame(body, `${path}:${frame[2]}${frame[3] ? `:${frame[3]}` : ""}`, loc);
       continue;
     }
@@ -117,6 +128,7 @@ function parseVitest(lines: string[]): Parsed | null {
   for (const line of lines) {
     if (/^\s*Test Files\s{2,}\S/.test(line)) summary.push(summaryLine(line, true));
     else if (/^\s*(?:Tests|Errors|Type Errors)\s{2,}\S/.test(line)) summary.push(summaryLine(line));
+    else if (/^\s*ERROR: Coverage for \S.*threshold/.test(line)) summary.push(summaryLine(line));
   }
   const failures: Failure[] = [];
   let counted = 0;
@@ -485,19 +497,34 @@ function parsePytest(lines: string[]): Parsed | null {
   let block: string[] | null = null;
   let last: { inline: string[] } | null = null;
   let reported: number | null = null;
-  for (const line of lines) {
+  const TOTALS_RE = /^(?:\d+ (?:failed|passed|errors?|skipped|xfailed|xpassed|deselected|warnings?)(?:, |\s|$))+(?:in [\d.]+s(?: \([\d:]+\))?)?$/;
+  const SECTION_TOTALS_RE = /\b\d+ (?:failed|passed|errors?|skipped|xfailed|xpassed|deselected|warnings?)\b|no tests ran/;
+  const PLAIN_SECTION_RE = /^(?:FAILURES|ERRORS|short test summary info|warnings summary|test session starts|PASSES)$/;
+  // Only the final summary counts: the last banner, or (quiet mode) a bare last line.
+  let finalAt = -1;
+  for (let i = lines.length - 1; i >= 0 && finalAt < 0; i--) {
+    const m = /^={3,} (.+?) ={3,}$/.exec(lines[i]!);
+    if (m && !PLAIN_SECTION_RE.test(m[1]!) && SECTION_TOTALS_RE.test(m[1]!)) finalAt = i;
+  }
+  if (finalAt < 0) {
+    for (let i = lines.length - 1; i >= 0; i--) {
+      if (!lines[i]!.trim()) continue;
+      if (TOTALS_RE.test(lines[i]!.trim())) finalAt = i;
+      break;
+    }
+  }
+  for (const [at, line] of lines.entries()) {
     const sec = /^={3,} (.+?) ={3,}$/.exec(line);
     if (sec) {
       section = sec[1]!;
       block = null;
       last = null;
-      if (!/^(?:FAILURES|ERRORS|short test summary info|warnings summary|test session starts|PASSES)$/.test(section) &&
-        /\b\d+ (?:failed|passed|errors?|skipped|xfailed|xpassed|deselected|warnings?)\b|no tests ran/.test(section)) {
+      if (at === finalAt) {
         reported = pytestTotals(section, summary);
       }
       continue;
     }
-    if (/^(?:\d+ (?:failed|passed|errors?|skipped|xfailed|xpassed|deselected|warnings?)(?:, |\s|$))+(?:in [\d.]+s(?: \([\d:]+\))?)?$/.test(line.trim())) {
+    if (at === finalAt && TOTALS_RE.test(line.trim())) {
       reported = pytestTotals(line.trim(), summary);
       continue;
     }

@@ -3,6 +3,7 @@ import { registerTransform } from "./registry";
 const COMMIT_RE = /^(?:([|\\/ ._-]*\*[|\\/* ._-]* ))?commit [0-9a-f]{7,40}\b/;
 const GRAPH_PREFIX_RE = /^[|\\/* ._-]*$/;
 const BODY_RE = /^ {4}/;
+const TRAILER_RE = /^ {4}(?:Co-[Aa]uthored-[Bb]y|Signed-off-by|Reviewed-by|Acked-by|Tested-by|Reported-by|Fixes|Closes):/;
 const KEPT_BODY_LINES = 2;
 const KEPT_PLAIN_BODY_LINES = 1;
 
@@ -94,6 +95,10 @@ function foldBodies(lines: string[], kept: number): string[] {
     }
     if (/^diff --(?:git|cc|combined) /.test(content)) inDiff = true;
     if (isBody && !inDiff && !(graphWidth > 0 && content.trim().length === 0)) {
+      if (TRAILER_RE.test(content)) {
+        out.push(line);
+        continue;
+      }
       body += 1;
       if (body <= kept) out.push(line);
       else {

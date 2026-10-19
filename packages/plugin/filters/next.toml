@@ -1,6 +1,6 @@
 [filters.next]
 description = "Compact next build / next dev output"
-match_command = "^next(\\s|$)|^npx\\s+next|^npm\\s+(run|exec)\\s+(build|dev|start)|^pnpm\\s+(run|exec)?\\s*(build|dev|start)"
+match_command = "^next(\\s|$)|^(?:npx|bunx|pnpm\\s+(?:exec|dlx)|yarn\\s+(?:exec|dlx)|npm\\s+exec)\\s+(?:--\\s+)?next(\\s|$)"
 priority = 65
 strip_ansi = true
 strip_lines_matching = [

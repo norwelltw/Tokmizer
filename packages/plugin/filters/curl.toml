@@ -1,12 +1,6 @@
 [filters.curl]
-description = "Drop verbose progress; keep body + status"
+description = "Drop curl progress meter and verbose trace; keep the response body untouched"
 match_command = "^curl(\\s|$)|^wget(\\s|$)"
 priority = 60
-strip_lines_matching = [
-  "^\\s*\\d+\\s+\\d+\\s+\\d+\\s+\\d+\\s+\\d+\\s+\\d+\\s+\\d+",
-  "^\\s*%",
-  "^[*<>]\\s",
-  "Dload\\s+Upload",
-  "^\\s*$"
-]
+transform = "curl-progress"
 max_lines = 200
