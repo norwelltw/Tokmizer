@@ -58,7 +58,62 @@ function dominantExt(files: Entry[]): string | null {
   return bestExt && bestN >= Math.ceil(files.length / 2) ? `${bestN} ${bestExt}` : null;
 }
 
+const PLAIN_MIN_NAMES = 12;
+const PLAIN_MIN_GROUP = 3;
+const PLAIN_LINE_CHARS = 180;
+
+function wrapped(head: string, words: string[]): string[] {
+  const out: string[] = [];
+  let line = head;
+  for (const w of words) {
+    if (line.length + 1 + w.length > PLAIN_LINE_CHARS && line !== head && line !== "  ") {
+      out.push(line);
+      line = "  ";
+    }
+    line += line === "  " ? w : ` ${w}`;
+  }
+  out.push(line);
+  return out;
+}
+
+function extensionOf(name: string): string {
+  const base = name.endsWith("/") ? "" : name;
+  const first = base.indexOf(".", 1);
+  return first > 0 ? base.slice(first) : "";
+}
+
+function plainLs(lines: string[]): string[] | null {
+  const names = lines.filter((l) => l.trim() !== "");
+  if (names.length < PLAIN_MIN_NAMES) return null;
+  const first = lines.findIndex((l) => l.trim() !== "");
+  const last = lines.length - 1 - [...lines].reverse().findIndex((l) => l.trim() !== "");
+  if (lines.slice(first, last + 1).some((l) => l.trim() === "")) return null;
+  if (names.some((n) => n.endsWith(":") || SECTION_HEADER_RE.test(n.trim()) || MODE_RE.test(n) || /^total\s+\d+/.test(n) || n !== n.trimEnd() || n.startsWith(" "))) return null;
+  if (names.filter((n) => /\s/.test(n)).length > names.length * 0.2) return null;
+  const quote = (n: string) => (/\s|"/.test(n) ? JSON.stringify(n) : n);
+  const groups = new Map<string, string[]>();
+  for (const n of names) {
+    const ext = extensionOf(n);
+    const arr = groups.get(ext) ?? [];
+    arr.push(n);
+    groups.set(ext, arr);
+  }
+  const out: string[] = [`${names.length} entries:`];
+  const rest: string[] = [];
+  for (const [ext, members] of [...groups.entries()].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]))) {
+    if (ext && members.length >= PLAIN_MIN_GROUP && members.every((m) => !/\s|"/.test(m))) {
+      out.push(...wrapped(`*${ext} (${members.length}):`, members.map((m) => m.slice(0, -ext.length))));
+    } else {
+      rest.push(...members);
+    }
+  }
+  if (rest.length) out.push(...wrapped(`other (${rest.length}):`, rest.map(quote)));
+  return out.join("\n").length < names.join("\n").length ? out : null;
+}
+
 export function smartLs(lines: string[]): string[] {
+  const plain = plainLs(lines);
+  if (plain) return plain;
   const dirs: Entry[] = [];
   const files: Entry[] = [];
   let parsedAny = false;

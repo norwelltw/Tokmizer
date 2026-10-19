@@ -17,13 +17,13 @@ import { loadSettingsCache } from "../settings-cache";
 import { detectHost, hostOutputCapBytes } from "../host-detect";
 import { envWithoutShimDir } from "../shim/install";
 import { installDaemonResolver, closeDaemonResolver } from "../daemon/resolver";
-import { captureForRestore, captureOriginalForRestore } from "../content-cache";
+import { captureForRestore, captureOriginalForRestore, neutralizeMarkers } from "../content-cache";
 import { FOLD_MARKER_RE } from "../engine/transforms/smart-code";
 import { READ_EDIT_NOTICE } from "../engine/read-notice";
 import { normalizeHead, producingSegment } from "../engine/routing";
 import { yoloEnabled } from "../yolo-mode";
 import { selfInvocation, singleBinary } from "../self-command";
-import { networkEnabled } from "../network";
+import { networkEnabled, networkNoticeMarker } from "../network";
 
 const MAX_BUFFER_BYTES = 10 * 1024 * 1024;
 const MIN_STDERR_FILTER_BYTES = 1024;
@@ -42,7 +42,7 @@ function decodeBuffered(chunks: Buffer[], truncated: boolean): string {
 
 export function kickBackgroundEnroll(): void {
   try {
-    if (!networkEnabled()) return;
+    if (!networkEnabled() || !existsSync(networkNoticeMarker())) return;
     const tkrBin = process.env.TOKMIZER_TKR_BIN || fileURLToPath(new URL("../bin/tkr.js", import.meta.url));
     if (!singleBinary() && !existsSync(tkrBin)) return;
     const marker = join(tokmizerHome(), "enroll-kick");
@@ -249,7 +249,7 @@ export async function processCapturedOutput(
       yolo,
       exitCode
     });
-    let stderrOut = stderr;
+    let stderrOut = neutralizeMarkers(stderr, stderr);
     let stderrRawBytes = 0;
     let stderrFilteredBytes = 0;
     if ((yolo || exitCode === 0) && Buffer.byteLength(stderr, "utf8") >= (yolo ? 1 : MIN_STDERR_FILTER_BYTES)) {
@@ -259,7 +259,7 @@ export async function processCapturedOutput(
         yolo,
         exitCode
       });
-      stderrOut = errProcessed.output;
+      stderrOut = neutralizeMarkers(errProcessed.output, stderr);
       if (!yolo && errProcessed.output !== stderr) {
         try {
           stderrOut = await captureForRestore(errProcessed.droppedTail ?? null, errProcessed.output, env, { raw: stderrTruncated ? null : stderr, label: statCmdLabel(cmdLine) });
@@ -277,7 +277,7 @@ export async function processCapturedOutput(
         try {
           stderrOut = await captureForRestore(errProcessed.droppedTail ?? null, errProcessed.output, env);
         } catch {
-          stderrOut = errProcessed.output;
+          stderrOut = neutralizeMarkers(errProcessed.output, stderr);
         }
         stderrRawBytes = errProcessed.rawBytes;
         stderrFilteredBytes = errProcessed.filteredBytes;
@@ -288,7 +288,7 @@ export async function processCapturedOutput(
     const shown = partialRead
       ? `${processed.output}${processed.output.endsWith("\n") ? "" : "\n"}${READ_EDIT_NOTICE}`
       : processed.output;
-    let delivered = shown;
+    let delivered = neutralizeMarkers(shown, stdout);
     if (!yolo && processed.filteredBytes < processed.rawBytes) {
       try {
         delivered = new RegExp(FOLD_MARKER_RE.source, "m").test(processed.output)

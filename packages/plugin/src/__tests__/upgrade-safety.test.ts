@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { spawnSync } from "node:child_process";
 import { chmodSync, copyFileSync, cpSync, utimesSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, readlinkSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -172,7 +172,27 @@ beforeEach(() => {
   stubLog = join(root, "stub.log");
 });
 
-afterEach(() => rmSync(root, { recursive: true, force: true }));
+async function stopTestDaemon(): Promise<void> {
+  vi.stubEnv("TOKMIZER_HOME", tkrHome);
+  for (const name of ["XDG_RUNTIME_DIR", "TMPDIR", "TMP", "TEMP"]) vi.stubEnv(name, "");
+  try {
+    const { socketPath } = await import("../daemon/lifecycle");
+    const { shutdownDaemon } = await import("../daemon/client");
+    const { path } = socketPath();
+    if (existsSync(path)) {
+      await shutdownDaemon({ socketPath: path });
+      await vi.waitFor(() => expect(existsSync(path)).toBe(false), { timeout: 3000, interval: 50 });
+    }
+    if (!path.startsWith(root)) rmSync(dirname(path), { recursive: true, force: true });
+  } finally {
+    vi.unstubAllEnvs();
+  }
+}
+
+afterEach(async () => {
+  await stopTestDaemon();
+  rmSync(root, { recursive: true, force: true });
+});
 
 describe.skipIf(process.platform === "win32")("upgrade safety", () => {
   for (const format of ["0.9.32", "0.9.52", "0.9.58"] as const) {

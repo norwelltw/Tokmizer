@@ -1,5 +1,5 @@
 import os from "node:os";
-import { createHash, randomUUID } from "node:crypto";
+import { createHash, createHmac, randomUUID } from "node:crypto";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { tokmizerHome, installIdFile } from "./paths";
 
@@ -60,16 +60,16 @@ export async function buildFingerprint(): Promise<FingerprintSignals> {
   const cpus = os.cpus();
   const cpuModel = cpus[0]?.model ?? "unknown";
   const cpuCores = cpus.length;
-  const macHash = sha256Hex(primaryMac());
-  const usernameHash = sha256Hex(os.userInfo().username);
+  const mac = primaryMac();
+  const username = os.userInfo().username;
   const composite = [
     hostname,
     platform,
     osVersion,
     cpuModel,
     String(cpuCores),
-    macHash,
-    usernameHash,
+    sha256Hex(mac),
+    sha256Hex(username),
     installId
   ].join("|");
   return {
@@ -80,7 +80,7 @@ export async function buildFingerprint(): Promise<FingerprintSignals> {
     osVersion,
     cpuModel,
     cpuCores,
-    macHash,
-    usernameHash
+    macHash: createHmac("sha256", installId).update(mac).digest("hex"),
+    usernameHash: createHmac("sha256", installId).update(username).digest("hex")
   };
 }

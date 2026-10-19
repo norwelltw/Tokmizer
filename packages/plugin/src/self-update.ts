@@ -9,6 +9,7 @@ import { isOlderVersion } from "./version";
 import { capJsonl } from "./jsonl-cap";
 import { selfInvocation, singleBinary } from "./self-command";
 import { networkEnabled } from "./network";
+import { queueCodexHookNotice } from "./codex-hook-notice";
 
 const SEMVER = /^\d+\.\d+\.\d+$/;
 const COOLDOWN_MS = 6 * 3600_000;
@@ -155,6 +156,7 @@ export async function selfUpdate(d: SelfUpdateDeps): Promise<string[]> {
       try {
         writeFileSync(offeredFile(), String(Date.now()));
       } catch {}
+      if (r === "added" || r === "updated") queueCodexHookNotice();
       actions.push(`codex hook ${r}`);
     }
   }

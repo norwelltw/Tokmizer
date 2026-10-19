@@ -245,6 +245,7 @@ describe("with network on", () => {
     const { d, run } = deps();
     await selfUpdate(d);
     expect(run).toHaveBeenCalled();
+    writeFileSync(join(home, "network-notice-shown"), String(Date.now()));
     kickBackgroundEnroll();
     expect(spawnSpy).toHaveBeenCalledTimes(1);
   });

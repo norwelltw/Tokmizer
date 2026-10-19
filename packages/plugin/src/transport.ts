@@ -23,6 +23,8 @@ function verifyResponseBody(body: string, ts: number, sigB64u: string, pem: stri
   }
 }
 
+const requestedPaths = new WeakMap<object, string>();
+
 export async function consumeSignedJson<T>(res: Response): Promise<T> {
   const body = await res.text();
   const pem = respPublicKeyPem();
@@ -44,7 +46,11 @@ export async function consumeSignedJson<T>(res: Response): Promise<T> {
   if (!sig || tsHeader === null || !Number.isFinite(ts)) {
     throw new TransportError("http", "missing server response signature");
   }
-  if (!verifyResponseBody(body, ts, sig, pem)) {
+  const signedPath = res.headers?.get?.("x-tokmizer-resp-path") ?? null;
+  if (signedPath !== null && signedPath !== requestedPaths.get(res)) {
+    throw new TransportError("http", "server response signed for another path");
+  }
+  if (!verifyResponseBody(signedPath === null ? body : `${signedPath}.${body}`, ts, sig, pem)) {
     throw new TransportError("http", "invalid server response signature");
   }
   return JSON.parse(body) as T;
@@ -92,15 +98,17 @@ export async function fetchSigned(
     "x-tokmizer-install-id": opts.installId,
     "x-tokmizer-sig": sig,
     "x-tokmizer-ts": String(ts),
-    "x-tokmizer-plugin-version": PLUGIN_VERSION
+    "x-tokmizer-plugin-version": PLUGIN_VERSION,
+    "x-tokmizer-accept-resp-path": "1"
   };
   if (opts.bearer) headers.authorization = `Bearer ${opts.bearer}`;
   const timeoutMs = opts.timeoutMs ?? 5000;
   const hasBody = method !== "GET" && method !== "DELETE";
   const init: RequestInit = { method, headers, signal: AbortSignal.timeout(timeoutMs) };
   if (hasBody) init.body = text;
+  let res: Response;
   try {
-    return await fetch(url, init);
+    res = await fetch(url, init);
   } catch (err) {
     const name = (err as { name?: string }).name;
     if (name === "TimeoutError" || name === "AbortError") {
@@ -108,4 +116,6 @@ export async function fetchSigned(
     }
     throw new TransportError("network", `${method} ${path} failed: ${(err as Error).message}`);
   }
+  if (res !== null && typeof res === "object") requestedPaths.set(res, path.split("?")[0]!);
+  return res;
 }

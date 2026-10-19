@@ -3,6 +3,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { homedir } from "node:os";
 import { fileURLToPath } from "node:url";
 import { dirname, join, resolve } from "node:path";
+import { parse as parseToml } from "smol-toml";
 import { recordUsageSync } from "../usage";
 import { singleBinary } from "../self-command";
 import { execUsable } from "./exec-health";
@@ -972,10 +973,55 @@ function codexRuleFiles(dir: string): string[] | "unreadable" {
   }
 }
 
+function codexRequirementsFile(): string {
+  return process.platform === "win32"
+    ? join(process.env.ProgramData || "C:\\ProgramData", "OpenAI", "Codex", "requirements.toml")
+    : "/etc/codex/requirements.toml";
+}
+
+function codexRequirementTokens(token: unknown): StarlarkValue | undefined {
+  if (!isRecord(token) || Object.keys(token).length !== 1) return undefined;
+  if (typeof token.token === "string") return token.token;
+  if (Array.isArray(token.any_of) && token.any_of.every((alt) => typeof alt === "string")) return token.any_of as string[];
+  return undefined;
+}
+
+function codexRequirementMatchers(raw: string, matchers: Matcher[]): boolean {
+  let doc: Record<string, unknown>;
+  try {
+    doc = parseToml(raw);
+  } catch {
+    return false;
+  }
+  if (doc.rules === undefined) return true;
+  if (!isRecord(doc.rules)) return false;
+  const list = doc.rules.prefix_rules;
+  if (list === undefined) return true;
+  if (!Array.isArray(list)) return false;
+  for (const rule of list) {
+    if (!isRecord(rule) || !Array.isArray(rule.pattern)) return false;
+    if (rule.decision !== "prompt" && rule.decision !== "forbidden") return false;
+    const pattern = rule.pattern.map(codexRequirementTokens);
+    if (pattern.some((token) => token === undefined)) return false;
+    const matcher = codexPatternMatcher(pattern as StarlarkValue[]);
+    if (!matcher) return false;
+    matchers.push(matcher);
+  }
+  return true;
+}
+
 function codexRules(cwd: string): RuleSet {
   const home = process.env.CODEX_HOME || join(homedir(), ".codex");
   const dirs = [join(home, "rules"), ...ancestors(cwd).map((dir) => join(dir, ".codex", "rules"))];
   const matchers: Matcher[] = [];
+  let requirements: string | null = null;
+  try {
+    requirements = readFileSync(codexRequirementsFile(), "utf8");
+  } catch (err) {
+    const code = (err as NodeJS.ErrnoException).code;
+    if (code !== "ENOENT" && code !== "ENOTDIR") return "unreadable";
+  }
+  if (requirements !== null && !codexRequirementMatchers(requirements, matchers)) return "unreadable";
   for (const dir of [...new Set(dirs)]) {
     const files = codexRuleFiles(dir);
     if (files === "unreadable") return "unreadable";

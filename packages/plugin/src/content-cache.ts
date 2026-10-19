@@ -143,15 +143,16 @@ function ccrDisabled(env: NodeJS.ProcessEnv): boolean {
 }
 
 const MARKER_LOOKALIKE_RE = /^(?=\[tkr |\[tokmizer\])/gm;
-const NOTICE_LINE_RE = /^\[tkr:/;
+const NOTICE_LINE_RE = /^\[(?:tkr:|same output as )/;
 const NOTICE_KINDS: ReadonlyArray<(line: string) => boolean> = [
   (line) => line === READ_EDIT_NOTICE,
-  (line) => /^\[tkr: previous log line repeated \d+ additional times\]$/.test(line)
+  (line) => /^\[tkr: previous log line repeated \d+ additional times\]$/.test(line),
+  (line) => /^\[same output as `.*` earlier in this session, unchanged, ~\d+ tokens\]$/.test(line)
 ];
 
-function neutralizeMarkers(text: string, input: string | null | undefined): string {
+export function neutralizeMarkers(text: string, input: string | null | undefined): string {
   const marked = text.replace(MARKER_LOOKALIKE_RE, "> ");
-  if (!marked.includes("[tkr:")) return marked;
+  if (!marked.includes("[tkr:") && !marked.includes("[same output as ")) return marked;
   const inputLines = input == null ? null : input.split("\n").map((line) => line.replace(/\r$/, "")).filter((line) => NOTICE_LINE_RE.test(line));
   const genuine = (line: string): boolean => {
     if (inputLines == null) return false;

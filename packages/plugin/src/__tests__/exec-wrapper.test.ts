@@ -349,19 +349,23 @@ describe("runWrapped never rejects after the command has run", () => {
 });
 
 describe("runWrapped auto-enroll wiring", () => {
-  it("kicks a background enroll (marker file) on a virgin install when the CLI exists", async () => {
-    const { mkdtempSync, existsSync: ex } = await import("node:fs");
+  it.each([
+    ["kicks a background enroll (marker file) on a set-up install without a key yet", true],
+    ["never kicks an enroll from a home no install step has set up", false]
+  ])("%s", async (_name, setUp) => {
+    const { mkdtempSync, existsSync: ex, writeFileSync: write } = await import("node:fs");
     const { tmpdir } = await import("node:os");
     const { join } = await import("node:path");
     const prevHome = process.env.TOKMIZER_HOME;
     const prevBin = process.env.TOKMIZER_TKR_BIN;
     process.env.TOKMIZER_HOME = mkdtempSync(join(tmpdir(), "tkr-kick-"));
     process.env.TOKMIZER_TKR_BIN = "/usr/bin/true";
+    if (setUp) write(join(process.env.TOKMIZER_HOME, "network-notice-shown"), String(Date.now()));
     const state = await import("../state");
     vi.mocked(state.loadState).mockResolvedValueOnce(null);
     try {
       await runWrapped(["true"]);
-      expect(ex(join(process.env.TOKMIZER_HOME!, "enroll-kick"))).toBe(true);
+      expect(ex(join(process.env.TOKMIZER_HOME!, "enroll-kick"))).toBe(setUp);
     } finally {
       if (prevHome === undefined) delete process.env.TOKMIZER_HOME;
       else process.env.TOKMIZER_HOME = prevHome;
@@ -371,13 +375,14 @@ describe("runWrapped auto-enroll wiring", () => {
   });
 
   it("does not burn the enroll throttle when the CLI bundle is missing", async () => {
-    const { mkdtempSync, existsSync: ex } = await import("node:fs");
+    const { mkdtempSync, existsSync: ex, writeFileSync: write } = await import("node:fs");
     const { tmpdir } = await import("node:os");
     const { join } = await import("node:path");
     const prevHome = process.env.TOKMIZER_HOME;
     const prevBin = process.env.TOKMIZER_TKR_BIN;
     process.env.TOKMIZER_HOME = mkdtempSync(join(tmpdir(), "tkr-kick-miss-"));
     process.env.TOKMIZER_TKR_BIN = join(process.env.TOKMIZER_HOME, "no-such-bin.js");
+    write(join(process.env.TOKMIZER_HOME, "network-notice-shown"), String(Date.now()));
     const state = await import("../state");
     vi.mocked(state.loadState).mockResolvedValueOnce(null);
     try {

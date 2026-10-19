@@ -1,5 +1,5 @@
 export { processOutput } from "../engine";
-export { captureForRestore, captureOriginalForRestore } from "../content-cache";
+export { captureForRestore, captureOriginalForRestore, neutralizeMarkers } from "../content-cache";
 export { FOLD_MARKER_RE } from "../engine/transforms/smart-code";
 export { resolveAllowedFilters } from "../default-rules";
 export { gatingPlan, graceExceeded } from "../entitlement";

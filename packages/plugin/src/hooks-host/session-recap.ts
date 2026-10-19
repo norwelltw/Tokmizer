@@ -3,6 +3,7 @@ import { isEntryModule } from "../entry";
 import { readSessionEvents, buildSessionRecap, pruneSessions } from "../session-log";
 import { forgetSession } from "../repeat-guard";
 import { telemetryNoticeLine } from "../telemetry-hint";
+import { codexHookNoticeLine } from "../codex-hook-notice";
 
 type SessionStartPayload = {
   session_id?: string;
@@ -26,7 +27,8 @@ async function main(): Promise<void> {
   } catch {
     process.exit(0);
   }
-  const output = sessionStartOutput(await handleSessionStart(payload), await telemetryNoticeLine().catch(() => null));
+  const notices = [await telemetryNoticeLine().catch(() => null), codexHookNoticeLine()].filter((n): n is string => n !== null);
+  const output = sessionStartOutput(await handleSessionStart(payload), notices.length ? notices.join("\n") : null);
   if (output) process.stdout.write(output);
 }
 

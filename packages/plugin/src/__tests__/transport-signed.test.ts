@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { generateKeyPairSync, sign } from "node:crypto";
-import { consumeSignedJson } from "../transport";
+import { consumeSignedJson, fetchSigned } from "../transport";
 
 vi.mock("../prod-public-key", () => ({ TOKMIZER_PROD_PUBLIC_KEY_PEM: "" }));
 
@@ -123,5 +123,59 @@ describe("consumeSignedJson", () => {
       )
     ).rejects.toThrow(/no signing public key/);
     process.env.TOKMIZER_DEV = "1";
+  });
+});
+
+describe("response path binding", () => {
+  const opts = { baseUrl: "https://api.invalid", fingerprint: "f".repeat(64), installId: "i".repeat(64) };
+  const served = (body: string, path: string | null, signedFor = path): Response => {
+    const ts = Date.now();
+    const headers: Record<string, string> = {
+      "x-tokmizer-resp-sig": signBody(signedFor === null ? body : `${signedFor}.${body}`, ts),
+      "x-tokmizer-resp-ts": String(ts)
+    };
+    if (path !== null) headers["x-tokmizer-resp-path"] = path;
+    return new Response(body, { headers });
+  };
+  const fetchFrom = (response: Response, path = "/api/v1/settings") => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(response));
+    return fetchSigned("GET", path, undefined, opts).then((r) => consumeSignedJson<{ plan: string }>(r));
+  };
+
+  beforeEach(() => {
+    process.env.TOKMIZER_RESP_SIGNING_PUBLIC_KEY_PEM = PUB_PEM;
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("accepts a response signed for the requested path", async () => {
+    await expect(fetchFrom(served("{\"plan\":\"pro\"}", "/api/v1/settings"))).resolves.toEqual({ plan: "pro" });
+    const init = vi.mocked(fetch).mock.calls[0]![1] as RequestInit;
+    expect((init.headers as Record<string, string>)["x-tokmizer-accept-resp-path"]).toBe("1");
+  });
+
+  it("refuses a response signed for another path", async () => {
+    await expect(fetchFrom(served("{\"plan\":\"pro\"}", "/api/v1/license/heartbeat"))).rejects.toThrow(/another path/);
+  });
+
+  it("refuses a path header the signature does not cover", async () => {
+    await expect(fetchFrom(served("{\"plan\":\"pro\"}", "/api/v1/settings", null))).rejects.toThrow(/invalid server response signature/);
+  });
+
+  it("refuses a bound signature replayed without its path header", async () => {
+    const ts = Date.now();
+    const body = "{\"plan\":\"pro\"}";
+    const stripped = new Response(body, { headers: { "x-tokmizer-resp-sig": signBody(`/api/v1/settings.${body}`, ts), "x-tokmizer-resp-ts": String(ts) } });
+    await expect(fetchFrom(stripped)).rejects.toThrow(/invalid server response signature/);
+  });
+
+  it("still accepts an older server that signs without a path", async () => {
+    await expect(fetchFrom(served("{\"plan\":\"pro\"}", null))).resolves.toEqual({ plan: "pro" });
+  });
+
+  it("refuses a path-bound response that did not come from a signed request", async () => {
+    await expect(consumeSignedJson(served("{\"plan\":\"pro\"}", "/api/v1/settings"))).rejects.toThrow(/another path/);
   });
 });

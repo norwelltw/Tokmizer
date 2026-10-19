@@ -17,6 +17,7 @@ Options:
 - `--verbose` prints one line per case: raw tokens, tokens in the default mode, tokens with commands rewritten.
 - `--out result.json` writes the full report, with every case.
 - `--only id1,id2` replays only the listed cases (ids from `bench/corpus.json`).
+- `--corpus path/to/corpus.json` replays another corpus in the same format; its `file` entries are read relative to that file. Use it for outputs that must stay out of the repository.
 
 A full run of the 102 cases takes about 40 seconds.
 

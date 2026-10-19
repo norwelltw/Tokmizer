@@ -89,7 +89,8 @@ async function syncRulesQuietly(): Promise<void> {
 }
 
 async function noticeLines(): Promise<string[]> {
-  const notices = [networkNoticeLine(), await telemetryNoticeLine(), rtkMigrationHint(currentRtkEnv())].filter((n): n is string => n !== null);
+  const { codexHookNoticeLine } = await import("../codex-hook-notice");
+  const notices = [networkNoticeLine(), await telemetryNoticeLine(), codexHookNoticeLine(), rtkMigrationHint(currentRtkEnv())].filter((n): n is string => n !== null);
   return notices.length ? ["", ...notices] : [];
 }
 
@@ -348,6 +349,8 @@ async function wrapCommand(argv: string[]): Promise<void> {
     return;
   }
   if (!shimsInstalled()) await installShims(resolveShimJsPath());
+  const notice = networkNoticeLine();
+  if (notice) process.stderr.write(`${notice}\n`);
   const { spawn } = await import("node:child_process");
   const child = spawn(program, command.slice(1), { stdio: "inherit", env: { ...agentPathEnv(), TOKMIZER_HOST: agent } });
   const forward = (sig: NodeJS.Signals): void => {

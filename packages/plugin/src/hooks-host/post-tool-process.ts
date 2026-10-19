@@ -16,7 +16,7 @@ import { rewrite, splitTopLevel } from "./pre-tool-rewrite";
 const COVERED_TOOLS = new Set(["Read", "Grep", "Glob", "Bash"]);
 const MAX_OUTPUT_BYTES = 10 * 1024 * 1024;
 const MIN_BASH_OUTPUT_BYTES = 1024;
-const GLOB_MIN_PATHS = 40;
+const GLOB_MIN_PATHS = 10;
 const PERSISTED_MAX_CHARS = 25_000;
 
 export type PostToolUsePayload = Payload;
@@ -393,6 +393,7 @@ async function processPayload(payload: Payload, options: PostToolUseOptions, max
     processOutput,
     captureForRestore,
     captureOriginalForRestore,
+    neutralizeMarkers,
     FOLD_MARKER_RE,
     resolveAllowedFilters,
     gatingPlan,
@@ -442,7 +443,7 @@ async function processPayload(payload: Payload, options: PostToolUseOptions, max
       : result.output;
     let output: string | null;
     if (result.filteredBytes >= result.rawBytes) output = null;
-    else if (yolo) output = result.output;
+    else if (yolo) output = neutralizeMarkers(result.output, raw);
     else if (payload.tool_name === "Glob" || foldHint.test(result.output)) output = await captureOriginalForRestore(raw, shown, undefined, { label });
     else output = await captureForRestore(result.droppedTail ?? null, shown, undefined, { raw, label });
     if (yolo && output != null) {

@@ -150,7 +150,16 @@ describe("Glob output", () => {
   });
 
   it("leaves a short Glob result untouched", async () => {
-    const filenames = globPaths(39);
-    expect(await processToolOutput({ tool_name: "Glob", tool_input: { pattern: "**/*.ts" }, tool_response: { filenames, numFiles: 39 } })).toBeNull();
+    const filenames = globPaths(9);
+    expect(await processToolOutput({ tool_name: "Glob", tool_input: { pattern: "**/*.ts" }, tool_response: { filenames, numFiles: 9 } })).toBeNull();
+  });
+
+  it("groups a Glob result from ten paths without losing any of them", async () => {
+    const filenames = globPaths(10);
+    const delivered = await processToolOutput({ tool_name: "Glob", tool_input: { pattern: "**/*.ts" }, tool_response: { filenames, numFiles: 10 } });
+    expect(delivered).not.toBeNull();
+    const { body } = splitHint(delivered!);
+    expect(Buffer.byteLength(delivered!)).toBeLessThan(Buffer.byteLength(filenames.join("\n")));
+    expect(new Set(expandGrouped(body.split("\n")))).toEqual(new Set(filenames));
   });
 });

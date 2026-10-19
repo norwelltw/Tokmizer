@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { spawnSync } from "node:child_process";
 import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { rewriteForAgent } from "../agent-rewrite";
 import { tokmizerEnabled } from "../hooks-host/quick-settings";
 import { missingTargets } from "../hook-health";
@@ -14,7 +14,20 @@ let home: string;
 let tkrHome: string;
 
 function env(extra: NodeJS.ProcessEnv = {}): NodeJS.ProcessEnv {
-  return { ...process.env, HOME: home, TOKMIZER_HOME: tkrHome, TOKMIZER_NETWORK: "0", TOKMIZER_AUTO_UPDATE: "0", CODEX_HOME: join(home, ".codex"), ...extra };
+  return { ...process.env, HOME: home, TOKMIZER_HOME: tkrHome, TOKMIZER_NETWORK: "0", TOKMIZER_AUTO_UPDATE: "0", XDG_RUNTIME_DIR: "", CODEX_HOME: join(home, ".codex"), ...extra };
+}
+
+async function stopTestDaemon(): Promise<void> {
+  vi.stubEnv("TOKMIZER_HOME", tkrHome);
+  vi.stubEnv("XDG_RUNTIME_DIR", "");
+  const { socketPath } = await vi.importActual<typeof import("../daemon/lifecycle")>("../daemon/lifecycle");
+  const { shutdownDaemon } = await vi.importActual<typeof import("../daemon/client")>("../daemon/client");
+  const { path } = socketPath();
+  if (existsSync(path)) {
+    await shutdownDaemon({ socketPath: path });
+    await vi.waitFor(() => expect(existsSync(path)).toBe(false), { timeout: 3000, interval: 50 });
+  }
+  if (!path.startsWith(root)) rmSync(dirname(path), { recursive: true, force: true });
 }
 
 beforeEach(() => {
@@ -24,10 +37,11 @@ beforeEach(() => {
   mkdirSync(home);
 });
 
-afterEach(() => {
+afterEach(async () => {
+  vi.doUnmock("../state");
+  await stopTestDaemon();
   vi.unstubAllEnvs();
   vi.resetModules();
-  vi.doUnmock("../state");
   rmSync(root, { recursive: true, force: true });
 });
 
@@ -100,6 +114,16 @@ describe.skipIf(process.platform === "win32")("tkr CLI", () => {
     const unknown = spawnSync(process.execPath, [tkrJs, "wrap", "/bin/sh"], { encoding: "utf8", env: env() });
     expect(unknown.status).toBe(2);
     expect(unknown.stderr).toContain("--host");
+  });
+
+  it("wrap shows the network notice once so the agent's commands may finish the free sign-up", () => {
+    const online = env({ TOKMIZER_NETWORK: "1", TOKMIZER_BASE_URL: "http://127.0.0.1:9" });
+    const first = spawnSync(process.execPath, [tkrJs, "wrap", "--host", "aider", "/bin/sh", "-c", "exit 0"], { encoding: "utf8", env: online });
+    expect(first.status).toBe(0);
+    expect(first.stderr).toContain("Tokmizer contacts tokmizer.com");
+    expect(existsSync(join(tkrHome, "network-notice-shown"))).toBe(true);
+    const second = spawnSync(process.execPath, [tkrJs, "wrap", "--host", "aider", "/bin/sh", "-c", "exit 0"], { encoding: "utf8", env: online });
+    expect(second.stderr).not.toContain("Tokmizer contacts tokmizer.com");
   });
 
   it("shim install no longer edits any shell profile", () => {

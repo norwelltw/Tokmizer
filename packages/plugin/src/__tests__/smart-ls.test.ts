@@ -171,3 +171,57 @@ describe("long listings keep permissions and ownership", () => {
     }
   });
 });
+
+describe("smartLs on a plain listing", () => {
+  const names = [
+    ...Array.from({ length: 14 }, (_, i) => `case${i}.test.ts`),
+    "index.ts", "loader.ts", "pipeline.ts", "README.md", "fixtures", "my notes.txt"
+  ];
+
+  function expand(lines: string[]): string[] {
+    const out: string[] = [];
+    let ext = "";
+    for (const line of lines.slice(1)) {
+      let rest: string;
+      if (line.startsWith("  ")) rest = line.slice(2);
+      else {
+        const m = /^(?:\*(\S+)|other) \(\d+\):(?: (.*))?$/.exec(line)!;
+        ext = m[1] ?? "";
+        rest = m[2] ?? "";
+      }
+      for (const p of rest.match(/"(?:[^"\\]|\\.)*"|\S+/g) ?? []) out.push(p.startsWith('"') ? JSON.parse(p) : `${p}${ext}`);
+    }
+    return out;
+  }
+
+  it("groups names by extension without losing any", () => {
+    const out = smartLs(names);
+    expect(out[0]).toBe(`${names.length} entries:`);
+    expect(out.join("\n").length).toBeLessThan(names.join("\n").length);
+    expect(new Set(expand(out))).toEqual(new Set(names));
+  });
+
+  it("keeps every name of a long listing through the ls filter line cap", async () => {
+    const many = Array.from({ length: 230 }, (_, i) => `module-number-${i}.test.ts`).concat(["notes.md", "data"]);
+    const result = await processOutput("ls src/__tests__", many.join("\n"), null, { exitCode: 0 });
+    const lines = result.output.split("\n");
+    expect(lines.every((l) => l.length <= 200)).toBe(true);
+    expect(new Set(expand(lines))).toEqual(new Set(many));
+    expect(result.output.length).toBeLessThan(many.join("\n").length);
+  });
+
+  it("leaves a short listing untouched", () => {
+    const short = names.slice(0, 11);
+    expect(smartLs(short)).toEqual(short);
+  });
+
+  it("leaves a column layout untouched", () => {
+    const columns = Array.from({ length: 14 }, (_, i) => `a${i}.ts    b${i}.ts    c${i}.ts`);
+    expect(smartLs(columns)).toEqual(columns);
+  });
+
+  it("leaves ls -R sections untouched", () => {
+    const recursive = ["src:", ...names, "", "src/fixtures:", "x.txt"];
+    expect(smartLs(recursive)).toEqual(recursive);
+  });
+});

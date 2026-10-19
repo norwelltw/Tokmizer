@@ -121,7 +121,9 @@ function slice(name, rows, count, measure) {
 async function main() {
   if (!existsSync(join(hooks, "pre-tool-use.js"))) throw new Error(`missing ${hooks}: build the plugin first (npm --workspace packages/plugin run build)`);
   if (process.platform === "win32") throw new Error("the benchmark replays commands through /bin/sh and runs on macOS or Linux only");
-  const corpus = JSON.parse(readFileSync(join(plugin, "bench", "corpus.json"), "utf8")).cases;
+  const corpusFile = option("--corpus") ? resolve(option("--corpus")) : join(plugin, "bench", "corpus.json");
+  const corpusRoot = option("--corpus") ? dirname(corpusFile) : plugin;
+  const corpus = JSON.parse(readFileSync(corpusFile, "utf8")).cases;
   const only = option("--only")?.split(",");
   const items = only ? corpus.filter((item) => only.includes(item.id)) : corpus;
   const counter = await tokenizer();
@@ -129,7 +131,7 @@ async function main() {
   const rows = [];
   try {
     for (const item of items) {
-      const raw = item.generate ? GENERATORS[item.generate]() : readFileSync(join(plugin, item.file), "utf8");
+      const raw = item.generate ? GENERATORS[item.generate]() : readFileSync(join(corpusRoot, item.file), "utf8");
       const work = join(base, item.id);
       mkdirSync(work);
       const context = prepare(work, item, raw);

@@ -11,7 +11,7 @@ import { recordStat, countedSaving, statCmdLabel, statOutcome } from "../stats";
 import { envWithoutShimDir } from "./install";
 import { detectHost, hostOutputCapBytes, hasNativeHook } from "../host-detect";
 import { installDaemonResolver, closeDaemonResolver } from "../daemon/resolver";
-import { captureForRestore, captureOriginalForRestore } from "../content-cache";
+import { captureForRestore, captureOriginalForRestore, neutralizeMarkers } from "../content-cache";
 import { FOLD_MARKER_RE } from "../engine/transforms/smart-code";
 import { yoloEnabled } from "../yolo-mode";
 import { failOpenActive } from "./sh";
@@ -294,22 +294,19 @@ export async function runShim(invocation: ShimInvocation): Promise<ShimResult> {
         const errRes = errCandidate && (yolo || errCandidate.failureSummary) ? errCandidate : null;
         const stdoutReduced = res.filteredBytes < res.rawBytes;
         const reduced = stdoutReduced || (errRes != null && errRes.filteredBytes < errRes.rawBytes);
-        let deliveredErr = errRes?.output ?? errBuf;
+        let deliveredErr = neutralizeMarkers(errRes?.output ?? errBuf, errBuf);
         if (errRes && !yolo) {
           try {
             deliveredErr = await captureForRestore(errRes.droppedTail ?? null, errRes.output);
           } catch {}
         }
-        let delivered = outBuf;
-        if (stdoutReduced) {
-          delivered = res.output;
-          if (!yolo) {
-            try {
-              delivered = new RegExp(FOLD_MARKER_RE.source, "m").test(res.output)
-                ? await captureOriginalForRestore(outBuf, res.output, process.env, { label: statCmdLabel(cmdLine) })
-                : await captureForRestore(res.droppedTail ?? null, res.output, process.env, { raw: outBuf, label: statCmdLabel(cmdLine) });
-            } catch {}
-          }
+        let delivered = neutralizeMarkers(stdoutReduced ? res.output : outBuf, outBuf);
+        if (stdoutReduced && !yolo) {
+          try {
+            delivered = new RegExp(FOLD_MARKER_RE.source, "m").test(res.output)
+              ? await captureOriginalForRestore(outBuf, res.output, process.env, { label: statCmdLabel(cmdLine) })
+              : await captureForRestore(res.droppedTail ?? null, res.output, process.env, { raw: outBuf, label: statCmdLabel(cmdLine) });
+          } catch {}
         }
         const rawBytes = outRaw.length + errRaw.length;
         const counted = countedSaving(
@@ -336,7 +333,7 @@ export async function runShim(invocation: ShimInvocation): Promise<ShimResult> {
             host
           });
         } catch {}
-        if (reduced) {
+        if (reduced || delivered !== outBuf || deliveredErr !== errBuf) {
           process.stdout.write(delivered);
           if (deliveredErr) process.stderr.write(deliveredErr);
           resolve({
