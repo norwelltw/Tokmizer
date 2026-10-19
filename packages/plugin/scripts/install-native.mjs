@@ -212,7 +212,11 @@ export function healShims(directory = packageDirectory) {
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  installSingle();
-  installNative();
-  healShims();
+  if (process.argv.includes("--native-only")) {
+    installNative();
+  } else {
+    installSingle();
+    installNative();
+    healShims();
+  }
 }

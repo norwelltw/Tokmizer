@@ -10,23 +10,80 @@ const commit = (n: number, bodyLines: number): string[] => [
   ...Array.from({ length: bodyLines }, (_, i) => `    body ${n}.${i}`)
 ];
 
+const hash = (n: number): string => `${n}`.repeat(40).slice(0, 40).replace(/[^0-9a-f]/g, "f");
+const plain = (n: number, bodyLines: number): string[] => [
+  `commit ${hash(n)}`,
+  "Author: Dev <dev@example.com>",
+  "Date:   Thu Oct 8 18:00:00 2026 +0200",
+  `    subject ${n}`,
+  ...Array.from({ length: bodyLines }, (_, i) => `    body ${n}.${i}`)
+];
+
 describe("smartLog", () => {
-  it("keeps every commit header, subject and first body line, and folds the rest", () => {
-    const lines = [...commit(1, 6), ...commit(2, 0), ...commit(3, 1)];
+  it("keeps every commit on one header line and its subject, and folds the rest", () => {
+    const lines = [...plain(1, 6), ...plain(2, 0), ...plain(3, 1)];
     const out = smartLog(lines);
+    expect(out.slice(0, 2)).toEqual(["author: Dev <dev@example.com>", "dates: UTC+0200"]);
     for (const n of [1, 2, 3]) {
-      expect(out).toContain(`commit ${String(n).padStart(40, "a")}`);
+      expect(out).toContain(`${hash(n).slice(0, 12)} 2026-10-08 18:00`);
       expect(out).toContain(`    subject ${n}`);
     }
-    expect(out).toContain("    body 1.0");
-    expect(out).not.toContain("    body 1.1");
-    expect(out).toContain("    … 5 lines folded …");
-    expect(out).toContain("    body 3.0");
-    expect(out.filter((l) => FOLD_MARKER_RE.test(l))).toHaveLength(1);
+    expect(out.some((l) => l.startsWith("commit ") || l.startsWith("Author:") || l.startsWith("Date:"))).toBe(false);
+    expect(out).not.toContain("    body 1.0");
+    expect(out).toContain("    … 6 lines folded …");
+    expect(out).toContain("    … 1 line folded …");
+    expect(out.filter((l) => FOLD_MARKER_RE.test(l))).toHaveLength(2);
   });
 
   it("leaves stat and diff lines untouched", () => {
-    const lines = [...commit(1, 0), " src/a.ts | 3 ++-", " 1 file changed, 2 insertions(+), 1 deletion(-)"];
+    const lines = [...plain(1, 0), " src/a.ts | 3 ++-", " 1 file changed, 2 insertions(+), 1 deletion(-)"];
+    expect(smartLog(lines)).toEqual([
+      `${hash(1).slice(0, 12)} 2026-10-08 18:00 +0200 Dev <dev@example.com>`,
+      "    subject 1",
+      " src/a.ts | 3 ++-",
+      " 1 file changed, 2 insertions(+), 1 deletion(-)"
+    ]);
+  });
+
+  it("keeps each author when they differ, and merge parents and decorations", () => {
+    const lines = [
+      `commit ${hash(1)} (HEAD -> main, origin/main)`,
+      "Merge: abc1234 def5678",
+      "Author: Ann <ann@example.com>",
+      "Date:   Mon Jan 5 09:03:00 2026 -0500",
+      "    merge feature",
+      `commit ${hash(2)}`,
+      "Author: Bob <bob@example.com>",
+      "Date:   Tue Feb 17 23:59:59 2026 +0000",
+      "    fix"
+    ];
+    expect(smartLog(lines)).toEqual([
+      `${hash(1).slice(0, 12)} 2026-01-05 09:03 -0500 Ann <ann@example.com> merge abc1234 def5678 (HEAD -> main, origin/main)`,
+      "    merge feature",
+      `${hash(2).slice(0, 12)} 2026-02-17 23:59 +0000 Bob <bob@example.com>`,
+      "    fix"
+    ]);
+  });
+
+  it("names a few alternating authors once in a legend", () => {
+    const by = (n: number, who: string): string[] => [`commit ${hash(n)}`, `Author: ${who}`, "Date:   Thu Oct 8 18:00:00 2026 +0200", `    change ${n}`];
+    const ann = "Ann <ann@example.com>";
+    const bob = "Bob <bob@example.com>";
+    const out = smartLog([...by(1, ann), ...by(2, bob), ...by(3, ann)]);
+    expect(out).toEqual([
+      `authors: [1] ${ann}; [2] ${bob}`,
+      "dates: UTC+0200",
+      `${hash(1).slice(0, 12)} 2026-10-08 18:00 [1]`,
+      "    change 1",
+      `${hash(2).slice(0, 12)} 2026-10-08 18:00 [2]`,
+      "    change 2",
+      `${hash(3).slice(0, 12)} 2026-10-08 18:00 [1]`,
+      "    change 3"
+    ]);
+  });
+
+  it("leaves headers alone when a date is not in git's default format", () => {
+    const lines = [`commit ${hash(1)}`, "Author: Dev <dev@example.com>", "Date:   2026-10-08T18:00:00+02:00", "    subject"];
     expect(smartLog(lines)).toEqual(lines);
   });
 
@@ -38,7 +95,7 @@ describe("smartLog", () => {
   it("treats deeper-indented continuation lines as part of the message", () => {
     const lines = [...commit(1, 1), "    - first bullet", "      wrapped continuation", "    - second bullet"];
     const out = smartLog(lines);
-    expect(out).toContain("    … 3 lines folded …");
+    expect(out).toContain("    … 4 lines folded …");
     expect(out).not.toContain("      wrapped continuation");
   });
 

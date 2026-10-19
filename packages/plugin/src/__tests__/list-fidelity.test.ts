@@ -40,13 +40,9 @@ describe.each(VERBOSITIES)("git status keeps every file at %s verbosity", (verbo
     expect(r.output).not.toMatch(/more lines omitted/);
   });
 
-  it(verbosity === "normal" ? "keeps the long status words" : "uses porcelain status codes per entry", async () => {
+  it("uses porcelain status codes per entry", async () => {
     const r = await processOutput("git status", GIT_STATUS, null, { verbosity, exitCode: 0 });
     const lines = r.output.split("\n");
-    if (verbosity === "normal") {
-      for (const entry of entries) expect(r.output).toContain(entry);
-      return;
-    }
     expect(lines.filter((l) => /^ M \S/.test(l))).toHaveLength(171);
     expect(lines.filter((l) => /^ D \S/.test(l))).toHaveLength(13);
     expect(lines.filter((l) => /^\?\? \S/.test(l))).toHaveLength(102);
@@ -58,11 +54,6 @@ describe.each(VERBOSITIES)("git status keeps every file at %s verbosity", (verbo
     const r = await processOutput("git status", GIT_STATUS, null, { verbosity, exitCode: 0 });
     expect(r.output).not.toContain('(use "git');
     expect(r.output).not.toMatch(/\n\s*\n/);
-    if (verbosity === "normal") {
-      expect(r.output).toContain("Changes not staged for commit:");
-      expect(r.output).toContain("Untracked files:");
-      return;
-    }
     expect(r.output.split("\n")[0]).toBe("* feat/auto-update...origin/feat/auto-update");
     expect(r.output).not.toMatch(/^(?:On branch|Your branch|Changes not staged|Untracked files)/m);
   });

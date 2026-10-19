@@ -20,6 +20,18 @@ const userMessages = [];
 let context = "";
 
 try {
+  const hooksFile = join(pluginRoot, "hooks", "hooks.json");
+  const installer = join(pluginRoot, "scripts", "install-native.mjs");
+  const { version } = JSON.parse(readFileSync(join(pluginRoot, "package.json"), "utf8"));
+  const attempt = join(home, `native-attempt-${version}`);
+  if (!single && process.env.TOKMIZER_NATIVE_EXEC !== "0" && existsSync(installer) && !existsSync(attempt) && readFileSync(hooksFile, "utf8").includes('"node \\"${CLAUDE_PLUGIN_ROOT}')) {
+    mkdirSync(home, { recursive: true });
+    writeFileSync(attempt, String(Date.now()), { mode: 0o600 });
+    spawn(process.execPath, [installer, "--native-only"], { detached: true, stdio: "ignore", windowsHide: true }).unref();
+  }
+} catch {}
+
+try {
   const srcDir = join(pluginRoot, "command-templates");
   const destDir = process.env.TOKMIZER_CLAUDE_COMMANDS_DIR || join(homedir(), ".claude", "commands");
   const MARKER = "managed-by: tokmizer";

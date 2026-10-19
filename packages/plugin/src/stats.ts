@@ -19,7 +19,7 @@ const FALLBACK_CODES = new Set(["n", "g", "e"]);
 
 const PROJECT_MAX_CHARS = 256;
 
-type CmdAcc = { n: number; nc: number; r: number; f: number; rr?: number; rf?: number; tn?: number; tr?: number; tf?: number; sh: boolean };
+type CmdAcc = { n: number; nc: number; r: number; f: number; rr?: number; rf?: number; tn?: number; tr?: number; tf?: number; trr?: number; trf?: number; tnc?: number; sh: boolean };
 
 type Acc = {
   n: number;
@@ -90,6 +90,11 @@ function addCommand(acc: Acc, rec: StatRecord): void {
     row.tn = (row.tn ?? 0) + 1;
     row.tr = (row.tr ?? 0) + rec.r;
     row.tf = (row.tf ?? 0) + rec.f;
+    if (rec.f < rec.r) {
+      row.tnc = (row.tnc ?? 0) + 1;
+      row.trr = (row.trr ?? 0) + rec.r;
+      row.trf = (row.trf ?? 0) + rec.f;
+    }
   }
   row.r += rec.r;
   row.f += rec.f;
@@ -181,6 +186,9 @@ function mergeAcc(into: Acc, from: Acc): void {
     row.tn = (row.tn ?? 0) + (c.tn ?? 0);
     row.tr = (row.tr ?? 0) + (c.tr ?? 0);
     row.tf = (row.tf ?? 0) + (c.tf ?? 0);
+    row.trr = (row.trr ?? 0) + (c.trr ?? 0);
+    row.trf = (row.trf ?? 0) + (c.trf ?? 0);
+    row.tnc = (row.tnc ?? 0) + (c.tnc ?? 0);
     row.sh = row.sh || c.sh;
     into.cmds[cmd] = row;
   }
@@ -371,6 +379,7 @@ export type GainAgg = {
     expandedCount: number;
   };
   agent?: { count: number; rawTokens: number; filteredTokens: number; savedPct: number | null };
+  shortened?: { count: number; rawTokens: number; filteredTokens: number; savedPct: number | null };
   terminal?: { count: number; rawTokens: number; savedTokens: number };
   oversizedExcluded?: number;
   restoration?: { count: number; tokens: number };
@@ -646,6 +655,14 @@ export async function readGain(file = statsPath(), sinceTs = 0, project?: string
     ? Math.round(((shellRawTokens - bytesToTokens(acc.sf)) / shellRawTokens) * 100)
     : 0;
 
+  let shortenedRaw = 0;
+  let shortenedFinal = 0;
+  let shortenedCount = 0;
+  for (const v of Object.values(acc.cmds)) {
+    shortenedRaw += (v.rr ?? 0) - (v.trr ?? 0);
+    shortenedFinal += (v.rf ?? 0) - (v.trf ?? 0);
+    shortenedCount += v.nc - (v.tnc ?? 0);
+  }
   const observedRawTokens = bytesToTokens(acc.or);
   const observedFilteredTokens = bytesToTokens(acc.of);
   return {
@@ -655,6 +672,12 @@ export async function readGain(file = statsPath(), sinceTs = 0, project?: string
       savedTokens: observedRawTokens - observedFilteredTokens,
       savedPct: acc.or ? Math.round((acc.or - acc.of) / acc.or * 10000) / 100 : null,
       expandedCount: acc.x
+    },
+    shortened: {
+      count: shortenedCount,
+      rawTokens: bytesToTokens(shortenedRaw),
+      filteredTokens: bytesToTokens(shortenedFinal),
+      savedPct: shortenedRaw > 0 ? Math.round(((shortenedRaw - shortenedFinal) / shortenedRaw) * 1000) / 10 : null
     },
     agent: {
       count: acc.n - acc.tn,
@@ -724,7 +747,8 @@ export function renderGain(agg: GainAgg, opts: { color: boolean; pricePerMtok: n
     `${label("Commands")}${formatCount(scope.count)} · ${formatCount(agg.compressedCount)} reduced`,
     `${label("Tokens in")}${formatTokens(scope.rawTokens)}`,
     `${label("Tokens out")}${formatTokens(scope.filteredTokens)}`,
-    `${label(saved >= 0 ? "Tokens saved" : "Tokens added")}${formatTokens(Math.abs(saved))} (${Math.abs(pct)} %)`,
+    `${label(saved >= 0 ? "Tokens saved" : "Tokens added")}${formatTokens(Math.abs(saved))} (${Math.abs(pct)} % of all commands)`,
+    ...(agg.shortened?.savedPct != null && agg.shortened.count > 0 ? [`${label("Shortened only")}−${agg.shortened.savedPct} % on the ${formatCount(agg.shortened.count)} output${agg.shortened.count === 1 ? "" : "s"} Tokmizer shortened`] : []),
     `${label("Efficiency")}${meter} ${Math.max(0, pct)} %`,
     ...(opts.periods?.length ? [
       "",

@@ -252,7 +252,7 @@ describe("gain CLI report flags", () => {
     expect(day.stdout.trim().split("\n")).toEqual(["date,commands,tokens_in,tokens_out,tokens_saved,percent", `${dayOf(now)},2,2000,1000,1000,50`]);
     const panel = run("gain", "--day");
     expect(panel.stdout).toMatch(/Commands\s+2 · 2 reduced/);
-    expect(panel.stdout).toMatch(/Tokens saved\s+1\.0K \(50 %\)/);
+    expect(panel.stdout).toMatch(/Tokens saved\s+1\.0K \(50 % of all commands\)/);
   });
 
   it("--project filters to the current directory by default and to a given path", () => {

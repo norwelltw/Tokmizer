@@ -236,7 +236,11 @@ export function compactStructuredOutput(
   verbosity: "normal" | "compact" | "minimal" | undefined,
   slug: string
 ): string {
-  if (verbosity !== "compact" && verbosity !== "minimal") return text;
+  if (verbosity !== "compact" && verbosity !== "minimal") {
+    if (slug !== "git-status") return text;
+    const short = compactGitStatus(text);
+    return Buffer.byteLength(short) < Buffer.byteLength(text) ? short : text;
+  }
   let candidate = text;
   if (/^[ \t\r\n]*[\[{]/.test(text)) {
     try {

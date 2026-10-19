@@ -184,7 +184,7 @@ describe("gain CLI measurement contract", () => {
     expect(all.stdout).toContain("all time");
     expect(all.stdout).toMatch(/Today\s+500 saved · 1 commands/);
     expect(all.stdout).toMatch(/Last 7 days\s+500 saved · 1 commands/);
-    expect(all.stdout).toMatch(/Tokens saved\s+1\.5K \(50 %\)/);
+    expect(all.stdout).toMatch(/Tokens saved\s+1\.5K \(50 % of all commands\)/);
     expect(all.stdout).not.toMatch(/Account|\bpro\b/);
     expect(all.stdout).not.toContain("not a lifetime total");
   });

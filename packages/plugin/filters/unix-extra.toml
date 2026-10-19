@@ -37,10 +37,11 @@ priority = 45
 max_lines = 200
 
 [filters.wc]
-description = "Compact wc output"
+description = "Compact wc output (shared folder stated once, alignment spaces dropped)"
 match_command = "^wc(\\s|$)"
 priority = 50
-max_lines = 30
+transform = "smart-wc"
+max_lines = 500
 
 [filters.tree]
 description = "Compact tree command"

@@ -89,6 +89,21 @@ function seedRows(rows: Record<string, unknown>[]): void {
 }
 
 describe("gain panel", () => {
+  it("adds the rate on shortened outputs only, leaving terminal commands out", async () => {
+    const now = Math.floor(Date.now() / 1000);
+    seedRows([
+      { t: now, r: 4000, f: 400, h: "claude-code", k: "sh", c: "rg" },
+      { t: now, r: 2000, f: 2000, h: "claude-code", k: "sh", c: "ls" },
+      { t: now, r: 2000, f: 2000, h: "claude-code", k: "sh", c: "head" },
+      { t: now, r: 8000, f: 800, h: "shell", k: "sh", c: "rg" }
+    ]);
+    const gain = await readGain(file);
+    expect(gain.shortened).toEqual({ count: 1, rawTokens: 1000, filteredTokens: 100, savedPct: 90 });
+    const output = renderGain(gain, { color: false, pricePerMtok: 3 });
+    expect(output).toMatch(/Tokens saved\s+900 \(45 % of all commands\)/);
+    expect(output).toMatch(/Shortened only\s+−90 % on the 1 output Tokmizer shortened/);
+  });
+
   it("shows tokens in, out and saved for agent outputs with one efficiency figure", async () => {
     const now = Math.floor(Date.now() / 1000);
     seedRows([
@@ -99,7 +114,7 @@ describe("gain panel", () => {
     expect(output).toMatch(/Commands\s+2 · 1 reduced/);
     expect(output).toMatch(/Tokens in\s+1\.5K/);
     expect(output).toMatch(/Tokens out\s+600/);
-    expect(output).toMatch(/Tokens saved\s+900 \(60 %\)/);
+    expect(output).toMatch(/Tokens saved\s+900 \(60 % of all commands\)/);
     expect(output).toMatch(/Efficiency\s+█+░+ 60 %/);
     expect(output).toMatch(/1\. rg\s+1\s+900\s+90 %/);
     expect(output).toContain("not provider-counted tokens");
@@ -121,7 +136,7 @@ describe("gain panel", () => {
     const now = Math.floor(Date.now() / 1000);
     seedRows([{ t: now, r: 100, f: 400, h: "claude-code", k: "sh", c: "ls" }]);
     const output = renderGain(await readGain(file), { color: false, pricePerMtok: 3 });
-    expect(output).toMatch(/Tokens added\s+75 \(300 %\)/);
+    expect(output).toMatch(/Tokens added\s+75 \(300 % of all commands\)/);
     expect(output).toMatch(/Efficiency\s+░+ 0 %/);
     expect(output).not.toContain("Tokens saved");
   });
@@ -151,7 +166,7 @@ describe("gain panel", () => {
     expect(gain.terminal).toEqual({ count: 0, rawTokens: 0, savedTokens: 0 });
     expect(gain.restoration).toEqual({ count: 1, tokens: 500 });
     const output = renderGain(gain, { color: false, pricePerMtok: 3 });
-    expect(output).toMatch(/Tokens saved\s+400 \(40 %\)/);
+    expect(output).toMatch(/Tokens saved\s+400 \(40 % of all commands\)/);
     expect(output).toMatch(/Restored\s+500 tokens, deducted · 1 restore/);
     expect(output).not.toContain("terminal commands with no agent");
   });

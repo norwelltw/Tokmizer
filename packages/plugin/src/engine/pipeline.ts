@@ -15,6 +15,7 @@ import { getTransform } from "./transforms/registry";
 import "./transforms/smart-ls";
 import "./transforms/smart-read";
 import "./transforms/smart-find";
+import "./transforms/smart-wc";
 import "./transforms/smart-grep";
 import "./transforms/smart-log";
 import "./transforms/strip-banners";
