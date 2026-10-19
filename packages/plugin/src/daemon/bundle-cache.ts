@@ -19,7 +19,7 @@ export function bundleCachePath(): string {
 export function saveBundleCache(envelope: { payload: string; signature: string; enc: "v1" }): void {
   try {
     const home = tokmizerHome();
-    mkdirSync(home, { recursive: true });
+    mkdirSync(home, { recursive: true, mode: 0o700 });
     const record: CachedEnvelope = { ...envelope, fetchedAt: Date.now() };
     const tmp = join(home, `bundle-cache.${process.pid}.tmp`);
     writeFileSync(tmp, JSON.stringify(record), { mode: 0o600 });

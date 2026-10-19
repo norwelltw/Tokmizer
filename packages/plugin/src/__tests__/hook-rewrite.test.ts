@@ -48,6 +48,12 @@ describe("PreToolUse rewrite", () => {
     expect(rewrite("deploy () { cargo build && cargo test; }")).toBe("deploy () { cargo build && cargo test; }");
   });
 
+  it("leaves a command alone when it defines a function with the function keyword", () => {
+    expect(rewrite("function git { echo SHADOWED; }; git status")).toBe("function git { echo SHADOWED; }; git status");
+    expect(rewrite("function ls {\n  echo x\n}\nls")).toBe("function ls {\n  echo x\n}\nls");
+    expect(rewrite("cd x && function f() { grep y; }; f")).toBe("cd x && function f() { grep y; }; f");
+  });
+
   it("does not wrap case-pattern labels", () => {
     const out = rewrite("case $x in a) grep y ;; b) cat z ;; esac");
     expect(out).not.toContain("tkr-exec b)");

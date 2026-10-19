@@ -153,9 +153,9 @@ describe("user filters", () => {
   it("never queues a learn event for a command handled by a user filter", async () => {
     await saveSettingsCache({ ...(await loadSettingsCache()), telemetryOptIn: true });
     commitSpool("learn");
-    await recordEvent({ cmd: "mytool run", filterId: "user/mytool", rawBytes: 100, filteredBytes: 10, plan: "pro" });
+    await recordEvent({ cmd: "mytool run", filterId: "user/mytool", rawBytes: 100, filteredBytes: 10 });
     expect(drainSpool("learn")).toEqual([]);
-    await recordEvent({ cmd: "mytool run", filterId: "mytool", rawBytes: 100, filteredBytes: 10, plan: "pro" });
+    await recordEvent({ cmd: "mytool run", filterId: "mytool", rawBytes: 100, filteredBytes: 10 });
     expect(drainSpool("learn")).toHaveLength(1);
     commitSpool("learn");
   });

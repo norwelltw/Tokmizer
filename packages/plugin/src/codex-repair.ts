@@ -1,6 +1,8 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import os from "node:os";
+import { isDeepStrictEqual } from "node:util";
+import { parse as parseToml } from "smol-toml";
 import { isJsonObject, readJsonConfig, writeJsonConfig, type JsonObject } from "./hook-config";
 import { writeConfigText } from "./config-backup";
 import { foreignTo } from "./hook-forms";
@@ -27,20 +29,21 @@ function readText(file: string): string | null {
 
 type TomlTable = { header: string; start: number; end: number };
 
-const TOML_HEADER = /^\s*\[\[?[^\[\]=,]+\]\]?\s*(?:#.*)?$/;
+const TOML_KEY = String.raw`(?:[A-Za-z0-9_-]+|"(?:[^"\\]|\\.)*"|'[^']*')`;
+const TOML_HEADER = new RegExp(String.raw`^\s*(\[\[?\s*${TOML_KEY}(?:\s*\.\s*${TOML_KEY})*\s*\]\]?)\s*(?:#.*)?$`);
 
 function tomlTables(lines: string[]): TomlTable[] {
   const tables: TomlTable[] = [];
   let quote: string | null = null;
   lines.forEach((line, i) => {
-    const opening = quote === null && TOML_HEADER.test(line);
+    const opening = quote === null ? TOML_HEADER.exec(line) : null;
     for (const m of line.matchAll(/"""|'''/g)) {
       if (quote === null) quote = m[0];
       else if (quote === m[0]) quote = null;
     }
     if (!opening) return;
     if (tables.length) tables[tables.length - 1]!.end = i;
-    tables.push({ header: line.trim().replace(/\s*#.*$/, ""), start: i, end: lines.length });
+    tables.push({ header: opening[1]!, start: i, end: lines.length });
   });
   return tables;
 }
@@ -190,11 +193,22 @@ export function stripTomlHooks(text: string, foreign: (command: string) => boole
     lines.splice(table.start, end - table.start);
   }
   const text2 = lines.join("");
+  if (removed.length && !sameOutsideHooks(text, text2)) return { text, removed: [], inline: [] };
   for (const line of text2.split(/\r?\n/)) {
     if (/^\s*#/.test(line)) continue;
     for (const m of line.matchAll(TOML_COMMANDS)) if (foreign(tomlText(m[1]!))) inline.push(line.trim());
   }
   return { text: text2, removed, inline };
+}
+
+function sameOutsideHooks(before: string, after: string): boolean {
+  try {
+    const { hooks: _before, ...kept } = parseToml(before) as Record<string, unknown>;
+    const { hooks: _after, ...left } = parseToml(after) as Record<string, unknown>;
+    return isDeepStrictEqual(kept, left);
+  } catch {
+    return false;
+  }
 }
 
 type HookGroup = JsonObject & { hooks?: unknown };

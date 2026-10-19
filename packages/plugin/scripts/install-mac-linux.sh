@@ -51,10 +51,10 @@ verify_sums() {
     log "Release signature verified (ssh-keygen)."
     return 0
   fi
-  if [ "${TOKMIZER_REQUIRE_SIG:-}" = "1" ]; then
-    err "Cannot verify the release signature: install OpenSSL 3 or OpenSSH 8.1+, or unset TOKMIZER_REQUIRE_SIG."
+  if [ "${TOKMIZER_ALLOW_UNSIGNED:-}" != "1" ] || [ "${TOKMIZER_REQUIRE_SIG:-}" = "1" ]; then
+    err "Cannot verify the release signature (no OpenSSL 3 with Ed25519, no ssh-keygen -Y). Install OpenSSL 3 or OpenSSH 8.1+ and retry, or set TOKMIZER_ALLOW_UNSIGNED=1 to install with SHA256SUMS checks only, at your own risk."
   fi
-  log "Warning: cannot verify the release signature (no OpenSSL 3 with Ed25519, no ssh-keygen -Y). Relying on SHA256SUMS only."
+  log "Warning: TOKMIZER_ALLOW_UNSIGNED=1, the release signature is not verified. Relying on SHA256SUMS only."
 }
 
 sha256_of() {

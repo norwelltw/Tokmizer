@@ -2,7 +2,6 @@ import readline from "node:readline/promises";
 import { stdin, stdout } from "node:process";
 import os from "node:os";
 import { join } from "node:path";
-import type { Plan } from "./contracts";
 import { M } from "./ui";
 import { activate } from "./license";
 import { loadState } from "./state";
@@ -12,20 +11,18 @@ import { installShims, resolveShimJsPath, ensurePathInRc, shellRcLine } from "./
 export async function runWizard(baseUrl: string): Promise<void> {
   const existing = await loadState();
   if (existing) {
-    stdout.write(M.activated(existing.plan) + "\n");
+    stdout.write(M.activated + "\n");
     return;
   }
   const rl = readline.createInterface({ input: stdin, output: stdout });
-  let activatedPlan: Plan | null = null;
-  let activatedBonus = false;
+  let activated = false;
   try {
     stdout.write(`${M.welcome}\n${M.needToken}\n${M.getToken}\n\n`);
     const token = (await rl.question(`${M.askToken} `)).trim();
     stdout.write(`${M.activating}\n`);
-    const state = await activate({ token, baseUrl });
-    stdout.write(M.activated(state.plan) + "\n");
-    activatedPlan = state.plan;
-    activatedBonus = state.bonusActive ?? false;
+    await activate({ token, baseUrl });
+    stdout.write(M.activated + "\n");
+    activated = true;
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     stdout.write(`${msg}\n`);
@@ -33,8 +30,8 @@ export async function runWizard(baseUrl: string): Promise<void> {
   } finally {
     rl.close();
   }
-  if (activatedPlan) {
-    await runConfigure(activatedPlan, activatedBonus);
+  if (activated) {
+    await runConfigure();
     await finishSetup();
   }
 }

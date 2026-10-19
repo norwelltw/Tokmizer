@@ -11,7 +11,7 @@ strip_lines_matching = [
   "^Generated Prisma Client",
   "^✔ Generated Prisma Client",
   "^Tip:",
-  "^\\s*\\d+\\.?\\d*s\\s*$",
+  "^\\s*\\d+(?:\\.\\d*)?s\\s*$",
   "^\\s*✔ ",
   "^prisma:",
 ]

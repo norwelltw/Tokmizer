@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { existsSync, mkdtempSync, readdirSync, rmSync, writeFileSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { clearStats, recordStat, rotateStats, readGain, readDaily, renderGain, formatTokens, countedSaving, monthlyProjectionUsd, paybackTarget, statCmdLabel, withInstallAge, type GainAgg } from "../stats";
+import { clearStats, recordStat, rotateStats, readGain, readDaily, renderGain, formatTokens, countedSaving, monthlyProjectionUsd, statCmdLabel, withInstallAge, type GainAgg } from "../stats";
 
 let dir: string;
 let file: string;
@@ -150,17 +150,6 @@ describe("monthlyProjectionUsd", () => {
   });
 });
 
-describe("paybackTarget", () => {
-  it("compares paid plans against their own price", () => {
-    expect(paybackTarget("pro")).toEqual({ priceUsd: 9.99, label: "Pro plan", upsell: false });
-    expect(paybackTarget("smart")).toEqual({ priceUsd: 4.99, label: "Smart plan", upsell: false });
-  });
-  it("compares free and trial against the entry plan for upsell", () => {
-    expect(paybackTarget("free")).toEqual({ priceUsd: 4.99, label: "Smart plan", upsell: true });
-    expect(paybackTarget("trial")).toEqual({ priceUsd: 4.99, label: "Smart plan", upsell: true });
-  });
-});
-
 describe("renderGain", () => {
   const agg: GainAgg = {
     count: 1240,
@@ -224,25 +213,14 @@ describe("renderGain", () => {
     expect(out).not.toContain("/ month");
   });
 
-  it("does not show a legacy paid-plan payback claim", () => {
-    const out = renderGain(agg, { color: false, pricePerMtok: 3, plan: paybackTarget("pro") });
-    expect(out).not.toContain("Pays for itself");
-    expect(out).not.toContain("your Pro plan");
-    expect(out).not.toContain("$9.99/mo");
-  });
-
-  it("does not turn free usage into a paid upsell", () => {
-    const out = renderGain(agg, { color: false, pricePerMtok: 3, plan: paybackTarget("free") });
-    expect(out).not.toContain("the Smart plan");
-    expect(out).not.toContain("link to bank it");
-    expect(out).not.toContain("Pays for itself");
-  });
-
-  it("omits the payback line when savings stay below the plan price", () => {
-    const small: GainAgg = { ...agg, savedTokens: 100_000, sinceDays: 14 };
-    const out = renderGain(small, { color: false, pricePerMtok: 3, plan: paybackTarget("pro") });
-    expect(out).not.toContain("Pays for itself");
-    expect(out).not.toContain("Covers");
+  it("never shows a paid-plan payback or upsell line", () => {
+    for (const g of [agg, { ...agg, savedTokens: 100_000, sinceDays: 14 }]) {
+      const out = renderGain(g, { color: false, pricePerMtok: 3 });
+      expect(out).not.toContain("Pays for itself");
+      expect(out).not.toContain("Covers");
+      expect(out).not.toContain("Smart plan");
+      expect(out).not.toContain("Pro plan");
+    }
   });
 });
 

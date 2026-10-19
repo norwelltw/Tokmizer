@@ -79,6 +79,8 @@ try {
       if (n === keepNewest) continue;
       const p = join(parent, n);
       if (statSync(p).mtimeMs > cutoff) continue;
+      const orphaned = join(p, ".orphaned_at");
+      if (!existsSync(orphaned) || statSync(orphaned).mtimeMs > cutoff) continue;
       rmSync(p, { recursive: true, force: true });
     }
   }
@@ -88,9 +90,9 @@ try {
   const onboardFile = join(home, "onboarded");
   if (!existsSync(onboardFile)) {
     userMessages.push(
-      "Tokmizer is on with the recommended settings. Free tier, no account needed.\n" +
+      "Tokmizer is on with the recommended settings. No account needed.\n" +
         "See it live anytime: /tkr-status. Your savings: /tkr-gain.\n" +
-        "Tune it with /tkr. Paid plan? Link it with /tkr-link."
+        "Tune it with /tkr. Link an account with /tkr-link."
     );
     mkdirSync(home, { recursive: true });
     writeFileSync(onboardFile, String(Date.now()));

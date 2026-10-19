@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, rmSync, utimesSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, rmSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -23,9 +23,15 @@ function runHook(pluginRoot: string): void {
   });
 }
 
-function addVersionDir(name: string, ageDays: number): string {
+function addVersionDir(name: string, ageDays: number, orphanedDays: number | null = ageDays): string {
   const p = join(base, name);
   mkdirSync(p, { recursive: true });
+  if (orphanedDays !== null) {
+    const marker = join(p, ".orphaned_at");
+    writeFileSync(marker, String(Date.now() - orphanedDays * 24 * 3600_000));
+    const m = new Date(Date.now() - orphanedDays * 24 * 3600_000);
+    utimesSync(marker, m, m);
+  }
   const t = new Date(Date.now() - ageDays * 24 * 3600_000);
   utimesSync(p, t, t);
   return p;
@@ -46,7 +52,7 @@ describe("session-start prunes stale cached plugin versions", () => {
     addVersionDir("0.7.2", 30);
     addVersionDir("0.9.9", 30);
     addVersionDir("0.9.10", 30);
-    const self = addVersionDir("0.9.31", 0);
+    const self = addVersionDir("0.9.31", 0, null);
 
     runHook(self);
 
@@ -54,6 +60,18 @@ describe("session-start prunes stale cached plugin versions", () => {
     expect(existsSync(join(base, "0.9.10"))).toBe(true);
     expect(existsSync(join(base, "0.7.2"))).toBe(false);
     expect(existsSync(join(base, "0.9.9"))).toBe(false);
+  });
+
+  it("keeps an old version Claude Code has not marked as orphaned, since a session may still use it", () => {
+    addVersionDir("0.9.8", 30, null);
+    addVersionDir("0.9.9", 30, 2);
+    addVersionDir("0.9.10", 30);
+    const self = addVersionDir("0.9.31", 0, null);
+
+    runHook(self);
+
+    expect(existsSync(join(base, "0.9.8"))).toBe(true);
+    expect(existsSync(join(base, "0.9.9"))).toBe(true);
   });
 
   it("keeps versions younger than seven days", () => {

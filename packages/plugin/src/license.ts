@@ -13,6 +13,7 @@ import { loadState, saveState, clearState, detectTimeZone, type State } from "./
 import { fetchSigned, consumeSignedJson } from "./transport";
 import { enrollCooldownFile, tokmizerHome } from "./paths";
 import { fetchAndVerifyBundles } from "./bundle";
+import { assertNoBundleRollback, recordInstalledVersions } from "./bundle-versions";
 import { ALLOWED_COMMAND_NAMES, ALLOWED_SKILL_SLUGS, unsafeBundleContent } from "./bundle-policy";
 import {
   writeSkill,
@@ -48,19 +49,25 @@ export async function refreshBundles(baseUrl: string, force: boolean): Promise<v
   if (!force && (await isFresh("power"))) return;
   try {
     const bundles = await fetchAndVerifyBundles(baseUrl);
+    await assertNoBundleRollback(bundles);
     const skillSlugs: string[] = [];
     const commandNames: string[] = [];
     const rejected: string[] = [];
+    const installed: typeof bundles = [];
     for (const b of bundles) {
       const isCommand = b.slug.endsWith(COMMAND_SLUG_SUFFIX);
       const name = isCommand ? b.slug.slice(0, -COMMAND_SLUG_SUFFIX.length) : b.slug;
       if (!(isCommand ? ALLOWED_COMMAND_NAMES : ALLOWED_SKILL_SLUGS).includes(name)) continue;
       const unsafe = unsafeBundleContent(b.body);
       if (unsafe) rejected.push(`${b.slug} (${unsafe})`);
-      else if (isCommand) await installCommand(name, b.body);
-      else await writeSkill(name, b.body);
+      else {
+        if (isCommand) await installCommand(name, b.body);
+        else await writeSkill(name, b.body);
+        installed.push(b);
+      }
       (isCommand ? commandNames : skillSlugs).push(name);
     }
+    await recordInstalledVersions(installed);
     await pruneSkills(skillSlugs);
     await pruneCommands(commandNames);
     await recordBundleRefresh(rejected.length ? `unsafe bundle skipped: ${rejected.join(", ")}` : null);
@@ -409,7 +416,7 @@ export async function maybeAutoEnroll(baseUrl?: string): Promise<State | null> {
   try {
     return await autoEnroll(baseUrl ?? baseUrlFromEnv());
   } catch {
-    await mkdir(tokmizerHome(), { recursive: true });
+    await mkdir(tokmizerHome(), { recursive: true, mode: 0o700 });
     await writeFile(cooldownPath, String(Date.now()), { mode: 0o600 });
     return null;
   }

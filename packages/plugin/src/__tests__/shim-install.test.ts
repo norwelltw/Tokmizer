@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import os from "node:os";
-import { mkdtempSync, rmSync, writeFileSync, existsSync, readFileSync, mkdirSync, chmodSync, readdirSync, statSync } from "node:fs";
+import { mkdtempSync, rmSync, writeFileSync, existsSync, readFileSync, mkdirSync, chmodSync, readdirSync, statSync, symlinkSync, lstatSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -134,6 +134,19 @@ describe("shim install", () => {
     expect(readFileSync(rc, "utf8")).toContain("tokmizer-shim PATH");
   });
 
+  it.skipIf(process.platform === "win32")("ensurePathInRc keeps a linked rc file a link and keeps its permissions", async () => {
+    const real = join(dir, "dotfiles-zshrc");
+    writeFileSync(real, "export FOO=bar\n");
+    chmodSync(real, 0o640);
+    const rc = join(dir, ".zshrc");
+    symlinkSync(real, rc);
+    expect(await ensurePathInRc(rc)).toBe("added");
+    expect(lstatSync(rc).isSymbolicLink()).toBe(true);
+    expect(readFileSync(real, "utf8")).toContain("tokmizer-shim PATH");
+    expect(readFileSync(real, "utf8").startsWith("export FOO=bar\n")).toBe(true);
+    expect(statSync(real).mode & 0o777).toBe(0o640);
+  });
+
   it("ensurePathInRc idempotent on second call", async () => {
     const rc = join(dir, ".zshrc");
     writeFileSync(rc, "x\n");
@@ -166,6 +179,7 @@ describe("shim install", () => {
     const s = windowsWrapperScript("C:\\Program Files\\tok\\shim.js", "git");
     expect(s).toContain("@echo off");
     expect(s).toContain('--as "git" %*');
+    expect(s.indexOf('if "%TOKMIZER_SHIM_ACTIVE%"=="git" goto tkpass')).toBeLessThan(s.indexOf('--as "git"'));
   });
 
   it("installed wrapper contains --as <cmd> (not symlink, no fork-bomb risk)", async () => {
@@ -292,6 +306,43 @@ describe.skipIf(process.platform === "win32")("unix shim fast path", () => {
 
   it("prefers the native-hook host when several host variables are set", () => {
     expect(runShim({ CLAUDECODE: "1", CURSOR_TRACE_ID: "x" }).startsWith("REAL ")).toBe(true);
+  });
+
+  function runFrom(entry: string, pathDirs: string[], extra: Record<string, string>) {
+    const env: Record<string, string> = {};
+    for (const [k, v] of Object.entries(process.env)) if (v !== undefined && !HOST_VARS.includes(k)) env[k] = v;
+    env.PATH = [...pathDirs, "/usr/bin", "/bin"].join(":");
+    Object.assign(env, extra);
+    return spawnSync(entry, ["x"], { env, encoding: "utf8", timeout: 5000 });
+  }
+
+  it("skips a link to the shim placed in another PATH folder instead of running itself forever", () => {
+    const linkDir = join(dir, "links");
+    mkdirSync(linkDir);
+    symlinkSync(join(shimsDir(), "tkfake"), join(linkDir, "tkfake"));
+    const r = runFrom(join(linkDir, "tkfake"), [shimsDir(), linkDir, realDir], { CLAUDECODE: "1" });
+    expect(r.error).toBeUndefined();
+    expect(r.stdout.startsWith("REAL x PATH=")).toBe(true);
+  });
+
+  it("skips a copy of the shim placed in another PATH folder", () => {
+    const copyDir = join(dir, "copies");
+    mkdirSync(copyDir);
+    writeFileSync(join(copyDir, "tkfake"), unixWrapperScript("tkfake"));
+    chmodSync(join(copyDir, "tkfake"), 0o755);
+    const r = runFrom(join(copyDir, "tkfake"), [copyDir, realDir], { CLAUDECODE: "1" });
+    expect(r.error).toBeUndefined();
+    expect(r.stdout.startsWith("REAL x PATH=")).toBe(true);
+  });
+
+  it("runs the real command when the runner re-enters the same shim", () => {
+    const r = runFrom(join(shimsDir(), "tkfake"), [shimsDir(), fakeNodeDir, realDir], { CURSOR_TRACE_ID: "x", TOKMIZER_SHIM_ACTIVE: "tkfake" });
+    expect(r.stdout.startsWith("REAL x PATH=")).toBe(true);
+  });
+
+  it("still hands another command over to node while one shim is running", () => {
+    const r = runFrom(join(shimsDir(), "tkfake"), [shimsDir(), fakeNodeDir, realDir], { CURSOR_TRACE_ID: "x", TOKMIZER_SHIM_ACTIVE: "git" });
+    expect(r.stdout.trim()).toBe(`NODE ${shimRunner} --as tkfake x`);
   });
 
   it("quotes paths that contain spaces and single quotes and reads them back", () => {

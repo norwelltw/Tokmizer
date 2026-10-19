@@ -10,6 +10,14 @@ Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot, Factory Droid, Trae, Qwe
 curl -fsSL https://tokmizer.com/install.sh | bash
 ```
 
+Without Node.js, the script installs the standalone executable and first checks the release signature with OpenSSL 3 or `ssh-keygen -Y verify` (OpenSSH 8.1+, included in macOS). If neither tool is available, the installation stops. To install anyway with only the SHA256SUMS checksums, at your own risk:
+
+```bash
+curl -fsSL https://tokmizer.com/install.sh | TOKMIZER_ALLOW_UNSIGNED=1 bash
+```
+
+`TOKMIZER_REQUIRE_SIG=1` keeps the signature mandatory even when `TOKMIZER_ALLOW_UNSIGNED=1` is set.
+
 ## Windows (PowerShell)
 
 ```powershell

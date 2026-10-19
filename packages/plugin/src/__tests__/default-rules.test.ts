@@ -147,13 +147,13 @@ describe("server bundle precedence", () => {
     const { installDaemonResolver, closeDaemonResolver } = await import("../daemon/resolver");
     const engine = await import("../engine");
     try {
-      installDaemonResolver("free");
+      installDaemonResolver();
       const lines = "line\n".repeat(300);
       expect((await engine.processOutput("npm install", lines, null, { exitCode: 0 })).filterId).toBe("npm");
       expect((await engine.processOutput("git log", lines, null, { exitCode: 0 })).filterId).toBeNull();
       closeDaemonResolver();
       rmSync(bundleCachePath(), { force: true });
-      installDaemonResolver("free");
+      installDaemonResolver();
       expect((await engine.processOutput("git log", lines, null, { exitCode: 0 })).filterId).toBe("git-log");
       expect((await engine.processOutput("npm install", lines, null, { exitCode: 0 })).filterId).toBe("npm");
     } finally {

@@ -31,7 +31,7 @@ async function readCommandRegistry(): Promise<string[]> {
 
 async function writeCommandRegistry(names: string[]): Promise<void> {
   try {
-    await mkdir(tokmizerHome(), { recursive: true });
+    await mkdir(tokmizerHome(), { recursive: true, mode: 0o700 });
     await writeFile(managedCommandsFile(), JSON.stringify(names), { mode: 0o600 });
   } catch {}
 }
@@ -55,7 +55,7 @@ export async function isFresh(slug: string): Promise<boolean> {
 }
 
 export async function writeSkill(slug: string, body: string): Promise<void> {
-  await mkdir(skillsDir(), { recursive: true });
+  await mkdir(skillsDir(), { recursive: true, mode: 0o700 });
   await writeFile(skillFile(slug), body, { mode: 0o600 });
   await chmod(skillFile(slug), 0o600);
 }
@@ -125,7 +125,7 @@ export async function commandInstalled(name: string): Promise<boolean> {
 
 export async function recordBundleRefresh(error: string | null): Promise<void> {
   try {
-    await mkdir(tokmizerHome(), { recursive: true });
+    await mkdir(tokmizerHome(), { recursive: true, mode: 0o700 });
     await writeFile(bundleRefreshFile(), JSON.stringify({ at: Date.now(), error }), {
       mode: 0o600
     });

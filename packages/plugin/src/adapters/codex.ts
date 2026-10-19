@@ -3,7 +3,7 @@ import { slugKey } from "../contracts";
 import { resolveAllowedFilters } from "../default-rules";
 import { readStdin } from "../stdin";
 import { loadState } from "../state";
-import { gatingPlan, graceExceeded } from "../entitlement";
+import { graceExceeded } from "../entitlement";
 import { loadSettingsCache } from "../settings-cache";
 import { recordEvent } from "../learn/recorder";
 import { recordTelemetry } from "../learn/telemetry";
@@ -57,8 +57,7 @@ export async function handleCodexHook(payload: CodexHookPayload): Promise<CodexH
   const state = await loadState();
   if (!state || !state.token) return { action: "continue" };
 
-  const plan = gatingPlan(state);
-  installDaemonResolver(plan);
+  installDaemonResolver();
   const baseAllowed = resolveAllowedFilters(state.allowedFilters, graceExceeded(state));
   const disabledKeys = new Set(settings.filters.disabled.map(slugKey));
   const allowed = baseAllowed && disabledKeys.size > 0
@@ -94,8 +93,7 @@ export async function handleCodexHook(payload: CodexHookPayload): Promise<CodexH
     cmd,
     filterId: result.filterId,
     rawBytes: result.rawBytes,
-    filteredBytes: result.filteredBytes,
-    plan
+    filteredBytes: result.filteredBytes
   });
 
   await recordTelemetry({

@@ -82,7 +82,7 @@ function envConcat(vars: string[]): string {
   return `"${vars.map((v) => `\${${v}:-}`).join("")}"`;
 }
 
-const SHIM_FORMAT = 1;
+const SHIM_FORMAT = 2;
 
 export function currentShim(content: string): boolean {
   const m = content.match(/^#!\/bin\/sh\n_tk_f=(\d+)\n/);
@@ -94,7 +94,7 @@ export function unixWrapperScript(cmd: string): string {
     "#!/bin/sh",
     `_tk_f=${SHIM_FORMAT}`,
     `_tk_c=${shQuote(cmd)}`,
-    `if [ -z ${envConcat(hostEnvVars(true))} ] && { [ -n ${envConcat(["TOKMIZER_HOST", ...hostEnvVars(false)])} ] || [ -t 1 ]; } && [ -f ${shQuote(launcherFile())} ] && ! ${failOpenShellTest()}; then`,
+    `if [ "\${TOKMIZER_SHIM_ACTIVE:-}" != "$_tk_c" ] && [ -z ${envConcat(hostEnvVars(true))} ] && { [ -n ${envConcat(["TOKMIZER_HOST", ...hostEnvVars(false)])} ] || [ -t 1 ]; } && [ -f ${shQuote(launcherFile())} ] && ! ${failOpenShellTest()}; then`,
     `  exec /bin/sh ${shQuote(launcherFile())} "$_tk_c" "$@"`,
     "fi",
     ...passthroughLines(""),
@@ -113,6 +113,7 @@ export function windowsWrapperScript(shimJs: string, cmd: string): string {
   const dir = shimsDir();
   return [
     "@echo off",
+    `if "%TOKMIZER_SHIM_ACTIVE%"=="${cmd}" goto tkpass`,
     `if exist "${failOpenFile()}" goto tkpass`,
     `if not exist "${launch.check}" goto tkmissing`,
     `${launch.run} --as "${cmd}" %*`,
@@ -359,13 +360,21 @@ export async function removeGlobalPathLines(opts: { force?: boolean } = {}): Pro
   return changed;
 }
 
+async function appendAtomic(file: string, content: string, block: string): Promise<boolean> {
+  const real = realOrSelf(file);
+  let mode = 0o600;
+  try {
+    mode = (await stat(real)).mode & 0o777;
+  } catch {}
+  return writeAtomic(real, `${content.replace(/\n*$/, "\n")}\n${block}`, mode);
+}
+
 export async function ensurePathInRc(rcFile: string, fish = false): Promise<"added" | "present" | "missing"> {
   try {
     await mkdir(dirname(rcFile), { recursive: true });
     const content = existsSync(rcFile) ? await readFile(rcFile, "utf8") : "";
     if (content.includes(RC_MARKER)) return "present";
-    await writeFile(rcFile, `${content.replace(/\n*$/, "\n")}\n${shellRcLine(fish)}`, { mode: 0o600 });
-    return "added";
+    return (await appendAtomic(rcFile, content, shellRcLine(fish))) ? "added" : "missing";
   } catch {
     return "missing";
   }
@@ -412,7 +421,7 @@ export async function ensureShimPath(): Promise<{
         await mkdir(dirname(profile), { recursive: true });
         const content = existsSync(profile) ? await readFile(profile, "utf8") : "";
         if (content.includes(RC_MARKER)) continue;
-        await writeFile(profile, `${content.replace(/\n*$/, "\n")}\n${snippet}`);
+        if (!(await appendAtomic(profile, content, snippet))) throw new Error("profile not written");
         added = true;
       }
       return { status: added ? "added" : "present", target, manual: snippet };

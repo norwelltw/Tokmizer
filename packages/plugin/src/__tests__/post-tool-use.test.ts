@@ -555,7 +555,7 @@ describe("failure-heuristic scoping per tool", () => {
     expect(call[3]?.exitCode).toBeUndefined();
   });
 
-  it("passes the exec exit code for a Bash command PostToolUse reports as successful", async () => {
+  it("leaves the exit code unknown when PostToolUse does not report it, so failure detection still runs", async () => {
     const { processOutput } = await import("../engine");
     vi.mocked(processOutput).mockClear();
     await processToolOutput({
@@ -565,7 +565,7 @@ describe("failure-heuristic scoping per tool", () => {
     });
     const call = vi.mocked(processOutput).mock.calls.at(-1)!;
     expect(call[0]).toBe("grep foo");
-    expect(call[3]?.exitCode).toBe(0);
+    expect(call[3]?.exitCode).toBeNull();
   });
 });
 
@@ -747,7 +747,7 @@ describe("session working-set recording", () => {
     } as never);
     expect(r).not.toBeNull();
     expect(vi.mocked(processOutput).mock.calls[0]![2]).toBeNull();
-    expect(vi.mocked(recordEvent).mock.calls[0]![0]).toMatchObject({ plan: null });
+    expect(vi.mocked(recordEvent)).not.toHaveBeenCalled();
   });
 
   it("does not record when the payload has no session id", async () => {

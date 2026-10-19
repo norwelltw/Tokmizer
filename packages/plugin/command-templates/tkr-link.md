@@ -1,6 +1,7 @@
 ---
-description: Link a paid Tokmizer account. Usage - /tkr-link tokmizer_yourkey
+description: Link your Tokmizer account. Usage - /tkr-link tokmizer_yourkey
 argument-hint: tokmizer_yourkey
+disable-model-invocation: true
 ---
 
 The user invoked /tkr-link with: $ARGUMENTS

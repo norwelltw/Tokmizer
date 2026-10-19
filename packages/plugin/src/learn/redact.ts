@@ -1,4 +1,10 @@
 const PATTERNS: Array<[RegExp, string]> = [
+  [/(\baws_(?:secret_access_key|session_token|access_key_id)\s+)\S+/gi, "$1[REDACTED]"],
+  [/(\bsshpass\b[^;&|\n]{0,200}?\s-p\s*)\S+/g, "$1[REDACTED]"],
+  [/(\bredis-cli\b[^;&|\n]{0,200}?\s(?:-a|--pass)\s+)\S+/g, "$1[REDACTED]"],
+  [/(\bopenssl\b[^;&|\n]{0,200}?\s-k\s+)\S+/g, "$1[REDACTED]"],
+  [/(\s-pass(?:in|out)?\s+(?:pass|env|file):)\S+/g, "$1[REDACTED]"],
+  [/(https?:\/\/hooks\.slack\.com\/(?:services|workflows|triggers)\/)\S+/gi, "$1[REDACTED]"],
   [/(authorization\s*:\s*)([A-Za-z][A-Za-z0-9._-]*)\s+[^\s'"]+/gi, "$1$2 [REDACTED]"],
   [/(authorization\s*:\s*)[A-Za-z0-9._\-+/=]{8,}/gi, "$1[REDACTED]"],
   [/(bearer\s+)[A-Za-z0-9._\-+/=]{8,}/gi, "$1[REDACTED]"],
@@ -66,6 +72,7 @@ const SECRET_PATTERNS: Array<[RegExp, string]> = [
   [/(?<![A-Z0-9])(AKIA|ASIA)[A-Z0-9]{16}(?![A-Z0-9])/g, `$1${MASK}`],
   [/(?<![A-Za-z0-9])(xox[abpors]-)[A-Za-z0-9-]{10,}/g, `$1${MASK}`],
   [/(?<![A-Za-z0-9])((?:sk|rk)_live_)[A-Za-z0-9]{16,}/g, `$1${MASK}`],
+  [/(?<![A-Za-z0-9_-])(sk-(?:ant-|proj-))[A-Za-z0-9_-]{20,}/g, `$1${MASK}`],
   [/(authorization["']?\s*[:=]\s*["']?bearer\s+)[A-Za-z0-9._~+/=-]{8,}/gi, `$1${MASK}`],
   [/(?<![A-Za-z0-9+.-])([a-zA-Z][a-zA-Z0-9+.-]{0,31}:\/\/[^\s:/@]*:)[^\s@/]+(@[^\s@/]+)/g, `$1${MASK}$2`]
 ];

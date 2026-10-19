@@ -2,9 +2,9 @@ import { ensureRunLauncherSync } from "../shim/launcher";
 import { claudeConfigDir } from "../claude-config-dir";
 import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
-import { homedir } from "node:os";
+import { homedir, userInfo } from "node:os";
 import { fileURLToPath } from "node:url";
-import { dirname, join, resolve } from "node:path";
+import { dirname, join, resolve, win32 } from "node:path";
 import { parse as parseToml } from "smol-toml";
 import { recordUsageSync } from "../usage";
 import { singleBinary } from "../self-command";
@@ -177,7 +177,7 @@ function isStreamingCommand(trimmed: string, head: string): boolean {
 
 const ASSIGN_RE = /^[A-Za-z_][A-Za-z0-9_]*\+?=/;
 const FUNC_DEF_RE = /^[A-Za-z_][A-Za-z0-9_-]*\s*\(\s*\)/;
-const FUNC_DEF_ANYWHERE = /(?:^|[;&|\n({])\s*[A-Za-z_][A-Za-z0-9_-]*\s*\(\s*\)/;
+const FUNC_DEF_ANYWHERE = /(?:^|[;&|\n({])\s*(?:[A-Za-z_][A-Za-z0-9_-]*\s*\(\s*\)|function\s+[A-Za-z_])/;
 
 function basename(word: string): string {
   const slash = word.lastIndexOf("/");
@@ -294,7 +294,7 @@ export function splitTopLevel(cmd: string): Segment[] {
         continue;
       }
       if (c === "&" && next !== ">") {
-        const trimmed = buf.replace(/\s+$/, "");
+        const trimmed = buf.trimEnd();
         const last = trimmed[trimmed.length - 1];
         if (last !== ">" && last !== "<" && last !== "&") {
           pushSep("&", 1);
@@ -426,7 +426,7 @@ function rewriteAt(cmd: string, exec: string, depth: number, headOk: HeadCheck, 
       ? unwrapShellScript(trimmed, exec, depth, headOk, onWrap)
       : null;
     if (unwrapped !== null) {
-      out.push(`${seg.text.match(/^\s*/)?.[0] ?? ""}${unwrapped}${seg.text.match(/\s*$/)?.[0] ?? ""}`);
+      out.push(`${seg.text.match(/^\s*/)?.[0] ?? ""}${unwrapped}${seg.text.slice(seg.text.trimEnd().length)}`);
       continue;
     }
     if (
@@ -455,7 +455,7 @@ function rewriteAt(cmd: string, exec: string, depth: number, headOk: HeadCheck, 
       continue;
     }
     const leading = seg.text.match(/^\s*/)?.[0] ?? "";
-    const trailing = seg.text.match(/\s*$/)?.[0] ?? "";
+    const trailing = seg.text.slice(seg.text.trimEnd().length);
     onWrap?.(trimmed);
     out.push(`${leading}${exec} ${trimmed}${trailing}`);
   }
@@ -652,6 +652,60 @@ function claudeManagedFiles(): string[] {
   return files;
 }
 
+function currentUserName(): string {
+  try {
+    return userInfo().username;
+  } catch {
+    return "";
+  }
+}
+
+export function registryAnswer(r: { status: number | null; error?: Error | undefined }): boolean {
+  if (r.error) return (r.error as NodeJS.ErrnoException).code === "ETIMEDOUT";
+  return r.status !== 1;
+}
+
+const POLICY_CACHE_MS = 5 * 60_000;
+const policyCache = new Map<string, { at: number; value: boolean }>();
+
+function registryPolicy(reg: string, cwd: string): boolean {
+  const hit = policyCache.get(reg);
+  if (hit && Date.now() - hit.at < POLICY_CACHE_MS) return hit.value;
+  const value = ["HKLM", "HKCU"].some((hive) =>
+    registryAnswer(spawnSync(reg, ["query", `${hive}\\SOFTWARE\\Policies\\ClaudeCode`, "/v", "Settings"], { cwd, stdio: "ignore", timeout: 2000, windowsHide: true }))
+  );
+  policyCache.set(reg, { at: Date.now(), value });
+  return value;
+}
+
+function windowsRegistryPolicy(): boolean {
+  const root = process.env.SystemRoot || "C:\\Windows";
+  return registryPolicy(win32.join(root, "System32", "reg.exe"), root);
+}
+
+const WSL_WINDOWS_REG = "/mnt/c/Windows/System32/reg.exe";
+
+function wslWindowsPolicy(exists: (path: string) => boolean): boolean {
+  if (!process.env.WSL_DISTRO_NAME && !exists("/proc/sys/fs/binfmt_misc/WSLInterop")) return false;
+  if (exists("/mnt/c/Program Files/ClaudeCode")) return true;
+  return exists(WSL_WINDOWS_REG) && registryPolicy(WSL_WINDOWS_REG, "/mnt/c/Windows");
+}
+
+export function osPolicyPresent(
+  platform: NodeJS.Platform = process.platform,
+  exists: (path: string) => boolean = existsSync,
+  windowsPolicy: () => boolean = windowsRegistryPolicy,
+  user: string = currentUserName(),
+  wslPolicy: () => boolean = () => wslWindowsPolicy(exists)
+): boolean {
+  if (platform === "darwin") {
+    const dir = "/Library/Managed Preferences";
+    return exists(join(dir, "com.anthropic.claudecode.plist")) || (user !== "" && exists(join(dir, user, "com.anthropic.claudecode.plist")));
+  }
+  if (platform === "win32") return windowsPolicy();
+  return platform === "linux" && wslPolicy();
+}
+
 function readRuleFiles(files: string[], jsonc: boolean, collect: (config: Record<string, unknown>, matchers: Matcher[]) => boolean, complete: boolean): RuleSet {
   const matchers: Matcher[] = [];
   for (const file of files) {
@@ -680,8 +734,10 @@ function claudeRules(cwd: string, dirs: ClaudeDirs): RuleSet {
   const home = join(homedir(), ".claude");
   type Scope = "managed" | "loaded" | "loadedLocal" | "project" | "extra";
   const loadedDir = dirs.configDir || home;
+  if (osPolicyPresent()) return "unreadable";
+  const remote = [...new Set([join(loadedDir, "remote-settings.json"), join(home, "remote-settings.json")])];
   const groups: [string[], Scope][] = [
-    [claudeManagedFiles(), "managed"],
+    [[...remote, ...claudeManagedFiles()], "managed"],
     [[join(loadedDir, "settings.json")], "loaded"],
     [[join(loadedDir, "settings.local.json")], "loadedLocal"],
     [dirs.configDir ? settings(home) : [], "extra"],
@@ -1274,9 +1330,11 @@ function narrowAllowRule(rules: RuleSet, cmd: string, context: RewriteContext): 
   return (rules.trustedAllow ?? []).find((allow) => allow.matches(cmd))?.rule ?? null;
 }
 
+const MAX_REWRITE_CHARS = 65_536;
+
 export type ShellRewrite = { command: string; allowedBy?: string; ask?: boolean };
 
-const ASKED_ANYWAY_RE = /^(?:\S+=\S*\s+)*(?:(?:npx|bunx|pnpm\s+exec|yarn\s+exec|uv\s+run|poetry\s+run)\s+)?(?:\.\/)?(?:ctest|gradlew|gradle|mvnw|mvnd|mvn|make|cmake|sbt|phpstan|phpunit|pest|pytest|py\.test|tox|nox|vitest|jest|mocha|playwright\s+test|tsc|(?:cargo|go)\s+(?:build|test|check|clippy|vet)|(?:bun|deno)\s+(?:test|check|lint|install)|(?:npm|pnpm|yarn)\s+(?:test|t|ci|install|run\s+\S+)|dotnet\s+(?:build|test)|swift\s+(?:build|test)|composer\s+(?:install|update|test))(?:\s|$)/;
+const ASKED_ANYWAY_RE = /^(?:[A-Za-z_][A-Za-z0-9_]*=\S*\s+)*(?:(?:npx|bunx|pnpm\s+exec|yarn\s+exec|uv\s+run|poetry\s+run)\s+)?(?:\.\/)?(?:ctest|gradlew|gradle|mvnw|mvnd|mvn|make|cmake|sbt|phpstan|phpunit|pest|pytest|py\.test|tox|nox|vitest|jest|mocha|playwright\s+test|tsc|(?:cargo|go)\s+(?:build|test|check|clippy|vet)|(?:bun|deno)\s+(?:test|check|lint|install)|(?:npm|pnpm|yarn)\s+(?:test|t|ci|install|run\s+\S+)|dotnet\s+(?:build|test)|swift\s+(?:build|test)|composer\s+(?:install|update|test))(?:\s|$)/;
 
 function askedAnyway(cmd: string, context: RewriteContext): boolean {
   return context.host === "claude-code" && context.permissionMode === "default" && ASKED_ANYWAY_RE.test(cmd.trim());
@@ -1288,7 +1346,7 @@ export function rewriteShellDecision(
   exec: string | null,
   recordUsage: (sessionId: string, routed: boolean) => void
 ): ShellRewrite | null {
-  if (!exec || /["\\$`;&|<>(){}]|'\\''/.test(exec)) return null;
+  if (!exec || cmd.length > MAX_REWRITE_CHARS || /["\\$`;&|<>(){}]|'\\''/.test(exec)) return null;
   const dirs = context.claudeDirs ?? currentClaudeDirs();
   const rules = hostRules(context.host, context.cwd, dirs);
   const allowedBy = narrowAllowRule(rules, cmd, context);

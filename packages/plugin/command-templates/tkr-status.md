@@ -1,5 +1,6 @@
 ---
 description: Show your Tokmizer account and engine status.
+disable-model-invocation: true
 ---
 
 Show the user their Tokmizer account status.

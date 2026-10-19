@@ -55,19 +55,19 @@ function spawnRecentlyFailed(): boolean {
 
 function logDaemon(message: string): void {
   try {
-    mkdirSync(tokmizerHome(), { recursive: true });
+    mkdirSync(tokmizerHome(), { recursive: true, mode: 0o700 });
     const file = daemonLogFile();
     try {
       if (statSync(file).size > DAEMON_LOG_MAX_BYTES) unlinkSync(file);
     } catch {}
-    appendFileSync(file, `${new Date().toISOString()} ${message}\n`);
+    appendFileSync(file, `${new Date().toISOString()} ${message}\n`, { mode: 0o600 });
   } catch {}
 }
 
 function noteSpawnFailure(err: unknown): void {
   try {
-    mkdirSync(tokmizerHome(), { recursive: true });
-    writeFileSync(spawnFailFile(), String(Date.now()));
+    mkdirSync(tokmizerHome(), { recursive: true, mode: 0o700 });
+    writeFileSync(spawnFailFile(), String(Date.now()), { mode: 0o600 });
   } catch {}
   logDaemon(`spawn failed: ${(err as Error).message}`);
 }
@@ -140,6 +140,23 @@ async function waitForSocket(path: string, timeoutMs = 3000): Promise<boolean> {
   return false;
 }
 
+export function spawnLockAbandoned(lockPath: string, now: number = Date.now()): boolean {
+  try {
+    const age = now - statSync(lockPath).mtimeMs;
+    if (age > 10_000) return true;
+    const pid = Number(readFileSync(lockPath, "utf8").trim());
+    if (!Number.isInteger(pid) || pid <= 0) return false;
+    try {
+      process.kill(pid, 0);
+      return false;
+    } catch (err) {
+      return (err as NodeJS.ErrnoException).code === "ESRCH";
+    }
+  } catch {
+    return false;
+  }
+}
+
 async function spawnDaemon(installId: string): Promise<void> {
   const bin = resolveDaemonBin();
   if (!singleBinary() && !existsSync(bin)) {
@@ -152,7 +169,7 @@ async function spawnDaemon(installId: string): Promise<void> {
   // created there (ENOENT). Use the real home dir for the spawn lock on Windows.
   const lockDir = process.platform === "win32" ? tokmizerHome() : dirname(sockPath);
   try {
-    mkdirSync(lockDir, { recursive: true });
+    mkdirSync(lockDir, { recursive: true, mode: 0o700 });
   } catch {}
   const lockPath = join(lockDir, "daemon.spawn.lock");
   let lockFd: number | null = null;
@@ -161,7 +178,7 @@ async function spawnDaemon(installId: string): Promise<void> {
     writeFileSync(lockFd, String(process.pid));
   } catch (err) {
     if ((err as NodeJS.ErrnoException).code === "EEXIST") {
-      const ok = await waitForSocket(sockPath, 5000);
+      const ok = !spawnLockAbandoned(lockPath) && (await waitForSocket(sockPath, 5000));
       if (ok) return;
       try {
         unlinkSync(lockPath);
@@ -184,7 +201,7 @@ async function spawnDaemon(installId: string): Promise<void> {
   try {
     let errFd: number | null = null;
     try {
-      errFd = openSync(daemonLogFile(), "a");
+      errFd = openSync(daemonLogFile(), "a", 0o600);
     } catch {}
     const [command, ...args] = selfInvocation(bin);
     const child = spawn(command!, args, {
@@ -342,7 +359,7 @@ export async function connectDaemon(opts: { socketPath?: string; skipVersionChec
         ...(allowed && allowed.length > 0 ? { allowed: allowed.slice(0, 512) } : {}),
         installId
       });
-      if (!res.ok) return null;
+      if (!res.ok) throw new Error(res.err);
       const parsed = FilterResData.safeParse(res.data);
       if (!parsed.success) return null;
       return parsed.data.filter;

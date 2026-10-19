@@ -25,7 +25,7 @@ export function telemetryNoticeMarker(): string {
 function claimOnce(marker: string, value: string): boolean {
   if (existsSync(marker)) return false;
   try {
-    mkdirSync(tokmizerHome(), { recursive: true });
+    mkdirSync(tokmizerHome(), { recursive: true, mode: 0o700 });
     writeFileSync(marker, value, { mode: 0o600 });
   } catch {
     return false;

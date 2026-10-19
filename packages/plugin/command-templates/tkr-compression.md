@@ -1,6 +1,7 @@
 ---
 description: Show or change the Tokmizer compression level (light, balanced, max).
 argument-hint: light | balanced | max
+disable-model-invocation: true
 ---
 
 Manage the user's Tokmizer compression level.

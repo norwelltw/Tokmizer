@@ -1,4 +1,5 @@
 import spawn from "cross-spawn";
+import { windowsCommand } from "./windows-command";
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { constants as osConstants } from "node:os";
@@ -9,7 +10,7 @@ import { slugKey } from "../contracts";
 import { resolveAllowedFilters } from "../default-rules";
 import { loadState } from "../state";
 import { tokmizerHome } from "../paths";
-import { gatingPlan, graceExceeded } from "../entitlement";
+import { graceExceeded } from "../entitlement";
 import { recordEvent } from "../learn/recorder";
 import { recordTelemetry } from "../learn/telemetry";
 import { recordStat, countedSaving, statCmdLabel, statOutcome } from "../stats";
@@ -57,7 +58,7 @@ export function kickBackgroundEnroll(): void {
       const last = Number(readFileSync(marker, "utf8"));
       if (Number.isFinite(last) && Date.now() - last < ENROLL_KICK_THROTTLE_MS) return;
     } catch {}
-    mkdirSync(tokmizerHome(), { recursive: true });
+    mkdirSync(tokmizerHome(), { recursive: true, mode: 0o700 });
     writeFileSync(marker, String(Date.now()));
     const [command, ...args] = selfInvocation(tkrBin);
     const child = spawn(command!, [...args, "heartbeat"], {
@@ -118,9 +119,10 @@ export async function runWrapped(argv: string[]): Promise<WrapResult> {
   if (!cmd) throw new Error("tkr-exec: missing command");
   const yolo = yoloEnabled();
 
-  const child = spawn(cmd, args, {
+  const env = { ...envWithoutShimDir(), [CAPTURING_ENV]: "1" };
+  const child = spawn(windowsCommand(cmd, env), args, {
     stdio: ["inherit", "pipe", "pipe"],
-    env: { ...envWithoutShimDir(), [CAPTURING_ENV]: "1" },
+    env,
     windowsHide: true
   });
 
@@ -244,7 +246,7 @@ export type CapturedOutput = {
   argv: string[];
   stdout: string;
   stderr: string;
-  exitCode: number;
+  exitCode: number | null;
   truncated: boolean;
   stderrTruncated: boolean;
 };
@@ -269,7 +271,7 @@ export async function processCapturedOutput(
   const rawResult = (): WrapResult => {
     const out = stdout + truncMarker;
     const bytes = Buffer.byteLength(out, "utf8");
-    return { stdout: out, stderr: stderr + stderrTruncMarker, code: exitCode, filterId: null, rawBytes: bytes, filteredBytes: bytes, truncated };
+    return { stdout: out, stderr: stderr + stderrTruncMarker, code: exitCode ?? 0, filterId: null, rawBytes: bytes, filteredBytes: bytes, truncated };
   };
 
   try {
@@ -282,17 +284,16 @@ export async function processCapturedOutput(
       recordSessionEvent(sessionId, {
         tool: "Bash",
         target: argv.join(" "),
-        ...(exitCode !== 0 ? { fail: 1 as const } : {})
+        ...(exitCode != null && exitCode !== 0 ? { fail: 1 as const } : {})
       });
     }
-    const plan = state ? gatingPlan(state) : null;
     const baseAllowed = state ? resolveAllowedFilters(state.allowedFilters, graceExceeded(state)) : null;
     const disabledKeys = new Set(settings.filters.disabled.map(slugKey));
     const allowed = baseAllowed && disabledKeys.size > 0
       ? new Set([...baseAllowed].filter((s) => !disabledKeys.has(s)))
       : baseAllowed;
     const cmdLine = commandLine(argv);
-    if (state && !resolver) installDaemonResolver(plan!);
+    if (state && !resolver) installDaemonResolver();
     const processed = await processOutput(cmdLine, stdout, allowed, {
       verbosity: settings.outputVerbosity,
       resolver,
@@ -302,7 +303,7 @@ export async function processCapturedOutput(
     let stderrOut = neutralizeMarkers(stderr, stderr);
     let stderrRawBytes = 0;
     let stderrFilteredBytes = 0;
-    if ((yolo || exitCode === 0) && Buffer.byteLength(stderr, "utf8") >= (yolo ? 1 : MIN_STDERR_FILTER_BYTES)) {
+    if ((yolo || exitCode === 0 || exitCode == null) && Buffer.byteLength(stderr, "utf8") >= (yolo ? 1 : MIN_STDERR_FILTER_BYTES)) {
       const errProcessed = await processOutput(cmdLine, stderr, allowed, {
         verbosity: settings.outputVerbosity,
         resolver,
@@ -363,13 +364,14 @@ export async function processCapturedOutput(
       try {
         recordStat(counted.raw, counted.filtered, undefined, false, host, "sh", statCmdLabel(cmdLine), "cwd" in context ? context.cwd : process.cwd(), statOutcome(processed));
 
-        await recordEvent({
-          cmd: cmdLine,
-          filterId: processed.filterId,
-          rawBytes: processed.rawBytes,
-          filteredBytes: processed.filteredBytes,
-          plan
-        });
+        if (state) {
+          await recordEvent({
+            cmd: cmdLine,
+            filterId: processed.filterId,
+            rawBytes: processed.rawBytes,
+            filteredBytes: processed.filteredBytes
+          });
+        }
 
         await recordTelemetry({
           cmd: cmdLine,
@@ -388,7 +390,7 @@ export async function processCapturedOutput(
     return {
       stdout: deliveredStdout,
       stderr: deliveredStderr,
-      code: exitCode,
+      code: exitCode ?? 0,
       filterId: processed.filterId,
       rawBytes: processed.rawBytes + stderrRawBytes,
       filteredBytes: processed.filteredBytes + stderrFilteredBytes,

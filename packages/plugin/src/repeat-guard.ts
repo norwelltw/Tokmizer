@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { appendFileSync, chmodSync, mkdirSync, readFileSync, rmSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { tokmizerHome } from "./paths";
+import { redactTarget } from "./session-log";
 
 const MAX_FILE_BYTES = 256 * 1024;
 const CMD_MAX = 80;
@@ -34,7 +35,7 @@ export function rememberOutput(
       if (a === agent && h === hash) return { cmd: c ?? "" };
     }
     mkdirSync(join(tokmizerHome(), "sessions"), { recursive: true, mode: 0o700 });
-    appendFileSync(file, `${agent}\t${hash}\t${clean(cmd)}\n`, { mode: 0o600 });
+    appendFileSync(file, `${agent}\t${hash}\t${clean(redactTarget(cmd))}\n`, { mode: 0o600 });
     chmodSync(file, 0o600);
     if (statSync(file).size > MAX_FILE_BYTES) rmSync(file, { force: true });
   } catch {}

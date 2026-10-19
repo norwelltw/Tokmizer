@@ -50,6 +50,8 @@ export function passthroughLines(indent: string): string[] {
     '  [ -n "$_tk_e" ] || continue',
     '  [ "$_tk_e" -ef "$_tk_d" ] && continue',
     "  _tk_p=${_tk_p:+$_tk_p:}$_tk_e",
+    '  [ "$_tk_e/$_tk_c" -ef "$0" ] && continue',
+    '  [ "$_tk_e/$_tk_c" -ef "$_tk_d/$_tk_c" ] && continue',
     '  [ -z "$_tk_x" ] && [ -f "$_tk_e/$_tk_c" ] && [ -x "$_tk_e/$_tk_c" ] && _tk_x=$_tk_e/$_tk_c',
     "done",
     "IFS=$_tk_o; PATH=$_tk_p; export PATH; set +f",

@@ -1,6 +1,7 @@
 ---
 description: Show estimated token reductions in recorded tool outputs.
 argument-hint: [--day | --week | --month] [--project [path]] [--csv | --graph | --history | --by-rule | --failures | --quota [pro|5x|20x]]
+disable-model-invocation: true
 ---
 
 Show the user Tokmizer's recorded tool-output reductions.

@@ -10,9 +10,8 @@ import { fetchSigned } from "../transport";
 import { getSettings, patchSettings, buildPatchFromArg } from "../settings-client";
 import { runConfigureFromCli } from "../configure";
 import { detectHost, adapterFor, nativeHookSetupCommand } from "../host-detect";
-import { powerAvailable } from "../engine/plans";
 import { commandInstalled, commandsInstallStatus, readSkill, readBundleRefresh, pruneSkills, pruneCommands } from "../cache";
-import { gatingPlan, gatingBonus, graceExceeded } from "../entitlement";
+import { graceExceeded } from "../entitlement";
 import { readGain, renderGain, readDaily, renderDaily, clearStats, coverageSummary, recordStat, normalizeProject, projectLabel, readAgentDaily, renderCsv, renderGraph, readHistory, renderHistory, renderByRule, renderFallbacks, quotaEstimate, renderQuota, QUOTA_TIERS, type QuotaTier } from "../stats";
 import { effectivePricePerMtok } from "../pricing";
 import { readSession, renderSession, clearUsage } from "../usage";
@@ -213,7 +212,6 @@ async function settingsCommand(argv: string[]): Promise<void> {
   if (sub === "show") {
     try {
       const r = await getSettings();
-      process.stdout.write(`Plan: ${r.plan}\n`);
       process.stdout.write(`${JSON.stringify(r.settings, null, 2)}\n`);
     } catch (e) {
       process.stdout.write(`Settings unavailable; showing local cached settings: ${e instanceof Error ? e.message : String(e)}\n`);
@@ -599,8 +597,8 @@ async function main(): Promise<void> {
       }
       const email = emailIdx >= 0 ? rest[emailIdx + 1] : "";
       try {
-        const state = await activate({ token: tokenArg, baseUrl: BASE_URL, ...(email ? { email } : {}) });
-        process.stdout.write(M.activated(state.plan) + "\n");
+        await activate({ token: tokenArg, baseUrl: BASE_URL, ...(email ? { email } : {}) });
+        process.stdout.write(M.activated + "\n");
         process.stdout.write("Review this account's settings: tkr settings show. Adjust them with: tkr settings configure\n");
         const linkRefresh = await readBundleRefresh();
         if (linkRefresh?.error) {
@@ -1090,9 +1088,9 @@ async function main(): Promise<void> {
       const state = (await loadState()) ?? (await maybeAutoEnroll(BASE_URL));
       process.stdout.write(
         state
-          ? "Free access is ready. No account is required.\n"
+          ? "Ready. No account is required.\n"
           : networkEnabled()
-            ? "Free activation is pending. When online, run: tkr status\n"
+            ? "Setup is pending. When online, run: tkr status\n"
             : "Network is off: Tokmizer runs with its built-in rules. Turn it back on with: tkr network on\n"
       );
       for (const line of (await noticeLines()).slice(1)) process.stdout.write(`${line}\n`);
@@ -1147,19 +1145,16 @@ async function main(): Promise<void> {
       for (const line of (await noticeLines()).slice(1)) process.stdout.write(`${line}\n`);
       return;
     }
-    const power = powerAvailable(gatingPlan(s), gatingBonus(s));
     process.stdout.write(
       `Status ${s.status} | ${s.email ? `Account ${s.email}` : "Not linked (run tkr link to see your savings on the dashboard)"}\n`
     );
-    process.stdout.write(`power: ${power ? "available" : "locked"}\n`);
-    if (power) {
-      const cmdOk = await commandInstalled("power");
-      const skillOk = (await readSkill("power")) !== null;
-      if (!cmdOk || !skillOk) {
-        const refresh = await readBundleRefresh();
-        const failed = refresh?.error ? ` (last sync failed: ${refresh.error})` : "";
-        process.stdout.write(`/power not synced yet${failed} — run: tkr heartbeat\n`);
-      }
+    process.stdout.write("power: available\n");
+    const cmdOk = await commandInstalled("power");
+    const skillOk = (await readSkill("power")) !== null;
+    if (!cmdOk || !skillOk) {
+      const refresh = await readBundleRefresh();
+      const failed = refresh?.error ? ` (last sync failed: ${refresh.error})` : "";
+      process.stdout.write(`/power not synced yet${failed} — run: tkr heartbeat\n`);
     }
     if (graceExceeded(s)) {
       process.stdout.write(
@@ -1225,7 +1220,7 @@ async function main(): Promise<void> {
     const scopeLabel = `${subtitle ?? "all time"}${project ? ` · ${projectLabel(project)}` : ""}`;
     const projectNote = project ? `  Project ${project}: live journal only, rotated history not included.\n` : "";
     if (json) {
-      const [agg, jsonState, restoreCache, rtkImport] = await Promise.all([readGain(undefined, sinceTs, project), loadState(), contentCacheStats(), !sinceTs && !project ? loadRtkImport() : null]);
+      const [agg, restoreCache, rtkImport] = await Promise.all([readGain(undefined, sinceTs, project), contentCacheStats(), !sinceTs && !project ? loadRtkImport() : null]);
       const price = effectivePricePerMtok(agg.savedByProvider);
       process.stdout.write(JSON.stringify({
         ...agg,
@@ -1237,7 +1232,6 @@ async function main(): Promise<void> {
         netSavedUsd: Number((((agg.observed?.savedTokens ?? agg.savedTokens) / 1e6) * price).toFixed(2)),
         netSavedUsdScope: "all-observed-outputs",
         referencePricePerMtok: price,
-        plan: jsonState?.plan ?? "free",
         ...(rtkImport ? { importedFromRtk: { commands: rtkImport.commands, savedTokens: rtkImport.savedTokens, inputTokens: rtkImport.inputTokens, outputTokens: rtkImport.outputTokens, firstAt: rtkImport.firstAt, lastAt: rtkImport.lastAt, scope: "rtk-estimate-not-in-totals" } } : {}),
         ...(sinceTs ? { since: sinceTs } : {}),
         ...(project ? { project, projectScope: "live-journal" } : {})
@@ -1519,13 +1513,7 @@ async function main(): Promise<void> {
       }
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
-      if (msg.includes("plan_required") || msg.toLowerCase().includes("smart and pro")) {
-        process.stdout.write(
-          "Reducer is not available on this token right now.\n"
-        );
-      } else {
-        process.stdout.write(`${msg}\n`);
-      }
+      process.stdout.write(`${msg}\n`);
       process.exitCode = 1;
     }
     return;

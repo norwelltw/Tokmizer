@@ -219,7 +219,7 @@ export type UploadResult = "ok" | "empty" | "auth" | "fail";
 export async function uploadSpool(
   name: SpoolName,
   endpoint: string,
-  opts: { baseUrl?: string | undefined; requirePro?: boolean; consent?: boolean } = {}
+  opts: { baseUrl?: string | undefined; consent?: boolean } = {}
 ): Promise<UploadResult> {
   if (!networkEnabled()) return "fail";
   if (uploading.has(name)) return "fail";
@@ -235,10 +235,6 @@ export async function uploadSpool(
     if (events.length === 0) return "empty";
     const state = await loadState();
     if (!state) return "fail";
-    if (opts.requirePro && state.plan !== "pro") {
-      commitSpool(name);
-      return "ok";
-    }
     const url = opts.baseUrl ?? baseUrlFromEnv();
     const fp = await buildFingerprint();
     for (let i = 0; i < events.length; i += UPLOAD_CHUNK) {

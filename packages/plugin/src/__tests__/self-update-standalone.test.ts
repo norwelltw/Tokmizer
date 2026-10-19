@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { createHash } from "node:crypto";
+import { createHash, generateKeyPairSync, sign } from "node:crypto";
 import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, readlinkSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -21,6 +21,8 @@ import { maybeSpawnSelfUpdate, selfUpdate, type RunResult, type SelfUpdateDeps }
 
 const KEY = "darwin-arm64";
 const BASE = "https://downloads.test/v";
+const signer = generateKeyPairSync("ed25519");
+const RELEASE_PEM = signer.publicKey.export({ type: "spki", format: "pem" }).toString();
 
 let home: string;
 let root: string;
@@ -73,8 +75,10 @@ function release(version: string, probeOutput = `tokmizer-single ${version}`, ba
   execFileSync("tar", ["-czf", archive, "-C", stage, name]);
   const bytes = readFileSync(archive);
   const sum = badSum ? "0".repeat(64) : createHash("sha256").update(bytes).digest("hex");
+  const sums = Buffer.from(`${"f".repeat(64)}  tokmizer-${version}-linux-x64.tar.gz\n${sum}  ${name}.tar.gz\n`);
   return new Map([
-    [`${BASE}${version}/SHA256SUMS`, Buffer.from(`${"f".repeat(64)}  tokmizer-${version}-linux-x64.tar.gz\n${sum}  ${name}.tar.gz\n`)],
+    [`${BASE}${version}/SHA256SUMS`, sums],
+    [`${BASE}${version}/SHA256SUMS.sig`, sign(null, sums, signer.privateKey)],
     [`${BASE}${version}/${name}.tar.gz`, bytes]
   ]);
 }
@@ -107,7 +111,8 @@ function deps(files: Map<string, Buffer>, latest = "0.9.34") {
         fetched.push(url);
         const body = files.get(url);
         return body ? new Response(new Uint8Array(body)) : new Response("missing", { status: 404 });
-      }
+      },
+      releaseKey: RELEASE_PEM
     }
   };
   writeFileSync(join(process.env.TOKMIZER_HOME!, "self-update-seen"), JSON.stringify({ version: latest, at: 0 }));
@@ -138,6 +143,97 @@ describe("selfUpdate for the standalone binary", () => {
     expect(actions.some((a) => a.startsWith("standalone failed"))).toBe(true);
     expect(currentTarget()).toBe(`tokmizer-0.9.33-${KEY}`);
     expect(existsSync(join(root, `tokmizer-0.9.34-${KEY}`))).toBe(false);
+  });
+
+  it("downloads the archive only after the release signature checks out", async () => {
+    installed("0.9.33");
+    const { d, fetched } = deps(release("0.9.34"));
+    await selfUpdate(d);
+    expect(fetched).toEqual([`${BASE}0.9.34/SHA256SUMS`, `${BASE}0.9.34/SHA256SUMS.sig`, `${BASE}0.9.34/tokmizer-0.9.34-${KEY}.tar.gz`]);
+  });
+
+  it("changes nothing when the release signature is missing", async () => {
+    installed("0.9.33");
+    const files = release("0.9.34");
+    files.delete(`${BASE}0.9.34/SHA256SUMS.sig`);
+    const { d, fetched } = deps(files);
+    const actions = await selfUpdate(d);
+    expect(actions).toContain("standalone failed (0.9.33): release signature missing or unreadable");
+    expect(fetched.some((u) => u.endsWith(".tar.gz"))).toBe(false);
+    expect(currentTarget()).toBe(`tokmizer-0.9.33-${KEY}`);
+    expect(existsSync(join(root, `tokmizer-0.9.34-${KEY}`))).toBe(false);
+    expect(readFileSync(join(process.env.TOKMIZER_HOME!, "self-update.log"), "utf8")).toContain("release signature missing");
+  });
+
+  it("changes nothing when SHA256SUMS was changed after signing", async () => {
+    installed("0.9.33");
+    const files = release("0.9.34");
+    const sums = files.get(`${BASE}0.9.34/SHA256SUMS`)!;
+    files.set(`${BASE}0.9.34/SHA256SUMS`, Buffer.concat([sums, Buffer.from("\n")]));
+    const { d, fetched } = deps(files);
+    const actions = await selfUpdate(d);
+    expect(actions).toContain("standalone failed (0.9.33): release signature invalid");
+    expect(fetched.some((u) => u.endsWith(".tar.gz"))).toBe(false);
+    expect(currentTarget()).toBe(`tokmizer-0.9.33-${KEY}`);
+    expect(existsSync(join(root, `tokmizer-0.9.34-${KEY}`))).toBe(false);
+  });
+
+  it("changes nothing when the release is signed by another key", async () => {
+    installed("0.9.33");
+    const files = release("0.9.34");
+    files.set(`${BASE}0.9.34/SHA256SUMS.sig`, sign(null, files.get(`${BASE}0.9.34/SHA256SUMS`)!, generateKeyPairSync("ed25519").privateKey));
+    const { d } = deps(files);
+    const actions = await selfUpdate(d);
+    expect(actions).toContain("standalone failed (0.9.33): release signature invalid");
+    expect(currentTarget()).toBe(`tokmizer-0.9.33-${KEY}`);
+  });
+
+  it("refuses a signature that is not a raw Ed25519 signature", async () => {
+    installed("0.9.33");
+    const files = release("0.9.34");
+    files.set(`${BASE}0.9.34/SHA256SUMS.sig`, Buffer.from("not a signature"));
+    const { d } = deps(files);
+    expect(await selfUpdate(d)).toContain("standalone failed (0.9.33): release signature invalid");
+    expect(currentTarget()).toBe(`tokmizer-0.9.33-${KEY}`);
+  });
+
+  it("stops reading an archive larger than the limit", async () => {
+    installed("0.9.33");
+    const files = release("0.9.34");
+    const { d } = deps(files);
+    const archiveUrl = `${BASE}0.9.34/tokmizer-0.9.34-${KEY}.tar.gz`;
+    let sent = 0;
+    const chunk = new Uint8Array(1024 * 1024);
+    const fetchFile = d.standalone!.fetch;
+    d.standalone!.fetch = async (url) =>
+      url === archiveUrl
+        ? new Response(
+            new ReadableStream({
+              pull(controller) {
+                sent += chunk.byteLength;
+                controller.enqueue(chunk);
+              }
+            })
+          )
+        : fetchFile(url);
+    const actions = await selfUpdate(d);
+    expect(actions).toContain(`standalone failed (0.9.33): tokmizer-0.9.34-${KEY}.tar.gz is larger than ${200 * 1024 * 1024} bytes`);
+    expect(sent).toBeLessThan(210 * 1024 * 1024);
+    expect(currentTarget()).toBe(`tokmizer-0.9.33-${KEY}`);
+    expect(existsSync(join(root, `tokmizer-0.9.34-${KEY}`))).toBe(false);
+  });
+
+  it("refuses an oversized SHA256SUMS from its announced length without reading it", async () => {
+    installed("0.9.33");
+    const files = release("0.9.34");
+    const { d, fetched } = deps(files);
+    const fetchFile = d.standalone!.fetch;
+    d.standalone!.fetch = async (url) =>
+      url.endsWith("/SHA256SUMS") ? new Response(new Uint8Array(1), { headers: { "content-length": String(10 * 1024 * 1024) } }) : fetchFile(url);
+    const actions = await selfUpdate(d);
+    expect(actions).toContain(`standalone failed (0.9.33): SHA256SUMS is larger than ${64 * 1024} bytes`);
+    expect(fetched).toHaveLength(0);
+    expect(currentTarget()).toBe(`tokmizer-0.9.33-${KEY}`);
   });
 
   it("changes nothing when the new binary fails its probe", async () => {

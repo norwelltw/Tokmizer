@@ -21,6 +21,10 @@ export function bundleRefreshFile(): string {
   return join(tokmizerHome(), "bundle-refresh.json");
 }
 
+export function bundleVersionsFile(): string {
+  return join(tokmizerHome(), "bundle-versions.json");
+}
+
 export function skillsDir(): string {
   return join(tokmizerHome(), "skills");
 }

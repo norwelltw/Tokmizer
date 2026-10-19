@@ -333,7 +333,7 @@ function fixtureTsc(): string {
   const rnd = prng(12);
   const files = ["src/engine/pipeline.ts", "src/engine/loader.ts", "src/engine/matcher.ts",
     "packages/plugin/src/daemon/server.ts", "app/src/lib/auth.ts", "app/src/app/page.tsx",
-    "packages/shared/src/api-contracts.ts"];
+    "packages/common/src/wire-types.ts"];
   const messages = [
     "Property 'foo' does not exist on type '{ bar: string; }'.",
     "Argument of type 'string | undefined' is not assignable to parameter of type 'string'.",

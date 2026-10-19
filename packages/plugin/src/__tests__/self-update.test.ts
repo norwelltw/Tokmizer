@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { mkdtempSync, rmSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { mkdtempSync, rmSync, writeFileSync, mkdirSync, existsSync, utimesSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { selfUpdate, autoUpdateEnabled, setAutoUpdate, claimSelfUpdateSlot, type SelfUpdateDeps } from "../self-update";
@@ -151,6 +151,19 @@ describe("claimSelfUpdateSlot", () => {
     expect(claimSelfUpdateSlot(1_000_000)).toBe(true);
     expect(claimSelfUpdateSlot(1_000_000 + 60_000)).toBe(false);
     expect(claimSelfUpdateSlot(1_000_000 + 7 * 3600_000)).toBe(true);
+  });
+
+  it("lets only one of two simultaneous runs through", () => {
+    mkdirSync(join(home, "self-update-slot.lock"), { recursive: true });
+    expect(claimSelfUpdateSlot(9_000_000_000)).toBe(false);
+  });
+
+  it("takes over a claim left by a run that died", () => {
+    const lock = join(home, "self-update-slot.lock");
+    mkdirSync(lock, { recursive: true });
+    const old = (Date.now() - 120_000) / 1000;
+    utimesSync(lock, old, old);
+    expect(claimSelfUpdateSlot(9_000_000_000)).toBe(true);
   });
 
   it("works when the home directory does not exist yet", () => {

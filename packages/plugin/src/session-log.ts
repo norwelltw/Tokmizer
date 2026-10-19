@@ -31,7 +31,7 @@ export function sessionFile(sessionId: string): string {
 
 /** Redact secrets (tokens, passwords, bearer headers, attached `-pSECRET`) before truncating, so a cut can't leave a token prefix. */
 export function redactTarget(target: string): string {
-  const attachedPassword = redactCommand(target).replace(/(^|\s)(-p)(?=\S)\S+/g, "$1$2[REDACTED]");
+  const attachedPassword = redactCommand(target.slice(0, TARGET_MAX * 32)).replace(/(^|\s)(-p)(?:'[^']*'|"[^"]*"|(?=\S)\S+)/g, "$1$2[REDACTED]");
   return maskSecrets(attachedPassword).slice(0, TARGET_MAX);
 }
 

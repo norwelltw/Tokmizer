@@ -1,10 +1,11 @@
 import spawn from "cross-spawn";
+import { windowsCommand } from "../exec/windows-command";
 import { constants as osConstants } from "node:os";
 import { processOutput } from "../engine";
 import { slugKey } from "../contracts";
 import { resolveAllowedFilters } from "../default-rules";
 import { loadState } from "../state";
-import { gatingPlan, graceExceeded } from "../entitlement";
+import { graceExceeded } from "../entitlement";
 import { loadSettingsCache } from "../settings-cache";
 import { recordEvent } from "../learn/recorder";
 import { recordTelemetry } from "../learn/telemetry";
@@ -28,6 +29,7 @@ function closeExitCode(code: number | null, signal: NodeJS.Signals | null): numb
   return 128 + (signals[signal] ?? 15);
 }
 const DEFAULT_TIMEOUT_MS = 600_000;
+const RELAYED_SIGNALS: NodeJS.Signals[] = process.platform === "win32" ? ["SIGINT", "SIGTERM"] : ["SIGINT", "SIGTERM", "SIGHUP", "SIGQUIT"];
 const DEFAULT_STREAM_AFTER_MS = 1_500;
 
 const PACKAGE_MANAGERS = new Set(["npm", "pnpm", "yarn", "bun"]);
@@ -81,7 +83,6 @@ type Prepared = {
   yolo: boolean;
   settings: Awaited<ReturnType<typeof loadSettingsCache>>;
   state: Awaited<ReturnType<typeof loadState>>;
-  plan: ReturnType<typeof gatingPlan> | null;
   allowed: Set<string> | null;
   host: ReturnType<typeof detectHost>["host"];
   piped: boolean;
@@ -93,7 +94,6 @@ async function prepareShim(cmdName: string, args: string[]): Promise<Prepared> {
   const yolo = yoloEnabled();
   const settings = await loadSettingsCache();
   const state = await loadState();
-  const plan = state ? gatingPlan(state) : null;
   const baseAllowed = state
     ? resolveAllowedFilters(state.allowedFilters, graceExceeded(state))
     : new Set<string>();
@@ -105,13 +105,14 @@ async function prepareShim(cmdName: string, args: string[]): Promise<Prepared> {
   const piped = !process.stdout.isTTY && host === "shell";
   const bypass = !settings.enabled || !state || hasNativeHook(host) || failOpenActive();
   const passthrough = isLongRunningInvocation(cmdName, args);
-  return { yolo, settings, state, plan, allowed, host, piped, bypass, passthrough };
+  return { yolo, settings, state, allowed, host, piped, bypass, passthrough };
 }
 
 function runUnfiltered(cmdName: string, args: string[]): Promise<ShimResult> {
   return new Promise((resolve) => {
     const done = (exitCode: number): void => resolve({ exitCode, filteredOut: "", filteredErr: "", filterId: null, rawBytes: 0, filteredBytes: 0 });
-    const child = spawn(cmdName, args, { stdio: "inherit", shell: false, windowsHide: true, env: envWithoutShimDir() });
+    const env = { ...envWithoutShimDir(), TOKMIZER_SHIM_ACTIVE: cmdName };
+    const child = spawn(windowsCommand(cmdName, env), args, { stdio: "inherit", shell: false, windowsHide: true, env });
     child.on("error", (err) => {
       process.stderr.write(`tkr-shim: ${err.message}\n`);
       done(127);
@@ -141,18 +142,18 @@ export async function runShim(invocation: ShimInvocation): Promise<ShimResult> {
   } catch {
     return runUnfiltered(cmdName, args);
   }
-  const { yolo, settings, state, plan, allowed, host, piped, bypass, passthrough } = prepared;
-  if (state && !bypass && !piped && !passthrough) installDaemonResolver(plan!);
+  const { yolo, settings, state, allowed, host, piped, bypass, passthrough } = prepared;
+  if (state && !bypass && !piped && !passthrough) installDaemonResolver();
 
-  let onSigint: (() => void) | undefined;
-  let onSigterm: (() => void) | undefined;
+  const relays: Array<[NodeJS.Signals, () => void]> = [];
   try {
     return await new Promise<ShimResult>((resolve) => {
-    const child = spawn(cmdName, args, {
+    const env = { ...envWithoutShimDir(), TOKMIZER_SHIM_ACTIVE: cmdName };
+    const child = spawn(windowsCommand(cmdName, env), args, {
       stdio: passthrough ? "inherit" : ["inherit", "pipe", "pipe"],
       shell: false,
       windowsHide: true,
-      env: envWithoutShimDir()
+      env
     });
 
     const outChunks: Buffer[] = [];
@@ -193,7 +194,10 @@ export async function runShim(invocation: ShimInvocation): Promise<ShimResult> {
     };
 
     if (!streaming && timeoutMs > 0) {
-      killTimer = setTimeout(() => child.kill("SIGTERM"), timeoutMs);
+      killTimer = setTimeout(() => {
+        process.stderr.write(`tkr-shim: stopped ${cmdName} after ${Math.round(timeoutMs / 1000)}s (TOKMIZER_SHIM_TIMEOUT_MS)\n`);
+        child.kill("SIGTERM");
+      }, timeoutMs);
       killTimer.unref?.();
     }
     armIdle();
@@ -203,10 +207,11 @@ export async function runShim(invocation: ShimInvocation): Promise<ShimResult> {
         child.kill(sig);
       } catch {}
     };
-    onSigint = (): void => forward("SIGINT");
-    onSigterm = (): void => forward("SIGTERM");
-    process.on("SIGINT", onSigint);
-    process.on("SIGTERM", onSigterm);
+    for (const sig of RELAYED_SIGNALS) {
+      const relay = (): void => forward(sig);
+      relays.push([sig, relay]);
+      process.on(sig, relay);
+    }
 
     child.stdout?.on("data", (chunk: Buffer) => {
       outBytes += chunk.length;
@@ -323,8 +328,7 @@ export async function runShim(invocation: ShimInvocation): Promise<ShimResult> {
             cmd: cmdLine,
             filterId: res.filterId,
             rawBytes: res.rawBytes,
-            filteredBytes: res.filteredBytes,
-            plan: plan!
+            filteredBytes: res.filteredBytes
           });
           await recordTelemetry({
             cmd: cmdLine,
@@ -364,8 +368,7 @@ export async function runShim(invocation: ShimInvocation): Promise<ShimResult> {
     });
     });
   } finally {
-    if (onSigint) process.off("SIGINT", onSigint);
-    if (onSigterm) process.off("SIGTERM", onSigterm);
+    for (const [sig, relay] of relays) process.off(sig, relay);
     closeDaemonResolver();
   }
 }

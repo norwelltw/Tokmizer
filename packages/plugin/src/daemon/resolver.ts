@@ -1,4 +1,3 @@
-import type { Plan } from "../contracts";
 import { connectDaemon, type DaemonClient } from "./client";
 import { setFilterResolver } from "../engine";
 import type { LoadedFilter } from "../engine/loader";
@@ -58,9 +57,9 @@ function hydrate(def: FilterDef | null): LoadedFilter | null {
   return { ...def, matchRegex: new RegExp(def.match_command) };
 }
 
-export function installDaemonResolver(plan: Plan): void {
+export function installDaemonResolver(): void {
   setFilterResolver(async (cmd, allowed) => {
-    const wirePlan: "trial" | "smart" | "pro" = plan === "free" ? "trial" : plan;
+    const wirePlan = "pro" as const;
     const gate = allowed ?? resolveAllowedFilters(undefined);
     const client = await getClient();
     if (!client) return selectFromCache(cmd, wirePlan, gate);

@@ -44,3 +44,14 @@ describe("repeatNotice", () => {
     expect(n.length).toBeLessThan(200);
   });
 });
+
+describe("rememberOutput and secrets", () => {
+  it("never writes a secret from the command into the seen file", async () => {
+    const { readFileSync } = await import("node:fs");
+    const { join } = await import("node:path");
+    const s = `rg-${Date.now()}-secret`;
+    rememberOutput(s, "main", big("sec"), "curl -H 'Authorization: Bearer abcdefghijklmnop123456' https://x");
+    const seen = readFileSync(join(process.env.TOKMIZER_HOME!, "sessions", `${s}.seen`), "utf8");
+    expect(seen).not.toContain("abcdefghijklmnop123456");
+  });
+});

@@ -1,5 +1,6 @@
 ---
 description: Unlink this machine from your Tokmizer account (it keeps working without an account).
+disable-model-invocation: true
 ---
 
 Unlink the local plugin from the user's Tokmizer account.

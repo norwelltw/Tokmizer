@@ -161,3 +161,14 @@ describe("shared completed-command processing", () => {
     }
   });
 });
+
+describe("stderr of a command whose exit code is unknown", () => {
+  it("is shortened like the stderr of a successful command", async () => {
+    const long = Array.from({ length: 400 }, (_, i) => `   Compiling crate-${i} v0.1.${i}`).join("\n") + "\n";
+    const run = (exitCode: number | null) => processCapturedOutput({ argv: ["demo"], stdout: "", stderr: long, exitCode, truncated: false, stderrTruncated: false }, { yolo: false, env: process.env, resolver });
+    const known = await run(0);
+    const unknown = await run(null);
+    expect(known.stderr.length).toBeLessThan(long.length);
+    expect(unknown.stderr.length).toBe(known.stderr.length);
+  });
+});

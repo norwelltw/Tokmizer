@@ -1,6 +1,7 @@
 ---
 description: Manage Tokmizer plugin settings (show, set, reset).
 argument-hint: [show | set <key> <value> | reset]
+disable-model-invocation: true
 ---
 
 Use the bundled CLI. Define it once in your shell call:

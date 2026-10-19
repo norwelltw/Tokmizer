@@ -1,5 +1,6 @@
 ---
 description: Update the Tokmizer plugin to the latest version.
+disable-model-invocation: true
 ---
 
 Update the Tokmizer plugin. Run this exactly:

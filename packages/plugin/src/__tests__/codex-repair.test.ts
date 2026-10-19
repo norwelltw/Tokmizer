@@ -134,6 +134,31 @@ describe("stripTomlHooks", () => {
     }
   });
 
+  it("keeps tables whose quoted keys hold commas, brackets, equals signs or hashes", () => {
+    const keep = [
+      "[projects.\"/Users/me/code/a,b\"]",
+      "trust_level = \"trusted\"",
+      "[projects.\"/Users/me/code/[old]\"]",
+      "trust_level = \"trusted\"",
+      "[projects.'/Users/me/x=y#z']",
+      "trust_level = \"trusted\"",
+      "[mcp_servers.keep]",
+      "command = \"srv\"",
+      ""
+    ];
+    const text = ["[[hooks.PreToolUse]]", "matcher = \"Bash\"", "[[hooks.PreToolUse.hooks]]", "command = \"'/p/tkr' hook pre-tool-use\"", ...keep].join("\n");
+    const scan = stripTomlHooks(text, claudeFormHook);
+    expect(scan.removed).toHaveLength(1);
+    expect(scan.text).toBe(keep.join("\n"));
+  });
+
+  it("leaves the file alone when the edit would change anything outside the hooks", () => {
+    const text = ["[[hooks.PreToolUse]]", "matcher = \"Bash\"", "[[hooks.PreToolUse.hooks]]", "command = \"'/p/tkr' hook pre-tool-use\"", "[ projects . \"odd\" ]  # weird spacing", "trust_level = \"trusted\"", "[a.\"b\" .c]", "x = 1", ""].join("\n");
+    const scan = stripTomlHooks(text.replace("[a.\"b\" .c]", "[a.\"b\" .c] extra"), claudeFormHook);
+    expect(scan.text).toBe(text.replace("[a.\"b\" .c]", "[a.\"b\" .c] extra"));
+    expect(scan.removed).toEqual([]);
+  });
+
   it("handles quoted event keys and keeps the comment that belongs to the next table", () => {
     const text = "[[hooks.\"PreToolUse\"]]\nmatcher = \"Bash\"\n[[hooks.\"PreToolUse\".hooks]]\ncommand = \"'/p/tkr-exec' --pre-tool-use\"\n\n# my model\n[profiles.x]\nmodel = \"o3\"\n";
     expect(stripTomlHooks(text, claudeFormHook).text).toBe("# my model\n[profiles.x]\nmodel = \"o3\"\n");

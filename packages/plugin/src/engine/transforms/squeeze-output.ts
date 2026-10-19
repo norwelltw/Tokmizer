@@ -5,7 +5,7 @@ export function squeezeOutput(lines: string[]): string[] {
   let blankRun = 0;
   let i = 0;
   while (i < lines.length) {
-    const line = lines[i]!.replace(/\s+$/, "");
+    const line = lines[i]!.trimEnd();
     if (line === "") {
       blankRun += 1;
       i += 1;
@@ -14,7 +14,7 @@ export function squeezeOutput(lines: string[]): string[] {
     }
     blankRun = 0;
     let run = 1;
-    while (i + run < lines.length && lines[i + run]!.replace(/\s+$/, "") === line) run += 1;
+    while (i + run < lines.length && lines[i + run]!.trimEnd() === line) run += 1;
     if (run >= 3) {
       out.push(line);
       out.push(`  … (repeated ${run}x)`);

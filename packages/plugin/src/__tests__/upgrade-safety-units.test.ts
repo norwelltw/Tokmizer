@@ -184,7 +184,7 @@ describe.skipIf(process.platform === "win32")("Unix installer and Claude Code", 
     }
     const r = spawnSync("/bin/bash", [join(pkg, "scripts", "install-mac-linux.sh")], {
       encoding: "utf8",
-      env: { ...env(), PATH: tools, TOKMIZER_STANDALONE: "1", TOKMIZER_DOWNLOAD_BASE: `file://${release}` }
+      env: { ...env(), PATH: tools, TOKMIZER_STANDALONE: "1", TOKMIZER_ALLOW_UNSIGNED: "1", TOKMIZER_DOWNLOAD_BASE: `file://${release}` }
     });
     expect(r.status, r.stderr).toBe(0);
     expect(readFileSync(log, "utf8")).toContain("shim install");

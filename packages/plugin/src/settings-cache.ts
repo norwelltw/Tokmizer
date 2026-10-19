@@ -23,7 +23,7 @@ export async function loadSettingsCache(): Promise<SettingsT> {
 }
 
 export async function saveSettingsCache(s: SettingsT): Promise<void> {
-  await mkdir(tokmizerHome(), { recursive: true });
+  await mkdir(tokmizerHome(), { recursive: true, mode: 0o700 });
   const path = join(tokmizerHome(), FILE);
   const tmpPath = `${path}.tmp-${process.pid}-${process.hrtime.bigint()}`;
   await writeFile(tmpPath, JSON.stringify(s, null, 2), { mode: 0o600 });

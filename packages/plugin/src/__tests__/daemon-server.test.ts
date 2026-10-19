@@ -138,6 +138,22 @@ describe("daemon server", () => {
     expect(res.err).toBe("warming");
   });
 
+  it("answers quickly while the first rules download is slow, then serves them once ready", async () => {
+    let release: (rt: DaemonRuntime) => void = () => {};
+    handle = await startServer(null, {
+      socketPath,
+      onWarming: () => new Promise<DaemonRuntime>((resolve) => { release = resolve; })
+    });
+    const started = Date.now();
+    const first = (await clientRequest({ id: "slow1", op: "filter", cmd: "git status", plan: "smart" })) as { ok: boolean; err?: string };
+    expect(Date.now() - started).toBeLessThan(1000);
+    expect(first).toMatchObject({ ok: false, err: "warming" });
+    release(fakeRuntime({ git: { match: "^git\\b" } }));
+    await new Promise((r) => setTimeout(r, 20));
+    const second = (await clientRequest({ id: "slow2", op: "filter", cmd: "git status", plan: "smart" })) as { ok: boolean; data?: { filter: { slug: string } | null } };
+    expect(second.data?.filter?.slug).toBe("git");
+  });
+
   it("keeps serving filters from a stale runtime while a failing warm refresh is in flight", async () => {
     const stale = fakeRuntime({ git: { match: "^git\\b" } });
     stale.fetchedAt = Date.now() - 8 * 24 * 60 * 60 * 1000;

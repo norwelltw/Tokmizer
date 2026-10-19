@@ -34,4 +34,15 @@ describe("runShim signal listeners", () => {
     expect(process.listenerCount("SIGINT")).toBe(beforeInt);
     expect(process.listenerCount("SIGTERM")).toBe(beforeTerm);
   });
+
+  it.skipIf(process.platform === "win32")("passes a hangup on to the command instead of leaving it orphaned", async () => {
+    const run = runShim({ cmdName: "sleep", args: ["30"] });
+    await new Promise((r) => setTimeout(r, 200));
+    process.emit("SIGHUP", "SIGHUP");
+    const started = Date.now();
+    const result = await run;
+    expect(Date.now() - started).toBeLessThan(5000);
+    expect(result.exitCode).toBe(129);
+    expect(process.listenerCount("SIGHUP")).toBe(0);
+  });
 });

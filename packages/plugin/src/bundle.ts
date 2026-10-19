@@ -43,7 +43,7 @@ function assertContentSigned(slug: string, version: number, fragments: ServedFra
 
 async function recordContentSignature(status: "verified"): Promise<void> {
   try {
-    await mkdir(tokmizerHome(), { recursive: true });
+    await mkdir(tokmizerHome(), { recursive: true, mode: 0o700 });
     await writeFile(join(tokmizerHome(), "content-signature.json"), JSON.stringify({ at: Date.now(), status }), { mode: 0o600 });
   } catch {}
 }

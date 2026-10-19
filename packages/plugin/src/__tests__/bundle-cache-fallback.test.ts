@@ -106,7 +106,7 @@ describe("daemon resolver falls back to the cached bundle", () => {
     const { installDaemonResolver, closeDaemonResolver } = await import("../daemon/resolver");
     const engine = await import("../engine");
     try {
-      installDaemonResolver("free");
+      installDaemonResolver();
       const out = await engine.processOutput("git status", "a\n".repeat(200), null, { exitCode: 0 });
       expect(out.filterId).toBe("git");
       expect(out.filteredBytes).toBeLessThan(out.rawBytes);

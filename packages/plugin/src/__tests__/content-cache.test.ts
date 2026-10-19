@@ -489,3 +489,21 @@ describe("restore hint is newline-terminated without a leading blank line", () =
     expect(await captureForRestore("x".repeat(400), "head\n", {})).toMatch(/^head\n\[tkr restore [0-9a-f]{16}\]\n$/);
   });
 });
+
+describe("restore storage that cannot be written", () => {
+  beforeEach(() => {
+    rmSync(join(dir, "content-cache"), { recursive: true, force: true });
+    writeFileSync(join(dir, "content-cache"), "not a folder");
+  });
+
+  it("delivers the original output instead of a cut one", async () => {
+    expect(await captureForRestore("row 11\nrow 12\n".repeat(4), "row 1\nrow 2", process.env, { raw: RAW })).toBe(RAW);
+    expect(await captureOriginalForRestore(RAW, "row 1", process.env)).toBe(RAW);
+  });
+
+  it("says no restore is available when only the cut part is known", async () => {
+    const out = await captureForRestore("row 11\nrow 12\n".repeat(4), "row 1\nrow 2", process.env);
+    expect(out.startsWith("row 1\nrow 2\n")).toBe(true);
+    expect(out).toContain("no restore available");
+  });
+});

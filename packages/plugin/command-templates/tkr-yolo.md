@@ -1,6 +1,7 @@
 ---
 description: Show, enable or disable the optional local YOLO mode. Content and diagnostics can be lost.
 argument-hint: on | off | status
+disable-model-invocation: true
 ---
 
 Manage YOLO on this machine only. It is off by default and does not sync to other machines.

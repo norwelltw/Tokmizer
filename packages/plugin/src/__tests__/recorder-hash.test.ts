@@ -14,7 +14,7 @@ describe("learn recorder anti-RE", () => {
     await saveSettingsCache({ ...settings, telemetryOptIn: false });
     try {
       commitSpool("learn");
-      await recordEvent({ cmd: "ls", filterId: null, rawBytes: 5, filteredBytes: 5, plan: "pro" });
+      await recordEvent({ cmd: "ls", filterId: null, rawBytes: 5, filteredBytes: 5 });
       expect(drainSpool("learn")).toEqual([]);
     } finally {
       await saveSettingsCache(settings);
@@ -39,7 +39,7 @@ describe("learn recorder anti-RE", () => {
 
   it("keeps a null filterId null", async () => {
     commitSpool("learn");
-    await recordEvent({ cmd: "ls", filterId: null, rawBytes: 5, filteredBytes: 5, plan: "pro" });
+    await recordEvent({ cmd: "ls", filterId: null, rawBytes: 5, filteredBytes: 5 });
     const events = drainSpool("learn") as Array<{ filterId: string | null }>;
     commitSpool("learn");
     expect(events).toHaveLength(1);

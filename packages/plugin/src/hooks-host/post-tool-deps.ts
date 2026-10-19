@@ -2,7 +2,7 @@ export { processOutput } from "../engine";
 export { captureForRestore, captureOriginalForRestore, neutralizeMarkers } from "../content-cache";
 export { FOLD_MARKER_RE } from "../engine/transforms/smart-code";
 export { resolveAllowedFilters } from "../default-rules";
-export { gatingPlan, graceExceeded } from "../entitlement";
+export { graceExceeded } from "../entitlement";
 export { recordEvent } from "../learn/recorder";
 export { recordTelemetry } from "../learn/telemetry";
 export { recordStat, countedSaving, statCmdLabel, statOutcome } from "../stats";

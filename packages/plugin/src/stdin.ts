@@ -1,4 +1,4 @@
-export function readStdin(timeoutMs = 5000): Promise<string> {
+export function readStdin(timeoutMs = 3000): Promise<string> {
   return new Promise((resolve) => {
     const chunks: Buffer[] = [];
     const stdin = process.stdin;

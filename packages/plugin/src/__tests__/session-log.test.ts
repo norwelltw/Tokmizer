@@ -98,3 +98,35 @@ describe("session recap hook decision", () => {
     expect(await recapForSessionStart({ session_id: "missing", source: "compact" })).toBeNull();
   });
 });
+
+describe("secrets in recorded commands", async () => {
+  const { redactTarget } = await import("../session-log");
+  const { maskSecrets } = await import("../learn/redact");
+
+  it("masks secrets passed as a separate argument to tools that take them that way", () => {
+    for (const [cmd, secret] of [
+      ["aws configure set aws_secret_access_key wJalrXUtnFEMIK7MDENGbPxRfiCYEXAMPLEKEY", "wJalrXUtnFEMIK7MDENGbPxRfiCYEXAMPLEKEY"],
+      ["aws configure set aws_session_token FwoGZXIvYXdzEJr", "FwoGZXIvYXdzEJr"],
+      ["sshpass -p hunter2 ssh me@host", "hunter2"],
+      ["sshpass -e -p hunter2 ssh me@host", "hunter2"],
+      ["redis-cli -h db -a hunter2 ping", "hunter2"],
+      ["openssl enc -aes-256-cbc -k mypassphrase -in a", "mypassphrase"],
+      ["openssl rsa -in k.pem -passin pass:mypassphrase", "mypassphrase"],
+      ["mysql -u root -p'Hunter2 Secret' db", "Secret"],
+      ['mysql -u root -p"Hunter2 Secret" db', "Secret"],
+      ["curl -X POST https://hooks.slack.com/services/T000/B000/XXXXXXXXXXXXXXXX", "XXXXXXXXXXXXXXXX"]
+    ]) {
+      expect(redactTarget(cmd!), cmd).not.toContain(secret);
+    }
+  });
+
+  it("keeps ordinary flags readable", () => {
+    expect(redactTarget("ssh -p 2222 me@host")).toBe("ssh -p 2222 me@host");
+    expect(redactTarget("redis-cli -h db ping")).toBe("redis-cli -h db ping");
+  });
+
+  it("masks Anthropic and OpenAI project keys in cached outputs", () => {
+    const out = maskSecrets("key sk-ant-api03-abcdefghijklmnopqrstuvwxyz0123 and sk-proj-abcdefghijklmnopqrstuvwxyz0123");
+    expect(out).not.toContain("abcdefghijklmnopqrstuvwxyz0123");
+  });
+});

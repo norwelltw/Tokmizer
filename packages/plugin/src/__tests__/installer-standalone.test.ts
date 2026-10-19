@@ -4,6 +4,7 @@ import { spawnSync } from "node:child_process";
 import { chmodSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { TOKMIZER_RELEASE_PUBLIC_KEY_PEM } from "../release-public-key";
 
 const shippedScript = resolve("packages/plugin/scripts/install-mac-linux.sh");
 const single = process.env.TOKMIZER_SINGLE_TEST_BIN;
@@ -197,17 +198,28 @@ describe.skipIf(process.platform === "win32" || !["darwin", "linux"].includes(pr
     expect(result.stderr).toMatch(/release is not signed/);
   });
 
-  it("warns without a verifier, and refuses with TOKMIZER_REQUIRE_SIG=1", () => {
+  it("refuses without a verifier unless TOKMIZER_ALLOW_UNSIGNED=1", () => {
     writeFileSync(join(root, "tkr"), stub(join(root, "calls")));
     publish(join(root, "tkr"), join(root, "tkr"));
     const path = toolbox();
-    const warned = install({ PATH: path });
-    expect(warned.status, warned.stderr).toBe(0);
-    expect(`${warned.stdout}${warned.stderr}`).toMatch(/cannot verify the release signature/);
-    const refused = install({ PATH: path, TOKMIZER_REQUIRE_SIG: "1" });
+    const refused = install({ PATH: path });
     expect(refused.status).not.toBe(0);
-    expect(refused.stderr).toMatch(/TOKMIZER_REQUIRE_SIG/);
+    expect(refused.stderr).toMatch(/Cannot verify the release signature/);
+    expect(refused.stderr).toMatch(/TOKMIZER_ALLOW_UNSIGNED=1/);
+    expect(existsSync(join(root, "calls"))).toBe(false);
+    expect(existsSync(join(home, ".local", "share", "tokmizer"))).toBe(false);
+    const required = install({ PATH: path, TOKMIZER_REQUIRE_SIG: "1" });
+    expect(required.status).not.toBe(0);
+    expect(required.stderr).toMatch(/Cannot verify the release signature/);
+    const both = install({ PATH: path, TOKMIZER_ALLOW_UNSIGNED: "1", TOKMIZER_REQUIRE_SIG: "1" });
+    expect(both.status).not.toBe(0);
+    expect(existsSync(join(root, "calls"))).toBe(false);
+    const allowed = install({ PATH: path, TOKMIZER_ALLOW_UNSIGNED: "1" });
+    expect(allowed.status, allowed.stderr).toBe(0);
+    expect(allowed.stdout).toMatch(/release signature is not verified/);
+    expect(readFileSync(join(root, "calls"), "utf8")).toContain("shim install");
   });
+
 
   it.skipIf(!capableOpenssl())("uses openssl when it supports Ed25519", () => {
     writeFileSync(join(root, "tkr"), stub(join(root, "calls")));
@@ -253,4 +265,14 @@ describe.skipIf(process.platform === "win32" || !["darwin", "linux"].includes(pr
     expect(hook.status, hook.stderr).toBe(0);
     expect(JSON.parse(hook.stdout).hookSpecificOutput.updatedInput.command).toMatch(/ git status$/);
   }, 60000);
+});
+
+describe("release public key", () => {
+  it("matches the release key pinned in the plugin", () => {
+    const pem = readFileSync(shippedScript, "utf8").match(/^RELEASE_KEY_PEM='([^']*)'$/m)?.[1];
+    expect(pem).toBeTruthy();
+    expect(`${pem}\n`).toBe(TOKMIZER_RELEASE_PUBLIC_KEY_PEM);
+    const ssh = readFileSync(shippedScript, "utf8").match(/^RELEASE_KEY_SSH='([^']*)'$/m)?.[1];
+    expect(ssh).toBe(`ssh-ed25519 ${sshKeyBlob(createPublicKey(TOKMIZER_RELEASE_PUBLIC_KEY_PEM)).toString("base64")}`);
+  });
 });

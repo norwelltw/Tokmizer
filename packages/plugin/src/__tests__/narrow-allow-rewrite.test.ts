@@ -4,7 +4,7 @@ import { chmodSync, existsSync, mkdirSync, mkdtempSync, realpathSync, rmSync, wr
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildPreToolUseOutput, claudeLaunchArgs, claudeLaunchRestricted, rewriteShellCommand, rewriteShellDecision } from "../hooks-host/pre-tool-rewrite";
+import { buildPreToolUseOutput, claudeLaunchArgs, claudeLaunchRestricted, osPolicyPresent, registryAnswer, rewriteShellCommand, rewriteShellDecision } from "../hooks-host/pre-tool-rewrite";
 import { routePreToolUse } from "../hooks-host/hook-router";
 
 const pluginRoot = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
@@ -97,6 +97,55 @@ describe("Claude Code default modes rewrite commands covered by a narrow allow r
     settings({ allow: ["Bash(cargo build:*)", "Read(*)"] });
     expect(decide("pytest -x")).toEqual({ command: "tkr-exec pytest -x", ask: true });
     expect(decide("git status")).toBeNull();
+  });
+
+  it("applies deny rules sent from the claude.ai console", () => {
+    settings({ allow: ["Bash(pytest:*)"] });
+    expect(decide("pytest -x")?.command).toBe("tkr-exec pytest -x");
+    write(join(config, "remote-settings.json"), { permissions: { deny: ["Bash(pytest:*)"] } });
+    expect(decide("pytest -x")).toBeNull();
+    expect(rewriteShellCommand("pytest -x", { host: "claude-code", sessionId: "s", cwd: project, claudeDirs: { configDir: config }, pathEnv, permissionMode: "bypassPermissions" }, "tkr-exec", () => {})).toBeNull();
+  });
+
+  it("stops rewriting when console rules cannot be read", () => {
+    write(join(config, "remote-settings.json"), "{ not json");
+    expect(rewriteShellCommand("git status", { host: "claude-code", sessionId: "s", cwd: project, claudeDirs: { configDir: config }, pathEnv, permissionMode: "bypassPermissions" }, "tkr-exec", () => {})).toBeNull();
+  });
+
+  it("reads the registry answer: found, absent, unlaunchable or too slow", () => {
+    const err = (code: string) => Object.assign(new Error(code), { code });
+    expect(registryAnswer({ status: 0 })).toBe(true);
+    expect(registryAnswer({ status: 1 })).toBe(false);
+    expect(registryAnswer({ status: null, error: err("ENOENT") })).toBe(false);
+    expect(registryAnswer({ status: null, error: err("ETIMEDOUT") })).toBe(true);
+  });
+
+  it("detects an operating system policy it cannot read", () => {
+    const present = (paths: string[]) => (path: string) => paths.includes(path);
+    expect(osPolicyPresent("darwin", present([]), () => false)).toBe(false);
+    expect(osPolicyPresent("darwin", present(["/Library/Managed Preferences/com.anthropic.claudecode.plist"]), () => false)).toBe(true);
+    expect(osPolicyPresent("darwin", present(["/Library/Managed Preferences/jo/com.anthropic.claudecode.plist"]), () => false, "jo")).toBe(true);
+    expect(osPolicyPresent("win32", present([]), () => true)).toBe(true);
+    expect(osPolicyPresent("win32", present([]), () => false)).toBe(false);
+    expect(osPolicyPresent("linux", present([]), () => true, "", () => false)).toBe(false);
+    expect(osPolicyPresent("linux", present([]), () => false, "", () => true)).toBe(true);
+    expect(osPolicyPresent("linux", present(["/proc/sys/fs/binfmt_misc/WSLInterop", "/mnt/c/Program Files/ClaudeCode"]), () => false, "")).toBe(true);
+    expect(osPolicyPresent("linux", present(["/mnt/c/Program Files/ClaudeCode"]), () => false, "")).toBe(false);
+  });
+
+  it("leaves a huge command untouched and answers quickly", () => {
+    settings({ allow: ["Bash(*)"] });
+    const huge = `git status ${"&& true ".repeat(40_000)}`;
+    const started = Date.now();
+    expect(rewriteShellCommand(huge, { host: "claude-code", sessionId: "s", cwd: project, claudeDirs: { configDir: config }, pathEnv, permissionMode: "bypassPermissions" }, "tkr-exec", () => {})).toBeNull();
+    expect(Date.now() - started).toBeLessThan(500);
+    expect(rewriteShellCommand(`git status${" ".repeat(30_000)}`, { host: "claude-code", sessionId: "s", cwd: project, claudeDirs: { configDir: config }, pathEnv, permissionMode: "bypassPermissions" }, "tkr-exec", () => {})).toBe(`tkr-exec git status${" ".repeat(30_000)}`);
+  });
+
+  it("answers quickly for a command made of many words holding several equals signs", () => {
+    const started = Date.now();
+    expect(decide(`${Array(24).fill("a=a=a=a=a").join(" ")} ; git status`)).toBeNull();
+    expect(Date.now() - started).toBeLessThan(500);
   });
 
   it("ignores allow rules with an inner wildcard, which are not narrow", () => {

@@ -62,7 +62,7 @@ export function networkNoticeLine(): string | null {
   const marker = networkNoticeMarker();
   if (existsSync(marker)) return null;
   try {
-    mkdirSync(tokmizerHome(), { recursive: true });
+    mkdirSync(tokmizerHome(), { recursive: true, mode: 0o700 });
     writeFileSync(marker, String(Date.now()), { mode: 0o600 });
   } catch {
     return null;

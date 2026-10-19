@@ -120,6 +120,17 @@ describe("Vibe hooks.toml setup", () => {
     expect(readFileSync(vibeHooksFile(), "utf8")).toBe(after);
   });
 
+  it("keeps the user's comments and quoted tables written right after ours", async () => {
+    expect(await ensureVibeHook("tkr-agent-hook vibe")).toBe("added");
+    const after = '# my notes\n["quoted.table"]\nkey = "user value"\n';
+    writeFileSync(vibeHooksFile(), `${readFileSync(vibeHooksFile(), "utf8")}${after}`);
+    expect(await ensureVibeHook("/new/tkr-agent-hook vibe")).toBe("updated");
+    expect(readFileSync(vibeHooksFile(), "utf8")).toContain('key = "user value"');
+    expect(readFileSync(vibeHooksFile(), "utf8")).toContain("# my notes");
+    expect(await removeVibeHook()).toBe("removed");
+    expect(readFileSync(vibeHooksFile(), "utf8")).toBe(after);
+  });
+
   it("reports absent when no file exists", async () => {
     expect(await removeVibeHook()).toBe("absent");
     expect(existsSync(vibeHooksFile())).toBe(false);

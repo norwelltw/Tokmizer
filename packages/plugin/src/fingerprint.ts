@@ -21,7 +21,7 @@ export async function ensureInstallId(): Promise<string> {
     const trimmed = raw.trim();
     if (/^[0-9a-f-]{36}$/i.test(trimmed)) return trimmed;
   } catch {}
-  await mkdir(tokmizerHome(), { recursive: true });
+  await mkdir(tokmizerHome(), { recursive: true, mode: 0o700 });
   const id = randomUUID();
   try {
     await writeFile(installIdFile(), id, { mode: 0o600, flag: "wx" });

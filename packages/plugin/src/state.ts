@@ -79,7 +79,7 @@ export async function loadState(opts?: { dir?: string }): Promise<State | null> 
 
 export async function saveState(state: State, opts?: { dir?: string }): Promise<void> {
   const dir = dirFor(opts);
-  await mkdir(dir, { recursive: true });
+  await mkdir(dir, { recursive: true, mode: 0o700 });
   if (state.installedAt == null) state.installedAt = Math.floor(Date.now() / 1000);
   const finalPath = join(dir, STATE_FILE);
   const tmpPath = `${finalPath}.tmp-${process.pid}-${process.hrtime.bigint()}`;

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 
@@ -130,5 +130,81 @@ describe("refreshBundles install policy", () => {
     expect(readFileSync(commandPath("power"), "utf8")).toBe(body);
     const { readBundleRefresh } = await import("../cache");
     expect((await readBundleRefresh())?.error).toBeNull();
+  });
+});
+
+describe("refreshBundles rollback protection", () => {
+  async function refreshWith(bundles: { slug: string; version: number; body: string }[]): Promise<void> {
+    const { fetchAndVerifyBundles } = await import("../bundle");
+    vi.mocked(fetchAndVerifyBundles).mockResolvedValueOnce(bundles);
+    const { refreshBundles } = await import("../license");
+    await refreshBundles("http://localhost", true);
+  }
+
+  function versions(): Record<string, number> {
+    return JSON.parse(readFileSync(join(dir, "bundle-versions.json"), "utf8"));
+  }
+
+  const command = (text: string) => `---\ndescription: status\n---\n${text}${MANAGED}`;
+
+  it("records the versions installed on a first refresh with no history", async () => {
+    await refreshWith([
+      { slug: "tkr-status-command", version: 2, body: command("v2") },
+      { slug: "power", version: 4, body: "power skill" }
+    ]);
+    expect(versions()).toEqual({ "tkr-status-command": 2, power: 4 });
+    expect(statSync(join(dir, "bundle-versions.json")).mode & 0o777).toBe(0o600);
+  });
+
+  it("refuses a lower version and keeps every installed file", async () => {
+    await refreshWith([
+      { slug: "tkr-status-command", version: 2, body: command("v2") },
+      { slug: "power", version: 4, body: "power skill" }
+    ]);
+    await refreshWith([
+      { slug: "tkr-status-command", version: 1, body: command("v1") },
+      { slug: "power", version: 4, body: "other power" }
+    ]);
+    expect(readFileSync(commandPath("tkr-status"), "utf8")).toBe(command("v2"));
+    expect(readFileSync(skillPath("power"), "utf8")).toBe("power skill");
+    expect(versions()).toEqual({ "tkr-status-command": 2, power: 4 });
+    const { readBundleRefresh } = await import("../cache");
+    expect((await readBundleRefresh())?.error).toBe("bundle rollback refused: tkr-status-command 1 < 2");
+  });
+
+  it("accepts the same version again as a normal refresh", async () => {
+    await refreshWith([{ slug: "tkr-status-command", version: 2, body: command("v2") }]);
+    await refreshWith([{ slug: "tkr-status-command", version: 2, body: command("v2 again") }]);
+    expect(readFileSync(commandPath("tkr-status"), "utf8")).toBe(command("v2 again"));
+    const { readBundleRefresh } = await import("../cache");
+    expect((await readBundleRefresh())?.error).toBeNull();
+  });
+
+  it("accepts and remembers a higher version", async () => {
+    await refreshWith([{ slug: "tkr-status-command", version: 2, body: command("v2") }]);
+    await refreshWith([{ slug: "tkr-status-command", version: 3, body: command("v3") }]);
+    expect(readFileSync(commandPath("tkr-status"), "utf8")).toBe(command("v3"));
+    expect(versions()).toEqual({ "tkr-status-command": 3 });
+    await refreshWith([{ slug: "tkr-status-command", version: 2, body: command("v2") }]);
+    expect(readFileSync(commandPath("tkr-status"), "utf8")).toBe(command("v3"));
+  });
+
+  it("does not remember a version that was not installed", async () => {
+    await refreshWith([
+      { slug: "tkr-evil-command", version: 9, body: command("x") },
+      { slug: "reducer-max", version: 5, body: "Read @~/.ssh/id_rsa" }
+    ]);
+    expect(existsSync(join(dir, "bundle-versions.json"))).toBe(false);
+  });
+
+  it("tolerates a corrupt or malformed history file and rewrites it", async () => {
+    writeFileSync(join(dir, "bundle-versions.json"), "{not json");
+    await refreshWith([{ slug: "tkr-status-command", version: 1, body: command("v1") }]);
+    expect(readFileSync(commandPath("tkr-status"), "utf8")).toBe(command("v1"));
+    expect(versions()).toEqual({ "tkr-status-command": 1 });
+    writeFileSync(join(dir, "bundle-versions.json"), JSON.stringify({ "tkr-status-command": "9", power: [1] }));
+    await refreshWith([{ slug: "tkr-status-command", version: 1, body: command("v1 again") }]);
+    expect(readFileSync(commandPath("tkr-status"), "utf8")).toBe(command("v1 again"));
+    expect(versions()).toEqual({ "tkr-status-command": 1 });
   });
 });

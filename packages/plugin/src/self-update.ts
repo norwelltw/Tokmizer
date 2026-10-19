@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
-import { createHash } from "node:crypto";
-import { accessSync, constants, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, renameSync, rmSync, symlinkSync, writeFileSync, appendFileSync } from "node:fs";
+import { createHash, createPublicKey, verify } from "node:crypto";
+import { accessSync, constants, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, renameSync, rmSync, statSync, symlinkSync, writeFileSync, appendFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { basename, dirname, join } from "node:path";
 import os from "node:os";
@@ -10,12 +10,16 @@ import { capJsonl } from "./jsonl-cap";
 import { selfInvocation, singleBinary } from "./self-command";
 import { networkEnabled } from "./network";
 import { queueCodexHookNotice } from "./codex-hook-notice";
+import { TOKMIZER_RELEASE_PUBLIC_KEY_PEM } from "./release-public-key";
 
 const SEMVER = /^\d+\.\d+\.\d+$/;
 const COOLDOWN_MS = 6 * 3600_000;
 const RELEASE_AGE_MS = 24 * 3600_000;
 const MIN_CODEX_HOOK_VERSION = "0.9.34";
 const LOG_BYTES = 64 * 1024;
+const SUMS_BYTES = 64 * 1024;
+const SIG_BYTES = 1024;
+const ARCHIVE_BYTES = 200 * 1024 * 1024;
 
 export type RunResult = { code: number; stdout: string; stderr?: string };
 export type StandaloneDeps = {
@@ -23,6 +27,7 @@ export type StandaloneDeps = {
   key: string;
   base: (version: string) => string;
   fetch: (url: string) => Promise<Response>;
+  releaseKey: string;
 };
 export type SelfUpdateDeps = {
   latest: string | undefined;
@@ -66,18 +71,41 @@ export function setAutoUpdate(on: boolean): void {
   writeFileSync(offFile(), String(Date.now()));
 }
 
-export function claimSelfUpdateSlot(now = Date.now()): boolean {
+function takeClaim(lock: string): boolean {
   try {
-    const last = Number(readFileSync(slotFile(), "utf8"));
-    if (Number.isFinite(last) && now - last < COOLDOWN_MS) return false;
+    mkdirSync(lock);
+    return true;
   } catch {}
   try {
-    mkdirSync(tokmizerHome(), { recursive: true, mode: 0o700 });
-    writeFileSync(slotFile(), String(now));
+    if (Date.now() - statSync(lock).mtimeMs < 60_000) return false;
+    rmSync(lock, { recursive: true, force: true });
+    mkdirSync(lock);
+    return true;
   } catch {
     return false;
   }
-  return true;
+}
+
+export function claimSelfUpdateSlot(now = Date.now()): boolean {
+  const lock = join(tokmizerHome(), "self-update-slot.lock");
+  try {
+    mkdirSync(tokmizerHome(), { recursive: true, mode: 0o700 });
+  } catch {
+    return false;
+  }
+  if (!takeClaim(lock)) return false;
+  try {
+    try {
+      const last = Number(readFileSync(slotFile(), "utf8"));
+      if (Number.isFinite(last) && now - last < COOLDOWN_MS) return false;
+    } catch {}
+    writeFileSync(slotFile(), String(now));
+    return true;
+  } catch {
+    return false;
+  } finally {
+    rmSync(lock, { recursive: true, force: true });
+  }
 }
 
 function log(line: string): void {
@@ -122,7 +150,7 @@ export async function selfUpdate(d: SelfUpdateDeps): Promise<string[]> {
     if (!isOlderVersion(standaloneV, latest)) current.push(standaloneV);
     else if (!ripe) waits(standaloneV);
     else {
-      const result = await installStandalone(d.standalone, standaloneV, latest, d.run).catch(() => `standalone failed (${standaloneV})`);
+      const result = await installStandalone(d.standalone, standaloneV, latest, d.run).catch((e: unknown) => `standalone failed (${standaloneV})${e instanceof Error ? `: ${e.message}` : ""}`);
       actions.push(result);
       if (result.includes("->")) current.push(latest);
     }
@@ -174,10 +202,37 @@ function standaloneVersion(root: string): string | undefined {
   }
 }
 
-async function download(s: StandaloneDeps, url: string): Promise<Buffer> {
+async function download(s: StandaloneDeps, url: string, max: number): Promise<Buffer> {
   const res = await s.fetch(url);
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return Buffer.from(await res.arrayBuffer());
+  const tooLarge = (): Error => new Error(`${basename(url)} is larger than ${max} bytes`);
+  if (Number(res.headers.get("content-length")) > max) {
+    await res.body?.cancel().catch(() => {});
+    throw tooLarge();
+  }
+  if (!res.body) return Buffer.alloc(0);
+  const reader = res.body.getReader();
+  const chunks: Buffer[] = [];
+  let size = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    size += value.byteLength;
+    if (size > max) {
+      await reader.cancel().catch(() => {});
+      throw tooLarge();
+    }
+    chunks.push(Buffer.from(value));
+  }
+  return Buffer.concat(chunks);
+}
+
+export function verifyReleaseSums(sums: Buffer, sig: Buffer, pem: string): boolean {
+  try {
+    return verify(null, sums, createPublicKey({ key: pem, format: "pem" }), sig);
+  } catch {
+    return false;
+  }
 }
 
 function pruneStandalone(root: string, key: string, keep: string[]): void {
@@ -190,13 +245,17 @@ function pruneStandalone(root: string, key: string, keep: string[]): void {
 async function installStandalone(s: StandaloneDeps, from: string, latest: string, run: SelfUpdateDeps["run"]): Promise<string> {
   const name = `tokmizer-${latest}-${s.key}`;
   const failed = (why: string): string => `standalone failed (${from}): ${why}`;
-  const sums = (await download(s, `${s.base(latest)}/SHA256SUMS`)).toString("utf8");
-  const expected = sums
+  const sumsBytes = await download(s, `${s.base(latest)}/SHA256SUMS`, SUMS_BYTES);
+  const sig = await download(s, `${s.base(latest)}/SHA256SUMS.sig`, SIG_BYTES).catch(() => undefined);
+  if (!sig) return failed("release signature missing or unreadable");
+  if (!verifyReleaseSums(sumsBytes, sig, s.releaseKey)) return failed("release signature invalid");
+  const expected = sumsBytes
+    .toString("utf8")
     .split("\n")
     .map((line) => /^([0-9a-f]{64}) {2}(\S+)$/.exec(line.trim()))
     .find((m) => m?.[2] === `${name}.tar.gz`)?.[1];
   if (!expected) return failed(`no build for ${s.key}`);
-  const archive = await download(s, `${s.base(latest)}/${name}.tar.gz`);
+  const archive = await download(s, `${s.base(latest)}/${name}.tar.gz`, ARCHIVE_BYTES);
   if (createHash("sha256").update(archive).digest("hex") !== expected) return failed("checksum mismatch");
   const stage = mkdtempSync(join(s.root, ".update-"));
   try {
@@ -240,13 +299,15 @@ function defaultStandalone(): StandaloneDeps | undefined {
     root,
     key: `${process.platform}-${arch}`,
     base: (version) => `https://github.com/norwelltw/Tokmizer/releases/download/v${version}`,
-    fetch: (url) => fetch(url, { redirect: "follow", signal: AbortSignal.timeout(5 * 60_000) })
+    fetch: (url) => fetch(url, { redirect: "follow", signal: AbortSignal.timeout(5 * 60_000) }),
+    releaseKey: TOKMIZER_RELEASE_PUBLIC_KEY_PEM
   };
 }
 
 function runCommand(cmd: string, args: string[], env?: NodeJS.ProcessEnv): Promise<RunResult> {
   return new Promise((resolve) => {
     const child = spawn(cmd, args, {
+      cwd: os.homedir(),
       env: env ?? process.env,
       shell: process.platform === "win32",
       stdio: ["ignore", "pipe", "pipe"],
@@ -322,6 +383,7 @@ export function maybeSpawnSelfUpdate(): void {
     if (!claimSelfUpdateSlot()) return;
     const [command, ...args] = selfInvocation(join(root, "bin", "tkr.js"));
     const child = spawn(command!, [...args, "self-update"], {
+      cwd: os.homedir(),
       detached: true,
       stdio: "ignore",
       windowsHide: true,

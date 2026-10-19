@@ -15,8 +15,6 @@ vi.mock("../state", () => ({
   loadState: vi.fn().mockResolvedValue({ token: "tok_x", plan: "smart" })
 }));
 vi.mock("../entitlement", () => ({
-  gatingPlan: vi.fn().mockReturnValue("smart"),
-  gatingBonus: vi.fn().mockReturnValue(false),
   graceExceeded: vi.fn().mockReturnValue(false)
 }));
 vi.mock("../settings-cache", () => ({
@@ -92,7 +90,7 @@ describe("runWrapped daemon resolver wiring", () => {
   it("installs and closes the daemon resolver around processing", async () => {
     const resolver = await import("../daemon/resolver");
     await runWrapped(["/bin/sh", ...printf("printf 'x\\ny\\n'")]);
-    expect(resolver.installDaemonResolver).toHaveBeenCalledWith("smart");
+    expect(resolver.installDaemonResolver).toHaveBeenCalledWith();
     expect(resolver.closeDaemonResolver).toHaveBeenCalledTimes(1);
   });
 });

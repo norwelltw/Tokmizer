@@ -3,13 +3,14 @@ import spawn from "cross-spawn";
 import { runWrapped, signalNumber, underCapturingExec } from "../exec/wrapper";
 import { exitOnBrokenPipe } from "../epipe";
 import { failOpenActive } from "../shim/sh";
+import { windowsCommand } from "../exec/windows-command";
 
 exitOnBrokenPipe();
 
 async function passthrough(argv: string[]): Promise<never> {
   const [cmd, ...args] = argv;
   if (!cmd) process.exit(2);
-  const child = spawn(cmd, args, { stdio: "inherit" });
+  const child = spawn(windowsCommand(cmd, process.env), args, { stdio: "inherit" });
   const code: number = await new Promise((resolve) => {
     child.on("error", () => resolve(127));
     child.on("close", (c, signal) => resolve(c != null ? c : signal ? 128 + signalNumber(signal) : 0));

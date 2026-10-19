@@ -1,10 +1,8 @@
 import readline from "node:readline/promises";
 import { stdin, stdout } from "node:process";
-import type { Plan, Settings } from "./contracts";
+import type { Settings } from "./contracts";
 import { patchSettings, getSettings } from "./settings-client";
-import { powerAvailable } from "./engine/plans";
 import { loadState } from "./state";
-import { gatingPlan, gatingBonus } from "./entitlement";
 import { setYoloMode } from "./yolo-mode";
 
 const RECOMMENDED: Partial<Settings> = {
@@ -52,7 +50,7 @@ async function askEnum<T extends string>(
   return found ?? def;
 }
 
-async function runCustom(rl: RL, plan: Plan, bonusActive: boolean): Promise<Partial<Settings>> {
+async function runCustom(rl: RL): Promise<Partial<Settings>> {
   stdout.write("\nLet us walk through each setting. Press Enter to keep the default.\n\n");
 
   const enabled = await askYesNo(rl, "Enable Tokmizer optimizations?", true);
@@ -78,27 +76,18 @@ async function runCustom(rl: RL, plan: Plan, bonusActive: boolean): Promise<Part
     filters: { enableAll, disabled }
   };
 
-  if (powerAvailable(plan, bonusActive)) {
-    stdout.write("\n/power is available right now on this token.\n");
-  } else if (plan === "smart") {
-    stdout.write(
-      "\n/power is included with Pro.\nIt is NOT available on this token today.\n"
-    );
-  }
-
   return patch;
 }
 
-export async function runConfigure(plan: Plan, bonusActive = false): Promise<void> {
+export async function runConfigure(): Promise<void> {
   const rl = readline.createInterface({ input: stdin, output: stdout });
   try {
-    const bonusLabel = bonusActive ? " (bonus window active)" : "";
-    stdout.write(`\nConfigure Tokmizer (current plan: ${plan}${bonusLabel})\n\n`);
+    stdout.write("\nConfigure Tokmizer\n\n");
     stdout.write("  1) Recommended  - sane defaults, ready to go\n");
     stdout.write("  2) Custom       - walk through each option\n\n");
     const choice = await ask(rl, "Choose 1 or 2", "1");
     const base =
-      choice === "2" ? await runCustom(rl, plan, bonusActive) : { ...RECOMMENDED };
+      choice === "2" ? await runCustom(rl) : { ...RECOMMENDED };
     const telemetryOptIn = await askTelemetry(rl);
     const patch: Partial<Settings> = { ...base, telemetryOptIn };
     stdout.write("\nSaving...\n");
@@ -117,9 +106,6 @@ export async function runConfigure(plan: Plan, bonusActive = false): Promise<voi
 }
 
 export async function runConfigureFromCli(): Promise<void> {
-  const cur = await getSettings();
-  const st = await loadState();
-  const plan = st ? gatingPlan({ ...st, plan: cur.plan }) : cur.plan;
-  const bonus = st ? gatingBonus(st) : false;
-  await runConfigure(plan, bonus);
+  await getSettings();
+  await runConfigure();
 }

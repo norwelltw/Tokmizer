@@ -55,6 +55,7 @@ export async function writeTextPreserving(file: string, text: string): Promise<b
     try {
       mode = (await stat(target)).mode & 0o777;
     } catch {}
+    if (process.platform !== "win32" && existsSync(target) && (mode & 0o200) === 0) return false;
     await writeFile(tmp, text, { mode });
     await chmod(tmp, mode);
     await rename(tmp, target);

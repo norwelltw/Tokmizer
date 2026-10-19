@@ -7,108 +7,108 @@ Changes not staged for commit:
 	modified:   .claude/scheduled_tasks.lock
 	modified:   .github/workflows/ci.yml
 	modified:   .github/workflows/publish-plugin.yml
-	modified:   app/.gitignore
-	modified:   app/messages/de.json
-	modified:   app/messages/en.json
-	modified:   app/messages/es.json
-	modified:   app/messages/fr.json
-	modified:   app/messages/pt.json
-	modified:   app/next.config.ts
-	modified:   app/package.json
-	modified:   app/public/plugin/marketplace.json
-	modified:   app/scripts/audit-site.mjs
-	deleted:    app/src/app/[locale]/(marketing)/changelog/page.tsx
-	modified:   app/src/app/[locale]/(marketing)/compare/context-mode/page.tsx
-	modified:   app/src/app/[locale]/(marketing)/compare/headroom/page.tsx
-	modified:   app/src/app/[locale]/(marketing)/compare/page.tsx
-	modified:   app/src/app/[locale]/(marketing)/compare/rtk/page.tsx
-	modified:   app/src/app/[locale]/(marketing)/docs/page.tsx
-	modified:   app/src/app/[locale]/(marketing)/dpa/page.tsx
-	modified:   app/src/app/[locale]/(marketing)/eula/page.tsx
-	modified:   app/src/app/[locale]/(marketing)/page.tsx
-	modified:   app/src/app/[locale]/(marketing)/privacy/page.tsx
-	modified:   app/src/app/[locale]/(marketing)/terms/page.tsx
-	modified:   app/src/app/[locale]/admin/ClearBacklogButton.tsx
-	deleted:    app/src/app/[locale]/admin/accounts/ManageModal.tsx
-	modified:   app/src/app/[locale]/admin/accounts/[id]/page.tsx
-	modified:   app/src/app/[locale]/admin/accounts/actions.ts
-	modified:   app/src/app/[locale]/admin/accounts/page.tsx
-	deleted:    app/src/app/[locale]/admin/grants/GrantManager.tsx
-	deleted:    app/src/app/[locale]/admin/grants/actions.ts
-	modified:   app/src/app/[locale]/admin/grants/page.tsx
-	modified:   app/src/app/[locale]/admin/page.tsx
-	modified:   app/src/app/[locale]/dashboard/_lib/actions.ts
-	modified:   app/src/app/[locale]/dashboard/actions.ts
-	modified:   app/src/app/[locale]/dashboard/claim/page.tsx
-	modified:   app/src/app/[locale]/dashboard/devices/page.tsx
-	modified:   app/src/app/[locale]/dashboard/docs/page.tsx
-	modified:   app/src/app/[locale]/dashboard/error.tsx
-	modified:   app/src/app/[locale]/dashboard/filters/page.tsx
-	modified:   app/src/app/[locale]/dashboard/layout.tsx
-	modified:   app/src/app/[locale]/dashboard/loading.tsx
-	modified:   app/src/app/[locale]/dashboard/page.tsx
-	modified:   app/src/app/[locale]/dashboard/privacy/page.tsx
-	modified:   app/src/app/[locale]/dashboard/sessions/page.tsx
-	modified:   app/src/app/[locale]/dashboard/suggestions/page.tsx
-	modified:   app/src/app/[locale]/dashboard/token/page.tsx
-	modified:   app/src/app/api/v1/_lib/plugin-auth.ts
-	modified:   app/src/app/api/v1/admin/backlog-reset/route.ts
-	modified:   app/src/app/api/v1/admin/grants/route.ts
-	modified:   app/src/app/api/v1/learn/route.ts
-	modified:   app/src/app/api/v1/license/activate/route.ts
-	modified:   app/src/app/api/v1/license/enroll/route.ts
-	modified:   app/src/app/globals.css
-	modified:   app/src/app/robots.ts
-	modified:   app/src/app/sitemap.ts
-	modified:   app/src/components/Faq.tsx
-	modified:   app/src/components/Footer.tsx
-	modified:   app/src/components/InstallPicker.tsx
-	modified:   app/src/components/LangSwitch.tsx
-	modified:   app/src/components/Scrollytelling.tsx
-	modified:   app/src/components/TokenCounts.tsx
-	deleted:    app/src/components/admin/AccountsChart.tsx
-	modified:   app/src/components/dashboard/CopyButton.tsx
-	modified:   app/src/components/dashboard/DashNav.tsx
-	modified:   app/src/components/dashboard/FilterBuilder.tsx
-	deleted:    app/src/components/dashboard/HoverChart.tsx
-	deleted:    app/src/components/dashboard/RangeToggle.tsx
-	modified:   app/src/components/docs/DocsBlock.tsx
-	modified:   app/src/components/docs/DocsSections.tsx
-	modified:   app/src/content/demo-commands.json
-	modified:   app/src/content/docs/de.ts
-	modified:   app/src/content/docs/en.ts
-	modified:   app/src/content/docs/es.ts
-	modified:   app/src/content/docs/fr.ts
-	modified:   app/src/content/docs/pt.ts
-	modified:   app/src/i18n/routing.ts
-	modified:   app/src/lib/accounts-series.ts
-	modified:   app/src/lib/admin-accounts-stats.ts
-	modified:   app/src/lib/admin-funnel.ts
-	deleted:    app/src/lib/admin-grant.ts
-	modified:   app/src/lib/auth.ts
-	modified:   app/src/lib/page-metadata.ts
-	modified:   app/src/lib/settings.ts
-	modified:   app/src/lib/telemetry-force.ts
-	modified:   app/src/proxy.ts
-	modified:   app/tests/api/activate-device-cap.test.ts
-	modified:   app/tests/api/activate-lifetime-cap.test.ts
-	modified:   app/tests/api/admin-backlog-reset.test.ts
-	deleted:    app/tests/api/admin-grant-surfaces.test.ts
-	modified:   app/tests/api/admin-grants.test.ts
-	modified:   app/tests/api/allowed-filters-customs.test.ts
-	modified:   app/tests/api/dashboard-action-rate-limits.test.ts
-	modified:   app/tests/api/learn-at.test.ts
-	modified:   app/tests/api/license-enroll.test.ts
-	modified:   app/tests/api/plugin-auth-device-blacklist.test.ts
-	modified:   app/tests/api/plugin-auth-hmac.test.ts
-	modified:   app/tests/api/plugin-auth-replay.test.ts
-	modified:   app/tests/lib/accounts-series.test.ts
-	modified:   app/tests/lib/admin-accounts-stats.test.ts
-	modified:   app/tests/lib/admin-funnel.test.ts
-	deleted:    app/tests/lib/admin-grant.test.ts
-	modified:   app/tests/lib/static-command-bundles.test.ts
-	modified:   app/tests/lib/telemetry-force.test.ts
-	modified:   app/tsconfig.json
+	modified:   app/m79888c
+	modified:   app/messages/mbc3b6f.json
+	modified:   app/messages/mc36d26.json
+	modified:   app/messages/mac8493.json
+	modified:   app/messages/m61f6c8.json
+	modified:   app/messages/m225d9a.json
+	modified:   app/me50a46.config.ts
+	modified:   app/mcb34d3.json
+	modified:   app/public/plugin/m0913de.json
+	modified:   app/scripts/m4608be.mjs
+	deleted:    app/src/app/[locale]/m6c1304)/changelog/page.tsx
+	modified:   app/src/app/[locale]/m6c1304)/compare/context-mode/page.tsx
+	modified:   app/src/app/[locale]/m6c1304)/compare/headroom/page.tsx
+	modified:   app/src/app/[locale]/m6c1304)/compare/page.tsx
+	modified:   app/src/app/[locale]/m6c1304)/compare/rtk/page.tsx
+	modified:   app/src/app/[locale]/m6c1304)/docs/page.tsx
+	modified:   app/src/app/[locale]/m6c1304)/dpa/page.tsx
+	modified:   app/src/app/[locale]/m6c1304)/eula/page.tsx
+	modified:   app/src/app/[locale]/m6c1304)/page.tsx
+	modified:   app/src/app/[locale]/m6c1304)/privacy/page.tsx
+	modified:   app/src/app/[locale]/m6c1304)/terms/page.tsx
+	modified:   app/src/app/[locale]/m688eb3/m11221d.tsx
+	deleted:    app/src/app/[locale]/m688eb3/m143de6/m42f7f6.tsx
+	modified:   app/src/app/[locale]/m688eb3/m143de6/[id]/m496c0b.tsx
+	modified:   app/src/app/[locale]/m688eb3/m143de6/m863a6b.ts
+	modified:   app/src/app/[locale]/m688eb3/m143de6/m496c0b.tsx
+	deleted:    app/src/app/[locale]/m688eb3/mb0f8a5/mf7830a.tsx
+	deleted:    app/src/app/[locale]/m688eb3/mb0f8a5/m863a6b.ts
+	modified:   app/src/app/[locale]/m688eb3/mb0f8a5/m496c0b.tsx
+	modified:   app/src/app/[locale]/m688eb3/m496c0b.tsx
+	modified:   app/src/app/[locale]/m308321/_lib/m863a6b.ts
+	modified:   app/src/app/[locale]/m308321/m863a6b.ts
+	modified:   app/src/app/[locale]/m308321/m7fa1a2/m496c0b.tsx
+	modified:   app/src/app/[locale]/m308321/m6b3d03/m496c0b.tsx
+	modified:   app/src/app/[locale]/m308321/docs/m496c0b.tsx
+	modified:   app/src/app/[locale]/m308321/mf9a6ff.tsx
+	modified:   app/src/app/[locale]/m308321/mcbc490/m496c0b.tsx
+	modified:   app/src/app/[locale]/m308321/m7211bc.tsx
+	modified:   app/src/app/[locale]/m308321/m28262a.tsx
+	modified:   app/src/app/[locale]/m308321/m496c0b.tsx
+	modified:   app/src/app/[locale]/m308321/m16bf2c/m496c0b.tsx
+	modified:   app/src/app/[locale]/m308321/mb13089/m496c0b.tsx
+	modified:   app/src/app/[locale]/m308321/meb6946/m496c0b.tsx
+	modified:   app/src/app/[locale]/m308321/m3c76e6/m496c0b.tsx
+	modified:   app/src/app/api/v1/_lib/m3f8e67.ts
+	modified:   app/src/app/api/v1/m688eb3/m50afb6/mccd25d.ts
+	modified:   app/src/app/api/v1/m688eb3/mb0f8a5/mccd25d.ts
+	modified:   app/src/app/api/v1/m6ff6db/mccd25d.ts
+	modified:   app/src/app/api/v1/m58052b/mad0bf9/mccd25d.ts
+	modified:   app/src/app/api/v1/m58052b/me7e616/mccd25d.ts
+	modified:   app/src/app/m997980.css
+	modified:   app/src/app/m2fb32d.ts
+	modified:   app/src/app/m40888c.ts
+	modified:   app/src/components/m32e1ce.tsx
+	modified:   app/src/components/me782f2.tsx
+	modified:   app/src/components/mb79bfe.tsx
+	modified:   app/src/components/m85067e.tsx
+	modified:   app/src/components/m606895.tsx
+	modified:   app/src/components/mab6c52.tsx
+	deleted:    app/src/components/m688eb3/m4d6a51.tsx
+	modified:   app/src/components/m308321/m8100fb.tsx
+	modified:   app/src/components/m308321/m5bcef9.tsx
+	modified:   app/src/components/m308321/m322318.tsx
+	deleted:    app/src/components/m308321/m8b1eef.tsx
+	deleted:    app/src/components/m308321/mc10983.tsx
+	modified:   app/src/components/docs/m37f005.tsx
+	modified:   app/src/components/docs/m2756d8.tsx
+	modified:   app/src/content/mf395d5.json
+	modified:   app/src/content/docs/mbc3b6f.ts
+	modified:   app/src/content/docs/mc36d26.ts
+	modified:   app/src/content/docs/mac8493.ts
+	modified:   app/src/content/docs/m61f6c8.ts
+	modified:   app/src/content/docs/m225d9a.ts
+	modified:   app/src/i18n/me1254c.ts
+	modified:   app/src/lib/m9608a4.ts
+	modified:   app/src/lib/m5ab149.ts
+	modified:   app/src/lib/m174764.ts
+	deleted:    app/src/lib/m38c07b.ts
+	modified:   app/src/lib/ma4bf6f.ts
+	modified:   app/src/lib/m5d509b.ts
+	modified:   app/src/lib/m941d83.ts
+	modified:   app/src/lib/meb47c6.ts
+	modified:   app/src/m0dde1f.ts
+	modified:   app/tests/api/mbc08cb.test.ts
+	modified:   app/tests/api/m0dc12d.test.ts
+	modified:   app/tests/api/m2895fe.test.ts
+	deleted:    app/tests/api/m7e19da.test.ts
+	modified:   app/tests/api/m668539.test.ts
+	modified:   app/tests/api/mc5d92d.test.ts
+	modified:   app/tests/api/m9a90bc.test.ts
+	modified:   app/tests/api/me98f04.test.ts
+	modified:   app/tests/api/mb26446.test.ts
+	modified:   app/tests/api/m77551f.test.ts
+	modified:   app/tests/api/maeac54.test.ts
+	modified:   app/tests/api/m737e5f.test.ts
+	modified:   app/tests/lib/m9608a4.test.ts
+	modified:   app/tests/lib/m5ab149.test.ts
+	modified:   app/tests/lib/m174764.test.ts
+	deleted:    app/tests/lib/m38c07b.test.ts
+	modified:   app/tests/lib/m3f91ef.test.ts
+	modified:   app/tests/lib/meb47c6.test.ts
+	modified:   app/mcb9c21.json
 	modified:   engine/build.rs
 	modified:   engine/src/stages/build_tools.rs
 	modified:   package-lock.json
@@ -186,49 +186,49 @@ Changes not staged for commit:
 	modified:   packages/plugin/src/shim/runner.ts
 	modified:   packages/plugin/src/state.ts
 	modified:   packages/plugin/src/stats.ts
-	modified:   packages/shared/src/__tests__/contracts-learn-settings.test.ts
-	modified:   packages/shared/src/api-contracts.ts
+	modified:   packages/common/src/__tests__/maf8e75.test.ts
+	modified:   packages/common/src/m09f1c6.ts
 
 Untracked files:
   (use "git add <file>..." to include in what will be committed)
 	.claude/settings.local.json
 	.github/workflows/native-artifacts.yml
 	AGENTS.md
-	app/public/benchmarks/
-	app/src/app/[locale]/(marketing)/blog/
-	app/src/app/[locale]/admin/accounts/[id]/not-found.tsx
-	app/src/app/[locale]/admin/error.tsx
-	app/src/app/[locale]/admin/layout.tsx
-	app/src/components/ComparisonBenchmarks.tsx
-	app/src/components/CompetitorComparison.tsx
-	app/src/components/admin/AccountManagement.tsx
-	app/src/components/admin/AdminInsights.tsx
-	app/src/components/admin/AdminUi.tsx
-	app/src/components/dashboard/ActionForm.tsx
-	app/src/components/dashboard/AnalyticsChart.tsx
-	app/src/components/dashboard/DashboardShell.tsx
-	app/src/components/dashboard/OverviewAnalytics.tsx
-	app/src/components/dashboard/SessionHistory.tsx
-	app/src/components/dashboard/SubmitButton.tsx
-	app/src/components/dashboard/analytics-chart.css
-	app/src/components/dashboard/analytics-overview.css
-	app/src/content/blog.ts
-	app/src/content/competitor-comparisons.json
-	app/src/lib/admin-overview-data.ts
-	app/src/lib/analytics-data.ts
-	app/src/lib/analytics.ts
-	app/src/lib/comparisons.ts
-	app/src/lib/serializable.ts
-	app/tests/api/admin-account-actions.test.ts
-	app/tests/api/dashboard-settings-actions.test.ts
-	app/tests/api/license-concurrency.test.ts
-	app/tests/lib/analytics-data.test.ts
-	app/tests/lib/analytics.test.ts
-	app/tests/lib/auth-session-identity.test.ts
-	app/tests/lib/page-metadata.test.ts
-	app/tests/lib/serializable.test.ts
-	app/tests/lib/settings-preference.test.ts
-	app/tests/seo-routing.test.ts
+	app/public/m0ac50c/m9cf08c
+	app/src/app/[locale]/m6c1304)/blog/
+	app/src/app/[locale]/m688eb3/m143de6/[id]/mcdd44e.tsx
+	app/src/app/[locale]/m688eb3/mf9a6ff.tsx
+	app/src/app/[locale]/m688eb3/m7211bc.tsx
+	app/src/components/md73c71.tsx
+	app/src/components/m6ab43d.tsx
+	app/src/components/m688eb3/m1d1926.tsx
+	app/src/components/m688eb3/m1e4e35.tsx
+	app/src/components/m688eb3/mccd160.tsx
+	app/src/components/m308321/mde48a1.tsx
+	app/src/components/m308321/m52e22c.tsx
+	app/src/components/m308321/m58c2fa.tsx
+	app/src/components/m308321/m7af4db.tsx
+	app/src/components/m308321/m3c9955.tsx
+	app/src/components/m308321/m6357a4.tsx
+	app/src/components/m308321/m7c8337.css
+	app/src/components/m308321/m9c510e.css
+	app/src/content/m85805d.ts
+	app/src/content/m217a8b.json
+	app/src/lib/m47ca22.ts
+	app/src/lib/m0d32d4.ts
+	app/src/lib/me2bbcc.ts
+	app/src/lib/mfa1158.ts
+	app/src/lib/m76d1f7.ts
+	app/tests/api/m83693e.test.ts
+	app/tests/api/mde16c6.test.ts
+	app/tests/api/m6d998b.test.ts
+	app/tests/lib/m0d32d4.test.ts
+	app/tests/lib/me2bbcc.test.ts
+	app/tests/lib/m10f5a6.test.ts
+	app/tests/lib/m5d509b.test.ts
+	app/tests/lib/m76d1f7.test.ts
+	app/tests/lib/m2c16af.test.ts
+	app/tests/m4408cc.test.ts
 	docs/marketing/
 	docs/releases/
 	docs/solutions/2026-10-08-installation-security-audit.md

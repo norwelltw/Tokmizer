@@ -129,11 +129,12 @@ describe("uploadSpool", () => {
     commitSpool("telemetry");
   });
 
-  it("discards non-pro events when requirePro is set", async () => {
+  it("uploads learn events whatever plan the local state still records", async () => {
     loadStateMock.mockResolvedValue({ jwt: "jwt", signingSecret: "sec", plan: "trial" } as never);
     appendSpool("learn", { cmd: "ls" });
-    expect(await uploadSpool("learn", "/api/v1/learn", { requirePro: true })).toBe("ok");
+    fetchMock.mockResolvedValue({ ok: true, status: 200 } as never);
+    expect(await uploadSpool("learn", "/api/v1/learn", {})).toBe("ok");
     expect(drainSpool("learn")).toHaveLength(0);
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 });

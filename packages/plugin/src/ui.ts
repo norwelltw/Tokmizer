@@ -4,7 +4,7 @@ export const M = {
   getToken: "Sign in at tokmizer.com, then grab your key from your dashboard.",
   askToken: "Paste your dashboard key, then press Enter:",
   activating: "Linking...",
-  activated: (_plan: string) => "Linked.",
+  activated: "Linked.",
   failed: (reason: string) => `Activation failed: ${reason}`,
   suspended: (why: string) => `Your token is suspended. ${why}`,
   revoked: "Your token has been revoked. Contact support at tokmizer.com/contact",

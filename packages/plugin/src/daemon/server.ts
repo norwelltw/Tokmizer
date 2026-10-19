@@ -24,6 +24,8 @@ export type DaemonHandle = {
   touch: () => void;
 };
 
+const FIRST_WARM_WAIT_MS = 300;
+
 export async function startServer(
   runtime: DaemonRuntime | null,
   opts: {
@@ -114,19 +116,32 @@ export async function startServer(
       }
       if (!current) {
         if (opts.onWarming) {
-          if (!warmingPromise) warmingPromise = opts.onWarming();
-          try {
-            current = await warmingPromise;
-          } catch (err) {
-            warmingPromise = null;
+          if (!warmingPromise) {
+            const started = opts.onWarming();
+            warmingPromise = started;
+            started
+              .then((next) => {
+                current = next;
+              })
+              .catch(() => {})
+              .finally(() => {
+                if (warmingPromise === started) warmingPromise = null;
+              });
+          }
+          const ready = await Promise.race([
+            warmingPromise.catch((err: unknown) => (err instanceof Error ? err : new Error(String(err)))),
+            new Promise<null>((resolve) => setTimeout(resolve, FIRST_WARM_WAIT_MS, null).unref?.())
+          ]);
+          if (ready === null) return { id: raw.id, ok: false, err: "warming", retryAfterMs: 250 };
+          if (ready instanceof Error) {
             return {
               id: raw.id,
               ok: false,
-              err: (err as Error).message,
+              err: ready.message,
               retryAfterMs: 1000
             };
           }
-          warmingPromise = null;
+          current = ready;
         } else {
           return { id: raw.id, ok: false, err: "warming", retryAfterMs: 250 };
         }

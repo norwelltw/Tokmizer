@@ -1,6 +1,7 @@
 ---
 description: Show or change Tokmizer usage stats (status, on, off, forget).
 argument-hint: status | on | off | forget
+disable-model-invocation: true
 ---
 
 Manage the user's Tokmizer telemetry preference.

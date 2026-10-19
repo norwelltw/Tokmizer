@@ -170,6 +170,11 @@ function tooLargeNote(compressed: string, bytes: number, env: NodeJS.ProcessEnv)
   return `${lead}[tkr: full output too large to keep (${mb(bytes)} > ${mb(limit)} limit), no restore available]\n`;
 }
 
+function unsavedNote(compressed: string): string {
+  const lead = compressed === "" || compressed.endsWith("\n") ? "" : "\n";
+  return `${lead}[tkr: the full output could not be saved, no restore available]\n`;
+}
+
 function exceedsEntryLimit(content: string, env: NodeJS.ProcessEnv): number | null {
   const bytes = Buffer.byteLength(content, "utf8");
   return bytes > contentCacheLimits(env).entryMaxBytes ? bytes : null;
@@ -203,8 +208,10 @@ export async function captureForRestore(
   }
   const tail = await storeEntry(droppedTail, true, source.label, env);
   if (tail) return `${compressed}${hint(tail)}`;
+  if (yoloEnabled()) return compressed;
   const big = exceedsEntryLimit(source.raw || droppedTail, env);
-  return big && !yoloEnabled() ? `${compressed}${tooLargeNote(compressed, big, env)}` : compressed;
+  if (big) return `${compressed}${tooLargeNote(compressed, big, env)}`;
+  return source.raw ?? `${compressed}${unsavedNote(compressed)}`;
 }
 
 export async function captureOriginalForRestore(
@@ -218,8 +225,9 @@ export async function captureOriginalForRestore(
   if (!original) return compressed;
   const hash = await storeEntry(original, false, source.label, env);
   if (hash) return `${compressed}${restoreHint(compressed, hash)}`;
+  if (yoloEnabled()) return compressed;
   const big = exceedsEntryLimit(original, env);
-  return big && !yoloEnabled() ? `${compressed}${tooLargeNote(compressed, big, env)}` : compressed;
+  return big ? `${compressed}${tooLargeNote(compressed, big, env)}` : original;
 }
 
 async function readMeta(hash: string): Promise<CacheEntryMeta | null> {

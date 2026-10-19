@@ -75,7 +75,7 @@ description = "Compact ruff check output (drop source snippets, keep every diagn
 match_command = "^ruff\\s+check(?!.*\\s--diff\\b)(?:\\s|$)"
 priority = 60
 strip_ansi = true
-strip_lines_matching = ["^\\s*\\d*\\s*\\|", "^\\s+- ", "^\\s*$"]
+strip_lines_matching = ["^\\s*(?:\\d+\\s*)?\\|", "^\\s+- ", "^\\s*$"]
 on_empty = "ruff: no issues"
 
 [filters.ruff-format]

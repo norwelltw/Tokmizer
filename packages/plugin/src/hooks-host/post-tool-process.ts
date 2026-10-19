@@ -266,7 +266,7 @@ async function persistedFullOutput(resp: Payload["tool_response"]): Promise<stri
   }
 }
 
-type ExecEquivalent = { argv: string[]; stdout: string; stderr: string; exitCode: number };
+type ExecEquivalent = { argv: string[]; stdout: string; stderr: string; exitCode: number | null };
 
 function execEquivalent(cmd: string, resp: Payload["tool_response"]): ExecEquivalent | null {
   if (!resp || typeof resp !== "object" || typeof resp.stdout !== "string") return null;
@@ -279,7 +279,7 @@ function execEquivalent(cmd: string, resp: Payload["tool_response"]): ExecEquiva
   if (splitTopLevel(cmd).some((seg) => seg.kind === "sep" && seg.text !== "&&" && seg.text !== "|" && seg.text !== "|&")) return null;
   const argv = shellWords(wrapped[0]!);
   if (!argv) return null;
-  return { argv, stdout: resp.stdout, stderr: resp.stderr ?? "", exitCode: resp.returnCodeInterpretation != null ? 1 : 0 };
+  return { argv, stdout: resp.stdout, stderr: resp.stderr ?? "", exitCode: resp.returnCodeInterpretation != null ? 1 : null };
 }
 
 async function processAsExec(run: ExecEquivalent, payload: Payload, yolo: boolean, options: PostToolUseOptions, maxChars?: number): Promise<string | null> {
@@ -354,6 +354,7 @@ export async function processToolOutput(payload: Payload, options: PostToolUseOp
 async function processPayload(payload: Payload, options: PostToolUseOptions, maxChars?: number): Promise<string | null> {
   const yolo = yoloEnabled();
   if (!payload.tool_name || !COVERED_TOOLS.has(payload.tool_name)) return null;
+  if (typeof payload.tool_response === "object" && payload.tool_response?.isImage === true) return null;
   const shellCmd = payload.tool_name === "Bash" ? payload.tool_input?.command ?? "" : "";
   const wrapped = routedThroughExec(shellCmd);
   if (/\btkr(?:\.js)?\s+restore\b/.test(shellCmd)) return null;
@@ -396,7 +397,6 @@ async function processPayload(payload: Payload, options: PostToolUseOptions, max
     neutralizeMarkers,
     FOLD_MARKER_RE,
     resolveAllowedFilters,
-    gatingPlan,
     graceExceeded,
     recordEvent,
     recordTelemetry,
@@ -410,8 +410,8 @@ async function processPayload(payload: Payload, options: PostToolUseOptions, max
   const settings = await loadSettingsCache();
   if (!settings.enabled) return null;
   const { slugKey } = await import("../contracts");
-  const plan = state?.token ? gatingPlan(state) : null;
-  if (!options.resolver && plan) installDaemonResolver(plan);
+  const linked = Boolean(state?.token);
+  if (!options.resolver && linked) installDaemonResolver();
   const baseAllowed = state?.token ? resolveAllowedFilters(state.allowedFilters, graceExceeded(state)) : null;
   const disabledKeys = new Set(settings.filters.disabled.map(slugKey));
   const allowed = baseAllowed && disabledKeys.size > 0
@@ -462,13 +462,14 @@ async function processPayload(payload: Payload, options: PostToolUseOptions, max
     const account = async (): Promise<void> => {
       if (recorded) return;
       recorded = true;
-      await recordEvent({
-        cmd: toolSlug,
-        filterId: result.filterId,
-        rawBytes: result.rawBytes,
-        filteredBytes: result.filteredBytes,
-        plan
-      });
+      if (linked) {
+        await recordEvent({
+          cmd: toolSlug,
+          filterId: result.filterId,
+          rawBytes: result.rawBytes,
+          filteredBytes: result.filteredBytes
+        });
+      }
       recordStat(counted.raw, counted.filtered, undefined, false, host, kind, label, cwd, statOutcome(result));
       await recordTelemetry({
         cmd: toolSlug,

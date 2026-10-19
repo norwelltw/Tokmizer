@@ -1,5 +1,4 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { powerAvailable } from "../engine/plans";
 import { slugKey } from "../contracts";
 import { resolveAllowedFilters } from "../default-rules";
 import { buildDefaultRules } from "../default-rules-build";
@@ -75,12 +74,5 @@ describe("server-authoritative allowed-filter resolution", () => {
     expect(hit).not.toBeNull();
     const miss = selectFilter("git log", [f] as never, resolveAllowedFilters(["docker"], false));
     expect(miss).toBeNull();
-  });
-
-  it("powerAvailable: available for every plan", () => {
-    expect(powerAvailable("pro", false)).toBe(true);
-    expect(powerAvailable("smart", false)).toBe(true);
-    expect(powerAvailable("free", false)).toBe(true);
-    expect(powerAvailable("trial", false)).toBe(true);
   });
 });

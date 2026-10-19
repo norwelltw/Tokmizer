@@ -298,7 +298,7 @@ function parseMocha(lines: string[]): Parsed | null {
 }
 
 function parsePlaywright(lines: string[]): Parsed | null {
-  const first = lines.findIndex((l) => /^\s{2}\d+\) .*›.*─{3,}\s*$/.test(l));
+  const first = lines.findIndex((l) => l.length <= 2_000 && /^\s{2}\d+\) .*›.*─{3,}\s*$/.test(l));
   if (first < 0) return null;
   const tail = lines.findIndex((l, i) => i > first && /^\s{2}\d+ (?:failed|flaky|passed|skipped|interrupted|did not run)(?: \(.+\))?$/.test(l));
   const end = tail < 0 ? lines.length : tail;

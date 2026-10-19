@@ -40,7 +40,7 @@ function splitTomlTables(text: string): string[] {
   const chunks: string[] = [];
   let current: string[] = [];
   for (const line of text.split(/(?<=\n)/)) {
-    if (/^\s*\[\[?\s*[A-Za-z0-9_-]/.test(line) && current.length) {
+    if (/^\s*\[\[?\s*[A-Za-z0-9_"'-]/.test(line) && current.length) {
       chunks.push(current.join(""));
       current = [];
     }
@@ -52,6 +52,15 @@ function splitTomlTables(text: string): string[] {
 
 function isOurVibeTable(chunk: string): boolean {
   return /^\s*\[\[hooks\]\]/.test(chunk) && new RegExp(`^\\s*name\\s*=\\s*"${VIBE_NAME}"\\s*$`, "m").test(chunk);
+}
+
+function withoutOurTable(chunk: string): string {
+  if (!isOurVibeTable(chunk)) return chunk;
+  const lines = chunk.split(/(?<=\n)/);
+  let end = 1;
+  while (end < lines.length && !/^\s*(?:#.*)?\r?\n?$/.test(lines[end]!)) end++;
+  while (end < lines.length && /^\s*\r?\n?$/.test(lines[end]!)) end++;
+  return lines.slice(end).join("");
 }
 
 async function writeText(file: string, text: string): Promise<boolean> {
@@ -83,7 +92,7 @@ export async function ensureVibeHook(command: string): Promise<HookInstall> {
   const chunks = splitTomlTables(text);
   const ours = chunks.filter(isOurVibeTable);
   if (ours.length === 1 && ours[0]!.trimEnd() === block.trimEnd()) return "present";
-  const kept = chunks.filter((c) => !isOurVibeTable(c)).join("").trimEnd();
+  const kept = chunks.map(withoutOurTable).join("").trimEnd();
   const next = kept ? `${kept}\n\n${block}` : block;
   return (await writeText(file, next)) ? (ours.length ? "updated" : "added") : "error";
 }
@@ -99,7 +108,7 @@ export async function removeVibeHook(): Promise<HookRemoval> {
   }
   const chunks = splitTomlTables(text);
   if (!chunks.some(isOurVibeTable)) return "absent";
-  const rest = chunks.filter((c) => !isOurVibeTable(c)).join("").trimEnd();
+  const rest = chunks.map(withoutOurTable).join("").trimEnd();
   const kept = rest ? `${rest}\n` : "";
   return (await writeText(file, kept)) ? "removed" : "error";
 }

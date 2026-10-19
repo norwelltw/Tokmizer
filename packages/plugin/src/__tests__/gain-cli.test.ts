@@ -88,10 +88,10 @@ describe("gain CLI measurement contract", () => {
       netSavedUsd: 2.5,
       netSavedUsdScope: "all-observed-outputs",
       referencePricePerMtok: 2.5,
-      plan: "pro",
       measurement: { scope: "tool-output", tokenMethod: "bytes/4", tokenCounts: "estimated", billing: "not-measured" }
     });
     expect(gain.observed).toMatchObject({ count: 2, rawTokens: 3000000, filteredTokens: 2000000, savedTokens: 1000000, savedPct: 33.33 });
+    expect(gain).not.toHaveProperty("plan");
   });
 
   it("deducts expanded outputs from the net estimate while retaining legacy reduced-output savings", () => {
@@ -142,7 +142,6 @@ describe("gain CLI measurement contract", () => {
       netSavedUsd: 0,
       netSavedUsdScope: "all-observed-outputs",
       referencePricePerMtok: 3,
-      plan: "free",
       observed: { count: 0, rawTokens: 0, filteredTokens: 0, savedTokens: 0, savedPct: null },
       window: { firstAt: null, lastAt: null },
       measurement: { scope: "tool-output", tokenMethod: "bytes/4", tokenCounts: "estimated", billing: "not-measured" }

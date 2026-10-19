@@ -17,13 +17,6 @@ if (-not (Get-Command tkr.cmd -ErrorAction SilentlyContinue)) { Fail "tkr is not
 tkr.cmd shim install
 if ($LASTEXITCODE -ne 0) { Fail "Tokmizer setup failed. Fix the reported error and run tkr shim install again." }
 
-$tokmizerDir = if ($env:TOKMIZER_HOME) { $env:TOKMIZER_HOME } else { Join-Path $env:USERPROFILE ".tokmizer" }
-$shimsDir = Join-Path $tokmizerDir "shims"
-$userPath = [Environment]::GetEnvironmentVariable("Path", "User")
-if (($userPath -split ';') -notcontains $shimsDir) {
-    [Environment]::SetEnvironmentVariable("Path", "$shimsDir;$userPath", "User")
-}
-
 Write-Log "Done. Open a new terminal. Tokmizer is free and does not require an account."
 Write-Log "For Codex, also run: tkr setup-codex"
 Write-Log "Check the installation with: tkr status"

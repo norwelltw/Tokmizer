@@ -1,7 +1,6 @@
 import { readFile, rm } from "node:fs/promises";
 import { appendFileSync, chmodSync, mkdirSync, readFileSync, realpathSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, resolve, sep } from "node:path";
-import type { Plan } from "./contracts";
 import { tokmizerHome } from "./paths";
 import { droppedEventsCount } from "./learn/spool";
 import { providerForHost, type Provider } from "./pricing";
@@ -572,17 +571,6 @@ export function monthlyProjectionUsd(savedTokens: number, sinceDays: number, pri
   return ((savedTokens / sinceDays) * 30) / 1e6 * pricePerMtok;
 }
 
-export type PaybackTarget = { priceUsd: number; label: string; upsell: boolean };
-
-const ENTRY_PLAN_PRICE_USD = 4.99;
-const PRO_PLAN_PRICE_USD = 9.99;
-
-export function paybackTarget(plan: Plan): PaybackTarget {
-  if (plan === "pro") return { priceUsd: PRO_PLAN_PRICE_USD, label: "Pro plan", upsell: false };
-  if (plan === "smart") return { priceUsd: ENTRY_PLAN_PRICE_USD, label: "Smart plan", upsell: false };
-  return { priceUsd: ENTRY_PLAN_PRICE_USD, label: "Smart plan", upsell: true };
-}
-
 function bytesToTokens(bytes: number): number {
   return Math.ceil(bytes / 4);
 }
@@ -742,7 +730,7 @@ export type PeriodRow = { label: string; savedTokens: number; count: number };
 
 export type RestoreCacheLine = { entries: number; bytes: number; kept: string };
 
-export function renderGain(agg: GainAgg, opts: { color: boolean; pricePerMtok: number; subtitle?: string | undefined; plan?: PaybackTarget | undefined; periods?: PeriodRow[] | undefined; restoreCache?: RestoreCacheLine | undefined }): string {
+export function renderGain(agg: GainAgg, opts: { color: boolean; pricePerMtok: number; subtitle?: string | undefined; periods?: PeriodRow[] | undefined; restoreCache?: RestoreCacheLine | undefined }): string {
   if (agg.count === 0 && !agg.oversizedExcluded) {
     return "  No data yet. Run a few commands to measure your output savings.\n  Watch this session live: tkr session";
   }
