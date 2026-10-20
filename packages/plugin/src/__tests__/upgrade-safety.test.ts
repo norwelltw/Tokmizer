@@ -247,7 +247,7 @@ describe.skipIf(process.platform === "win32")("upgrade safety", () => {
     newPackage(join(cache, NEW));
     expect(sessionStart(join(cache, NEW)).status).toBe(0);
     rmSync(stubLog, { force: true });
-    rmSync(join(cache, NEW), { recursive: true });
+    rmSync(join(cache, NEW), { recursive: true, maxRetries: 10 });
     oldStub(join(cache, "0.9.58"));
     for (const shell of shells) expectWorks(runIn(shell, "agent"), true);
     expect(existsSync(stubLog)).toBe(false);
@@ -456,7 +456,7 @@ describe.skipIf(process.platform === "win32")("upgrade safety", () => {
   it("session and prompt hooks read large payloads without breaking the pipe, and stop waiting on a stuck stdin", async () => {
     const big = JSON.stringify({ prompt: "x".repeat(512 * 1024) });
     for (const hook of [join(pkg, "hooks", "on-session-start.mjs"), join(pkg, "dist", "hooks-host", "reducer-prompt-submit.js"), join(pkg, "dist", "hooks-host", "reducer-session-start.js")]) {
-      const r = spawnSync(process.execPath, [hook], { input: big, encoding: "utf8", timeout: 30000, env: baseEnv({ TOKMIZER_CLAUDE_COMMANDS_DIR: join(root, "commands"), CLAUDE_PLUGIN_ROOT: pkg }) });
+      const r = spawnSync(process.execPath, [hook], { input: big, encoding: "utf8", timeout: 30000, env: baseEnv({ TOKMIZER_CLAUDE_COMMANDS_DIR: join(root, "commands"), CLAUDE_PLUGIN_ROOT: pkg, TOKMIZER_NATIVE_EXEC: "0" }) });
       expect(r.error).toBeUndefined();
       expect(r.status).toBe(0);
     }

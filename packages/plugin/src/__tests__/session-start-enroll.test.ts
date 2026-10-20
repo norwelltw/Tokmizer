@@ -43,8 +43,8 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  rmSync(root, { recursive: true, force: true });
-  rmSync(home, { recursive: true, force: true });
+  rmSync(root, { recursive: true, force: true, maxRetries: 10 });
+  rmSync(home, { recursive: true, force: true, maxRetries: 10 });
 });
 
 describe("sign-up from SessionStart", () => {
