@@ -174,7 +174,8 @@ try {
     last = Number(readFileSync(throttleFile, "utf8")) || 0;
   } catch {}
 
-  if (!networkOff && existsSync(stateFile) && Date.now() - last >= THROTTLE_MS) {
+  const signedUp = existsSync(stateFile);
+  if (!networkOff && (signedUp || existsSync(join(home, "network-notice-shown"))) && (!signedUp || Date.now() - last >= THROTTLE_MS)) {
     try {
       writeFileSync(throttleFile, String(Date.now()));
     } catch {}

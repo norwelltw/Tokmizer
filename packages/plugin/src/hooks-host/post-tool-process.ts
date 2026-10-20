@@ -360,6 +360,7 @@ async function processPayload(payload: Payload, options: PostToolUseOptions, max
   if (/\btkr(?:\.js)?\s+restore\b/.test(shellCmd)) return null;
   const state = await loadState();
   if (!tokmizerEnabled()) return null;
+  if (!state) await import("../exec/wrapper").then((m) => m.kickBackgroundEnroll(), () => {});
   const asExec = payload.tool_name === "Bash" && !wrapped ? execEquivalent(shellCmd, payload.tool_response) : null;
   if (asExec) {
     if (Buffer.byteLength(asExec.stdout, "utf8") + Buffer.byteLength(asExec.stderr, "utf8") > MAX_OUTPUT_BYTES) return null;
