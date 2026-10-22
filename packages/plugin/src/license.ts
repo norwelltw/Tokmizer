@@ -2,6 +2,7 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import {
   slugKey,
   type ActivateRequest,
+  type InstallChannel,
   type ActivateResponse,
   type EnrollRequest,
   type EnrollResponse,
@@ -9,6 +10,7 @@ import {
   type HeartbeatResponse
 } from "./contracts";
 import { buildFingerprint } from "./fingerprint";
+import { installChannel } from "./install-channel";
 import { loadState, saveState, clearState, detectTimeZone, type State } from "./state";
 import { fetchSigned, consumeSignedJson } from "./transport";
 import { enrollCooldownFile, tokmizerHome } from "./paths";
@@ -107,6 +109,11 @@ function internalMarker(): { internal?: true } {
   return process.env.TOKMIZER_INTERNAL === "1" ? { internal: true } : {};
 }
 
+function channelField(): { channel?: InstallChannel } {
+  const channel = installChannel();
+  return channel ? { channel } : {};
+}
+
 export async function activate(input: ActivateInput): Promise<State> {
   assertNetworkEnabled();
   const fp = await buildFingerprint();
@@ -120,6 +127,7 @@ export async function activate(input: ActivateInput): Promise<State> {
     timeZone,
     ...(previousToken ? { previousToken } : {}),
     ...internalMarker(),
+    ...channelField(),
     ...fp
   };
   const res = await withRetry(
@@ -366,7 +374,7 @@ export async function autoEnroll(baseUrl: string): Promise<State> {
   assertNetworkEnabled();
   const fp = await buildFingerprint();
   const timeZone = detectTimeZone();
-  const body: EnrollRequest = { pluginVersion: PLUGIN_VERSION, timeZone, ...internalMarker(), ...fp };
+  const body: EnrollRequest = { pluginVersion: PLUGIN_VERSION, timeZone, ...internalMarker(), ...channelField(), ...fp };
   const res = await fetchSigned("POST", "/api/v1/license/enroll", body, {
     baseUrl,
     fingerprint: fp.fingerprint,

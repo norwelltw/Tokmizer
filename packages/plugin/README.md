@@ -355,16 +355,16 @@ tkr network off     # stop every connection; compression keeps working with the 
 
 | When | What is sent | Why |
 | --- | --- | --- |
-| First online run | A random install ID, its SHA-256 hash (the fingerprint), your time zone and the plugin version. Nothing that describes your machine: no computer name, OS, hardware or user name | create the install token used to download rules |
+| First online run | A random install ID, its SHA-256 hash (the fingerprint), your time zone, the plugin version and how it was installed (Claude Code, Codex, npm, npx, Homebrew or the install script, read from where it runs). Nothing that describes your machine: no computer name, OS, hardware or user name | create the install token used to download rules |
 | `tkr link <key>` | The same, plus your key, and your email only with `--email` | attach this machine to your account (up to 15 connected at once) |
 | Check-in (heartbeat) | Install ID, fingerprint, plugin version, local date and time zone; while usage stats are on, install health counts such as outdated shims, broken hooks and repairs | refresh access, announce new versions, spot broken installs |
 | Rule downloads | Install ID, fingerprint, plugin version | latest rules, `/power` and reducer instructions |
 | Settings sync, linked accounts only | Your Tokmizer settings | keep them in sync with the dashboard |
-| Usage stats, only while on | Command names such as `npm install` (never arguments), token counts, rule IDs with output sizes, session ID, agent name | see which commands to optimize next |
+| Usage stats, only while on | Command names such as `npm install` (never arguments), token counts, rule IDs with output sizes, session ID, agent name | see which commands to optimize next, and spot when compression gets worse to fix it before it reaches everyone |
 | `tkr unlink` | Install ID, fingerprint | remove this device from your account |
 | Self-update | `npm i -g @tokmizer/plugin@<version>` or `brew upgrade tokmizer` | keep the CLI current; `tkr auto-update off` stops it |
 
-The install ID is drawn at random on first run and says nothing about your machine. Like any web server, `tokmizer.com` sees your IP address and keeps it in its security log. Usage stats are on by default; Tokmizer says so once before anything is sent, and turning them off survives updates. Detailed rows are kept 90 days, then only a running total. With the network off, Tokmizer uses the last downloaded rules for up to 7 days, then the rules built into the CLI. `tkr network off` does not cover Claude Code's own marketplace auto-update. Full policy: [tokmizer.com/en/privacy](https://tokmizer.com/en/privacy).
+The install ID is drawn at random on first run and says nothing about your machine. Like any web server, `tokmizer.com` sees your IP address and keeps it in its security log. Usage stats are on by default; Tokmizer says so once before anything is sent, and turning them off survives updates. Detailed rows are kept 90 days, then only a running total. The server also keeps daily totals with no identifier: installs per day by plugin version and install channel, and commands, tokens and active installs per day. They cannot be linked to you and stay when you turn stats off or delete your account; your own data is still deleted. With the network off, Tokmizer uses the last downloaded rules for up to 7 days, then the rules built into the CLI. `tkr network off` does not cover Claude Code's own marketplace auto-update. Full policy: [tokmizer.com/en/privacy](https://tokmizer.com/en/privacy).
 
 </details>
 

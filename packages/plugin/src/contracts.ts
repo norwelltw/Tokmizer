@@ -24,6 +24,8 @@ export const Settings = z.object({
 });
 export type Settings = z.infer<typeof Settings>;
 
+export type InstallChannel = "claude-code" | "codex" | "npm" | "npx" | "homebrew" | "script";
+
 export type FingerprintSignals = {
   fingerprint: string;
   installId: string;
@@ -36,6 +38,7 @@ export type ActivateRequest = FingerprintSignals & {
   timeZone?: string;
   previousToken?: string;
   internal?: true;
+  channel?: InstallChannel;
 };
 
 export type ActivateResponse = {
@@ -54,6 +57,7 @@ export type EnrollRequest = FingerprintSignals & {
   pluginVersion: string;
   timeZone?: string;
   internal?: true;
+  channel?: InstallChannel;
 };
 
 export type EnrollResponse = ActivateResponse & {

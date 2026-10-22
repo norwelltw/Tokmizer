@@ -9,8 +9,8 @@ export const NETWORK_OFF_MESSAGE = "Network is off for Tokmizer. Turn it back on
 
 export const NETWORK_NOTICE = [
   "Tokmizer contacts tokmizer.com to keep its rules up to date and to improve the product. No account or email is needed.",
-  "It sends a random install ID and the plugin version, nothing that describes your machine: no computer name, OS, hardware or user name. Command contents and output are never sent.",
-  "Usage stats (command names, token counts and install health counts) are sent only while they are on. Check with: tkr telemetry status.",
+  "It sends a random install ID, the plugin version and how it was installed (npm, Homebrew, Claude Code...), nothing that describes your machine: no computer name, OS, hardware or user name. Command contents and output are never sent.",
+  "Usage stats (command names, token counts and install health counts) are sent only while they are on, to spot when compression gets worse and fix it before it reaches everyone. Check with: tkr telemetry status.",
   "Turn all network access off: tkr network off. Usage stats only: tkr telemetry off."
 ].join("\n");
 
