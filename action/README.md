@@ -60,4 +60,4 @@ Failing tests, errors and stack traces stay in the output. If Claude needs a ful
 | `plugins` | `tokmizer@tokmizer`, for `claude-code-action`. |
 | `version` | Installed version. |
 
-Needs Node.js 20.11 or newer on the runner. GitHub-hosted runners have it.
+Needs Node.js 24.22.1 or newer (or 22.23.4+) on the runner.

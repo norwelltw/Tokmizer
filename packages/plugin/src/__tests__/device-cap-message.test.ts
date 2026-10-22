@@ -18,14 +18,7 @@ vi.mock("../transport", () => ({
 vi.mock("../fingerprint", () => ({
   buildFingerprint: vi.fn(async () => ({
     fingerprint: "f".repeat(64),
-    installId: "11111111-1111-1111-1111-111111111111",
-    hostname: "host",
-    os: "darwin",
-    osVersion: "14.5",
-    cpuModel: "m",
-    cpuCores: 8,
-    macHash: "a".repeat(64),
-    usernameHash: "b".repeat(64)
+    installId: "11111111-1111-1111-1111-111111111111"
   }))
 }));
 

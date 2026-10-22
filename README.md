@@ -8,7 +8,7 @@ Free · no account · Claude Code, Codex, Cursor, Gemini CLI, Copilot and 16 mor
 
 [![npm](https://img.shields.io/npm/v/@tokmizer/plugin?label=npm&color=cb3837)](https://www.npmjs.com/package/@tokmizer/plugin)
 [![licence](https://img.shields.io/badge/licence-Apache--2.0%20%2B%20BUSL--1.1-blue)](https://github.com/norwelltw/Tokmizer/blob/main/packages/plugin/LICENSES.md)
-[![node](https://img.shields.io/badge/node-%E2%89%A5%2020.11-339933)](https://nodejs.org)
+[![node](https://img.shields.io/badge/node-%E2%89%A5%2024.22.1-339933)](https://nodejs.org)
 
 [Website](https://tokmizer.com) · [Docs](https://tokmizer.com/en/docs) · [Benchmark vs rtk](https://tokmizer.com/en/compare/rtk) · [CI](https://tokmizer.com/en/ci)
 
@@ -77,7 +77,7 @@ curl -fsSL https://tokmizer.com/install.sh | bash
 tkr setup --all
 ```
 
-The script uses npm when Node.js 20.11+ is installed, and otherwise downloads a standalone build for macOS or Linux after checking its signature and SHA-256. Your shell profile is not touched.
+The script uses npm when a patched Node.js (24.22.1+, or 22.23.4+) is installed, and otherwise downloads a standalone build for macOS or Linux after checking its signature and SHA-256. Your shell profile is not touched.
 
 <table>
 <tr><td><b>npm</b></td><td>
@@ -190,9 +190,9 @@ Agents check their allow, ask and deny rules against the command text. Tokmizer 
 
 | Mode | What Tokmizer does |
 | --- | --- |
-| Default | Build and test commands (`npm test`, `cargo test`, `pytest`, `./gradlew build`…) are shortened before they run; Claude Code asks for them once, as it would anyway. Read-only commands (`ls`, `cat`, `git status`) run as typed, so Claude Code still approves them on its own, and their output is shortened once they succeed. Claude Code runs that after-command hook only for successful commands, so a failing read-only command reaches Claude in full. |
-| Default, with a narrow allow rule of yours | A single command typed on its own (no `&&`, `;`, pipe, redirection, `$( )` or wildcard) that one of your allow rules covers, such as `Bash(pytest:*)` in your user or managed settings, is rewritten too when no deny or ask rule matches. Tokmizer then gives the approval Claude Code would have given to the command as typed, so no new prompt appears. |
-| `bypassPermissions`, or a plain `Bash` allow rule | In `bypassPermissions` mode, or when a plain `Bash` allow rule in your user or managed settings applies and the session is in default, `acceptEdits` or `dontAsk` mode, every routed command is rewritten, and failing output is shortened too. |
+| Default | Build and test commands (`npm test`, `cargo test`, `pytest`, `./gradlew build`…) are shortened before they run; Claude Code asks for them once, as it would anyway. Read-only commands (`ls`, `cat`, `git status`) run as typed, so Claude Code still approves them on its own, and their output is shortened once they succeed. |
+| Default, with a narrow allow rule of yours such as `Bash(pytest:*)` | A single command it covers is rewritten too, with no new prompt. |
+| `bypassPermissions`, or a plain `Bash` allow rule | Every routed command is rewritten, and failing output is shortened too. |
 
 Your deny and ask rules, `--disallowedTools`, `--settings`, managed policies and the claude.ai console rules always win. In a linked git worktree, commands that mention git run as typed so Claude Code's worktree check never refuses them.
 
@@ -210,11 +210,11 @@ Your deny and ask rules, `--disallowedTools`, `--settings`, managed policies and
 | `/power` | `$power` in Codex, `/power` in most agents | plan, build, test and ship a change in one go |
 | `/tkr` | `tkr settings show\|set\|configure` | every setting |
 | `/tkr-telemetry` | `tkr telemetry on\|off\|status` | usage stats |
-| `/tkr-link` | `tkr link <key>` | optional account: synced settings and a dashboard |
+| `/tkr-link` | `tkr link <key>` | optional account: synced settings and a dashboard, up to 15 devices at once |
 | `/tkr-unlink` | `tkr unlink` | detach this machine from the account |
 | `/tkr-update` | npm, brew or auto-update | latest version |
 
-Also in the terminal: `tkr restore`, `tkr doctor [--fix]`, `tkr discover`, `tkr session`, `tkr network`, `tkr filters`, `tkr migrate rtk`, `tkr setup`, `tkr uninstall`. `tkr --help` lists everything.
+Also in the terminal: `tkr restore`, `tkr doctor [--fix]`, `tkr discover`, `tkr session`, `tkr network`, `tkr filters`, `tkr migrate rtk`, `tkr setup`, `tkr uninstall`. `tkr help` lists everything.
 
 ## Compression modes
 
@@ -235,12 +235,12 @@ The **reducer** is separate: from the next session it asks the model to answer i
 ```bash
 tkr restore <hash>                     # the whole original output
 tkr restore <hash> --lines 120:180     # only some lines
-tkr restore <hash> --grep <pattern>    # matching lines with their numbers
-tkr restore --grep <pattern>           # search every cached output of this project
+tkr restore <hash> --grep timeout      # matching lines with their numbers
+tkr restore --grep timeout             # search every cached output of this project
 tkr restore --list                     # what is cached here; --all-projects for every project
 ```
 
-Copies stay on your machine. Entries are kept 30 days, up to 8 MB each and 200 MB in total; the oldest go first. Private keys, GitHub, npm, AWS, Slack and Stripe tokens, `Bearer` headers and passwords in URLs are masked before a copy is saved; what the agent sees is unchanged. `TOKMIZER_CCR_DISABLED=1` turns copies off.
+Copies stay on your machine for 30 days, up to 8 MB each and 200 MB in total. Private keys, GitHub, npm, AWS, Slack and Stripe tokens, `Bearer` headers and passwords in URLs are masked before a copy is saved; what the agent sees is unchanged. `TOKMIZER_CCR_DISABLED=1` turns copies off.
 
 ## Measuring your own savings
 
@@ -263,28 +263,28 @@ Each view also takes `--project` and `--json`. `tkr gain` estimates command-outp
 
 | Agent | `/power` | Reducer |
 | --- | --- | --- |
-| Claude Code | native: `/power` command | native: SessionStart and UserPromptSubmit hooks |
-| Codex | skill `~/.agents/skills/power`, type `$power <request>` | native: SessionStart and UserPromptSubmit hooks (approve them in `/hooks`) |
-| Gemini CLI | native: `~/.gemini/commands/power.toml` | native: SessionStart and BeforeAgent hooks |
-| Cursor | skill `/power` (`~/.agents/skills`) | native: sessionStart hook (no per-prompt context hook exists) |
-| GitHub Copilot CLI | skill `/power` (`~/.agents/skills`) | native: sessionStart hook (per-prompt hook output is dropped by Copilot) |
-| Factory Droid | skill `/power` (`~/.agents/skills`) | native: SessionStart and UserPromptSubmit hooks |
-| Qwen Code | native: `~/.qwen/commands/power.md` | native: SessionStart and UserPromptSubmit hooks |
-| ZCode | skill `/power` (`~/.zcode/skills`) | native: SessionStart and UserPromptSubmit hooks |
-| Trae | not possible: no documented location for custom commands or skills | native: SessionStart and UserPromptSubmit hooks |
-| Antigravity | skill `/power` (`~/.gemini/config/skills`) | native: SessionStart hook (system message) |
-| Crush | skill `user:power` in the command palette (`~/.agents/skills`) | via rules: managed block in `~/.config/crush/CRUSH.md` (no session or prompt hook) |
-| Junie CLI | native: `~/.junie/commands/power.md` | via rules: managed block in `~/.junie/AGENTS.md` (session-start context is ignored) |
-| Grok Build | skill `/power` (`~/.grok/skills`) | via rules: managed block in `~/.grok/AGENTS.md` (hook output is ignored) |
-| Mistral Vibe | skill `/power` (`~/.vibe/skills`) | via rules: managed block in `~/.vibe/AGENTS.md` (no session or prompt hook) |
-| OpenCode | native: `~/.config/opencode/commands/power.md` | via plugin: system prompt, experimental `experimental.chat.system.transform` hook |
-| Kilo Code | native: `~/.config/kilo/commands/power.md` | via plugin: system prompt, experimental `experimental.chat.system.transform` hook |
-| Amp | skill `power` (`~/.agents/skills`); ask Amp to use it, Amp has no custom slash commands | via rules: managed block in `~/.config/amp/AGENTS.md` |
-| Pi | native: `~/.pi/agent/prompts/power.md` | via rules: managed block in `~/.pi/agent/APPEND_SYSTEM.md` |
-| Oh My Pi | native: `~/.omp/agent/commands/power.md` | via rules: managed block in `~/.omp/agent/APPEND_SYSTEM.md` |
-| Hermes | skill `/power` (`~/.hermes/skills`) | via plugin: system prompt section |
-| OpenClaw | skill `/power` (`~/.openclaw/skills`) | via plugin: `before_prompt_build`, once you set `plugins.entries.tokmizer.hooks.allowConversationAccess` to `true` |
-| Cline, Windsurf, Aider | not installed: these agents only get command shims and have no `tkr setup-<agent>` command | not installed |
+| Claude Code | `/power` command | SessionStart and UserPromptSubmit hooks |
+| Codex | skill `~/.agents/skills/power`, type `$power <request>` | SessionStart and UserPromptSubmit hooks |
+| Gemini CLI | `~/.gemini/commands/power.toml` | SessionStart and BeforeAgent hooks |
+| Cursor | skill `/power`, `~/.agents/skills` | sessionStart hook |
+| GitHub Copilot CLI | skill `/power`, `~/.agents/skills` | sessionStart hook |
+| Factory Droid | skill `/power`, `~/.agents/skills` | SessionStart and UserPromptSubmit hooks |
+| Qwen Code | `~/.qwen/commands/power.md` | SessionStart and UserPromptSubmit hooks |
+| ZCode | skill `/power`, `~/.zcode/skills` | SessionStart and UserPromptSubmit hooks |
+| Trae | no documented location | SessionStart and UserPromptSubmit hooks |
+| Antigravity | skill `/power`, `~/.gemini/config/skills` | SessionStart hook |
+| Crush | skill `user:power`, `~/.agents/skills` | managed block in `~/.config/crush/CRUSH.md` |
+| Junie CLI | `~/.junie/commands/power.md` | managed block in `~/.junie/AGENTS.md` |
+| Grok Build | skill `/power`, `~/.grok/skills` | managed block in `~/.grok/AGENTS.md` |
+| Mistral Vibe | skill `/power`, `~/.vibe/skills` | managed block in `~/.vibe/AGENTS.md` |
+| OpenCode | `~/.config/opencode/commands/power.md` | plugin, experimental system prompt hook |
+| Kilo Code | `~/.config/kilo/commands/power.md` | plugin, experimental system prompt hook |
+| Amp | skill `power`, `~/.agents/skills`; ask Amp to use it | managed block in `~/.config/amp/AGENTS.md` |
+| Pi | `~/.pi/agent/prompts/power.md` | managed block in `~/.pi/agent/APPEND_SYSTEM.md` |
+| Oh My Pi | `~/.omp/agent/commands/power.md` | managed block in `~/.omp/agent/APPEND_SYSTEM.md` |
+| Hermes | skill `/power`, `~/.hermes/skills` | plugin, system prompt section |
+| OpenClaw | skill `/power`, `~/.openclaw/skills` | plugin, once `plugins.entries.tokmizer.hooks.allowConversationAccess` is `true` |
+| Aider, Cline, Windsurf | not installed | not installed |
 
 </details>
 
@@ -355,8 +355,8 @@ tkr network off     # stop every connection; compression keeps working with the 
 
 | When | What is sent | Why |
 | --- | --- | --- |
-| First online run | A random install ID, computer name, OS and version, CPU model and core count, SHA-256 hashes of your network card address and user name, a fingerprint of these, your time zone and the plugin version | create the install token used to download rules |
-| `tkr link <key>` | The same, plus your key, and your email only with `--email` | attach this machine to your account |
+| First online run | A random install ID, its SHA-256 hash (the fingerprint), your time zone and the plugin version. Nothing that describes your machine: no computer name, OS, hardware or user name | create the install token used to download rules |
+| `tkr link <key>` | The same, plus your key, and your email only with `--email` | attach this machine to your account (up to 15 connected at once) |
 | Check-in (heartbeat) | Install ID, fingerprint, plugin version, local date and time zone; while usage stats are on, install health counts such as outdated shims, broken hooks and repairs | refresh access, announce new versions, spot broken installs |
 | Rule downloads | Install ID, fingerprint, plugin version | latest rules, `/power` and reducer instructions |
 | Settings sync, linked accounts only | Your Tokmizer settings | keep them in sync with the dashboard |
@@ -364,7 +364,7 @@ tkr network off     # stop every connection; compression keeps working with the 
 | `tkr unlink` | Install ID, fingerprint | remove this device from your account |
 | Self-update | `npm i -g @tokmizer/plugin@<version>` or `brew upgrade tokmizer` | keep the CLI current; `tkr auto-update off` stops it |
 
-The hashes are not anonymous: the same machine always gives the same values, and a user name hash can be guessed. Like any web server, `tokmizer.com` sees your IP address and keeps it in its security log. Usage stats are on by default; Tokmizer says so once before anything is sent, and turning them off survives updates. Detailed rows are kept 90 days, then only a running total. With the network off, Tokmizer uses the last downloaded rules for up to 7 days, then the rules built into the CLI. `tkr network off` does not cover Claude Code's own marketplace auto-update. Full policy: [tokmizer.com/en/privacy](https://tokmizer.com/en/privacy).
+The install ID is drawn at random on first run and says nothing about your machine. Like any web server, `tokmizer.com` sees your IP address and keeps it in its security log. Usage stats are on by default; Tokmizer says so once before anything is sent, and turning them off survives updates. Detailed rows are kept 90 days, then only a running total. With the network off, Tokmizer uses the last downloaded rules for up to 7 days, then the rules built into the CLI. `tkr network off` does not cover Claude Code's own marketplace auto-update. Full policy: [tokmizer.com/en/privacy](https://tokmizer.com/en/privacy).
 
 </details>
 
@@ -379,7 +379,7 @@ In Claude Code: `/plugin uninstall tokmizer@tokmizer`. Your savings history stay
 
 ## Build from source
 
-Node.js 20.11+ and npm. The optional native launcher needs Rust.
+Node.js 24.22.1+ (or 22.23.4+) and npm. The optional native launcher needs Rust.
 
 ```bash
 git clone https://github.com/norwelltw/Tokmizer

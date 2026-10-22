@@ -1,18 +1,10 @@
-import os from "node:os";
-import { createHash, createHmac, randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { tokmizerHome, installIdFile } from "./paths";
 
 export type FingerprintSignals = {
   fingerprint: string;
   installId: string;
-  hostname: string;
-  os: string;
-  osVersion: string;
-  cpuModel: string;
-  cpuCores: number;
-  macHash: string;
-  usernameHash: string;
 };
 
 export async function ensureInstallId(): Promise<string> {
@@ -36,51 +28,10 @@ export async function ensureInstallId(): Promise<string> {
   }
 }
 
-function sha256Hex(s: string): string {
-  return createHash("sha256").update(s).digest("hex");
-}
-
-function primaryMac(): string {
-  const nets = os.networkInterfaces();
-  for (const key of Object.keys(nets)) {
-    for (const iface of nets[key] ?? []) {
-      if (!iface.internal && iface.mac && iface.mac !== "00:00:00:00:00:00") {
-        return iface.mac;
-      }
-    }
-  }
-  return "no-mac";
-}
-
 export async function buildFingerprint(): Promise<FingerprintSignals> {
   const installId = await ensureInstallId();
-  const hostname = os.hostname();
-  const platform = os.platform();
-  const osVersion = os.release();
-  const cpus = os.cpus();
-  const cpuModel = cpus[0]?.model ?? "unknown";
-  const cpuCores = cpus.length;
-  const mac = primaryMac();
-  const username = os.userInfo().username;
-  const composite = [
-    hostname,
-    platform,
-    osVersion,
-    cpuModel,
-    String(cpuCores),
-    sha256Hex(mac),
-    sha256Hex(username),
-    installId
-  ].join("|");
   return {
-    fingerprint: sha256Hex(composite),
-    installId,
-    hostname,
-    os: platform,
-    osVersion,
-    cpuModel,
-    cpuCores,
-    macHash: createHmac("sha256", installId).update(mac).digest("hex"),
-    usernameHash: createHmac("sha256", installId).update(username).digest("hex")
+    fingerprint: createHash("sha256").update(installId).digest("hex"),
+    installId
   };
 }

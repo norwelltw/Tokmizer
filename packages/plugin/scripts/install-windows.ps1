@@ -5,9 +5,10 @@ function Fail([string]$msg) { Write-Error "tkr install: $msg"; exit 1 }
 
 try {
     $nodeVersion = [version]((node --version).TrimStart('v'))
-    if ($LASTEXITCODE -ne 0) { Fail "Node.js 20.11+ is required." }
-    if ($nodeVersion -lt [version]'20.11') { Fail "Node.js 20.11+ is required." }
-} catch { Fail "Node.js 20.11+ is required." }
+    if ($LASTEXITCODE -ne 0) { Fail "Node.js 24.22.1+ (or 22.23.4+) is required." }
+    $patched = ($nodeVersion.Major -eq 22 -and $nodeVersion -ge [version]'22.23.4') -or ($nodeVersion.Major -eq 24 -and $nodeVersion -ge [version]'24.22.1') -or ($nodeVersion.Major -eq 26 -and $nodeVersion -ge [version]'26.12.1') -or $nodeVersion.Major -gt 26
+    if (-not $patched) { Fail "Node.js 24.22.1+ (or 22.23.4+) is required." }
+} catch { Fail "Node.js 24.22.1+ (or 22.23.4+) is required." }
 
 Write-Log "Installing @tokmizer/plugin from npm..."
 npm.cmd install -g @tokmizer/plugin

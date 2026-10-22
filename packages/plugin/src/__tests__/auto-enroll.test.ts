@@ -14,14 +14,7 @@ vi.mock("../transport", async (importActual) => {
 vi.mock("../fingerprint", () => ({
   buildFingerprint: vi.fn().mockResolvedValue({
     fingerprint: "f".repeat(64),
-    installId: "11111111-1111-1111-1111-111111111111",
-    hostname: "h",
-    os: "darwin",
-    osVersion: "24",
-    cpuModel: "m",
-    cpuCores: 8,
-    macHash: "a".repeat(64),
-    usernameHash: "a".repeat(64)
+    installId: "11111111-1111-1111-1111-111111111111"
   })
 }));
 vi.mock("../bundle", () => ({ refreshBundles: vi.fn().mockResolvedValue(undefined) }));
@@ -78,6 +71,26 @@ afterEach(() => {
 });
 
 describe("maybeAutoEnroll", () => {
+  it("sends only the install ID, plus the internal marker when TOKMIZER_INTERNAL=1", async () => {
+    const { fetchSigned } = await import("../transport");
+    const mock = fetchSigned as ReturnType<typeof vi.fn>;
+    mock.mockResolvedValue(signedEnrollResponse());
+    const { maybeAutoEnroll } = await import("../license");
+    await maybeAutoEnroll("http://localhost");
+    expect(Object.keys(mock.mock.calls[0]![2]).sort()).toEqual(["fingerprint", "installId", "pluginVersion", "timeZone"]);
+    rmSync(join(dir, "state.json"), { force: true });
+    rmSync(join(dir, "license.json"), { force: true });
+    mock.mockClear();
+    process.env.TOKMIZER_INTERNAL = "1";
+    try {
+      const { autoEnroll } = await import("../license");
+      await autoEnroll("http://localhost");
+    } finally {
+      delete process.env.TOKMIZER_INTERNAL;
+    }
+    expect(mock.mock.calls[0]![2]).toMatchObject({ internal: true });
+  });
+
   it("enrolls and saves state when none exists", async () => {
     const { fetchSigned } = await import("../transport");
     (fetchSigned as ReturnType<typeof vi.fn>).mockResolvedValue(signedEnrollResponse());

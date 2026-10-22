@@ -6,7 +6,7 @@ log() { printf 'tkr: %s\n' "$*"; }
 
 node_ready() {
   command -v node >/dev/null 2>&1 && command -v npm >/dev/null 2>&1 &&
-    node -e 'const [major, minor] = process.versions.node.split(".").map(Number); process.exit(major > 20 || major === 20 && minor >= 11 ? 0 : 1)' 2>/dev/null
+    node -e 'const [major, minor, patch] = process.versions.node.split(".").map(Number); const at = (m, p) => minor > m || minor === m && patch >= p; process.exit(major === 22 && at(23, 4) || major === 24 && at(22, 1) || major === 26 && at(12, 1) || major > 26 ? 0 : 1)' 2>/dev/null
 }
 
 work=""
@@ -65,7 +65,7 @@ sha256_of() {
 
 install_standalone() {
   local os arch key base line name sum root bindir unavailable
-  unavailable="Install Node.js 20.11+ and retry."
+  unavailable="Install Node.js 24.22.1+ (or 22.23.4+) and retry."
   case "$(uname -s)" in
     Darwin) os=darwin ;;
     Linux) os=linux ;;

@@ -2,7 +2,7 @@
 
 Tokmizer works with **Claude Code, OpenAI Codex, Cursor, Cline, Aider, Gemini CLI, Windsurf, and GitHub Copilot** — on **macOS, Linux, and Windows**.
 
-Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot, Factory Droid, Trae, Qwen Code, Crush, Junie CLI, ZCode, Grok Build and Kilo Code use native hooks or plugins (`tkr setup-<tool>` installs them; see the table below). Aider, Cline and Windsurf have no hook system: Tokmizer reaches them through command shims that are active only inside the agent, never in your own terminals. Tokmizer does not edit your shell profile. Node.js 20.11 or newer is required for npm installation. Tokmizer is free and requires no account.
+Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot, Factory Droid, Trae, Qwen Code, Crush, Junie CLI, ZCode, Grok Build and Kilo Code use native hooks or plugins (`tkr setup-<tool>` installs them; see the table below). Aider, Cline and Windsurf have no hook system: Tokmizer reaches them through command shims that are active only inside the agent, never in your own terminals. Tokmizer does not edit your shell profile. Node.js 24.22.1 or newer (or 22.23.4+) is required for npm installation. Tokmizer is free and requires no account.
 
 ## macOS / Linux
 

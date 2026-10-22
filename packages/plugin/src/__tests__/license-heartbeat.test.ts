@@ -43,9 +43,7 @@ vi.mock("../daemon/client", () => ({
 vi.mock("../fingerprint", () => ({
   buildFingerprint: vi.fn().mockResolvedValue({
     fingerprint: "f".repeat(64),
-    installId: "11111111-1111-1111-1111-111111111111",
-    hostname: "h",
-    os: "darwin"
+    installId: "11111111-1111-1111-1111-111111111111"
   })
 }));
 

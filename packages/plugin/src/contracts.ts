@@ -27,13 +27,6 @@ export type Settings = z.infer<typeof Settings>;
 export type FingerprintSignals = {
   fingerprint: string;
   installId: string;
-  hostname: string;
-  os: string;
-  osVersion: string;
-  cpuModel: string;
-  cpuCores: number;
-  macHash: string;
-  usernameHash: string;
 };
 
 export type ActivateRequest = FingerprintSignals & {
@@ -42,6 +35,7 @@ export type ActivateRequest = FingerprintSignals & {
   pluginVersion: string;
   timeZone?: string;
   previousToken?: string;
+  internal?: true;
 };
 
 export type ActivateResponse = {
@@ -59,6 +53,7 @@ export type ActivateResponse = {
 export type EnrollRequest = FingerprintSignals & {
   pluginVersion: string;
   timeZone?: string;
+  internal?: true;
 };
 
 export type EnrollResponse = ActivateResponse & {

@@ -144,7 +144,7 @@ describe("network switch storage", () => {
   it("states what is sent without claiming anonymity", () => {
     expect(NETWORK_NOTICE).toContain("No account or email is needed");
     expect(NETWORK_NOTICE).toContain("random install ID");
-    expect(NETWORK_NOTICE).toContain("computer name");
+    expect(NETWORK_NOTICE).toContain("nothing that describes your machine");
     expect(NETWORK_NOTICE).toContain("tkr network off");
     expect(NETWORK_NOTICE).toContain("tkr telemetry off");
     expect(NETWORK_NOTICE.toLowerCase()).not.toContain("anonym");
