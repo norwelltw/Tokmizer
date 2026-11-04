@@ -214,7 +214,7 @@ function mergeAcc(into: Acc, from: Acc): void {
   }
 }
 
-function dayKey(ts: number): string {
+export function dayKey(ts: number): string {
   const d = new Date(ts * 1000);
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
@@ -708,20 +708,20 @@ export function formatTokens(n: number): string {
   return String(n);
 }
 
-function formatDollars(d: number): string {
+export function formatDollars(d: number): string {
   if (d < 0) return `-${formatDollars(-d)}`;
   if (d > 0 && d < 0.01) return "<$0.01";
   return `$${d.toFixed(2)}`;
 }
 
-function formatCount(n: number): string {
+export function formatCount(n: number): string {
   return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-const AMBER = "\x1b[38;2;245;176;65m";
-const RESET = "\x1b[0m";
+export const AMBER = "\x1b[38;2;245;176;65m";
+export const RESET = "\x1b[0m";
 
-function bar(blocks: number, color: boolean): string {
+export function bar(blocks: number, color: boolean): string {
   const run = "█".repeat(blocks);
   return color ? `${AMBER}${run}${RESET}` : run;
 }
@@ -807,7 +807,7 @@ function formatMegabytes(bytes: number): string {
   return bytes >= 1024 * 1024 ? `${(bytes / (1024 * 1024)).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`;
 }
 
-function header(title: string, subtitle: string | undefined): string[] {
+export function header(title: string, subtitle: string | undefined): string[] {
   return [`  ${title} · ${subtitle ?? "all time"}`, "  " + "═".repeat(60), ""];
 }
 
@@ -965,7 +965,7 @@ export function renderCsv(rows: AgentDayRow[]): string {
   return lines.join("\n") + "\n";
 }
 
-function shortDay(day: string): string {
+export function shortDay(day: string): string {
   return `${day.slice(8, 10)}/${day.slice(5, 7)}`;
 }
 

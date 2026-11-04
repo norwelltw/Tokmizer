@@ -214,7 +214,9 @@ Your deny and ask rules, `--disallowedTools`, `--settings`, managed policies and
 | `/tkr-unlink` | `tkr unlink` | detach this machine from the account |
 | `/tkr-update` | npm, brew or auto-update | latest version |
 
-Also in the terminal: `tkr restore`, `tkr doctor [--fix]`, `tkr discover`, `tkr session`, `tkr learn`, `tkr gain --watch`, `tkr network`, `tkr filters`, `tkr migrate rtk`, `tkr setup`, `tkr uninstall`. `tkr help` lists everything.
+Also in the terminal: `tkr usage`, `tkr restore`, `tkr doctor [--fix]`, `tkr discover`, `tkr session`, `tkr learn`, `tkr gain --watch`, `tkr network`, `tkr filters`, `tkr migrate rtk`, `tkr setup`, `tkr uninstall`. `tkr help` lists everything.
+
+`tkr usage` reads the logs Claude Code and Codex keep on your machine and prints the tokens they used, by agent and model, with the public API price (`--week`, `--all`, `--daily`, `--json`). The first run reads the logs once, later runs only what is new.
 
 `tkr learn` reads this project's Claude Code history and lists commands the agent got wrong, then fixed (a wrong flag, a missing module, a zsh quirk). `tkr learn --write` saves them to `.claude/rules/tkr-command-corrections.md` so the agent runs the working form first. Nothing leaves your machine. `tkr gain --watch` keeps the savings view open and refreshes it every 2 seconds.
 
@@ -363,6 +365,7 @@ tkr network off     # stop every connection; compression keeps working with the 
 | Rule downloads | Install ID, fingerprint, plugin version | latest rules, `/power` and reducer instructions |
 | Settings sync, linked accounts only | Your Tokmizer settings | keep them in sync with the dashboard |
 | Usage stats, only while on | Command names such as `npm install` (never arguments), token counts, rule IDs with output sizes, session ID, agent name | see which commands to optimize next, and spot when compression gets worse to fix it before it reaches everyone |
+| Agent usage, linked accounts with usage stats on | Every few hours, per day over the last 90 days: agent (Claude Code or Codex), model name, input, output and cache token counts, number of requests | the Usage page of your dashboard, the same figures `tkr usage` prints |
 | `tkr unlink` | Install ID, fingerprint | remove this device from your account |
 | Self-update | `npm i -g @tokmizer/plugin@<version>` or `brew upgrade tokmizer` | keep the CLI current; `tkr auto-update off` stops it |
 

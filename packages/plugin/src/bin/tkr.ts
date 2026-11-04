@@ -15,6 +15,9 @@ import { graceExceeded } from "../entitlement";
 import { readGain, renderGain, readDaily, renderDaily, clearStats, coverageSummary, recordStat, normalizeProject, projectLabel, readAgentDaily, renderCsv, renderGraph, readHistory, renderHistory, renderByRule, renderFallbacks, quotaEstimate, renderQuota, QUOTA_TIERS, type QuotaTier } from "../stats";
 import { effectivePricePerMtok } from "../pricing";
 import { readSession, renderSession, clearUsage } from "../usage";
+import { scanAgentUsage, type UsageAgent } from "../agent-usage";
+import { dayKey } from "../stats";
+import { renderUsage, renderUsageDaily, summarizeUsage, usageJson } from "../usage-report";
 import { clearSpool } from "../learn/spool";
 import { recordTelemetry } from "../learn/telemetry";
 import { loadSettingsCache, clearSettingsCache, updateSettingsCache } from "../settings-cache";
@@ -165,6 +168,9 @@ function help(): void {
       "       [--by-rule|--failures]       savings per rule, commands left unchanged",
       "       [--quota [pro|5x|20x]]       estimated share of a Claude plan budget (default pro, last 30 days)",
       "       [--watch]                    live view in your terminal, refreshed every 2 seconds",
+      "  usage [--week|--month|--all]      tokens and API price of Claude Code and Codex (default 30 days)",
+      "        [--day] [--claude|--codex]  today only, one agent only",
+      "        [--daily|--json]            per-day bar chart, JSON",
       "  session                           this session's tkr coverage",
       "  learn [--all] [--since <days>]    commands the agent got wrong then fixed, from Claude Code history",
       "        [--min <count>] [--write]   only pairs seen that often (default 2); save .claude/rules/tkr-command-corrections.md",
@@ -310,7 +316,7 @@ async function telemetryCommand(argv: string[]): Promise<void> {
         `Network: ${networkStatusLabel()}\n` +
         `Account: ${state?.linked === true || state?.email ? "linked" : "none (stats are tied to this install's random key)"}\n` +
         (sending
-          ? "Sent: command names, token counts, session ID, agent name and install health counts. Never arguments, output, file contents or paths.\n"
+          ? "Sent: command names, token counts, session ID, agent name and install health counts. Never arguments, output, file contents or paths.\nLinked accounts also send daily token counts per agent and model (tkr usage) to the dashboard.\n"
           : on
             ? "Sent: nothing while network is off.\n"
             : "Sent: nothing.\n") +
@@ -1170,6 +1176,78 @@ async function main(): Promise<void> {
     const hint = await telemetryHintLine();
     if (hint) process.stdout.write(`${hint}\n`);
     for (const line of (await noticeLines()).slice(1)) process.stdout.write(`${line}\n`);
+    return;
+  }
+  if (cmd === "usage") {
+    if (rest.length === 1 && rest[0] === "--sync") {
+      const { runAgentUsageSync } = await import("../agent-usage-sync");
+      await runAgentUsageSync();
+      return;
+    }
+    const usage = "Usage: tkr usage [--day|--week|--month|--all] [--claude|--codex] [--daily|--json]\n";
+    const n = new Date();
+    const dayStartMs = (daysAgo: number): number => new Date(n.getFullYear(), n.getMonth(), n.getDate() - daysAgo).getTime();
+    const periods: Record<string, { sinceMs: number; subtitle: string }> = {
+      "--day": { sinceMs: dayStartMs(0), subtitle: "today" },
+      "--week": { sinceMs: dayStartMs(6), subtitle: "last 7 days" },
+      "--month": { sinceMs: dayStartMs(29), subtitle: "last 30 days" },
+      "--all": { sinceMs: 0, subtitle: "all time" }
+    };
+    let period: { sinceMs: number; subtitle: string } | undefined;
+    let agent: UsageAgent | undefined;
+    let view: "summary" | "daily" | "json" = "summary";
+    let bad = false;
+    for (const arg of rest) {
+      if (periods[arg] && !period) period = periods[arg];
+      else if ((arg === "--claude" || arg === "--codex") && !agent) agent = arg === "--claude" ? "claude-code" : "codex";
+      else if ((arg === "--daily" || arg === "--json") && view === "summary") view = arg === "--daily" ? "daily" : "json";
+      else bad = true;
+    }
+    if (bad) {
+      process.stderr.write(usage);
+      process.exitCode = 2;
+      return;
+    }
+    const chosen = period ?? periods["--month"]!;
+    const color = Boolean(process.stdout.isTTY) && !process.env.NO_COLOR;
+    let read = 0;
+    let told = false;
+    const rows = scanAgentUsage({
+      sinceMs: chosen.sinceMs,
+      onProgress: (bytes) => {
+        read += bytes;
+        if (!told && read > 256 * 1024 * 1024 && process.stderr.isTTY) {
+          told = true;
+          process.stderr.write("  Reading agent logs once. Later runs only read what is new.\n");
+        }
+      }
+    });
+    const sinceDay = chosen.sinceMs > 0 ? dayKey(Math.floor(chosen.sinceMs / 1000)) : "";
+    const picked = rows.filter((r) => r.day >= sinceDay && (!agent || r.agent === agent));
+    const summary = summarizeUsage(picked);
+    const subtitle = agent ? `${chosen.subtitle} · ${agent === "codex" ? "Codex" : "Claude Code"}` : chosen.subtitle;
+    if (view === "json") {
+      process.stdout.write(usageJson(picked, summary, sinceDay || null));
+      return;
+    }
+    if (view === "daily") {
+      const first = sinceDay || picked[0]?.day || dayKey(Math.floor(n.getTime() / 1000));
+      const days: string[] = [];
+      const cursor = new Date(Number(first.slice(0, 4)), Number(first.slice(5, 7)) - 1, Number(first.slice(8, 10)));
+      const last = dayKey(Math.floor(n.getTime() / 1000));
+      while (days.length < 366) {
+        const key = dayKey(Math.floor(cursor.getTime() / 1000));
+        if (key > last) break;
+        days.push(key);
+        cursor.setDate(cursor.getDate() + 1);
+      }
+      process.stdout.write(renderUsageDaily(summary, { color, subtitle, days: days.slice(-90) }));
+      return;
+    }
+    const gainAgg = await readGain(undefined, Math.floor(chosen.sinceMs / 1000)).catch(() => null);
+    process.stdout.write(renderUsage(summary, { color, subtitle, savedTokens: agent ? undefined : gainAgg?.savedTokens }));
+    const { maybeSpawnAgentUsageSync } = await import("../agent-usage-sync");
+    await maybeSpawnAgentUsageSync();
     return;
   }
   if (cmd === "gain") {

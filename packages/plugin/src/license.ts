@@ -363,6 +363,10 @@ export async function heartbeat(baseUrl: string): Promise<State | null> {
     await flushTelemetry(baseUrl);
     await flush(baseUrl);
   } catch {}
+  try {
+    const { maybeSpawnAgentUsageSync } = await import("./agent-usage-sync");
+    await maybeSpawnAgentUsageSync();
+  } catch {}
   return next;
 }
 
