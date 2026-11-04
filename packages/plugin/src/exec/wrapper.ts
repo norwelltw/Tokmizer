@@ -31,6 +31,10 @@ import { shQuote } from "../shim/sh";
 const MAX_BUFFER_BYTES = 10 * 1024 * 1024;
 const MIN_STDERR_FILTER_BYTES = 1024;
 const ENROLL_KICK_THROTTLE_MS = 60_000;
+
+function shorter(candidate: string, original: string): boolean {
+  return candidate.length < original.length && Buffer.byteLength(candidate, "utf8") < Buffer.byteLength(original, "utf8");
+}
 // Once the direct child has exited, a background descendant may still hold the
 // pipes open. Like a shell, stop waiting after a short quiet period (or a hard
 // cap if it keeps writing) and keep the child's exit code.
@@ -324,15 +328,20 @@ export async function processCapturedOutput(
         resolver,
         exitCode
       });
-      if (errProcessed.failureSummary) {
+      if (errProcessed.failureSummary || errProcessed.output !== stderr) {
         try {
-          stderrOut = await captureForRestore(errProcessed.droppedTail ?? null, errProcessed.output, env);
+          stderrOut = await captureForRestore(errProcessed.droppedTail ?? null, errProcessed.output, env, errProcessed.failureSummary ? {} : { raw: stderrTruncated ? null : stderr, label: statCmdLabel(cmdLine) });
         } catch {
           stderrOut = neutralizeMarkers(errProcessed.output, stderr);
         }
         stderrRawBytes = errProcessed.rawBytes;
         stderrFilteredBytes = errProcessed.filteredBytes;
       }
+    }
+    if (!stderrTruncated && stderr.length > 0 && !shorter(stderrOut, stderr)) {
+      stderrOut = neutralizeMarkers(stderr, stderr);
+      stderrRawBytes = 0;
+      stderrFilteredBytes = 0;
     }
 
     const partialRead = !yolo && processed.output !== stdout && readsFile(cmdLine);
@@ -347,7 +356,7 @@ export async function processCapturedOutput(
           : await captureForRestore(processed.droppedTail ?? null, shown, env, { raw: truncated ? null : stdout, label: statCmdLabel(cmdLine) });
       } catch {}
     }
-    if (!truncated && stdout.length > 0 && Buffer.byteLength(delivered, "utf8") >= Buffer.byteLength(stdout, "utf8")) delivered = neutralizeMarkers(stdout, stdout);
+    if (!truncated && stdout.length > 0 && !shorter(delivered, stdout)) delivered = neutralizeMarkers(stdout, stdout);
     const deliveredStdout = delivered + truncMarker;
     const deliveredStderr = stderrOut + stderrTruncMarker;
     const host = detectHost(env).host;

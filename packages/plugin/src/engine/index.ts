@@ -48,7 +48,7 @@ const EXIT_ONE_IS_FINDINGS =
   /^(?:grep|rg|find|eslint|ruff|flake8|mypy|prettier|biome|black|stylelint)(?:\s|$)|^git\s+(?:diff|grep)\b/;
 
 const FALLBACK_MIN_BYTES = 2048;
-const FAILURE_NOISE_MIN_BYTES = 8192;
+const FAILURE_NOISE_MIN_BYTES = 2048;
 export const READ_FOLD_MIN_BYTES = 32 * 1024;
 
 function failureStripped(output: string, filter: LoadedFilter, verbosity: PipelineOpts["verbosity"]): string {

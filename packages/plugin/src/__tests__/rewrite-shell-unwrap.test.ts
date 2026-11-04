@@ -131,7 +131,11 @@ describe("tool subcommands of interpreters are wrapped, scripts and servers are 
     "php run-tests.php -q tests",
     "php artisan migrate",
     "php artisan test",
-    "/usr/local/bin/php artisan route:list"
+    "/usr/local/bin/php artisan route:list",
+    "python -m pytest -q",
+    "python3 -m mypy app",
+    ".venv/bin/python -m ruff check .",
+    "python3.12 -m unittest discover"
   ])("wraps %s", (cmd) => {
     expect(rewrite(cmd)).toBe(`tkr-exec ${cmd}`);
   });
@@ -152,7 +156,10 @@ describe("tool subcommands of interpreters are wrapped, scripts and servers are 
     "php artisan serve",
     "php artisan tinker",
     "php artisan queue:work",
-    "php -S localhost:8000"
+    "php -S localhost:8000",
+    "python -m http.server 8000",
+    "python3 -m pip install requests",
+    "python manage.py runserver"
   ])("leaves %s untouched", (cmd) => {
     expect(rewrite(cmd)).toBe(cmd);
   });

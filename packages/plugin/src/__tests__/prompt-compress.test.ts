@@ -194,6 +194,20 @@ describe("condenseLogNoise", () => {
     expect(condenseLogNoise(failures)).toEqual(failures);
   });
 
+  it("folds indented progress lines and never an error or warning among them", () => {
+    const compiling = (from: number, n: number) => Array.from({ length: n }, (_, i) => `   Compiling crate${from + i} v0.${i}.0`);
+    const lines = [...compiling(0, 10), "error[E0308]: mismatched types", "warning: unused import", ...compiling(10, 3), "   Compiling broken v1.0.0 failed"];
+    expect(condenseLogNoise(lines)).toEqual([lines[0], "… 7 similar log lines dropped …", lines[8], lines[9], ...lines.slice(10)]);
+  });
+
+  it("folds docker layer progress and finished pulumi resources", () => {
+    const layers = Array.from({ length: 9 }, (_, i) => `a1b2c3d4e5f${i}: Pull complete`);
+    expect(condenseLogNoise(layers)).toEqual([layers[0], "… 6 similar log lines dropped …", layers[7], layers[8]]);
+    const rows = Array.from({ length: 9 }, (_, i) => ` +   ├─ aws:s3:Bucket   svc-${i}-bucket   created (${i + 1}s)`);
+    const failed = " +   ├─ aws:s3:Bucket   svc-9-bucket   **creating failed**     1 error";
+    expect(condenseLogNoise([...rows, failed])).toEqual([rows[0], "… 6 similar log lines dropped …", rows[7], rows[8], failed]);
+  });
+
   it("folds unlevelled lines that only differ by numbers", () => {
     const rows = Array.from({ length: 12 }, (_, i) => `processed row ${i} of 12`);
     expect(condenseLogNoise(rows)).toEqual([rows[0], "… 9 similar log lines dropped …", rows[10], rows[11]]);

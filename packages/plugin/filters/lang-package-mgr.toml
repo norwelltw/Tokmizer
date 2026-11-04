@@ -106,3 +106,13 @@ strip_ansi = true
 transform = "squeeze-output"
 max_lines = 200
 keep_failures = true
+
+[filters.pdm]
+description = "Compact pdm install/sync/add (drop per-package install lines, keep errors and the summary)"
+match_command = "^pdm\\s+(?:install|sync|add|update|remove|lock)(?:\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^\\s*[✔✓] (?:Install|Update|Remove|Uninstall) ", "^\\s*$"]
+keep_failures = true
+strip_on_failure = true
+max_lines = 120

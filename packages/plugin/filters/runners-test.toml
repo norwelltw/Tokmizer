@@ -157,3 +157,32 @@ strip_on_failure = true
 transform = "bun-frames"
 transform_on_failure = true
 drop_lines_matching = ["^bun test v\\d+\\.\\d+\\.\\d+ \\([0-9a-f]+\\)$"]
+
+[filters.mocha]
+description = "Compact mocha runs (drop passing tests, keep failures and the summary)"
+match_command = "^mocha(?:\\s|$)|^npx\\s+mocha(?:\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^\\s*[✓✔]\\s", "^\\s*$"]
+keep_failures = true
+max_lines = 200
+
+[filters.swift-test]
+description = "Compact swift test (drop passing cases and build progress, keep failures and the summary)"
+match_command = "^swift\\s+test(?:\\s|$)"
+priority = 65
+strip_ansi = true
+strip_lines_matching = ["^Test Case '.*' (?:started|passed)", "^\\[\\d+/\\d+\\] (?:Compiling|Emitting|Linking|Write|Build|Planning)", "^\\s*$"]
+keep_failures = true
+strip_on_failure = true
+max_lines = 200
+
+[filters.tox]
+description = "Compact tox / nox sessions (drop install noise, keep test results and the session summary)"
+match_command = "^(?:tox|nox)(?:\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^\\S+: (?:install_deps|install_package_deps|install_package|packaging|venv)>", "^nox > (?:Running session|Creating virtual environment|python -m pip install|pip install)", "^\\s*$"]
+keep_failures = true
+strip_on_failure = true
+max_lines = 200

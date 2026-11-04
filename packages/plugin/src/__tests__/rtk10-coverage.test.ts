@@ -273,7 +273,8 @@ describe("findings and failures stay fully visible", () => {
     ["phpt-fail.txt", "php run-tests.php -q tests", 1, /^PASS .*\.phpt\]\s*$|^(?:PHP|PHP_SAPI|PHP_VERSION|ZEND_VERSION|PHP_OS|INI actual|More \.INIs|CWD|Extra dirs|VALGRIND)\s*:|^TIME (?:START|END) |^Exts (?:skipped|tested)|^[=-]{20,}$/],
     ["phpstan-fail.txt", "vendor/bin/phpstan analyse", 1, /^\s*\d+\/\d+ \[|^Note: Using configuration file |^\s*-{3,}\s+-{3,}\s*$/],
     ["bun-test-fail.txt", "bun test", 1, /^\(pass\) |^bun test v\d+\.\d+\.\d+ \([0-9a-f]+\)$|^\d+ \| |^\s+\^\s*$/],
-    ["pulumi-up-fail.txt", "pulumi up --yes", 255, /^@ |^View in Browser|^\s*Type\s+Name\s+(?:Status|Plan)/]
+    ["pulumi-up-fail.txt", "pulumi up --yes", 255, /^@ |^View in Browser|^\s*Type\s+Name\s+(?:Status|Plan)|\s(?:created|updated|deleted|replaced|refreshed|read|same) \(\d+s\)$/],
+    ["uv-sync-fail.txt", "uv sync", 1, /^\s*(?:Downloaded|Compiling) \S+ v\d|^\s*cargo:rustc-[a-z-]+=/]
   ])("%s drops only passing noise", async (file, cmd, exit, noise) => {
     for (const verbosity of ["normal", "compact"] as const) {
       const raw = fixture(file);
@@ -290,7 +291,6 @@ describe("findings and failures stay fully visible", () => {
     ["ast-grep-scan-fail.txt", "ast-grep scan", 1],
     ["golangci-lint-fail.txt", "golangci-lint run", 1],
     ["rubocop-fail.txt", "bundle exec rubocop", 1],
-    ["uv-sync-fail.txt", "uv sync", 1],
     ["mypy-fail.txt", "mypy app.py", 1]
   ])("%s keeps every line", async (file, cmd, exit) => {
     for (const verbosity of ["normal", "compact"] as const) {

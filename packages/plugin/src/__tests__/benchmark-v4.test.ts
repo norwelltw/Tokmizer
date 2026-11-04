@@ -43,7 +43,7 @@ const CASES: Case[] = [
   { name: "deno-test-green", cmd: "deno test", exit: 0, slug: "deno", minSaved: 0.45, noise: /^\s*$|^Check |^running \d+ tests? from |\.\.\. ok \(/ },
   { name: "deno-lint", cmd: "deno lint", exit: 1, slug: "deno", minSaved: 0.4, noise: /^\s*$/ },
   { name: "pulumi-preview", cmd: "pulumi preview", exit: 0, slug: "pulumi", minSaved: 0.02, noise: /^\s*$|^View in Browser|^\s*Type\s+Name\s+Plan/ },
-  { name: "pulumi-up-fail", cmd: "pulumi up --yes", exit: 255, slug: "pulumi", minSaved: 0.02, noise: /^\s*$|^View in Browser|^\s*Type\s+Name\s+Status/ },
+  { name: "pulumi-up-fail", cmd: "pulumi up --yes", exit: 255, slug: "pulumi", minSaved: 0.85, noise: /^\s*$|^View in Browser|^\s*Type\s+Name\s+Status|\s(?:created|updated|deleted|replaced|refreshed|read|same) \(\d+s\)$/ },
   { name: "composer-install-fail", cmd: "composer install", exit: 1, slug: "composer", minSaved: 0.9, noise: /^\s*-\s+(?:Installing|Downloading) |^\s*$/ },
   { name: "phpunit-fail", cmd: "phpunit", exit: 1, slug: "phpunit", minSaved: 0.4, noise: /^(?:Runtime|Configuration):\s|^[.SIRDWFEN]+\s+\d+ \/ \d+ \(\s*\d+%\)$|^\s*$/ },
   { name: "phpstan", cmd: "phpstan analyse src", exit: 1, slug: "phpstan", minSaved: 0.38, noise: /^\s*\d+\/\d+ \[|^\s*-{3,}\s+-{3,}\s*$|^\s*$/ },

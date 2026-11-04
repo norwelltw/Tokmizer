@@ -318,7 +318,7 @@ async function processAsExec(run: ExecEquivalent, payload: Payload, yolo: boolea
     if (options.deferAccounting) options.deferAccounting(commit);
     else await commit();
   }
-  if (unchanged || (rawBytes > 0 && Buffer.byteLength(merged, "utf8") >= rawBytes)) return null;
+  if (unchanged || (rawBytes > 0 && (Buffer.byteLength(merged, "utf8") >= rawBytes || merged.length >= raw.length))) return null;
   maybeNoteFirstSave(rawBytes, Buffer.byteLength(merged, "utf8"));
   return merged;
 }

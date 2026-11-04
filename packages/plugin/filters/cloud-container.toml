@@ -72,3 +72,20 @@ strip_lines_matching = [
 ]
 max_lines = 100
 on_empty = "brew: ok"
+
+[filters.docker-build]
+description = "Compact docker build / pull (drop layer and BuildKit progress, keep steps, errors and the final image)"
+match_command = "^docker\\s+(?:(?:buildx\\s+)?build|pull|compose\\s+(?:build|pull|up))(?:\\s|$)|^docker-compose\\s+(?:build|pull|up)(?:\\s|$)"
+priority = 65
+strip_ansi = true
+strip_lines_matching = [
+  "^#\\d+ (?:DONE|CACHED)\\b",
+  "^#\\d+ (?:sha256:|resolve |extracting |transferring |exporting layers|writing image|naming to|load build definition|load \\.dockerignore|load metadata)",
+  "^\\s*=> => (?:sha256:|resolve |extracting |transferring |exporting layers|writing image|naming to)",
+  "^[0-9a-f]{12}: (?:Pulling fs layer|Waiting|Verifying Checksum|Download complete|Pull complete|Already exists|Downloading|Extracting)",
+  "^\\s*$"
+]
+strip_on_failure = true
+keep_failures = true
+truncate_lines_at = 220
+max_lines = 150

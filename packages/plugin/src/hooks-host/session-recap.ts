@@ -45,7 +45,20 @@ export async function handleSessionStart(payload: SessionStartPayload): Promise<
     pruneSessions();
   } catch {}
   if (payload.session_id && payload.source !== "startup") forgetSession(payload.session_id);
-  return recapForSessionStart(payload);
+  const recap = await recapForSessionStart(payload);
+  const note = payload.source !== "resume" && (await compressionOn()) ? RESTORE_NOTE : null;
+  return [recap, note].filter((part): part is string => part !== null).join("\n\n") || null;
+}
+
+export const RESTORE_NOTE = "Tokmizer shortens long command output. A line `[tkr restore <id>]` marks a cut: run `tkr restore <id>` (or add `--lines a:b`) to read the full text instead of re-running the command.";
+
+async function compressionOn(): Promise<boolean> {
+  try {
+    const { loadSettingsCache } = await import("../settings-cache");
+    return (await loadSettingsCache()).enabled;
+  } catch {
+    return false;
+  }
 }
 
 const entry = process.argv[1] ?? "";

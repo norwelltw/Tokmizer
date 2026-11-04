@@ -188,3 +188,27 @@ match_command = "^php\\s+-l(?:\\s|$)"
 priority = 66
 strip_lines_matching = ["^No syntax errors detected in "]
 on_empty = "php -l: no syntax errors"
+
+[filters.pylint]
+description = "Compact pylint output (keep every message with its location, drop separators and the score banner padding)"
+match_command = "^pylint(?:\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^-{5,}\\s*$", "^\\s*$"]
+on_empty = "pylint: no issues"
+
+[filters.flake8]
+description = "Compact flake8 output (keep every diagnostic, drop source snippets)"
+match_command = "^flake8(?:\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^\\s+\\^\\s*$", "^\\s*$"]
+on_empty = "flake8: no issues"
+
+[filters.stylelint]
+description = "Compact stylelint output (keep every warning with its file)"
+match_command = "^stylelint(?:\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^\\s*$"]
+on_empty = "stylelint: no issues"

@@ -51,6 +51,7 @@ import { rtkMigrationHint } from "../migrate/migrate-rtk";
 import { loadRtkImport, renderRtkImportLine } from "../migrate/rtk-history";
 
 const BASE_URL = baseUrlFromEnv();
+const WATCH_SECONDS = 2;
 
 async function bonusDoctorLines(): Promise<string[]> {
   const { AGENT_BONUSES, powerInstalled, reducerInstalled } = await import("../agent-bonuses");
@@ -163,7 +164,10 @@ function help(): void {
       "       [--json|--csv|--graph|--history]  JSON, one CSV row per day, per-day bar chart, last 20 commands",
       "       [--by-rule|--failures]       savings per rule, commands left unchanged",
       "       [--quota [pro|5x|20x]]       estimated share of a Claude plan budget (default pro, last 30 days)",
+      "       [--watch]                    live view in your terminal, refreshed every 2 seconds",
       "  session                           this session's tkr coverage",
+      "  learn [--all] [--since <days>]    commands the agent got wrong then fixed, from Claude Code history",
+      "        [--min <count>] [--write]   only pairs seen that often (default 2); save .claude/rules/tkr-command-corrections.md",
       "  restore <hash>                    re-fetch the full output behind a [tkr restore …] hint",
       "          [--lines a:b] [--grep re] only some lines of it",
       "  restore --list | --grep <re>      list or search this project's cached outputs",
@@ -1169,7 +1173,7 @@ async function main(): Promise<void> {
     return;
   }
   if (cmd === "gain") {
-    const usage = "Usage: tkr gain [--day|--week|--month] [--project [path]] [--json] [--csv|--graph|--history|--by-rule|--failures|--quota [pro|5x|20x]]\n";
+    const usage = "Usage: tkr gain [--day|--week|--month] [--project [path]] [--json] [--csv|--graph|--history|--by-rule|--failures|--quota [pro|5x|20x]|--watch]\n";
     const n = new Date();
     const dayStart = (daysAgo: number): number =>
       Math.floor(new Date(n.getFullYear(), n.getMonth(), n.getDate() - daysAgo).getTime() / 1000);
@@ -1185,6 +1189,7 @@ async function main(): Promise<void> {
     let period: { since: number; subtitle: string; daily: boolean } | undefined;
     let mode: string | undefined;
     let json = false;
+    let watch = false;
     let tier: QuotaTier = "pro";
     let project: string | undefined;
     let bad = false;
@@ -1192,6 +1197,7 @@ async function main(): Promise<void> {
       const arg = rest[i]!;
       if (periodFlags[arg] && !period) period = periodFlags[arg];
       else if (arg === "--json" && !json) json = true;
+      else if (arg === "--watch" && !watch) watch = true;
       else if (modeFlags.has(arg) && !mode) {
         mode = arg;
         const next = rest[i + 1];
@@ -1207,8 +1213,13 @@ async function main(): Promise<void> {
         project = normalizeProject(explicit ? next : process.cwd());
       } else bad = true;
     }
-    if (bad || (json && mode != null && !["--by-rule", "--failures", "--quota"].includes(mode))) {
+    if (bad || (json && mode != null && !["--by-rule", "--failures", "--quota"].includes(mode)) || (watch && (json || mode != null))) {
       process.stderr.write(usage);
+      process.exitCode = 1;
+      return;
+    }
+    if (watch && !process.stdout.isTTY) {
+      process.stderr.write("tkr gain --watch needs a terminal. Run it in your own shell, not through an agent.\n");
       process.exitCode = 1;
       return;
     }
@@ -1263,72 +1274,106 @@ async function main(): Promise<void> {
       process.stdout.write(renderHistory(await readHistory(undefined, sinceTs, project), { color, subtitle: scopeLabel }) + projectNote);
       return;
     }
-    const [agg, gainState, today, week] = await Promise.all([
-      readGain(undefined, sinceTs, project),
-      loadState(),
-      period ? undefined : readGain(undefined, dayStart(0), project),
-      period ? undefined : readGain(undefined, dayStart(6), project)
-    ]);
-    const agentPeriod = (g: Awaited<ReturnType<typeof readGain>>) => ({
-      savedTokens: g.agent ? g.agent.rawTokens - g.agent.filteredTokens : g.observed?.savedTokens ?? g.savedTokens,
-      count: g.agent?.count ?? g.count
-    });
-    const periods = today && week ? [
-      { label: "Today", ...agentPeriod(today) },
-      { label: "Last 7 days", ...agentPeriod(week) }
-    ] : undefined;
-    const price = effectivePricePerMtok(agg.savedByProvider);
-    const linked = gainState?.linked ?? (Boolean(gainState?.jwt) && gainState?.plan !== "free");
-    const cacheStats = await contentCacheStats().catch(() => null);
-    const restoreCache = cacheStats ? { entries: cacheStats.entries, bytes: cacheStats.bytes, kept: retentionLabel() } : undefined;
-    let out = renderGain(agg, { color, pricePerMtok: price, subtitle: scopeLabel, periods, restoreCache });
-    const rtkImport = !period && !project ? await loadRtkImport() : null;
-    if (rtkImport) out += renderRtkImportLine(rtkImport);
-    if (project) out += (agg.count === 0 ? "\n" : "") + projectNote;
-    if (!linked) out += "  Not linked: run tkr link to see these on your dashboard.\n";
-    if (showDaily) {
-      const table = renderDaily(await readDaily(undefined, sinceTs, project), { color });
-      if (table) out += "\n" + table;
-    }
-    if (gainState?.relinkRequired) {
-      out += "  ⚠ dashboard link lost — run: tkr link <your-token> (from tokmizer.com/dashboard)\n";
-    }
-    if (gainState?.updateRequired) {
-      out += "  ⚠ plugin update required — run: /tkr-update\n";
-    } else if (isOlderVersion(PLUGIN_VERSION, gainState?.latestPluginVersion)) {
-      out += `  ⚠ you run v${PLUGIN_VERSION}, v${gainState?.latestPluginVersion} is out — older versions undercount savings. Run /tkr-update, then RESTART Claude Code.\n`;
-    }
-    if (gainState?.clockSkewDetected) {
-      out += "  ⚠ system clock looks off — sync it, then run: tkr heartbeat\n";
-    }
-    const builtinRules = async (): Promise<number | null> => {
-      const { defaultRulesRuntime } = await import("../default-rules");
-      return defaultRulesRuntime()?.ruleCount ?? null;
-    };
-    try {
-      const { connectDaemon } = await import("../daemon/client");
-      const client = await connectDaemon();
-      const info = await client.ping();
-      client.close();
-      let cachedRules: number | null = null;
-      if (info.ruleCount === 0) {
-        const { runtimeFromCache } = await import("../daemon/runtime");
-        cachedRules = (await runtimeFromCache())?.ruleCount ?? null;
+    const render = async (): Promise<string> => {
+      const [agg, gainState, today, week] = await Promise.all([
+        readGain(undefined, sinceTs, project),
+        loadState(),
+        period ? undefined : readGain(undefined, dayStart(0), project),
+        period ? undefined : readGain(undefined, dayStart(6), project)
+      ]);
+      const agentPeriod = (g: Awaited<ReturnType<typeof readGain>>) => ({
+        savedTokens: g.agent ? g.agent.rawTokens - g.agent.filteredTokens : g.observed?.savedTokens ?? g.savedTokens,
+        count: g.agent?.count ?? g.count
+      });
+      const periods = today && week ? [
+        { label: "Today", ...agentPeriod(today) },
+        { label: "Last 7 days", ...agentPeriod(week) }
+      ] : undefined;
+      const price = effectivePricePerMtok(agg.savedByProvider);
+      const linked = gainState?.linked ?? (Boolean(gainState?.jwt) && gainState?.plan !== "free");
+      const cacheStats = await contentCacheStats().catch(() => null);
+      const restoreCache = cacheStats ? { entries: cacheStats.entries, bytes: cacheStats.bytes, kept: retentionLabel() } : undefined;
+      let out = renderGain(agg, { color, pricePerMtok: price, subtitle: scopeLabel, periods, restoreCache });
+      const rtkImport = !period && !project ? await loadRtkImport() : null;
+      if (rtkImport) out += renderRtkImportLine(rtkImport);
+      if (project) out += (agg.count === 0 ? "\n" : "") + projectNote;
+      if (!linked) out += "  Not linked: run tkr link to see these on your dashboard.\n";
+      if (showDaily) {
+        const table = renderDaily(await readDaily(undefined, sinceTs, project), { color });
+        if (table) out += "\n" + table;
       }
-      out += engineNotice(info.ruleCount, cachedRules, info.ruleCount === 0 ? await builtinRules() : null);
-    } catch {
-      const { runtimeFromCache } = await import("../daemon/runtime");
-      const cached = await runtimeFromCache();
-      out += engineNotice(null, cached ? cached.ruleCount : null, await builtinRules());
+      if (gainState?.relinkRequired) {
+        out += "  ⚠ dashboard link lost — run: tkr link <your-token> (from tokmizer.com/dashboard)\n";
+      }
+      if (gainState?.updateRequired) {
+        out += "  ⚠ plugin update required — run: /tkr-update\n";
+      } else if (isOlderVersion(PLUGIN_VERSION, gainState?.latestPluginVersion)) {
+        out += `  ⚠ you run v${PLUGIN_VERSION}, v${gainState?.latestPluginVersion} is out — older versions undercount savings. Run /tkr-update, then RESTART Claude Code.\n`;
+      }
+      if (gainState?.clockSkewDetected) {
+        out += "  ⚠ system clock looks off — sync it, then run: tkr heartbeat\n";
+      }
+      const builtinRules = async (): Promise<number | null> => {
+        const { defaultRulesRuntime } = await import("../default-rules");
+        return defaultRulesRuntime()?.ruleCount ?? null;
+      };
+      try {
+        const { connectDaemon } = await import("../daemon/client");
+        const client = await connectDaemon();
+        const info = await client.ping();
+        client.close();
+        let cachedRules: number | null = null;
+        if (info.ruleCount === 0) {
+          const { runtimeFromCache } = await import("../daemon/runtime");
+          cachedRules = (await runtimeFromCache())?.ruleCount ?? null;
+        }
+        out += engineNotice(info.ruleCount, cachedRules, info.ruleCount === 0 ? await builtinRules() : null);
+      } catch {
+        const { runtimeFromCache } = await import("../daemon/runtime");
+        const cached = await runtimeFromCache();
+        out += engineNotice(null, cached ? cached.ruleCount : null, await builtinRules());
+      }
+      const hint = await telemetryHintLine();
+      if (hint) out += `  ${hint}\n`;
+      for (const notice of (await noticeLines()).slice(1)) out += `${notice.split("\n").map((l) => `  ${l}`).join("\n")}\n`;
+      return out + "\n";
+    };
+    if (!watch) {
+      process.stdout.write(await render());
+      return;
     }
-    const hint = await telemetryHintLine();
-    if (hint) out += `  ${hint}\n`;
-    for (const notice of (await noticeLines()).slice(1)) out += `${notice.split("\n").map((l) => `  ${l}`).join("\n")}\n`;
-    process.stdout.write(out + "\n");
-    return;
+    for (;;) {
+      process.stdout.write(`\x1b[H\x1b[2J${await render()}  Refreshing every ${WATCH_SECONDS}s. Ctrl+C to quit.\n`);
+      await new Promise((done) => setTimeout(done, WATCH_SECONDS * 1000));
+    }
   }
   if (cmd === "session") {
     process.stdout.write(renderSession(readSession()) + "\n");
+    return;
+  }
+  if (cmd === "learn") {
+    const { learnCorrections, renderCorrections, transcriptFiles, writableCorrections, writeRules } = await import("../cli-corrections");
+    const number = (flag: string, fallback: number): number | null => {
+      const i = rest.indexOf(flag);
+      if (i < 0) return fallback;
+      const value = Number(rest[i + 1]);
+      return Number.isInteger(value) && value > 0 ? value : null;
+    };
+    const known = new Set(["--all", "--write", "--since", "--min"]);
+    const sinceDays = number("--since", 30);
+    const minCount = number("--min", 2);
+    const unknown = rest.filter((a, i) => !known.has(a) && !(i > 0 && (rest[i - 1] === "--since" || rest[i - 1] === "--min")));
+    if (sinceDays === null || minCount === null || unknown.length) {
+      process.stderr.write("Usage: tkr learn [--all] [--since <days>] [--min <count>] [--write]\n");
+      process.exitCode = 1;
+      return;
+    }
+    const files = transcriptFiles({ cwd: process.cwd(), all: rest.includes("--all"), sinceDays });
+    const found = learnCorrections(files, minCount).slice(0, 20);
+    process.stdout.write(renderCorrections(found, files.length));
+    const safe = writableCorrections(found).slice(0, 10);
+    if (rest.includes("--write") && safe.length) process.stdout.write(`Wrote ${writeRules(process.cwd(), safe)}\n`);
+    else if (rest.includes("--write") && found.length) process.stdout.write("Nothing written: every correction contains a masked secret, a backtick or a control character.\n");
     return;
   }
   if (cmd === "discover") {

@@ -327,7 +327,7 @@ describe("gain CLI report flags", () => {
     for (const args of [["--csv", "--json"], ["--graph", "--json"], ["--by-rule", "--failures"], ["--quota", "10x"], ["--quota", "--csv"], ["--day", "--week"], ["--graph", "--history"], ["--bogus"], ["--project", "--project"]]) {
       const result = run("gain", ...args);
       expect(result.status).toBe(1);
-      expect(result.stderr).toBe("Usage: tkr gain [--day|--week|--month] [--project [path]] [--json] [--csv|--graph|--history|--by-rule|--failures|--quota [pro|5x|20x]]\n");
+      expect(result.stderr).toBe("Usage: tkr gain [--day|--week|--month] [--project [path]] [--json] [--csv|--graph|--history|--by-rule|--failures|--quota [pro|5x|20x]|--watch]\n");
     }
   });
 });

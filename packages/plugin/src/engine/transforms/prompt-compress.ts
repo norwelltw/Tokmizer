@@ -34,8 +34,17 @@ const NOISE_RUN_MIN = 8;
 const NOISE_KEEP_HEAD = 1;
 const NOISE_KEEP_TAIL = 2;
 
+const PROGRESS_LINE = /^(\s*)(?:Downloaded|Downloading|Compiling|Fetching|Fetched|Installing|Installed|Collecting|Using cached|Requirement already satisfied:|Unpacking|Preparing|Pulling fs layer|Pull complete|Already exists|Download complete|Verifying Checksum|Waiting|Extracting|Get:\d+|Hit:\d+|Ign:\d+|Setting up|Selecting previously unselected package|Progress: resolved|cargo:rustc-[a-z-]+=)/;
+const LAYER_PROGRESS = /^[0-9a-f]{12}: (?:Pulling fs layer|Waiting|Downloading|Verifying Checksum|Download complete|Extracting|Pull complete|Already exists)\b/;
+const RESOURCE_DONE = /^\s*[-+~]\s+[├└│ ─]*\S+:\S+\s+\S+\s+(?:created|updated|deleted|replaced|refreshed|read|same)\s\(\d+s\)\s*$/;
+
 function noiseKey(line: string): string | null {
-  if (line.trim() === "" || /^\s/.test(line) || LOG_FAILURE.test(line) || WARNING.test(line) || EXCEPTION_RE.test(line)) return null;
+  if (line.trim() === "" || LOG_FAILURE.test(line) || WARNING.test(line) || EXCEPTION_RE.test(line)) return null;
+  const progress = PROGRESS_LINE.exec(line);
+  if (progress) return `\u0000progress${progress[1]}`;
+  if (LAYER_PROGRESS.test(line)) return "\u0000layer";
+  if (RESOURCE_DONE.test(line)) return "\u0000resource-done";
+  if (/^\s/.test(line)) return null;
   const body = line.replace(TIMESTAMP_PREFIX, "");
   if (VERBOSE_LEVEL_PREFIX.test(body) || PY_LOGGING_PREFIX.test(body)) return "\u0000verbose";
   return line.replace(/\d+/g, "#");

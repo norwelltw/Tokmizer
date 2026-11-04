@@ -4,7 +4,7 @@ import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "no
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { TELEMETRY_NOTICE, telemetryNoticeLine, telemetryNoticeMarker } from "../telemetry-hint";
-import { sessionStartOutput } from "../hooks-host/session-recap";
+import { RESTORE_NOTE, sessionStartOutput } from "../hooks-host/session-recap";
 import { setNetwork } from "../network";
 
 let dir: string;
@@ -144,18 +144,18 @@ describe("session start channel", () => {
   it("prints the notice at the first session of a fresh install, before any enrollment, then never again", () => {
     const first = sessionStart();
     expect(first.status).toBe(0);
-    expect(JSON.parse(first.stdout)).toEqual({ systemMessage: TELEMETRY_NOTICE });
-    expect(sessionStart().stdout).toBe("");
+    expect(JSON.parse(first.stdout)).toEqual({ systemMessage: TELEMETRY_NOTICE, hookSpecificOutput: { hookEventName: "SessionStart", additionalContext: RESTORE_NOTE } });
+    expect(sessionStart().stdout).toBe(RESTORE_NOTE);
   });
 
   it("prints the notice at the first session after an upgrade, then never again", () => {
     seedState("0.9.57");
     const first = sessionStart();
     expect(first.status).toBe(0);
-    expect(JSON.parse(first.stdout)).toEqual({ systemMessage: TELEMETRY_NOTICE });
+    expect(JSON.parse(first.stdout)).toEqual({ systemMessage: TELEMETRY_NOTICE, hookSpecificOutput: { hookEventName: "SessionStart", additionalContext: RESTORE_NOTE } });
     const second = sessionStart();
     expect(second.status).toBe(0);
-    expect(second.stdout).toBe("");
+    expect(second.stdout).toBe(RESTORE_NOTE);
     const status = run("status");
     expect(status.stdout).not.toContain(TELEMETRY_NOTICE);
   });

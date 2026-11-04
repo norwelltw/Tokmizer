@@ -5,7 +5,7 @@ export type ReducerContextKind = "session" | "prompt";
 export type ReducerContext = { level: string; text: string };
 
 export function reducerReminder(level: string): string {
-  return `TKR REDUCER ACTIVE (${level}). Compact response style stays on this turn. Code/commits/errors/security: write normal.`;
+  return `TKR REDUCER ACTIVE (${level}), still on.`;
 }
 
 export async function reducerContext(kind: ReducerContextKind): Promise<ReducerContext | null> {

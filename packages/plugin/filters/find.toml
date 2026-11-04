@@ -6,3 +6,11 @@ transform = "smart-find"
 strip_lines_matching = ["^find:.*Permission denied", "^find:.*Operation not permitted"]
 max_lines = 2000
 on_empty = "find: no matches"
+
+[filters.fd]
+description = "Compact fd output (group paths by directory like find)"
+match_command = "^(?:fd|fdfind)(?:\\s|$)"
+priority = 60
+transform = "smart-find"
+max_lines = 2000
+on_empty = "fd: no matches"

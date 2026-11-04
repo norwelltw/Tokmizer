@@ -28,10 +28,12 @@ describe("Max repeated diagnostic output", () => {
     expect(result.droppedTail).toBe(input);
   });
 
-  it.each(["normal", "compact"] as const)("keeps the complete failure output in %s", async (verbosity) => {
+  it.each(["normal", "compact"] as const)("folds a long run of identical log lines and keeps the whole diagnostic in %s", async (verbosity) => {
     useFilter();
     const input = progress.repeat(100) + diagnostic;
-    expect((await processOutput("npm test", input, null, { verbosity, exitCode: 1 })).output).toBe(input);
+    const result = await processOutput("npm test", input, null, { verbosity, exitCode: 1 });
+    expect(result.output).toBe(progress + "… 97 similar log lines dropped …\n" + progress.repeat(2) + diagnostic);
+    expect(result.droppedTail).toBe(input);
   });
 
   it.each([

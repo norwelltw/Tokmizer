@@ -174,3 +174,22 @@ strip_ansi = true
 strip_lines_matching = ["^\\s*$"]
 max_lines = 100
 keep_failures = true
+
+[filters.dart-test]
+description = "Compact dart / flutter test (drop passing progress lines, keep failures and the final result)"
+match_command = "^(?:dart|flutter)\\s+test(?:\\s|$)"
+priority = 65
+strip_ansi = true
+strip_lines_matching = ["^\\d{2}:\\d{2} \\+\\d+(?: ~\\d+)?: (?!.*(?:\\[E\\]|Some tests failed|All tests passed))", "^\\s*$"]
+keep_failures = true
+max_lines = 200
+
+[filters.nix]
+description = "Compact nix build / develop / nixos-rebuild (drop store copy and fetch progress, keep errors and results)"
+match_command = "^nix\\s+(?:build|develop|run|flake\\s+(?:check|update))(?:\\s|$)|^nix-build(?:\\s|$)|^nixos-rebuild(?:\\s|$)|^darwin-rebuild(?:\\s|$)|^home-manager\\s+switch(?:\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = ["^copying path '", "^building '/nix/store/", "^(?:downloading|fetching) '", "^\\s+/nix/store/[a-z0-9]{32}-\\S+$", "^\\s*$"]
+keep_failures = true
+strip_on_failure = true
+max_lines = 150

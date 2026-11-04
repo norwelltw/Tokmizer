@@ -7,7 +7,8 @@ import { fileURLToPath } from "node:url";
 import { dirname, join, resolve, win32 } from "node:path";
 import { parse as parseToml } from "smol-toml";
 import { recordUsageSync } from "../usage";
-import { singleBinary } from "../self-command";
+import { selfInvocation, singleBinary } from "../self-command";
+import { shQuote } from "../shim/sh";
 import { execUsable } from "./exec-health";
 import { claudeShellNames, resolvableHead, shadowedByShell, type ShellNames } from "./shell-heads";
 
@@ -45,6 +46,7 @@ const INTERPRETER_TOOL_RE = new RegExp(
   `|bun\\s+run\\s+(?!${LONG_RUNNING}(?:\\s|$))[A-Za-z0-9:_-]+(?:\\s|$)` +
   "|deno\\s+(?:test|lint|fmt|check|compile|install|info|doc|bench|outdated)(?:\\s|$)" +
   `|deno\\s+task\\s+(?!${LONG_RUNNING}(?:\\s|$))[A-Za-z0-9:_-]+(?:\\s|$)` +
+  "|python[0-9.]*\\s+-m\\s+(?:pytest|unittest|mypy|ruff|pylint|flake8|black|tox|nox)(?:\\s|$)" +
   "|php\\s+-l(?:\\s|$)" +
   "|php\\s+(?:\\S*/)?(?:phpunit|pest|paratest|phpstan|pint|ecs|php-cs-fixer|psalm|rector|run-tests\\.php)(?:\\s|$)" +
   "|php\\s+artisan\\s+(?!(?:serve|tinker|queue:work|queue:listen|horizon|octane:start|reverb:start|schedule:work|pail|dev)(?:\\s|$))\\S" +
@@ -552,6 +554,8 @@ export function buildPreToolUseOutput(
   const cwd = typeof cwdField === "string" && cwdField ? cwdField : undefined;
   const sessionId = typeof payload.session_id === "string" && payload.session_id ? payload.session_id : "unknown";
   const permissionMode = typeof payload.permission_mode === "string" ? payload.permission_mode : undefined;
+  const restore = host === "claude-code" ? bundledRestore(cmd, cwd, pathEnv) : null;
+  if (restore) return JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", updatedInput: { ...input, command: restore } } });
   const decision = rewriteShellDecision(cmd, { host, sessionId, cwd, claudeDirs, pathEnv, permissionMode }, exec, recordUsage);
   if (!decision) return null;
   const updatedInput = { ...input, command: decision.command };
@@ -567,7 +571,21 @@ export function buildPreToolUseOutput(
   });
 }
 
-const RESTRICTING_LAUNCH_FLAG_RE = /(?:^|\s)--(?:disallowedTools|disallowed-tools|settings|setting-sources)(?:[=\s]|$)/;
+const RESTORE_CMD_RE = /^tkr\s+restore\s+([0-9a-f]{8,64}(?:\s+--lines\s+\d+:\d+)?|--list)\s*$/;
+
+export function bundledRestore(
+  cmd: string,
+  cwd: string | undefined,
+  pathEnv: string | undefined,
+  script: string = join(dirname(fileURLToPath(import.meta.url)), "..", "bin", "tkr.js")
+): string | null {
+  const match = RESTORE_CMD_RE.exec(cmd.trim());
+  if (!match || resolvableHead("tkr", cwd, pathEnv)) return null;
+  if (!singleBinary() && !existsSync(script)) return null;
+  return `${selfInvocation(script).map(shQuote).join(" ")} restore ${match[1]!.trim()}`;
+}
+
+const RESTRICTING_LAUNCH_FLAG_RE =/(?:^|\s)--(?:disallowedTools|disallowed-tools|settings|setting-sources)(?:[=\s]|$)/;
 
 export function claudeLaunchArgs(env: NodeJS.ProcessEnv = process.env, platform: NodeJS.Platform = process.platform): string | null {
   const pid = Number(env.CLAUDE_PID) || process.ppid;

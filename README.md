@@ -214,7 +214,9 @@ Your deny and ask rules, `--disallowedTools`, `--settings`, managed policies and
 | `/tkr-unlink` | `tkr unlink` | detach this machine from the account |
 | `/tkr-update` | npm, brew or auto-update | latest version |
 
-Also in the terminal: `tkr restore`, `tkr doctor [--fix]`, `tkr discover`, `tkr session`, `tkr network`, `tkr filters`, `tkr migrate rtk`, `tkr setup`, `tkr uninstall`. `tkr help` lists everything.
+Also in the terminal: `tkr restore`, `tkr doctor [--fix]`, `tkr discover`, `tkr session`, `tkr learn`, `tkr gain --watch`, `tkr network`, `tkr filters`, `tkr migrate rtk`, `tkr setup`, `tkr uninstall`. `tkr help` lists everything.
+
+`tkr learn` reads this project's Claude Code history and lists commands the agent got wrong, then fixed (a wrong flag, a missing module, a zsh quirk). `tkr learn --write` saves them to `.claude/rules/tkr-command-corrections.md` so the agent runs the working form first. Nothing leaves your machine. `tkr gain --watch` keeps the savings view open and refreshes it every 2 seconds.
 
 ## Compression modes
 

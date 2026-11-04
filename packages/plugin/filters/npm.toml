@@ -5,10 +5,18 @@ priority = 60
 strip_ansi = true
 strip_lines_matching = [
   "^npm WARN",
+  "^npm warn deprecated",
   "^npm notice",
   "^npm fund",
   "^npm audit",
   "^Already up-to-date",
+  "^Progress: resolved \\d+",
+  "^\\+{8,}",
+  "^ WARN  (?:deprecated|\\d+ deprecated subdependencies)",
+  "^\\[\\d+/\\d+\\] (?:Resolving|Fetching|Linking|Building|Validating|Auditing)",
+  "^warning [^:]*: .*deprecated",
+  "^\u27a4 YN0000: [\u250c\u2514\u2502]",
+  "^\u27a4 YN0013:",
   "^\\s*$",
   "found 0 vulnerabilities"
 ]

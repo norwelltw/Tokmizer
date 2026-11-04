@@ -14,6 +14,24 @@ strip_ansi = true
 strip_lines_matching = ["^\\s*$", "^\\s*\\(use \"git [^)]*\\)$", "^no changes added to commit"]
 on_empty = "git status: clean"
 
+[filters.git-sync]
+description = "Compact git push/pull/fetch/clone (drop transfer progress, keep refs, remote messages and errors)"
+match_command = "^git\\s+(?:push|pull|fetch|clone)(\\s|$)"
+priority = 65
+strip_ansi = true
+strip_lines_matching = [
+  "^(?:remote: )?(?:Enumerating|Counting|Compressing|Receiving|Writing|Unpacking) objects:",
+  "^(?:remote: )?Resolving deltas:",
+  "^(?:remote: )?Total \\d+ \\(delta \\d+\\)",
+  "^Delta compression using up to",
+  "^remote:\\s*$",
+  "^\\s*$"
+]
+keep_failures = true
+strip_on_failure = true
+max_lines = 80
+on_empty = "git: done"
+
 [filters.git-log]
 description = "Compact git log output (drop empty lines, keep every commit header, trailer and patch context line)"
 match_command = "^git\\s+log(\\s|$)"
