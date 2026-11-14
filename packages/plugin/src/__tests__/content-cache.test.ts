@@ -10,7 +10,8 @@ import {
   captureOriginalForRestore,
   restoreCommand,
   contentCacheStats,
-  listContentCache
+  listContentCache,
+  cleanSuccess
 } from "../content-cache";
 import { contentCacheFile } from "../paths";
 import { READ_EDIT_NOTICE } from "../engine/read-notice";
@@ -505,5 +506,28 @@ describe("restore storage that cannot be written", () => {
     const out = await captureForRestore("row 11\nrow 12\n".repeat(4), "row 1\nrow 2", process.env);
     expect(out.startsWith("row 1\nrow 2\n")).toBe(true);
     expect(out).toContain("no restore available");
+  });
+});
+
+describe("restore line after a clean success", () => {
+  it("stores the original without a restore line when the cut is silent", async () => {
+    const raw = "noise\n".repeat(80) + "ok | 7 passed | 0 failed (18ms)\n";
+    const out = await captureForRestore("noise\n".repeat(80), "ok | 7 passed | 0 failed (18ms)\n", {}, { raw, quiet: true });
+    expect(out).toBe("ok | 7 passed | 0 failed (18ms)\n");
+    const { createHash } = await import("node:crypto");
+    expect(await readContentCache(createHash("sha256").update(raw).digest("hex").slice(0, 16))).toBe(raw);
+  });
+  it("keeps the restore line when the output shows a cut", async () => {
+    const out = await captureForRestore("x\n".repeat(400), "head\n… (400 more lines omitted)\n", {}, { quiet: true });
+    expect(out).toMatch(/\n\[tkr restore [0-9a-f]{16}\]\n$/);
+  });
+  it("counts as clean only an exit 0 with no failure-looking line", () => {
+    expect(cleanSuccess(0, "ok | 7 passed | 0 failed (18ms)\nTests failed    :    0 (  0.0%)\n[OK] No errors found.")).toBe(true);
+    expect(cleanSuccess(0, "Ran 3 tests")).toBe(true);
+    expect(cleanSuccess(1, "Ran 3 tests")).toBe(false);
+    expect(cleanSuccess(null, "Ran 3 tests")).toBe(false);
+    expect(cleanSuccess(0, "2 failed, 5 passed")).toBe(false);
+    expect(cleanSuccess(0, "Traceback (most recent call last):\n  File \"a.py\"\nKeyError: 'url'")).toBe(false);
+    expect(cleanSuccess(0, "error[E0308]: mismatched types")).toBe(false);
   });
 });

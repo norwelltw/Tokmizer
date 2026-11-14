@@ -186,7 +186,7 @@ strip_lines_matching = ["^\\s*\\d+/\\d+ \\[[░▓▒█=>\\- ]*\\]\\s+\\d+%$", 
 description = "Collapse php -l success lines"
 match_command = "^php\\s+-l(?:\\s|$)"
 priority = 66
-strip_lines_matching = ["^No syntax errors detected in "]
+strip_lines_matching = ["^No syntax errors detected in ", "^\\s*$"]
 on_empty = "php -l: no syntax errors"
 
 [filters.pylint]

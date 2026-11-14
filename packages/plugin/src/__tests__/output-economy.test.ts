@@ -56,8 +56,15 @@ afterEach(() => {
 describe("delivered output is never longer than what the command printed", () => {
   it("keeps the original when the restore line would cost more characters than the filter saved", async () => {
     const raw = fixture("rtk10/gt-log.txt");
-    const r = await captured(["gt", "log"], raw, "", 0);
+    const r = await captured(["gt", "log"], raw, "", 1);
     expect(r.stdout).toBe(raw);
+  });
+
+  it("delivers the small saving of a successful command, which carries no restore line", async () => {
+    const raw = fixture("rtk10/gt-log.txt");
+    const r = await captured(["gt", "log"], raw, "", 0);
+    expect(r.stdout.length).toBeLessThan(raw.length);
+    expect(r.stdout).not.toContain("tkr restore");
   });
 
   it("keeps a failing stderr unchanged when the filter cannot shorten it", async () => {

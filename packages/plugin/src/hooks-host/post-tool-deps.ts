@@ -1,5 +1,5 @@
 export { processOutput } from "../engine";
-export { captureForRestore, captureOriginalForRestore, neutralizeMarkers } from "../content-cache";
+export { captureForRestore, captureOriginalForRestore, cleanSuccess, neutralizeMarkers } from "../content-cache";
 export { FOLD_MARKER_RE } from "../engine/transforms/smart-code";
 export { resolveAllowedFilters } from "../default-rules";
 export { graceExceeded } from "../entitlement";

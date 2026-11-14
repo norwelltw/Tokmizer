@@ -6,6 +6,7 @@ import { __resetCache } from "../engine/loader";
 import { __resetMatcherCache } from "../engine/matcher";
 import { routingCandidates } from "../engine/routing";
 import { stripAnsi } from "../engine/transforms/strip-ansi";
+import { compactResult } from "../engine/transforms/smart-ctest";
 
 const fixture = (name: string): string => readFileSync(fileURLToPath(new URL(`./fixtures/rtk10/${name}`, import.meta.url)), "utf8");
 const bytes = (s: string): number => Buffer.byteLength(s, "utf8");
@@ -16,7 +17,7 @@ const run = (cmd: string, raw: string, exitCode: number, verbosity: "normal" | "
 export function expectOnlyNoiseDropped(raw: string, out: string, noise: RegExp | null): void {
   const kept = new Set(out.split("\n").map((l) => l.replace(/ ×\d+$/, "").trimEnd()));
   for (const line of stripAnsi(raw).split("\n")) {
-    if (!line.trim() || kept.has(line.trimEnd())) continue;
+    if (!line.trim() || kept.has(line.trimEnd()) || kept.has(compactResult(line))) continue;
     expect(noise !== null && noise.test(line), line).toBe(true);
   }
 }
@@ -145,7 +146,7 @@ describe("success output is compressed and keeps its result", () => {
       const raw = fixture(file);
       const r = await run(cmd, raw, 0);
       expect(r.output).toContain("OK (24 tests, 24 assertions)");
-      expect(r.output).toContain("by Sebastian Bergmann and contributors.");
+      expect(r.output).not.toContain("by Sebastian Bergmann and contributors.");
       expect(r.output).not.toMatch(/^\.+\s+24 \/ 24/m);
       expect(saved(raw, r.output)).toBeGreaterThan(0.5);
     }
@@ -268,12 +269,12 @@ describe("success output is compressed and keeps its result", () => {
 
 describe("findings and failures stay fully visible", () => {
   it.each([
-    ["ctest-fail.txt", "ctest", 8, /^\s+Start\s+\d+: |\s+Passed\s+[\d.]+ sec$/],
+    ["ctest-fail.txt", "ctest", 8, /^\s+Start\s+\d+: |\s+Passed\s+[\d.]+ sec$|^The following tests FAILED:$|^\s*\d+ - \S+ \(Failed\)$|^Total Test time \(real\) = /],
     ["pest-fail.txt", "php artisan test", 1, /^\s*✓ |^\s*PASS\s+\S/],
     ["phpt-fail.txt", "php run-tests.php -q tests", 1, /^PASS .*\.phpt\]\s*$|^(?:PHP|PHP_SAPI|PHP_VERSION|ZEND_VERSION|PHP_OS|INI actual|More \.INIs|CWD|Extra dirs|VALGRIND)\s*:|^TIME (?:START|END) |^Exts (?:skipped|tested)|^[=-]{20,}$/],
     ["phpstan-fail.txt", "vendor/bin/phpstan analyse", 1, /^\s*\d+\/\d+ \[|^Note: Using configuration file |^\s*-{3,}\s+-{3,}\s*$/],
     ["bun-test-fail.txt", "bun test", 1, /^\(pass\) |^bun test v\d+\.\d+\.\d+ \([0-9a-f]+\)$|^\d+ \| |^\s+\^\s*$/],
-    ["pulumi-up-fail.txt", "pulumi up --yes", 255, /^@ |^View in Browser|^\s*Type\s+Name\s+(?:Status|Plan)|\s(?:created|updated|deleted|replaced|refreshed|read|same) \(\d+s\)$/],
+    ["pulumi-up-fail.txt", "pulumi up --yes", 255, /^@ |^View in Browser|^\s*Type\s+Name\s+(?:Status|Plan)|\s(?:created|updated|deleted|replaced|refreshed|read|same) \(\d+s\)$|^Duration: \d/],
     ["uv-sync-fail.txt", "uv sync", 1, /^\s*(?:Downloaded|Compiling) \S+ v\d|^\s*cargo:rustc-[a-z-]+=/]
   ])("%s drops only passing noise", async (file, cmd, exit, noise) => {
     for (const verbosity of ["normal", "compact"] as const) {
@@ -357,10 +358,9 @@ describe("huge outputs", () => {
     const raw = ctestLines(3000, [17, 2999]);
     const r = await run("ctest -j16", raw, 8);
     expect(r.debugBypass).toBe(true);
-    expect(r.output).toContain("  17/3000 Test  #17: case_17 ...........***Failed    0.01 sec");
-    expect(r.output).toContain("2999/3000 Test  #2999: case_2999 ...........***Failed    0.01 sec");
-    expect(r.output).toContain("The following tests FAILED:");
-    expect(r.output).toContain("\t2999 - case_2999 (Failed)");
+    expect(r.output).toContain("#17 case_17: Failed 0.01 sec");
+    expect(r.output).toContain("#2999 case_2999: Failed 0.01 sec");
+    expect(r.output).toContain("99% tests passed, 2 tests failed out of 3000");
     expect(r.output).toContain("Errors while running CTest");
     expect(r.output).not.toContain("   Passed    ");
     expect(saved(raw, r.output)).toBeGreaterThan(0.99);

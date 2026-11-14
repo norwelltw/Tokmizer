@@ -40,6 +40,7 @@ strip_lines_matching = [
 max_lines = 150
 keep_failures = true
 strip_on_failure = true
+transform = "sbt-summary"
 
 [filters.pio-run]
 description = "Compact PlatformIO run/upload"

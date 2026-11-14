@@ -1,6 +1,7 @@
 import { mkdir, mkdtemp, readFile, readdir, realpath, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { processToolOutput } from "../src/hooks-host/post-tool-process";
 import { processCapturedOutput } from "../src/exec/wrapper";
@@ -25,6 +26,7 @@ type Delivery = {
   original: string;
   raw: string;
   delivered: string;
+  exitCode: number;
 };
 
 type VoletReport<T> = {
@@ -136,7 +138,7 @@ async function deliverAll(home: string): Promise<Delivery[]> {
         const delivered = mode === "post"
           ? await viaPostBash(sheet.command, stdout, stderr, sheet.exitCode)
           : await viaExec(sheet.command, stdout, stderr, sheet.exitCode);
-        out.push({ key: `facts/${name}/${mode}/${verbosity}`, volet: "facts", fixture: name, mode, verbosity, original: text, raw: merged(stdout, stderr), delivered });
+        out.push({ key: `facts/${name}/${mode}/${verbosity}`, volet: "facts", fixture: name, mode, verbosity, original: text, raw: merged(stdout, stderr), delivered, exitCode: sheet.exitCode });
       }
     }
     for (const { name, path, text } of sources) {
@@ -147,7 +149,7 @@ async function deliverAll(home: string): Promise<Delivery[]> {
           : mode === "post"
             ? await viaPostBash(command, text, "", 0)
             : await viaExec(command, text, "", 0);
-        out.push({ key: `editSafety/${name}/${mode}/${verbosity}`, volet: "editSafety", fixture: name, mode, verbosity, original: text, raw: text, delivered });
+        out.push({ key: `editSafety/${name}/${mode}/${verbosity}`, volet: "editSafety", fixture: name, mode, verbosity, original: text, raw: text, delivered, exitCode: 0 });
       }
     }
   }
@@ -222,6 +224,7 @@ async function checkRestore(deliveries: Delivery[]): Promise<FidelityReport["vol
       continue;
     }
     const ids = [...d.delivered.matchAll(RESTORE_ID_RE)].map((m) => m[1]!);
+    if (ids.length === 0 && d.exitCode === 0 && d.mode !== "read") ids.push(createHash("sha256").update(d.raw).digest("hex").slice(0, 16));
     if (ids.length === 0) {
       failures.push({ key: d.key, reason: "output changed but carries no [tkr restore] id" });
       continue;

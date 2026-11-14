@@ -50,7 +50,7 @@ export async function handleSessionStart(payload: SessionStartPayload): Promise<
   return [recap, note].filter((part): part is string => part !== null).join("\n\n") || null;
 }
 
-export const RESTORE_NOTE = "Tokmizer shortens long command output. A line `[tkr restore <id>]` marks a cut: run `tkr restore <id>` (or add `--lines a:b`) to read the full text instead of re-running the command.";
+export const RESTORE_NOTE = "Tokmizer shortens long command output. A line `[tkr restore <id>]` marks a cut: run `tkr restore <id>` (or add `--lines a:b`) to read the full text instead of re-running the command. A clean success gets no such line; `tkr restore --list` still shows its saved original.";
 
 async function compressionOn(): Promise<boolean> {
   try {

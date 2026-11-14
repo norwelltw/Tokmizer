@@ -104,6 +104,7 @@ strip_lines_matching = [
   "^Permalink:",
   "^\\s*Type\\s+Name\\s+(?:Status|Plan)\\b",
   "^\\s*[-+~]\\s.*\\s(?:creating|updating|deleting|replacing|refreshing|reading)\\s\\(\\d+s\\)",
+  "^Duration: \\d+(?:\\.\\d+)?(?:ms|s|m)\\S*$",
   "^\\s*$"
 ]
 max_lines = 200

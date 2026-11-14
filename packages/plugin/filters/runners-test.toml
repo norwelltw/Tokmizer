@@ -57,7 +57,7 @@ description = "Compact phpunit"
 match_command = "^phpunit(\\s|$)|^vendor/bin/phpunit|^php\\s+(?:\\S*/)?phpunit(?:\\s|$)"
 priority = 55
 strip_ansi = true
-strip_lines_matching = ["^Runtime:\\s", "^Configuration:\\s", "^Processes:\\s", "^[.SIRDWFEN]+\\s+\\d+ / \\d+ \\(\\s*\\d+%\\)$", "^\\s*$"]
+strip_lines_matching = ["^(?:PHPUnit|ParaTest) \\S+ .*by Sebastian Bergmann and contributors\\.$", "^Time: \\d+:\\d+\\.\\d+, Memory: ", "^There (?:was|were) \\d+ (?:failures?|errors?):$", "^(?:FAILURES|ERRORS)!$", "^Runtime:\\s", "^Configuration:\\s", "^Processes:\\s", "^[.SIRDWFEN]+\\s+\\d+ / \\d+ \\(\\s*\\d+%\\)$", "^\\s*$"]
 max_lines = 150
 strip_on_failure = true
 
@@ -66,7 +66,7 @@ description = "Compact paratest"
 match_command = "^paratest(?:\\s|$)|^php\\s+(?:\\S*/)?paratest(?:\\s|$)"
 priority = 60
 strip_ansi = true
-strip_lines_matching = ["^Runtime:\\s", "^Configuration:\\s", "^Processes:\\s", "^[.SIRDWFEN]+\\s+\\d+ / \\d+ \\(\\s*\\d+%\\)$", "^\\s*$"]
+strip_lines_matching = ["^(?:PHPUnit|ParaTest) \\S+ .*by Sebastian Bergmann and contributors\\.$", "^Time: \\d+:\\d+\\.\\d+, Memory: ", "^There (?:was|were) \\d+ (?:failures?|errors?):$", "^(?:FAILURES|ERRORS)!$", "^Runtime:\\s", "^Configuration:\\s", "^Processes:\\s", "^[.SIRDWFEN]+\\s+\\d+ / \\d+ \\(\\s*\\d+%\\)$", "^\\s*$"]
 max_lines = 150
 strip_on_failure = true
 
@@ -105,6 +105,7 @@ strip_ansi = true
 strip_lines_matching = ["^\\s*$"]
 max_lines = 150
 keep_failures = true
+transform = "dot-leaders"
 
 [filters.ctest]
 description = "Compact ctest (drop passing tests and start lines, keep failures and totals)"

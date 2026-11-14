@@ -1,7 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { smartCtest } from "../engine/transforms/smart-ctest";
+import { compactResult, smartCtest } from "../engine/transforms/smart-ctest";
 import { smartPhpstan } from "../engine/transforms/smart-phpstan";
 import { bunFrames } from "../engine/transforms/bun-frames";
+import { sbtSummary } from "../engine/transforms/sbt-summary";
+import { dotLeaders } from "../engine/transforms/dot-leaders";
 import { applyFilter } from "../engine/pipeline";
 import { processOutput, setFilterResolver, selectFilter, loadFilters } from "../engine";
 import { __resetCache } from "../engine/loader";
@@ -36,14 +38,14 @@ describe("smartCtest", () => {
       "\t  2 - unit_b (Timeout)",
       "Errors while running CTest"
     ]);
-    expect(out).toContain(" 1/2 Test  #1: unit_a .........................***Failed    0.01 sec");
-    expect(out).toContain(" 2/2 Test  #2: unit_b .........................***Timeout   1.00 sec");
+    expect(out).toContain("#1 unit_a: Failed 0.01 sec");
+    expect(out).toContain("#2 unit_b: Timeout 1.00 sec");
     expect(out).toContain("missing-command ×2");
     expect(out).toContain("noise 0");
     expect(out).toContain("noise 29");
     expect(out.some((l) => /more lines omitted/.test(l))).toBe(true);
-    expect(out).toContain("The following tests FAILED:");
-    expect(out).toContain("\t  1 - unit_a (Failed)");
+    expect(out).not.toContain("The following tests FAILED:");
+    expect(out).not.toContain("\t  1 - unit_a (Failed)");
     expect(out).toContain("50% tests passed, 2 tests failed out of 2");
     expect(out).toContain("Errors while running CTest");
   });
@@ -90,6 +92,72 @@ describe("bunFrames", () => {
   it("leaves output without a caret alone", () => {
     expect(bunFrames(["1 | a", "2 | b"])).toEqual(["1 | a", "2 | b"]);
   });
+  it("drops space-padded context lines", () => {
+    expect(bunFrames([
+      " 9 | test(\"before\", () => { console.error(\"x\"); });",
+      "10 | test(\"b\", () => { expect(1).toBe(2); });",
+      "                         ^",
+      "error: expect(received).toBe(expected)"
+    ])).toEqual(["10 | test(\"b\", () => { expect(1).toBe(2); });", "error: expect(received).toBe(expected)"]);
+  });
+  it("drops file headers of files without failures and keeps the others", () => {
+    expect(bunFrames([
+      "src/a.test.ts:",
+      "src/b.test.ts:",
+      "error: boom",
+      "(fail) b > breaks",
+      "src/c.spec.tsx:",
+      "1 tests failed:",
+      "(fail) b > breaks",
+      " 3 pass",
+      "src/d_test.js:"
+    ])).toEqual(["src/b.test.ts:", "error: boom", "(fail) b > breaks", "1 tests failed:", "(fail) b > breaks", " 3 pass"]);
+  });
+});
+
+describe("sbtSummary", () => {
+  const passing = [
+    "[info] MyServiceSpec:",
+    "[info] A MyService",
+    "[info]   when initialized",
+    "[warn] deprecated setting",
+    "[info] Total number of tests run: 30",
+    "[info] Tests: succeeded 30, failed 0, canceled 0, ignored 2, pending 0",
+    "[info] All tests passed.",
+    "[success] Total time: 12 s"
+  ];
+  it("keeps only the totals and non-info lines of a green test run", () => {
+    expect(sbtSummary(passing)).toEqual(passing.slice(3));
+  });
+  it("leaves runs with failures or without a test summary alone", () => {
+    const failing = ["[info] - should work *** FAILED ***", ...passing];
+    expect(sbtSummary(failing)).toEqual(failing);
+    expect(sbtSummary(["[info] compiling", "[success] done"])).toEqual(["[info] compiling", "[success] done"]);
+  });
+});
+
+describe("smartCtest lists", () => {
+  it("keeps the failed list when a listed name differs from its result line", () => {
+    const lines = [
+      " 1/2 Test  #1: unit_a .....***Failed    0.01 sec",
+      " 2/2 Test  #2: unit_b .....***Failed    0.01 sec",
+      "0% tests passed, 2 tests failed out of 2",
+      "Total Test time (real) =   0.05 sec",
+      "The following tests FAILED:",
+      "\t  1 - unit_a (Failed)",
+      "\t  2 - unit_other (Failed)"
+    ];
+    expect(smartCtest(lines)).toEqual(["#1 unit_a: Failed 0.01 sec", "#2 unit_b: Failed 0.01 sec", "0% tests passed, 2 tests failed out of 2", "Total Test time (real) = 0.05 sec", "The following tests FAILED:", "\t  1 - unit_a (Failed)", "\t  2 - unit_other (Failed)"]);
+  });
+  it("leaves a line without the result shape untouched", () => {
+    expect(compactResult("Test project /tmp/build")).toBe("Test project /tmp/build");
+  });
+});
+
+describe("dotLeaders", () => {
+  it("replaces dot leaders with one space", () => {
+    expect(dotLeaders(["  create_users_table ........ 21.87ms DONE", "a ... b", "1.... 2"])).toEqual(["create_users_table 21.87ms DONE", "a ... b", "1.... 2"]);
+  });
 });
 
 describe("filter options", () => {
@@ -131,8 +199,8 @@ describe("failure output", () => {
   it("caps long output of a failing ctest run and keeps the summary", async () => {
     const raw = ["Test project /tmp/b", " 1/1 Test  #1: a ..........***Failed    0.01 sec", ...Array.from({ length: 30 }, (_, i) => `trace ${i}`), "0% tests passed, 1 tests failed out of 1", "The following tests FAILED:", "\t  1 - a (Failed)", "Errors while running CTest", ""].join("\n");
     const r = await processOutput("ctest --output-on-failure", raw, null, { exitCode: 8 });
-    expect(r.output).toContain(" 1/1 Test  #1: a ..........***Failed    0.01 sec");
-    expect(r.output).toContain("The following tests FAILED:");
+    expect(r.output).toContain("#1 a: Failed 0.01 sec");
+    expect(r.output).not.toContain("The following tests FAILED:");
     expect(r.output).toMatch(/more lines omitted/);
   });
 });

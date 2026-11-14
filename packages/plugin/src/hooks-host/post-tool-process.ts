@@ -57,6 +57,12 @@ const RESTORE_HINT_RE = /^\[tkr restore [0-9a-f]{8,64}\]$/;
 const GROUPED_PATHS_RE = /^\d+F \d+D(?: in .+\/)?:$|^\S.*\/ \(\d+(?:, \*\.[^)]+)?\): \S/;
 const READ_OMISSION_RE = /^… \(\d+ more lines omitted\)$/m;
 
+function bashEndedNormally(payload: Payload): boolean {
+  const resp = payload.tool_response;
+  if (payload.tool_name !== "Bash" || !resp || typeof resp === "string") return false;
+  return !resp.interrupted && resp.returnCodeInterpretation == null;
+}
+
 function isAnnotationLine(line: string): boolean {
   return OMISSION_MARKER_RE.test(line) || RESTORE_HINT_RE.test(line) || line === "[YOLO: omitted]";
 }
@@ -296,6 +302,7 @@ async function processAsExec(run: ExecEquivalent, payload: Payload, yolo: boolea
       env,
       ...(options.resolver ? { resolver: options.resolver } : {}),
       deferAccounting,
+      assumeSuccess: bashEndedNormally(payload),
       cwd: payload.cwd || (options.inferCwd === false ? undefined : process.cwd())
     }
   );
@@ -397,6 +404,7 @@ async function processPayload(payload: Payload, options: PostToolUseOptions, max
     captureOriginalForRestore,
     neutralizeMarkers,
     FOLD_MARKER_RE,
+    cleanSuccess,
     resolveAllowedFilters,
     graceExceeded,
     recordEvent,
@@ -446,7 +454,7 @@ async function processPayload(payload: Payload, options: PostToolUseOptions, max
     if (result.filteredBytes >= result.rawBytes) output = null;
     else if (yolo) output = neutralizeMarkers(result.output, raw);
     else if (payload.tool_name === "Glob" || foldHint.test(result.output)) output = await captureOriginalForRestore(raw, shown, undefined, { label });
-    else output = await captureForRestore(result.droppedTail ?? null, shown, undefined, { raw, label });
+    else output = await captureForRestore(result.droppedTail ?? null, shown, undefined, { raw, label, quiet: cleanSuccess(bashEndedNormally(payload) ? 0 : null, raw) });
     if (yolo && output != null) {
       output = extractOutput(buildUpdatedToolOutput(payload.tool_response, output, payload.tool_name) as Payload["tool_response"]);
     }

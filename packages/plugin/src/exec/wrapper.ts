@@ -19,7 +19,7 @@ import { loadSettingsCache } from "../settings-cache";
 import { detectHost, hostOutputCapBytes } from "../host-detect";
 import { envWithoutShimDir } from "../shim/install";
 import { installDaemonResolver, closeDaemonResolver } from "../daemon/resolver";
-import { captureForRestore, captureOriginalForRestore, neutralizeMarkers } from "../content-cache";
+import { captureForRestore, captureOriginalForRestore, cleanSuccess, neutralizeMarkers } from "../content-cache";
 import { FOLD_MARKER_RE } from "../engine/transforms/smart-code";
 import { READ_EDIT_NOTICE } from "../engine/read-notice";
 import { normalizeHead, producingSegment } from "../engine/routing";
@@ -262,12 +262,14 @@ export type CapturedContext = {
   onMissingState?: () => void;
   deferAccounting?: (commit: () => Promise<void>) => void;
   cwd?: string | undefined;
+  assumeSuccess?: boolean;
 };
 
 export async function processCapturedOutput(
   { argv, stdout, stderr, exitCode, truncated, stderrTruncated }: CapturedOutput,
-  { yolo, env, resolver, onMissingState, deferAccounting, ...context }: CapturedContext
+  { yolo, env, resolver, onMissingState, deferAccounting, assumeSuccess, ...context }: CapturedContext
 ): Promise<WrapResult> {
+  const settledExit = exitCode ?? (assumeSuccess ? 0 : null);
 
   const truncMarker = truncated ? `\n… (output truncated at ${MAX_BUFFER_BYTES / (1024 * 1024)}MB)` : "";
   const stderrTruncMarker = stderrTruncated ? `\n… (stderr truncated at ${MAX_BUFFER_BYTES / (1024 * 1024)}MB)` : "";
@@ -317,7 +319,7 @@ export async function processCapturedOutput(
       stderrOut = neutralizeMarkers(errProcessed.output, stderr);
       if (!yolo && errProcessed.output !== stderr) {
         try {
-          stderrOut = await captureForRestore(errProcessed.droppedTail ?? null, errProcessed.output, env, { raw: stderrTruncated ? null : stderr, label: statCmdLabel(cmdLine) });
+          stderrOut = await captureForRestore(errProcessed.droppedTail ?? null, errProcessed.output, env, { raw: stderrTruncated ? null : stderr, label: statCmdLabel(cmdLine), quiet: !errProcessed.failureSummary && cleanSuccess(settledExit, stderr) });
         } catch {}
       }
       stderrRawBytes = errProcessed.rawBytes;
@@ -353,7 +355,7 @@ export async function processCapturedOutput(
       try {
         delivered = new RegExp(FOLD_MARKER_RE.source, "m").test(processed.output)
           ? await captureOriginalForRestore(stdout, shown, env, { label: statCmdLabel(cmdLine) })
-          : await captureForRestore(processed.droppedTail ?? null, shown, env, { raw: truncated ? null : stdout, label: statCmdLabel(cmdLine) });
+          : await captureForRestore(processed.droppedTail ?? null, shown, env, { raw: truncated ? null : stdout, label: statCmdLabel(cmdLine), quiet: !processed.failureSummary && cleanSuccess(settledExit, stdout) });
       } catch {}
     }
     if (!truncated && stdout.length > 0 && !shorter(delivered, stdout)) delivered = neutralizeMarkers(stdout, stdout);

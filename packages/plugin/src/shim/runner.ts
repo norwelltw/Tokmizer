@@ -13,7 +13,7 @@ import { recordStat, countedSaving, statCmdLabel, statOutcome } from "../stats";
 import { envWithoutShimDir } from "./install";
 import { detectHost, hostOutputCapBytes, hasNativeHook } from "../host-detect";
 import { installDaemonResolver, closeDaemonResolver } from "../daemon/resolver";
-import { captureForRestore, captureOriginalForRestore, neutralizeMarkers } from "../content-cache";
+import { captureForRestore, captureOriginalForRestore, neutralizeMarkers, cleanSuccess } from "../content-cache";
 import { FOLD_MARKER_RE } from "../engine/transforms/smart-code";
 import { yoloEnabled } from "../yolo-mode";
 import { failOpenActive } from "./sh";
@@ -313,7 +313,7 @@ export async function runShim(invocation: ShimInvocation): Promise<ShimResult> {
           try {
             delivered = new RegExp(FOLD_MARKER_RE.source, "m").test(res.output)
               ? await captureOriginalForRestore(outBuf, res.output, process.env, { label: statCmdLabel(cmdLine) })
-              : await captureForRestore(res.droppedTail ?? null, res.output, process.env, { raw: outBuf, label: statCmdLabel(cmdLine) });
+              : await captureForRestore(res.droppedTail ?? null, res.output, process.env, { raw: outBuf, label: statCmdLabel(cmdLine), quiet: !res.failureSummary && cleanSuccess(exitCode, outBuf) });
           } catch {}
         }
         const rawBytes = outRaw.length + errRaw.length;

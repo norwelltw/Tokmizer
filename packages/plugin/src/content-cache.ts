@@ -191,23 +191,32 @@ function restoreHint(compressed: string, hash: string): string {
   return `${lead}[tkr restore ${hash}]\n`;
 }
 
+const FAILURE_WORD_RE = /✕|✗|×|\bFAIL\b|\bERROR\b|\bFATAL\b|\bError|\berror|Expected|Received|\bfailed\b|^Traceback \(most recent call last\):$|\w(?:Error|Exception):|^panic: /;
+const ZERO_FAILURES_RE = /\b0 (?:failed|failures?|errors?)\b|\b(?:failed|failures?|errors?)\s*[:=]?\s*0\b|\bNo errors? found\b/gi;
+const VISIBLE_CUT_RE = /^… \(?\d+ more lines omitted\)?$|^… \d+ similar log lines dropped …$/m;
+
+export function cleanSuccess(exitCode: number | null | undefined, text: string): boolean {
+  return exitCode === 0 && !text.split("\n").some((line) => FAILURE_WORD_RE.test(line.replace(ZERO_FAILURES_RE, "")));
+}
+
 export async function captureForRestore(
   droppedTail: string | null,
   compressed: string,
   env: NodeJS.ProcessEnv = process.env,
-  source: { raw?: string | null | undefined; label?: string | undefined } = {}
+  source: { raw?: string | null | undefined; label?: string | undefined; quiet?: boolean } = {}
 ): Promise<string> {
   compressed = neutralizeMarkers(compressed, source.raw);
   if (ccrDisabled(env)) return compressed;
   if (!droppedTail) return compressed;
+  if (source.quiet && VISIBLE_CUT_RE.test(compressed)) source = { ...source, quiet: false };
   const hint = (hash: string): string => restoreHint(compressed, hash);
   if (Buffer.byteLength(droppedTail, "utf8") <= Buffer.byteLength(hint("0".repeat(16)), "utf8")) return compressed;
   if (source.raw) {
     const full = await storeEntry(source.raw, false, source.label, env);
-    if (full) return `${compressed}${hint(full)}`;
+    if (full) return source.quiet ? compressed : `${compressed}${hint(full)}`;
   }
   const tail = await storeEntry(droppedTail, true, source.label, env);
-  if (tail) return `${compressed}${hint(tail)}`;
+  if (tail) return source.quiet ? compressed : `${compressed}${hint(tail)}`;
   if (yoloEnabled()) return compressed;
   const big = exceedsEntryLimit(source.raw || droppedTail, env);
   if (big) return `${compressed}${tooLargeNote(compressed, big, env)}`;
