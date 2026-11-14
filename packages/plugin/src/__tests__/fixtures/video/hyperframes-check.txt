@@ -1,0 +1,136 @@
+◆  Checking demo
+[hyperframes] browserGpuMode probe → hardware (WebGL renderer vendor="Google Inc. (Apple)" renderer="ANGLE (Apple, ANGLE Metal Renderer: Apple M4 Pro, Unspecified Version)")
+[hyperframes] check: samples 1/9
+[hyperframes] check: samples 2/9
+[hyperframes] check: samples 3/9
+[hyperframes] check: samples 4/9
+[hyperframes] check: samples 5/9
+[hyperframes] check: samples 6/9
+[hyperframes] check: samples 7/9
+[hyperframes] check: samples 8/9
+[hyperframes] check: samples 9/9
+[hyperframes] check: craft 1/80
+[hyperframes] check: craft 2/80
+[hyperframes] check: craft 3/80
+[hyperframes] check: craft 4/80
+[hyperframes] check: craft 5/80
+[hyperframes] check: craft 6/80
+[hyperframes] check: craft 7/80
+[hyperframes] check: craft 8/80
+[hyperframes] check: craft 9/80
+[hyperframes] check: craft 10/80
+[hyperframes] check: craft 11/80
+[hyperframes] check: craft 12/80
+[hyperframes] check: craft 13/80
+[hyperframes] check: craft 14/80
+[hyperframes] check: craft 15/80
+[hyperframes] check: craft 16/80
+[hyperframes] check: craft 17/80
+[hyperframes] check: craft 18/80
+[hyperframes] check: craft 19/80
+[hyperframes] check: craft 20/80
+[hyperframes] check: craft 21/80
+[hyperframes] check: craft 22/80
+[hyperframes] check: craft 23/80
+[hyperframes] check: craft 24/80
+[hyperframes] check: craft 25/80
+[hyperframes] check: craft 26/80
+[hyperframes] check: craft 27/80
+[hyperframes] check: craft 28/80
+[hyperframes] check: craft 29/80
+[hyperframes] check: craft 30/80
+[hyperframes] check: craft 31/80
+[hyperframes] check: craft 32/80
+[hyperframes] check: craft 33/80
+[hyperframes] check: craft 34/80
+[hyperframes] check: craft 35/80
+[hyperframes] check: craft 36/80
+[hyperframes] check: craft 37/80
+[hyperframes] check: craft 38/80
+[hyperframes] check: craft 39/80
+[hyperframes] check: craft 40/80
+[hyperframes] check: craft 41/80
+[hyperframes] check: craft 42/80
+[hyperframes] check: craft 43/80
+[hyperframes] check: craft 44/80
+[hyperframes] check: craft 45/80
+[hyperframes] check: craft 46/80
+[hyperframes] check: craft 47/80
+[hyperframes] check: craft 48/80
+[hyperframes] check: craft 49/80
+[hyperframes] check: craft 50/80
+[hyperframes] check: craft 51/80
+[hyperframes] check: craft 52/80
+[hyperframes] check: craft 53/80
+[hyperframes] check: craft 54/80
+[hyperframes] check: craft 55/80
+[hyperframes] check: craft 56/80
+[hyperframes] check: craft 57/80
+[hyperframes] check: craft 58/80
+[hyperframes] check: craft 59/80
+[hyperframes] check: craft 60/80
+[hyperframes] check: craft 61/80
+[hyperframes] check: craft 62/80
+[hyperframes] check: craft 63/80
+[hyperframes] check: craft 64/80
+[hyperframes] check: craft 65/80
+[hyperframes] check: craft 66/80
+[hyperframes] check: craft 67/80
+[hyperframes] check: craft 68/80
+[hyperframes] check: craft 69/80
+[hyperframes] check: craft 70/80
+[hyperframes] check: craft 71/80
+[hyperframes] check: craft 72/80
+[hyperframes] check: craft 73/80
+[hyperframes] check: craft 74/80
+[hyperframes] check: craft 75/80
+[hyperframes] check: craft 76/80
+[hyperframes] check: craft 77/80
+[hyperframes] check: craft 78/80
+[hyperframes] check: craft 79/80
+[hyperframes] check: craft 80/80
+[hyperframes] check: overlap 1/10
+[hyperframes] check: overlap 2/10
+[hyperframes] check: overlap 3/10
+[hyperframes] check: overlap 4/10
+[hyperframes] check: overlap 5/10
+[hyperframes] check: overlap 6/10
+[hyperframes] check: overlap 7/10
+[hyperframes] check: overlap 8/10
+[hyperframes] check: overlap 9/10
+[hyperframes] check: overlap 10/10
+[hyperframes] check: analyze 0/3
+[hyperframes] check: analyze 1/3
+[hyperframes] check: analyze 2/3
+
+Lint
+  ◇ 0 errors, 0 warnings
+
+Runtime
+  ◇ 0 errors, 0 warnings
+
+Layout
+  ⚠ t=0s sweep_static [data-composition-id] — Nothing on screen moved under seek.
+        Fix: If the composition is meant to be still, add `data-no-timeline` to the element with `data-composition-id`. Otherwise confirm it seeks a paused GSAP/CSS timeline under `data-*` timing attributes rather than only autoplaying.
+  0 error(s), 1 warning(s), 0 info(s)
+
+Motion
+  ◇ 0 errors, 0 warnings
+
+Contrast
+  ◇ 5/5 text checks pass WCAG AA
+
+Craft
+  ◇ 0 errors, 0 warnings
+
+Audio
+  ℹ audio_none: The film has no sound: no clip in it plays audio.
+    index.html [data-composition-id] t=0s
+  0 error(s), 0 warning(s), 1 info(s)
+
+Snapshots
+  ◇ disabled
+
+◇  Check passed
+Report: /work/demo/.hyperframes/artifacts/checks/e2f2e43f-66c8-42d7-81e4-195b29a2f764.json
+Revision: none (unversioned)

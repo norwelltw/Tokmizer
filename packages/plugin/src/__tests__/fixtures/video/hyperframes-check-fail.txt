@@ -1,0 +1,40 @@
+◆  Checking bad
+
+Lint
+  ✗ video_missing_muted: <video id="v1"> has data-start but declares neither muted nor data-has-audio. If the file has sound, add data-has-audio="true" (the sound stays on this clip). If it is silent, add muted.
+    /work/bad/index.html #v1 t=0s
+    Fix: Add data-has-audio="true" when the file has sound (recommended: it keeps picture and sound on one clip), or add `muted` for silent footage.
+  ⚠ clip_ends_past_root_duration: <h2 id="sub"> runs from 2s to 22s, past the root composition's data-duration of 10s, so it is cut off in previews, posters and renders.
+    /work/bad/index.html #sub t=0s
+    Fix: Extend the root data-duration to 22, or make <h2 id="sub"> end at or before 10s.
+  ✗ missing_local_asset: <video> element references local file(s) not found in the project: assets/missing.mp4. The renderer will silently skip these and produce a video with missing visuals.
+    /work/bad/index.html [data-composition-id] t=0s
+    Fix: Add "assets/missing.mp4" to the project directory, or update the src attribute to point to an existing file. Common cause: captured asset filenames are unreliable (heygen-logo.svg often contains Google, nvidia-logo.svg may contain Autodesk, etc.). Open the contact sheets and verify the file actually exists at this path before referencing it.
+  2 error(s), 1 warning(s), 0 info(s)
+
+  ⚠ Browser session never ran — layout, motion, and contrast below are empty placeholders, not a clean pass.
+
+Runtime
+  ◇ 0 errors, 0 warnings
+
+Layout
+  ◇ 0 issues across 0 sample(s)
+
+Motion
+  ◇ 0 errors, 0 warnings
+
+Contrast
+  ◇ 0/0 text checks pass WCAG AA
+
+Craft
+  ◇ skipped
+
+Audio
+  ◇ 0 errors, 0 warnings
+
+Snapshots
+  ◇ disabled
+
+◇  Check failed
+Report: /work/bad/.hyperframes/artifacts/checks/1f64c1d9-926c-42d6-8d8f-3b34b1315388.json
+Revision: none (unversioned)

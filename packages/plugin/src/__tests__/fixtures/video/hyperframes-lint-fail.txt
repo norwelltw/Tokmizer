@@ -1,0 +1,10 @@
+◆  Linting bad/index.html
+
+  ✗ [/work/bad/index.html:54:7] video_missing_muted [v1]: <video id="v1"> has data-start but declares neither muted nor data-has-audio. If the file has sound, add data-has-audio="true" (the sound stays on this clip). If it is silent, add muted.
+    Fix: Add data-has-audio="true" when the file has sound (recommended: it keeps picture and sound on one clip), or add `muted` for silent footage.
+  ⚠ [/work/bad/index.html:53:7] clip_ends_past_root_duration [sub]: <h2 id="sub"> runs from 2s to 22s, past the root composition's data-duration of 10s, so it is cut off in previews, posters and renders.
+    Fix: Extend the root data-duration to 22, or make <h2 id="sub"> end at or before 10s.
+  ✗ missing_local_asset: <video> element references local file(s) not found in the project: assets/missing.mp4. The renderer will silently skip these and produce a video with missing visuals.
+    Fix: Add "assets/missing.mp4" to the project directory, or update the src attribute to point to an existing file. Common cause: captured asset filenames are unreliable (heygen-logo.svg often contains Google, nvidia-logo.svg may contain Autodesk, etc.). Open the contact sheets and verify the file actually exists at this path before referencing it.
+
+◇  2 error(s), 1 warning(s)

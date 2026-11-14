@@ -1,0 +1,72 @@
+[filters.hyperframes-render]
+description = "Compact hyperframes render logs to warnings and the final summary"
+match_command = "^(?:npx\\s+(?:--yes\\s+|-y\\s+)?)?hyperframes(?:@[\\w.-]+)?\\s+render\\b(?!.*\\s--json\\b)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = [
+  "^\\s*$",
+  "^@hf-progress ",
+  "^\\s*[█░▓▒]+\\s+\\d+%",
+  "^\\[INFO\\] ",
+  "^\\[initSession:",
+  "^\\[HyperFrames\\] render runtime fps",
+  "^\\[BrowserManager\\] Browser launched",
+  "^\\[hyperframes\\] browserGpuMode probe",
+  "^Checking browser",
+  "^Browser: ",
+  "Keep editing by chatting with Framey",
+]
+strip_on_failure = true
+truncate_lines_at = 300
+max_lines = 60
+
+[filters.ffmpeg]
+description = "Drop ffmpeg banner, encoder statistics and repeated progress"
+match_command = "^ffmpeg(\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = [
+  "^\\s*$",
+  "^ffmpeg version ",
+  "^\\s+built with ",
+  "^\\s+configuration: ",
+  "^\\s+lib(?:avutil|avcodec|avformat|avdevice|avfilter|swscale|swresample|postproc)\\s",
+  "^\\[libx26[45] @ [^\\]]+\\] (?:using SAR|using cpu capabilities|profile |26[45] - core|frame [IPB]:|consecutive B-frames|mb [IPB] |8x8 transform|coded y,|i16 v,|i8c? |i4 v,|Weighted P-Frames|ref [PB] L[01]|kb/s:|direct mvs)",
+  "^\\s+Metadata:\\s*$",
+  "^\\s+(?:encoder|handler_name|vendor_id|major_brand|minor_version|compatible_brands|creation_time)\\s*:",
+  "^\\s+Side data:\\s*$",
+  "^\\s+CPB properties:",
+  "^Press \\[q\\] to stop",
+]
+strip_on_failure = true
+transform = "ffmpeg-progress"
+truncate_lines_at = 300
+max_lines = 80
+
+[filters.ffprobe]
+description = "Drop ffprobe banner and container metadata noise"
+match_command = "^ffprobe(\\s|$)"
+priority = 60
+strip_lines_matching = [
+  "^ffprobe version ",
+  "^\\s+built with ",
+  "^\\s+configuration: ",
+  "^\\s+lib(?:avutil|avcodec|avformat|avdevice|avfilter|swscale|swresample|postproc)\\s",
+  "^\\s+Metadata:\\s*$",
+  "^\\s+(?:encoder|handler_name|vendor_id|major_brand|minor_version|compatible_brands|creation_time)\\s*:",
+]
+strip_on_failure = true
+
+[filters.hyperframes-check]
+description = "Drop hyperframes check, lint and snapshot progress, keep findings and paths"
+match_command = "^(?:npx\\s+(?:--yes\\s+|-y\\s+)?)?hyperframes(?:@[\\w.-]+)?\\s+(?:check|lint|snapshot)\\b(?!.*\\s--json\\b)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = [
+  "^\\s*$",
+  "^\\[hyperframes\\] (?:check|snapshot): ",
+  "^\\[hyperframes\\] browserGpuMode probe",
+]
+strip_on_failure = true
+truncate_lines_at = 400
+max_lines = 120

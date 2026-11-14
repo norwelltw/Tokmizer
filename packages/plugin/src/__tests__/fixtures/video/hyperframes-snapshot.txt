@@ -1,0 +1,14 @@
+◆  Capturing 2 frames at [0.5s, 1s] from demo
+[hyperframes] browserGpuMode probe → hardware (WebGL renderer vendor="Google Inc. (Apple)" renderer="ANGLE (Apple, ANGLE Metal Renderer: Apple M4 Pro, Unspecified Version)")
+   Note: added an end-of-timeline frame at 9.75s. Short beats between your --at times may still be skipped — pass them explicitly.
+[hyperframes] snapshot: frame 1/3 at 0.5s
+[hyperframes] snapshot: frame 2/3 at 1s
+[hyperframes] snapshot: frame 3/3 at 9.75s
+   Revision: none (unversioned)
+   State: /work/demo/.hyperframes/video-state.json
+
+◇  3 snapshots saved to /work/demo/.hyperframes/artifacts/snapshots/812d4a72-0de6-45bc-a1b2-f7915540a0f4
+   /work/demo/.hyperframes/artifacts/snapshots/812d4a72-0de6-45bc-a1b2-f7915540a0f4/frame-00-at-0.5s.png
+   /work/demo/.hyperframes/artifacts/snapshots/812d4a72-0de6-45bc-a1b2-f7915540a0f4/frame-01-at-1s.png
+   /work/demo/.hyperframes/artifacts/snapshots/812d4a72-0de6-45bc-a1b2-f7915540a0f4/frame-02-at-9.75s.png
+   /work/demo/.hyperframes/artifacts/snapshots/812d4a72-0de6-45bc-a1b2-f7915540a0f4/contact-sheet.jpg (grid view for AI review)

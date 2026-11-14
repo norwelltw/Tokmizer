@@ -26,6 +26,7 @@ import "./transforms/smart-grep";
 import "./transforms/smart-log";
 import "./transforms/strip-banners";
 import "./transforms/squeeze-output";
+import "./transforms/ffmpeg-progress";
 
 export function capMultiplier(verbosity: "normal" | "compact" | "minimal" | undefined): number {
   if (verbosity === "compact") return 0.6;
