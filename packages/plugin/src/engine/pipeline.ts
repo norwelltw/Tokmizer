@@ -21,6 +21,7 @@ import "./transforms/smart-phpstan";
 import "./transforms/bun-frames";
 import "./transforms/sbt-summary";
 import "./transforms/dot-leaders";
+import "./transforms/trim-end";
 import "./transforms/smart-grep";
 import "./transforms/smart-log";
 import "./transforms/strip-banners";

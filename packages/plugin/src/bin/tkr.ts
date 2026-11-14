@@ -24,7 +24,7 @@ import { loadSettingsCache, clearSettingsCache, updateSettingsCache } from "../s
 import { telemetryHintLine, telemetryNoticeLine, markTelemetryNoticeShown, TELEMETRY_NOTICE } from "../telemetry-hint";
 import { networkEnabled, networkNoticeLine, networkStatusLabel, networkOffByEnv, setNetwork, NETWORK_OFF_MESSAGE } from "../network";
 import { yoloEnabled, setYoloMode } from "../yolo-mode";
-import { restoreCommand, contentCacheStats, retentionLabel, readRestoreConfig } from "../content-cache";
+import { restoreCommand, contentCacheStats, retentionLabel, readRestoreConfig, pruneContentCache } from "../content-cache";
 import { restoreConfigFile } from "../paths";
 import {
   installShims,
@@ -1554,6 +1554,7 @@ async function main(): Promise<void> {
     const startedAt = Date.now();
     const s = await heartbeat(BASE_URL);
     if (!s || (s.lastHeartbeatOkAt ?? 0) < startedAt) {
+      await pruneContentCache().catch(() => {});
       process.stderr.write("Heartbeat failed\n");
       process.exitCode = 1;
       return;

@@ -8,6 +8,7 @@ import { createSpoolSync } from "../daemon/spool-sync";
 import { startProcessingEndpoint } from "../exec/processing-endpoint";
 import { defaultRulesRuntime } from "../default-rules";
 import { networkEnabled, NetworkDisabledError } from "../network";
+import { scheduleContentCachePrune } from "../content-cache";
 
 const BASE_URL = baseUrlFromEnv();
 
@@ -146,6 +147,7 @@ async function main(): Promise<void> {
 
   startAutoHeartbeat();
   startSpoolUpload();
+  scheduleContentCachePrune();
 }
 
 main().catch((err) => {

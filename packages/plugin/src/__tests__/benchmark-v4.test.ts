@@ -39,9 +39,9 @@ const MVN_NOISE = new RegExp(`^(?:\\[[^\\]\\s]+\\] )?\\[INFO\\]|${JVM_FRAMES.sou
 type Case = { name: string; cmd: string; exit: number; slug: string; minSaved: number; noise: RegExp | null };
 
 const CASES: Case[] = [
-  { name: "bun-test-real", cmd: "bun test", exit: 1, slug: "bun-test", minSaved: 0.8, noise: /^\(pass\) |^\S+\.test\.ts:$|^\s*$|^bun test v\d+\.\d+\.\d+ \([0-9a-f]+\)$|^\s+\^\s*$|^\s*\d+ \| / },
-  { name: "bun-test-fail", cmd: "bun test", exit: 1, slug: "bun-test", minSaved: 0.4, noise: /^\(pass\) |^\s*$|^bun test v\d+\.\d+\.\d+ \([0-9a-f]+\)$|^\s*\d+ \| |^\s+\^\s*$/ },
-  { name: "bun-test-green", cmd: "bun test", exit: 0, slug: "bun-test", minSaved: 0, noise: /^\s*$|^bun test v\d+\.\d+\.\d+ \([0-9a-f]+\)$/ },
+  { name: "bun-test-real", cmd: "bun test", exit: 1, slug: "bun-test", minSaved: 0.8, noise: /^\(pass\) |^\S+\.test\.ts:$|^\s*$|^bun test v\d+\.\d+\.\d+ \([0-9a-f]+\)$|^\s+\^\s*$|^\s*\d+ \| |^\s*\d+ expect\(\) calls$|^\d+ tests? (?:failed|skipped|todo):$/ },
+  { name: "bun-test-fail", cmd: "bun test", exit: 1, slug: "bun-test", minSaved: 0.4, noise: /^\(pass\) |^\s*$|^bun test v\d+\.\d+\.\d+ \([0-9a-f]+\)$|^\s*\d+ \| |^\s+\^\s*$|^\s*\d+ expect\(\) calls$|^\d+ tests? (?:failed|skipped|todo):$/ },
+  { name: "bun-test-green", cmd: "bun test", exit: 0, slug: "bun-test", minSaved: 0, noise: /^\s*$|^bun test v\d+\.\d+\.\d+ \([0-9a-f]+\)$|^\s*\d+ expect\(\) calls$|^\d+ tests? (?:failed|skipped|todo):$/ },
   { name: "bun-install", cmd: "bun install", exit: 0, slug: "bun", minSaved: 0.6, noise: /^\s*$|^Resolving dependencies|^Resolved, downloaded and extracted|^Saved lockfile|^bun install v\d+\.\d+\.\d+ \([0-9a-f]+\)$/ },
   { name: "deno-test-fail", cmd: "deno test", exit: 1, slug: "deno", minSaved: 0.5, noise: /^\s*$|^Check |^running \d+ tests? from |\.\.\. ok \(|^\s+\^\s*$|^\s+at .*https:\/\/(?:jsr\.io\/@std\/|deno\.land\/std@)/ },
   { name: "deno-test-green", cmd: "deno test", exit: 0, slug: "deno", minSaved: 0.45, noise: /^\s*$|^Check |^running \d+ tests? from |\.\.\. ok \(/ },

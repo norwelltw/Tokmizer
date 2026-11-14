@@ -111,7 +111,14 @@ describe("bunFrames", () => {
       "(fail) b > breaks",
       " 3 pass",
       "src/d_test.js:"
-    ])).toEqual(["src/b.test.ts:", "error: boom", "(fail) b > breaks", "1 tests failed:", "(fail) b > breaks", " 3 pass"]);
+    ])).toEqual(["src/b.test.ts:", "error: boom", "(fail) b > breaks", " 3 pass"]);
+  });
+
+  it("drops the closing recap only when it repeats lines already shown", () => {
+    expect(bunFrames(["(fail) a > one", "(skip) a > two", "1 tests failed:", "(fail) a > one", "1 tests skipped:", "(skip) a > two", " 1 fail"]))
+      .toEqual(["(fail) a > one", "(skip) a > two", " 1 fail"]);
+    const differs = ["(fail) a > one [1.00ms]", "2 tests failed:", "(fail) a > one [1.00ms]", "(fail) a > hidden", " 2 fail"];
+    expect(bunFrames(differs)).toEqual(differs);
   });
 });
 
@@ -126,8 +133,12 @@ describe("sbtSummary", () => {
     "[info] All tests passed.",
     "[success] Total time: 12 s"
   ];
-  it("keeps only the totals and non-info lines of a green test run", () => {
-    expect(sbtSummary(passing)).toEqual(passing.slice(3));
+  it("keeps only the test totals and non-info lines of a green test run", () => {
+    expect(sbtSummary(passing)).toEqual([
+      "[warn] deprecated setting",
+      "Tests: succeeded 30, failed 0, canceled 0, ignored 2, pending 0",
+      "[success] Total time: 12 s"
+    ]);
   });
   it("leaves runs with failures or without a test summary alone", () => {
     const failing = ["[info] - should work *** FAILED ***", ...passing];

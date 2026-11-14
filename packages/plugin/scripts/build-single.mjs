@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { build } from "esbuild";
 import { bundleDefines, singleBanner, sourceFingerprint } from "./bundle-config.mjs";
 import { execFileSync } from "node:child_process";
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { nativePlatforms, singleFile, singlePackage, syncSingleIntoDist, SINGLE_BUN_VERSION } from "./native-artifacts.mjs";
@@ -40,17 +40,32 @@ await build({
   logLevel: "warning"
 });
 
+function probe(binary) {
+  const answer = execFileSync(binary, ["--single-check"], { encoding: "utf8", timeout: 5000 }).trim();
+  if (answer !== `tokmizer-single ${version}`) throw new Error(`Single binary probe failed: ${answer}`);
+}
+
+function reusable(output, binary) {
+  const manifest = join(output, "single.json");
+  if (!existsSync(manifest) || !existsSync(binary)) return false;
+  const entry = JSON.parse(readFileSync(manifest, "utf8"));
+  return entry.version === version && entry.bun === bunVersion && entry.source === source &&
+    entry.sha256 === createHash("sha256").update(readFileSync(binary)).digest("hex");
+}
+
 for (const key of keys) {
   const [platform, arch] = key.split("-");
   const output = join(directory, "native", "artifacts", key);
   const binary = join(output, singleFile(platform));
+  if (process.env.TOKMIZER_SINGLE_REUSE === "1" && reusable(output, binary)) {
+    if (key === hostKey) probe(binary);
+    console.log(`single binary: ${key} ${version} reused (same sources, bun and checksum)`);
+    continue;
+  }
   mkdirSync(output, { recursive: true });
   rmSync(binary, { force: true });
   execFileSync(bun, ["build", "--compile", "--minify", "--bytecode", `--target=${targets[key]}`, entry, "--outfile", binary], { stdio: ["ignore", "ignore", "inherit"], cwd: directory });
-  if (key === hostKey) {
-    const probe = execFileSync(binary, ["--single-check"], { encoding: "utf8", timeout: 5000 }).trim();
-    if (probe !== `tokmizer-single ${version}`) throw new Error(`Single binary probe failed: ${probe}`);
-  }
+  if (key === hostKey) probe(binary);
   const sha256 = createHash("sha256").update(readFileSync(binary)).digest("hex");
   writeFileSync(join(output, "single.json"), JSON.stringify({ version, platform, arch, bun: bunVersion, package: singlePackage(key), source, sha256 }, null, 2) + "\n");
   console.log(`single binary: ${key} ${version}${key === hostKey ? "" : " (cross-built, probed at install)"}`);

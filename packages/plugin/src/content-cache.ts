@@ -346,10 +346,20 @@ function renderList(entries: CacheEntry[]): string {
 async function resolveHash(prefix: string): Promise<{ hash: string } | { error: string }> {
   if (!HASH_RE.test(prefix)) return { error: `tkr restore: no cached content for ${prefix}\n` };
   const exact = prefix.toLowerCase();
-  const entries = await listContentCache();
-  if (entries.some((e) => e.hash === exact)) return { hash: exact };
-  const matches = entries.filter((e) => e.hash.startsWith(exact));
-  if (matches.length === 1) return { hash: matches[0]!.hash };
+  let names: string[] = [];
+  try {
+    names = (await readdir(contentCacheDir())).filter((name) => ENTRY_NAME_RE.test(name) && name.startsWith(exact));
+  } catch {}
+  const maxAge = contentCacheLimits().maxAgeMs;
+  const now = Date.now();
+  const matches: string[] = [];
+  for (const name of names) {
+    try {
+      if (now - (await stat(contentCacheFile(name))).mtimeMs <= maxAge) matches.push(name);
+    } catch {}
+  }
+  if (matches.includes(exact)) return { hash: exact };
+  if (matches.length === 1) return { hash: matches[0]! };
   if (matches.length > 1) return { error: `tkr restore: ${prefix} matches ${matches.length} entries, use more characters\n` };
   return { error: `tkr restore: no cached content for ${prefix} (entries are kept ${retentionLabel()}; see tkr restore --list)\n` };
 }
@@ -505,4 +515,29 @@ export async function pruneContentCache(): Promise<void> {
       await rm(join(contentCacheDir(), `${name}${META_SUFFIX}`), { force: true });
     } catch {}
   }
+}
+
+const PRUNE_INTERVAL_MS = 6 * 60 * 60 * 1000;
+
+export async function pruneContentCacheIfDue(now: number = Date.now()): Promise<boolean> {
+  const stamp = join(tokmizerHome(), "content-cache-pruned");
+  try {
+    if (now - (await stat(stamp)).mtimeMs < PRUNE_INTERVAL_MS) return false;
+  } catch {}
+  try {
+    await mkdir(tokmizerHome(), { recursive: true, mode: 0o700 });
+    await writeFile(stamp, String(now), { mode: 0o600 });
+  } catch {
+    return false;
+  }
+  await pruneContentCache();
+  return true;
+}
+
+export function scheduleContentCachePrune(): void {
+  const run = (): void => {
+    pruneContentCacheIfDue().catch(() => {});
+  };
+  setTimeout(run, 30_000).unref();
+  setInterval(run, PRUNE_INTERVAL_MS).unref();
 }

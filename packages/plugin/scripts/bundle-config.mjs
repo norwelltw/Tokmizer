@@ -29,7 +29,25 @@ export function sourceFingerprint(directory) {
     .flatMap((entry) => files(join(directory, entry)))
     .sort();
   for (const file of inputs) {
-    hash.update(relative(directory, file).split(sep).join("/")).update("\0").update(readFileSync(file)).update("\0");
+    const content = file.endsWith("package-lock.json") ? lockWithoutPlatformPins(readFileSync(file, "utf8")) : readFileSync(file);
+    hash.update(relative(directory, file).split(sep).join("/")).update("\0").update(content).update("\0");
   }
   return hash.digest("hex");
+}
+
+const PLATFORM_ENTRY = /(?:^|\/)node_modules\/@tokmizer\/plugin-[^/]+$/;
+
+export function lockWithoutPlatformPins(text) {
+  const lock = JSON.parse(text);
+  for (const name of Object.keys(lock.packages ?? {})) {
+    if (PLATFORM_ENTRY.test(name)) delete lock.packages[name];
+  }
+  const plugin = lock.packages?.["packages/plugin"];
+  if (plugin) {
+    delete plugin.version;
+    for (const name of Object.keys(plugin.optionalDependencies ?? {})) {
+      if (name.startsWith("@tokmizer/plugin-")) delete plugin.optionalDependencies[name];
+    }
+  }
+  return JSON.stringify(lock);
 }

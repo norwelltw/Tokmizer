@@ -3,6 +3,7 @@ import { mkdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from "no
 import { join } from "node:path";
 import { runtimeFromCache, type DaemonRuntime } from "../daemon/runtime";
 import { processOutput } from "../engine";
+import { scheduleContentCachePrune } from "../content-cache";
 import { defaultRulesRuntime } from "../default-rules";
 import { processorDescriptorName, startProcessingEndpoint } from "../exec/processing-endpoint";
 import { processorRuntime } from "../exec/processor-runtime";
@@ -109,6 +110,7 @@ async function main(): Promise<void> {
   process.on("SIGINT", shutdown);
   process.on("SIGTERM", shutdown);
   setImmediate(() => void warmUp(rules.current()));
+  scheduleContentCachePrune();
   setTimeout(() => {
     process.title = "tkr-processor";
   }, 1000).unref();

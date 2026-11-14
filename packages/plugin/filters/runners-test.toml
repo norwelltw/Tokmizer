@@ -157,7 +157,7 @@ keep_failures = true
 strip_on_failure = true
 transform = "bun-frames"
 transform_on_failure = true
-drop_lines_matching = ["^bun test v\\d+\\.\\d+\\.\\d+ \\([0-9a-f]+\\)$"]
+drop_lines_matching = ["^bun test v\\d+\\.\\d+\\.\\d+ \\([0-9a-f]+\\)$", "^\\s*\\d+ expect\\(\\) calls$"]
 
 [filters.mocha]
 description = "Compact mocha runs (drop passing tests, keep failures and the summary)"

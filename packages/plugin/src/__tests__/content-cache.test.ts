@@ -6,6 +6,7 @@ import {
   writeContentCache,
   readContentCache,
   pruneContentCache,
+  pruneContentCacheIfDue,
   captureForRestore,
   captureOriginalForRestore,
   restoreCommand,
@@ -91,6 +92,20 @@ describe("content-cache", () => {
     const old = new Date(Date.now() - OLDER_THAN_RETENTION_MS);
     utimesSync(contentCacheFile(HASH), old, old);
     await pruneContentCache();
+    expect(existsSync(contentCacheFile(HASH))).toBe(false);
+  });
+
+  it("prunes on its own schedule, at most once every six hours", async () => {
+    await writeContentCache(HASH, "stale");
+    const old = new Date(Date.now() - OLDER_THAN_RETENTION_MS);
+    utimesSync(contentCacheFile(HASH), old, old);
+    expect(await pruneContentCacheIfDue()).toBe(true);
+    expect(existsSync(contentCacheFile(HASH))).toBe(false);
+    await writeContentCache(HASH, "stale again");
+    utimesSync(contentCacheFile(HASH), old, old);
+    expect(await pruneContentCacheIfDue()).toBe(false);
+    expect(existsSync(contentCacheFile(HASH))).toBe(true);
+    expect(await pruneContentCacheIfDue(Date.now() + 7 * 60 * 60 * 1000)).toBe(true);
     expect(existsSync(contentCacheFile(HASH))).toBe(false);
   });
 

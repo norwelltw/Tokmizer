@@ -159,12 +159,12 @@ function pseudoCommand(payload: Payload): string {
   return name.toLowerCase();
 }
 
-const EXEC_LAUNCHER_RE = /'(?:[A-Za-z]:)?\/[^']*\/(?:tkr-exec(?:\.exe|\.js)?'|tkr(?:\.exe)?' exec)(?:\\'')?(?:\s|$)/;
+const EXEC_LAUNCHER_RE = /'(?:[A-Za-z]:)?\/[^']*\/(?:tkr-exec(?:\.exe|\.js)?'|tkr-run'|tkr(?:\.exe)?' exec)(?:\\'')?(?:\s|$)/;
 const UNKNOWN_STATUS_RE = /;|\|\||\n|(?<![>&|])&(?![&>])/;
 const SILENT_HEADS = new Set(["cd", "export", "set", "unset", "true", ":"]);
 const SHELL_SCRIPT_RE = /^(?:\S*\/)?(?:sh|bash|zsh|dash|ksh)\s+-[elux]*c[elux]*\s+'([^']*)'$/;
 
-const BARE_LAUNCHER_RE = /(?:^|[\s;&|(])(?:[A-Za-z]:)?\/\S*\/tkr-exec(?:\.exe|\.js)?\s|(?:^|[;&|(\n])\s*(?:\S*\/)?tkr-exec(?:\.exe|\.js)?\s/;
+const BARE_LAUNCHER_RE = /(?:^|[\s;&|(])(?:[A-Za-z]:)?\/\S*\/(?:tkr-exec(?:\.exe|\.js)?|tkr-run)\s|(?:^|[;&|(\n])\s*(?:\S*\/)?(?:tkr-exec(?:\.exe|\.js)?|tkr-run)\s/;
 
 export function routedThroughExec(cmd: string): boolean {
   return EXEC_LAUNCHER_RE.test(cmd) || BARE_LAUNCHER_RE.test(cmd);

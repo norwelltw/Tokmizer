@@ -181,6 +181,8 @@ match_command = "^ecs(?:\\s|$)|^php\\s+(?:\\S*/)?ecs(?:\\s|$)"
 priority = 60
 strip_ansi = true
 strip_lines_matching = ["^\\s*\\d+/\\d+ \\[[░▓▒█=>\\- ]*\\]\\s+\\d+%$", "^\\s*$"]
+transform = "trim-end"
+transform_on_failure = true
 
 [filters.php-lint]
 description = "Collapse php -l success lines"

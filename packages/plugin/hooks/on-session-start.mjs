@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 import { join, dirname, basename } from "node:path";
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, renameSync, rmSync, statSync } from "node:fs";
 import { homedir } from "node:os";
+import { createHash } from "node:crypto";
 
 const drained = new Promise((resolve) => {
   if (process.stdin.isTTY) return resolve();
@@ -16,6 +17,7 @@ const pluginRoot = process.env.CLAUDE_PLUGIN_ROOT || (single ? join(dirname(proc
 const networkOff =
   ["0", "off", "false", "no"].includes(String(process.env.TOKMIZER_NETWORK ?? "").trim().toLowerCase()) ||
   existsSync(join(home, "network-off"));
+const NATIVE_RETRY_MS = 6 * 60 * 60 * 1000;
 const userMessages = [];
 let context = "";
 
@@ -23,9 +25,16 @@ try {
   const hooksFile = join(pluginRoot, "hooks", "hooks.json");
   const installer = join(pluginRoot, "scripts", "install-native.mjs");
   const { version } = JSON.parse(readFileSync(join(pluginRoot, "package.json"), "utf8"));
-  const attempt = join(home, `native-attempt-${version}`);
-  if (!single && process.env.TOKMIZER_NATIVE_EXEC !== "0" && existsSync(installer) && !existsSync(attempt) && readFileSync(hooksFile, "utf8").includes('"node \\"${CLAUDE_PLUGIN_ROOT}')) {
+  const prefix = `native-attempt-${version}-`;
+  const attempt = join(home, prefix + createHash("sha256").update(pluginRoot).digest("hex").slice(0, 12));
+  let attemptedAt = 0;
+  try { attemptedAt = statSync(attempt).mtimeMs; } catch {}
+  if (!single && process.env.TOKMIZER_NATIVE_EXEC !== "0" && existsSync(installer) && Date.now() - attemptedAt > NATIVE_RETRY_MS && readFileSync(hooksFile, "utf8").includes('node \\"${CLAUDE_PLUGIN_ROOT}/dist/hooks-host/pre-tool-use.js')) {
     mkdirSync(home, { recursive: true });
+    for (const name of readdirSync(home)) {
+      if (!name.startsWith("native-attempt-") || name.startsWith(prefix)) continue;
+      try { if (Date.now() - statSync(join(home, name)).mtimeMs > NATIVE_RETRY_MS) rmSync(join(home, name), { force: true }); } catch {}
+    }
     writeFileSync(attempt, String(Date.now()), { mode: 0o600 });
     spawn(process.execPath, [installer, "--native-only"], { detached: true, stdio: "ignore", windowsHide: true }).unref();
   }
