@@ -27,6 +27,8 @@ import { yoloEnabled } from "../yolo-mode";
 import { selfInvocation, singleBinary } from "../self-command";
 import { networkEnabled, networkNoticeMarker } from "../network";
 import { shQuote } from "../shim/sh";
+import { videoModeEnabled } from "../video-mode";
+import { formatTips, unseenTips, videoTips } from "../video-tips";
 
 const MAX_BUFFER_BYTES = 10 * 1024 * 1024;
 const MIN_STDERR_FILTER_BYTES = 1024;
@@ -359,7 +361,17 @@ export async function processCapturedOutput(
       } catch {}
     }
     if (!truncated && stdout.length > 0 && !shorter(delivered, stdout)) delivered = neutralizeMarkers(stdout, stdout);
-    const deliveredStdout = delivered + truncMarker;
+    let tipBlock = "";
+    if (exitCode === 0 || exitCode == null) {
+      try {
+        const candidates = videoTips(cmdLine, `${stdout}\n${stderr}`);
+        if (candidates.length > 0 && videoModeEnabled("cwd" in context ? context.cwd : process.cwd())) {
+          const tips = unseenTips(candidates, sessionId);
+          if (tips.length > 0) tipBlock = `${delivered.length === 0 || delivered.endsWith("\n") ? "" : "\n"}${formatTips(tips)}\n`;
+        }
+      } catch {}
+    }
+    const deliveredStdout = delivered + truncMarker + tipBlock;
     const deliveredStderr = stderrOut + stderrTruncMarker;
     const host = detectHost(env).host;
     const counted = countedSaving(

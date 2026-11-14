@@ -24,6 +24,7 @@ import { loadSettingsCache, clearSettingsCache, updateSettingsCache } from "../s
 import { telemetryHintLine, telemetryNoticeLine, markTelemetryNoticeShown, TELEMETRY_NOTICE } from "../telemetry-hint";
 import { networkEnabled, networkNoticeLine, networkStatusLabel, networkOffByEnv, setNetwork, NETWORK_OFF_MESSAGE } from "../network";
 import { yoloEnabled, setYoloMode } from "../yolo-mode";
+import { readVideoMode, setVideoMode, videoModeEnabled, videoProjectRoot } from "../video-mode";
 import { restoreCommand, contentCacheStats, retentionLabel, readRestoreConfig, pruneContentCache } from "../content-cache";
 import { restoreConfigFile } from "../paths";
 import {
@@ -208,6 +209,7 @@ function help(): void {
       "  settings reset                    reset all settings to defaults",
       "  compression [level]               show or set compression level (light, balanced, max)",
       "  yolo [on|off|status]              local aggressive output reduction; content can be lost",
+      "  video [on|off|status] [--global]  video-editing mode for this project: render speed tips",
       "  reducer [level]                   show or set response reducer (off, light, balanced, max)",
       "  telemetry status                  show telemetry on/off + local record count",
       "  telemetry on | off                turn usage stats (command names, token counts; on by default) on or off",
@@ -571,6 +573,28 @@ async function main(): Promise<void> {
       await setYoloMode(false);
     }
     process.stdout.write(`YOLO: ${yoloEnabled() ? "on" : "off"} (this machine only)\n`);
+    return;
+  }
+
+  if (cmd === "video") {
+    const flags = rest.filter((a) => a.startsWith("-"));
+    const words = rest.filter((a) => !a.startsWith("-"));
+    const action = words[0] ?? "status";
+    const global = flags.includes("--global");
+    if (words.length > 1 || flags.some((f) => f !== "--global") || !["on", "off", "status"].includes(action)) {
+      process.stderr.write("Usage: tkr video [on|off|status] [--global]\n");
+      process.exitCode = 1;
+      return;
+    }
+    if (action !== "status") await setVideoMode(action === "on", { global });
+    const mode = readVideoMode();
+    const here = videoModeEnabled();
+    process.stdout.write(
+      `Video mode: ${here ? "on" : "off"} for ${videoProjectRoot()}${mode.global ? " (on everywhere)" : ""}\n` +
+        (here
+          ? "Render and encode commands get speed tips. Commands, images and video files are never changed.\n"
+          : "Turn on for this project: tkr video on    everywhere: tkr video on --global\n")
+    );
     return;
   }
 

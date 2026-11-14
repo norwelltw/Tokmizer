@@ -304,6 +304,18 @@ describe("per-command breakdown", () => {
     expect(statCmdLabel("docker compose up")).toBe("docker compose");
   });
 
+  it("names the package behind a package runner, whatever flags or version come first", () => {
+    expect(statCmdLabel("npx hyperframes render")).toBe("npx hyperframes");
+    expect(statCmdLabel("npx -y hyperframes@latest render --quality draft")).toBe("npx hyperframes");
+    expect(statCmdLabel("npx --yes hyperframes@0.8.212 check")).toBe("npx hyperframes");
+    expect(statCmdLabel("npx -p typescript tsc --noEmit")).toBe("npx tsc");
+    expect(statCmdLabel("npx --package=typescript tsc")).toBe("npx tsc");
+    expect(statCmdLabel("bunx hyperframes snapshot")).toBe("bunx hyperframes");
+    expect(statCmdLabel("npx -y @scope/tool@1.2.3 run")).toBe("npx");
+    expect(statCmdLabel("npx -y")).toBe("npx");
+    expect(statCmdLabel("npx vitest run")).toBe("npx vitest");
+  });
+
   it("recordStat writes the command label", () => {
     const file = join(dir, "stats.jsonl");
     recordStat(1000, 100, file, false, "claude-code", "sh", "git status");

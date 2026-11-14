@@ -410,6 +410,8 @@ const SUBCOMMAND_BINS = new Set([
   "gcloud", "az", "bundle", "rake", "rails", "prisma", "poetry", "uv", "gem", "composer"
 ]);
 
+const RUNNER_BINS = new Set(["npx", "bunx", "pnpx"]);
+const RUNNER_VALUE_FLAGS = new Set(["-p", "--package", "-c", "--call"]);
 const ASSIGNMENT_RE = /^[A-Za-z_][A-Za-z0-9_]*=/;
 
 function isSetupOnly(words: string[]): boolean {
@@ -486,6 +488,12 @@ export function statCmdLabel(cmdLine: string): string {
   if (i >= tokens.length) return "";
   const rawHead = tokens[i]!;
   const head = rawHead.includes("/") ? rawHead.slice(rawHead.lastIndexOf("/") + 1) : rawHead;
+  if (RUNNER_BINS.has(head.toLowerCase())) {
+    let j = i + 1;
+    while (j < tokens.length && tokens[j]!.startsWith("-")) j += RUNNER_VALUE_FLAGS.has(tokens[j]!) ? 2 : 1;
+    const pkg = tokens[j]?.replace(/(?<=.)@[^/]*$/, "");
+    return (pkg && SUBCOMMAND_RE.test(pkg) ? `${head} ${pkg}` : head).slice(0, 24);
+  }
   const sub = tokens[i + 1];
   const label = sub && !sub.startsWith("-") && SUBCOMMAND_RE.test(sub) && SUBCOMMAND_BINS.has(head.toLowerCase())
     ? `${head} ${sub}`
