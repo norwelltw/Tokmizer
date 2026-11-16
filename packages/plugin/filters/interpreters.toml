@@ -8,6 +8,7 @@ strip_lines_matching = [
   "^  File \"<frozen [^\"]*>\", line \\d+"
 ]
 transform = "squeeze-output"
+max_lines = 200
 on_empty = "python: ok"
 
 [filters.node]
@@ -21,4 +22,5 @@ strip_lines_matching = [
   "^\\(Use `node --trace-"
 ]
 transform = "squeeze-output"
+max_lines = 200
 on_empty = "node: ok"

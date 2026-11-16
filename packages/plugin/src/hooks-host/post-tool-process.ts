@@ -12,12 +12,15 @@ import type { FilterResolver } from "../engine";
 import { READ_EDIT_NOTICE } from "../engine/read-notice";
 import { claudeOrCodex } from "./payload-host";
 import { rewrite, splitTopLevel } from "./pre-tool-rewrite";
+import { PREVIEW_BUDGET_CHARS, previewExcerpt, withoutRestoreHints } from "../exec/host-budget";
 
 const COVERED_TOOLS = new Set(["Read", "Grep", "Glob", "Bash"]);
 const MAX_OUTPUT_BYTES = 10 * 1024 * 1024;
 const MIN_BASH_OUTPUT_BYTES = 1024;
 const GLOB_MIN_PATHS = 10;
-const PERSISTED_MAX_CHARS = 25_000;
+// Claude Code shows ~2 KB of a persisted output: deliver no more than that.
+const PERSISTED_MAX_CHARS = PREVIEW_BUDGET_CHARS;
+const BUDGET_HINT_RE = /\[tkr restore [0-9a-f]+\]\n?$/;
 
 export type PostToolUsePayload = Payload;
 
@@ -296,6 +299,8 @@ async function processAsExec(run: ExecEquivalent, payload: Payload, yolo: boolea
   const env: NodeJS.ProcessEnv = { ...process.env };
   if (payload.session_id) env.CLAUDE_CODE_SESSION_ID = payload.session_id;
   else delete env.CLAUDE_CODE_SESSION_ID;
+  // Only Claude Code persists an output: its preview budget applies.
+  if (maxChars != null) env.TOKMIZER_HOST = "claude-code";
   const result = await processCapturedOutput(
     { argv: run.argv, stdout: run.stdout, stderr: run.stderr, exitCode: run.exitCode, truncated: false, stderrTruncated: false },
     {
@@ -463,7 +468,12 @@ async function processPayload(payload: Payload, options: PostToolUseOptions, max
       output = extractOutput(buildUpdatedToolOutput(payload.tool_response, output, payload.tool_name) as Payload["tool_response"]);
     }
     if (output != null && Buffer.byteLength(output, "utf8") >= result.rawBytes) output = null;
-    if (maxChars != null && (output == null || output.length > maxChars)) return null;
+    if (maxChars != null && (output == null || output.length > maxChars)) {
+      if (yolo) return null;
+      const budgeted = await captureOriginalForRestore(raw, previewExcerpt(output == null ? raw : withoutRestoreHints(output), maxChars), undefined, { label });
+      if (!BUDGET_HINT_RE.test(budgeted) || budgeted.length > maxChars) return null;
+      output = budgeted;
+    }
     const deliveredBytes = output == null ? result.rawBytes : Buffer.byteLength(output, "utf8");
     const host = detectHost().host;
     const counted = countedSaving(result.rawBytes, deliveredBytes, hostOutputCapBytes(host));

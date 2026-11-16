@@ -97,7 +97,8 @@ export async function processOutput(
   const explicitSlice = rawBytes <= 16_384 && producer != null &&
     /^(?:head|tail)(?:\s|$)|^sed\s+(?:(?:-[Eru]+|--(?:regexp-extended|unbuffered|sandbox))\s+)*(?:-[Enruse]*n[Enruse]*(?:\s|$)|--(?:quiet|silent)(?:\s|$))/.test(normalizeHead(producer));
   const completeLightRead = chosen?.transform === "smart-read" && rawBytes <= 16_384 &&
-    (pipelineOpts.verbosity ?? "normal") === "normal" && pipelineOpts.smartCode !== true;
+    // A cut file read costs a `tkr restore` turn, which outweighs the bytes saved under 16 KB.
+    (pipelineOpts.verbosity ?? "normal") !== "minimal" && pipelineOpts.smartCode !== true;
   const editableRead = chosen?.slug === "read-tool" && rawBytes < READ_FOLD_MIN_BYTES;
   if (!yolo && (completeLightRead || editableRead || explicitSlice || (targetedRead && pipelineOpts.smartCode !== true))) {
     return { output, filterId: chosen?.slug ?? null, rawBytes, filteredBytes: rawBytes, debugBypass: knownFailure || suspectedFailure, droppedTail: null };

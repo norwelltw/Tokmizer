@@ -48,6 +48,7 @@ const Prepare = z.object({
   sessionId: z.string().max(256).optional(),
   restoreDisabled: z.boolean(),
   restoreMaxBytes: z.number().int().positive().max(MAX_CAPTURE_BYTES).optional(),
+  hostOutputChars: z.number().int().positive().max(1_000_000_000).optional(),
   timeoutMs: z.number().int().positive().max(86_400_000)
 }).strict();
 
@@ -292,6 +293,7 @@ export async function startProcessingServer(opts: {
         if (request.sessionId !== undefined) env.CLAUDE_CODE_SESSION_ID = request.sessionId;
         env.TOKMIZER_CCR_DISABLED = request.restoreDisabled ? "1" : "0";
         if (request.restoreMaxBytes !== undefined) env.TOKMIZER_CCR_ENTRY_MAX_BYTES = String(request.restoreMaxBytes);
+        if (request.hostOutputChars !== undefined) env.BASH_MAX_OUTPUT_LENGTH = String(request.hostOutputChars);
         const work = processCapturedOutput({ ...captured, argv: request.argv }, {
           env,
           yolo,

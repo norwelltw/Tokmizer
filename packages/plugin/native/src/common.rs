@@ -677,6 +677,14 @@ pub fn run(args: &[OsString]) -> Option<i32> {
         }
         prepare["restoreMaxBytes"] = json!(parsed);
     }
+    // Claude Code's own output limit: the server keeps delivery within its preview.
+    if let Some(limit) = env::var("BASH_MAX_OUTPUT_LENGTH")
+        .ok()
+        .and_then(|value| value.trim().parse::<u64>().ok())
+        .filter(|limit| *limit > 0 && *limit <= 1_000_000_000)
+    {
+        prepare["hostOutputChars"] = json!(limit);
+    }
     let metadata = serde_json::to_vec(&prepare).ok()?;
     if metadata.len() > METADATA_CAP {
         return None;

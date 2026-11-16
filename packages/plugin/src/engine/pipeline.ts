@@ -184,11 +184,15 @@ export function applyFilterWithTail(
       }
       const omitted = meaningful - effectiveCap;
       if (def.keep_failures) {
-        const tail = lines.slice(cut);
+        // Keep the last lines too (final summary), as headTailLines does.
+        const lastKept = pad ? 0 : effectiveCap - Math.ceil(effectiveCap * 0.7);
+        const headCut = cut - lastKept;
+        const tail = lines.slice(headCut, lines.length - lastKept);
+        const last = lastKept > 0 ? lines.slice(lines.length - lastKept) : [];
         const nonFailureTail = tail.filter((l) => !FAILURE.test(l));
-        const omitted = tail.reduce((count, line, i) => count + (!FAILURE.test(line) && !pad?.[cut + i] ? 1 : 0), 0);
+        const omitted = tail.reduce((count, line, i) => count + (!FAILURE.test(line) && !pad?.[headCut + i] ? 1 : 0), 0);
         droppedTail = nonFailureTail.length > 0 ? nonFailureTail.join("\n") : null;
-        lines = [...lines.slice(0, cut), ...(omitted > 0 ? [omissionMarker(omitted)] : []), ...tail.filter((l) => FAILURE.test(l))];
+        lines = [...lines.slice(0, headCut), ...(omitted > 0 ? [omissionMarker(omitted)] : []), ...tail.filter((l) => FAILURE.test(l)), ...last];
       } else if (keepNumbering) {
         droppedTail = lines.slice(cut).join("\n");
         lines = [...lines.slice(0, cut), omissionMarker(omitted)];

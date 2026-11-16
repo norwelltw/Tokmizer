@@ -37,6 +37,12 @@ strip_lines_matching = [
   "^\\s+Side data:\\s*$",
   "^\\s+CPB properties:",
   "^Press \\[q\\] to stop",
+  "(?:Starting thread\\.\\.\\.|Terminating thread with return code \\d+.*)$",
+  "\\] (?:EOF while reading input|All consumers returned EOF|Filtergraph returned EOF, finishing|All streams finished|Decoder thread received EOF packet|Decoder returned EOF, finishing|Encoder thread received EOF)$",
+  "^\\[in#\\d+/[^\\]]*\\] (?:Input file #|  Input stream #|  Total: )",
+  "^\\[AVIOContext @ [^\\]]+\\] Statistics:",
+  "^\\[aac @ [^\\]]+\\] Qavg:",
+  "^Exiting with exit code 0$",
 ]
 strip_on_failure = true
 transform = "ffmpeg-progress"

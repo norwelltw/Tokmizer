@@ -98,6 +98,20 @@ describe.skipIf(process.platform === "win32")("authenticated processing service"
     }));
   });
 
+  it("passes the caller's Claude Code output limit to processing", async () => {
+    await start();
+    const socket = await client();
+    const ready = frameFrom(socket);
+    socket.write(prepare({ host: "claude-code", hostOutputChars: 500000 }));
+    expect(JSON.parse((await ready).toString())).toMatchObject({ ok: true });
+    const delivered = frameFrom(socket);
+    socket.write(encodeProcessingFrame(encodeCapturedFrame(input)));
+    await delivered;
+    expect(processCapturedOutput).toHaveBeenCalledExactlyOnceWith(expect.anything(), expect.objectContaining({
+      env: { CLAUDECODE: "1", TOKMIZER_CCR_DISABLED: "0", BASH_MAX_OUTPUT_LENGTH: "500000" }
+    }));
+  });
+
   it.each([
     ["qwen-code", { QWEN_CODE: "1" }],
     ["crush", { CRUSH: "1" }],

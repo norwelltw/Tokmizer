@@ -29,8 +29,10 @@ import { networkEnabled, networkNoticeMarker } from "../network";
 import { shQuote } from "../shim/sh";
 import { videoModeEnabled } from "../video-mode";
 import { autoVideoArgs, autoVideoNotice, formatTips, unseenTips, videoTips } from "../video-tips";
+import { claudeCodePersistChars, PREVIEW_BUDGET_CHARS, previewExcerpt, withoutRestoreHints } from "./host-budget";
 
 const MAX_BUFFER_BYTES = 10 * 1024 * 1024;
+const RESTORE_HINT_RE = /\[tkr restore [0-9a-f]+\]\n?$/;
 const MIN_STDERR_FILTER_BYTES = 1024;
 const ENROLL_KICK_THROTTLE_MS = 60_000;
 
@@ -382,9 +384,25 @@ export async function processCapturedOutput(
         }
       } catch {}
     }
-    const deliveredStdout = delivered + truncMarker + tipBlock;
-    const deliveredStderr = stderrOut + stderrTruncMarker;
+    let deliveredStdout = delivered + truncMarker + tipBlock;
+    let deliveredStderr = stderrOut + stderrTruncMarker;
     const host = detectHost(env).host;
+    // Claude Code persists an output above its limit and shows a ~2 KB preview:
+    // never hand it more than that, with the whole output kept for tkr restore.
+    let budgeted = false;
+    if (!yolo && host === "claude-code" && stdout.length + stderr.length > claudeCodePersistChars(env) &&
+      deliveredStdout.length + deliveredStderr.length > PREVIEW_BUDGET_CHARS) {
+      const combined = [stdout, stderr].filter(Boolean).join("\n");
+      const shownText = withoutRestoreHints([delivered, stderrOut].filter(Boolean).join("\n"));
+      try {
+        const capped = await captureOriginalForRestore(combined, previewExcerpt(shownText, PREVIEW_BUDGET_CHARS - truncMarker.length - tipBlock.length), env, { label: statCmdLabel(cmdLine) });
+        if (RESTORE_HINT_RE.test(capped)) {
+          deliveredStdout = capped + truncMarker + tipBlock;
+          deliveredStderr = stderrTruncMarker;
+          budgeted = true;
+        }
+      } catch {}
+    }
     const counted = countedSaving(
       processed.rawBytes + Buffer.byteLength(stderr, "utf8"),
       Buffer.byteLength(deliveredStdout, "utf8") + Buffer.byteLength(deliveredStderr, "utf8"),
@@ -426,8 +444,10 @@ export async function processCapturedOutput(
       stderr: deliveredStderr,
       code: exitCode ?? 0,
       filterId: processed.filterId,
-      rawBytes: processed.rawBytes + stderrRawBytes,
-      filteredBytes: processed.filteredBytes + stderrFilteredBytes,
+      rawBytes: budgeted ? processed.rawBytes + Buffer.byteLength(stderr, "utf8") : processed.rawBytes + stderrRawBytes,
+      filteredBytes: budgeted
+        ? Buffer.byteLength(deliveredStdout, "utf8") + Buffer.byteLength(deliveredStderr, "utf8")
+        : processed.filteredBytes + stderrFilteredBytes,
       truncated
     };
   } catch {

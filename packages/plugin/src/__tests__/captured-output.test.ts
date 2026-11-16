@@ -172,3 +172,54 @@ describe("stderr of a command whose exit code is unknown", () => {
     expect(unknown.stderr.length).toBe(known.stderr.length);
   });
 });
+
+describe("Claude Code preview budget", () => {
+  const debugLog = Array.from({ length: 1868 }, (_, i) => i % 3 === 2
+    ? `[libx264 @ 0x7711421180] frame= ${i} QP=16.00 NAL=2 Slice:P Poc:${i % 64}  I:4    P:83   SKIP:833  size=784 bytes`
+    : `[out#0/mp4 @ 0x7711410900] sq: ${i % 3 ? "receive" : "send"} 0 ts ${(i / 30).toFixed(6)}`)
+    .concat(["[error] muxer warning: something to keep", "frame=  300 fps=0.0 q=-1.0 Lsize=     253kB time=00:00:09.93 bitrate= 208.7kbits/s speed=12.1x"])
+    .join("\n") + "\n";
+  const run = (env: NodeJS.ProcessEnv, exitCode = 0, text = debugLog) => processCapturedOutput(
+    { argv: ["python3", "render.py"], stdout: "", stderr: text, exitCode, truncated: false, stderrTruncated: false },
+    { yolo: false, env: { ...env, CLAUDE_CODE_SESSION_ID: "" }, resolver }
+  );
+
+  it("caps a long output to the preview budget under Claude Code and keeps the whole of it for restore", async () => {
+    for (const exitCode of [0, 1]) {
+      const r = await run({ CLAUDECODE: "1", TOKMIZER_HOME: home }, exitCode);
+      const delivered = r.stdout + r.stderr;
+      expect(delivered.length).toBeLessThanOrEqual(2_500);
+      expect(delivered).toContain("speed=12.1x");
+      expect(delivered).toContain("[error] muxer warning: something to keep");
+      expect(delivered).toMatch(/more lines omitted/);
+      const hash = /\[tkr restore ([0-9a-f]+)\]\n?$/.exec(delivered)?.[1];
+      expect(hash).toBeDefined();
+      expect(await readContentCache(hash!)).toBe(debugLog);
+      if (exitCode !== 0) {
+        // The failing run is not shortened by the filter: the budget replaces it, and the counts say so.
+        expect(r.stdout).toMatch(/\[tkr restore [0-9a-f]+\]\n$/);
+        expect(r.stderr).toBe("");
+        expect(r.rawBytes).toBe(Buffer.byteLength(debugLog, "utf8"));
+        expect(r.filteredBytes).toBe(Buffer.byteLength(delivered, "utf8"));
+      }
+    }
+  });
+
+  it("leaves other hosts, a raised Claude Code limit and short outputs as before", async () => {
+    const raised = await run({ CLAUDECODE: "1", TOKMIZER_HOME: home, BASH_MAX_OUTPUT_LENGTH: "500000" }, 1);
+    const codex = await run({ CODEX_CLI: "1", TOKMIZER_HOME: home }, 1);
+    expect((raised.stdout + raised.stderr).length).toBeGreaterThan(2_500);
+    expect((codex.stdout + codex.stderr).length).toBeGreaterThan(2_500);
+    const short = debugLog.split("\n").slice(0, 300).join("\n") + "\n";
+    expect(short.length).toBeLessThan(30_000);
+    const plain = await run({ CODEX_CLI: "1", TOKMIZER_HOME: home }, 0, short);
+    const claude = await run({ CLAUDECODE: "1", TOKMIZER_HOME: home }, 0, short);
+    expect(claude.stderr).toBe(plain.stderr);
+  });
+
+  it("delivers the filtered output when the restore store is off", async () => {
+    const r = await run({ CLAUDECODE: "1", TOKMIZER_HOME: home, TOKMIZER_CCR_DISABLED: "1" }, 1);
+    expect(r.stdout + r.stderr).not.toMatch(/\[tkr restore /);
+    expect((r.stdout + r.stderr).length).toBeGreaterThan(2_500);
+  });
+});

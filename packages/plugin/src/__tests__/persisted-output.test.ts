@@ -77,7 +77,7 @@ describe("Claude Code persisted Bash output", () => {
       const updated = envelope.hookSpecificOutput.updatedToolOutput;
       expect(updated.persistedOutputPath).toBeUndefined();
       expect(updated.persistedOutputSize).toBeUndefined();
-      expect(updated.stdout.length).toBeLessThanOrEqual(25_000);
+      expect(updated.stdout.length).toBeLessThanOrEqual(2_500);
       expect(updated.stdout).toContain("row data value with some padding 1\n");
       expect(updated.stdout).toMatch(/padding 4000\n|more lines omitted/);
       expect(await readContentCache(restoreHash(updated.stdout))).toBe(rows);
@@ -86,14 +86,20 @@ describe("Claude Code persisted Bash output", () => {
     });
   }
 
-  it("leaves the output untouched when the compressed full text stays above 25 000 characters", async () => {
+  it("delivers a preview-sized excerpt when the compressed full text stays above the preview budget", async () => {
     const full = Array.from({ length: 6000 }, (_, i) => (i % 2 ? `drop ${i}` : `keep line ${i} with enough text to stay large`)).join("\n") + "\n";
     const definition = FilterDef.parse({ slug: "half", match_command: ".*", strip_lines_matching: ["^drop "], max_lines: 100000, scale_with_level: false });
     const resolver: FilterResolver = async () => ({ ...definition, matchRegex: /.*/ });
     for (const command of ["cat big.txt", "cat big.txt; true"]) {
-      expect(await processToolOutput(bash(command, full), { resolver })).toBeNull();
+      const output = await processToolOutput(bash(command, full), { resolver });
+      expect(output).not.toBeNull();
+      expect(output!.length).toBeLessThanOrEqual(2_500);
+      expect(output).toContain("keep line 0 with enough text");
+      expect(output).toContain("keep line 5998 with enough text");
+      expect(output).not.toContain("drop ");
+      expect(await readContentCache(restoreHash(output!))).toBe(full);
     }
-    expect(statRows()).toHaveLength(0);
+    expect(statRows()).toHaveLength(2);
   });
 
   it("leaves the output untouched when stderr is present or the run was interrupted", async () => {
