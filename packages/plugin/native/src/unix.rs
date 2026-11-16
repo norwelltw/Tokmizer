@@ -310,6 +310,7 @@ pub fn capture(
     extra_env: &[(String, OsString)],
 ) -> io::Result<(Capture, Capture, i32)> {
     let _signals = Signals::install()?;
+    let mut timed_out = false;
     let path = env::split_paths(&env::var_os("PATH").unwrap_or_default())
         .filter(|entry| !entry.as_os_str().is_empty() && entry != &home.join("shims"))
         .collect::<Vec<_>>();
@@ -379,6 +380,7 @@ pub fn capture(
         }
         if start.elapsed() >= Duration::from_millis(timeout) && terminated.is_none() {
             if status.is_none() {
+                timed_out = true;
                 unsafe {
                     libc::kill(child.id() as libc::pid_t, libc::SIGTERM);
                 }
@@ -438,6 +440,25 @@ pub fn capture(
                 .unwrap_or_else(|| 128 + status.signal().unwrap_or(15))
         })
         .unwrap_or(1);
+    if timed_out {
+        // Say why the command stopped: a silent exit 143 reads like a crash of the command itself.
+        let mut stderr = stderr;
+        if !stderr.bytes.is_empty() && !stderr.bytes.ends_with(b"\n") {
+            stderr.append(b"\n");
+        }
+        stderr.append(
+            format!(
+                "tkr: stopped after {} (TOKMIZER_EXEC_TIMEOUT_MS). Run it in the background for longer jobs.\n",
+                if timeout >= 60_000 {
+                    format!("{} min", (timeout + 30_000) / 60_000)
+                } else {
+                    format!("{} s", (timeout + 500) / 1000)
+                }
+            )
+            .as_bytes(),
+        );
+        return Ok((stdout, stderr, code));
+    }
     Ok((stdout, stderr, code))
 }
 

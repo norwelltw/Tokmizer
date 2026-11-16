@@ -1720,8 +1720,10 @@ async function main(): Promise<void> {
     }
     return;
   }
+  const asked = ["help", "--help", "-h"].includes(cmd);
+  if (!asked) process.stderr.write(`tkr: unknown command "${cmd}"\n\n`);
   help();
-  process.exitCode = ["help", "--help", "-h"].includes(cmd) ? 0 : 1;
+  process.exitCode = asked ? 0 : 1;
 }
 
 main().catch((e) => {

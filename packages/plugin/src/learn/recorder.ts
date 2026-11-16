@@ -1,4 +1,4 @@
-import { commandName } from "./telemetry";
+import { commandName, isKnownProgram } from "./telemetry";
 import { redactCommand } from "./redact";
 import { appendSpool, uploadSpool, type UploadResult } from "./spool";
 import { slugKey } from "../contracts";
@@ -18,7 +18,8 @@ export async function recordEvent(input: RecordInput): Promise<void> {
   const name = commandName(input.cmd);
   if (!name || redactCommand(name) !== name) return;
   appendSpool("learn", {
-    cmd: name,
+    // Same rule as usage stats: a program outside the public catalog (an in-house tool name) is never sent.
+    cmd: isKnownProgram(name) ? name : "other",
     filterId: input.filterId == null ? null : slugKey(input.filterId),
     rawBytes: input.rawBytes,
     filteredBytes: input.filteredBytes

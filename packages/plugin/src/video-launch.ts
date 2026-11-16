@@ -149,7 +149,8 @@ export function blenderGpuScriptsDir(home: string = tokmizerHome()): string | nu
       current = readFileSync(file, "utf8");
     } catch {}
     if (current !== BLENDER_GPU_STARTUP) {
-      mkdirSync(dirname(file), { recursive: true });
+      mkdirSync(home, { recursive: true, mode: 0o700 });
+      mkdirSync(dirname(file), { recursive: true, mode: 0o700 });
       // Atomic: a Blender starting meanwhile never reads half a module.
       const tmp = `${file}.${process.pid}.tmp`;
       writeFileSync(tmp, BLENDER_GPU_STARTUP, { mode: 0o644 });

@@ -94,7 +94,7 @@ export function commandName(raw: string): string {
   return out.slice(0, 64);
 }
 
-function isKnownProgram(name: string): boolean {
+export function isKnownProgram(name: string): boolean {
   return KNOWN_PROGRAMS.has((name.split(" ")[0] ?? "").toLowerCase());
 }
 

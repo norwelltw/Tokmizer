@@ -188,6 +188,7 @@ export async function runWrapped(written: string[]): Promise<WrapResult> {
   });
 
   let killTimer: NodeJS.Timeout | undefined;
+  let timedOut = false;
   let forceKillTimer: NodeJS.Timeout | undefined;
   let idleTimer: NodeJS.Timeout | undefined;
   let capTimer: NodeJS.Timeout | undefined;
@@ -235,6 +236,7 @@ export async function runWrapped(written: string[]): Promise<WrapResult> {
         finish();
       });
       killTimer = setTimeout(() => {
+        timedOut = true;
         child.kill("SIGTERM");
         forceKillTimer = setTimeout(() => child.kill("SIGKILL"), 2000);
       }, DEFAULT_TIMEOUT_MS);
@@ -258,6 +260,11 @@ export async function runWrapped(written: string[]): Promise<WrapResult> {
     onMissingState: kickBackgroundEnroll
   });
   if (notice) result.stdout = `${result.stdout}${result.stdout.length === 0 || result.stdout.endsWith("\n") ? "" : "\n"}${notice}\n`;
+  // Say why the command stopped: a silent exit 143 reads like a crash of the command itself.
+  if (timedOut) {
+    const after = DEFAULT_TIMEOUT_MS >= 60_000 ? `${Math.round(DEFAULT_TIMEOUT_MS / 60_000)} min` : `${Math.round(DEFAULT_TIMEOUT_MS / 1000)} s`;
+    result.stderr = `${result.stderr}${result.stderr.length === 0 || result.stderr.endsWith("\n") ? "" : "\n"}tkr: stopped after ${after} (TOKMIZER_EXEC_TIMEOUT_MS). Run it in the background for longer jobs.\n`;
+  }
   return result;
 }
 

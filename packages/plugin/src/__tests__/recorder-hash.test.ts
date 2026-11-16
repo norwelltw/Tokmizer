@@ -37,6 +37,15 @@ describe("learn recorder anti-RE", () => {
     expect(events[0]!.filterId).not.toBe("ls");
   });
 
+  it("never spools the name of a program outside the public catalog", async () => {
+    commitSpool("learn");
+    await recordEvent({ cmd: "acme-prod-deploy --x", filterId: null, rawBytes: 10, filteredBytes: 5 });
+    await recordEvent({ cmd: "git status", filterId: null, rawBytes: 10, filteredBytes: 5 });
+    const events = drainSpool("learn") as Array<{ cmd: string }>;
+    commitSpool("learn");
+    expect(events.map((e) => e.cmd)).toEqual(["other", "git status"]);
+  });
+
   it("keeps a null filterId null", async () => {
     commitSpool("learn");
     await recordEvent({ cmd: "ls", filterId: null, rawBytes: 5, filteredBytes: 5 });

@@ -6,8 +6,8 @@ Copyright 2026 Impulse Creation, the copyright holder and the Licensor named in 
 
 | Path | Licence | Text |
 |---|---|---|
-| `src/engine/**` (compression engine: pipeline, routing, matcher, filter schema and loader, transforms, structured compaction, test-failure folding) | BUSL-1.1, converts to Apache-2.0 on the Change Date | [`src/engine/LICENSE`](src/engine/LICENSE) |
-| `filters/**` (TOML rule catalogue), including the default rules built from it and embedded in `dist/` | BUSL-1.1, same Licensed Work as the engine | [`filters/LICENSE`](filters/LICENSE) |
+| `src/engine/**` (compression engine: pipeline, routing, matcher, filter schema and loader, transforms, structured compaction, test-failure folding) | BUSL-1.1, converts to Apache-2.0 on the Change Date | [`LICENSE-ENGINE`](LICENSE-ENGINE) |
+| `filters/**` (TOML rule catalogue), including the default rules built from it and embedded in `dist/` | BUSL-1.1, same Licensed Work as the engine | [`LICENSE-ENGINE`](LICENSE-ENGINE) |
 | Everything else: CLI (`src/bin`, `src/*.ts`), hooks (`hooks/`, `src/hooks-host`), agent adapters (`src/adapters`, `agent-plugins/`), daemon, launcher and shims (`src/daemon`, `src/exec`, `src/shim`), native launcher (`native/`), setup commands (`command-templates/`, `codex-plugin/`, `.claude-plugin/`, install scripts), tests and fixtures (`src/__tests__`), build scripts (`scripts/`) and documentation | Apache-2.0 | [`LICENSE`](LICENSE) |
 | `dist/` and the npm package `@tokmizer/plugin` | `Apache-2.0 AND BUSL-1.1`: the bundled files contain code and rules under both licences | both texts above |
 | Third-party code bundled into `dist/` and into the native launcher | its own licence | [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md) |

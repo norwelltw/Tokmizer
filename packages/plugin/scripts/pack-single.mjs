@@ -102,7 +102,8 @@ export function packSingle(directory, keys, base) {
     for (const [name, bytes] of licenses) writeFileSync(join(stage, name), bytes);
     writeFileSync(join(stage, "package.json"), JSON.stringify({ name: "@tokmizer/standalone", version, private: true, license: LICENSE_EXPRESSION }, null, 2) + "\n");
     const archive = join(release, `${name}.tar.gz`);
-    execFileSync("tar", ["-czf", archive, "-C", join(release, "stage"), name], { stdio: "inherit", env: { ...process.env, COPYFILE_DISABLE: "1" } });
+    // Owner root:root in the archive, never the local user name.
+    execFileSync("tar", ["--uid", "0", "--gid", "0", "--uname", "root", "--gname", "root", "-czf", archive, "-C", join(release, "stage"), name], { stdio: "inherit", env: { ...process.env, COPYFILE_DISABLE: "1" } });
     archives[key] = { name: `${name}.tar.gz`, sha256: sha256(readFileSync(archive)) };
   }
   rmSync(join(release, "stage"), { recursive: true, force: true });

@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Everything runs from main: a truncated `curl | bash` download runs nothing.
+main() {
+
 err() { printf 'tkr install: %s\n' "$*" >&2; exit 1; }
 log() { printf 'tkr: %s\n' "$*"; }
 
@@ -121,7 +124,12 @@ if [ "${TOKMIZER_STANDALONE:-}" = "1" ] || ! node_ready; then
   standalone=1
 else
   log "Installing @tokmizer/plugin from npm..."
-  npm install -g @tokmizer/plugin
+  if ! npm install -g @tokmizer/plugin; then
+    # A root-owned global prefix (Node from the official .pkg) refuses `npm install -g`.
+    log "npm could not install globally. Installing the standalone tkr executable instead (Node.js not needed)..."
+    install_standalone
+    standalone=1
+  fi
 fi
 command -v tkr >/dev/null 2>&1 || err "tkr is not on PATH. Add its directory to PATH and run tkr shim install."
 
@@ -133,3 +141,6 @@ tkr setup --all </dev/null || log "Some agents could not be set up. Run: tkr set
 log "Done. Tokmizer is free and does not require an account. Your shell profile was not changed."
 log "For Aider, Cline or Windsurf, start them with: tkr wrap <agent>"
 log "Check the installation with: tkr status"
+}
+
+main "$@"

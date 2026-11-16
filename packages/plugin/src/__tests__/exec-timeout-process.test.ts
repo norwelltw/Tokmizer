@@ -58,7 +58,7 @@ describe("packaged CLI timeout lifecycle", () => {
   it.skipIf(process.platform === "win32")("exits promptly after a timed-out command shuts down cooperatively", async () => {
     const result = await run("process.on('SIGTERM',()=>{process.stdout.write('stopped:'+Date.now());process.stderr.write('diagnostic');process.exitCode=23;clearInterval(timer)});const timer=setInterval(()=>{},100);");
     expect(result.code).toBe(23);
-    expect(result.stderr).toBe("diagnostic");
+    expect(result.stderr).toBe("diagnostic\ntkr: stopped after 1 s (TOKMIZER_EXEC_TIMEOUT_MS). Run it in the background for longer jobs.\n");
     expect(result.stdout).toMatch(/^stopped:\d+$/);
     const stoppedAt = Number(result.stdout.slice("stopped:".length));
     expect(result.finishedAt - stoppedAt).toBeLessThan(1200);
@@ -67,7 +67,7 @@ describe("packaged CLI timeout lifecycle", () => {
   it.skipIf(process.platform === "win32")("still force-stops a command that ignores termination after the grace period", async () => {
     const result = await run("process.on('SIGTERM',()=>process.stdout.write('ignored:'+Date.now()));setInterval(()=>{},100);");
     expect(result.code).toBe(137);
-    expect(result.stderr).toBe("");
+    expect(result.stderr).toBe("tkr: stopped after 1 s (TOKMIZER_EXEC_TIMEOUT_MS). Run it in the background for longer jobs.\n");
     expect(result.stdout).toMatch(/^ignored:\d+$/);
     const ignoredAt = Number(result.stdout.slice("ignored:".length));
     expect(result.finishedAt - ignoredAt).toBeGreaterThanOrEqual(1800);
