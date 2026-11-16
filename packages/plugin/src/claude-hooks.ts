@@ -14,7 +14,7 @@ const CLAUDE_HOOKS: ClaudeHookSpec[] = [
   { event: "UserPromptSubmit", matcher: "", words: "hook reducer-prompt-submit", exec: false, timeout: 5 },
   { event: "Stop", matcher: "", words: "hook reducer-stop", exec: false, timeout: 5 },
   { event: "UserPromptExpansion", matcher: "", words: "hook command-expansion", exec: false, timeout: 10 },
-  { event: "PreToolUse", matcher: "Bash", words: "--pre-tool-use", exec: true, timeout: 5 },
+  { event: "PreToolUse", matcher: "Bash|Read", words: "--pre-tool-use", exec: true, timeout: 5 },
   { event: "PostToolUse", matcher: "Read|Grep|Glob|Bash", words: "--post-tool-use", exec: true, timeout: 10 }
 ];
 
@@ -90,14 +90,27 @@ export async function ensureClaudeHooks(executables: ClaudeExecutables, platform
   for (const spec of CLAUDE_HOOKS) {
     const command = commandFor(spec, executables, platform);
     const groups = groupsOf(parsed, spec.event);
-    const existing = groups.flatMap(hooksOf).find((hook): hook is Hook => isOurs(hook, spec));
-    if (existing) {
+    const home = groups.find((g) => hooksOf(g).some((hook) => isOurs(hook, spec)));
+    const existing = home ? hooksOf(home).find((hook): hook is Hook => isOurs(hook, spec)) : undefined;
+    // Only the PreToolUse hook moved (Bash, now Bash|Read); any other matcher is the user's choice.
+    const moved = home && spec.event === "PreToolUse" && home.matcher === "Bash" && spec.matcher !== "Bash";
+    if (home && existing && !moved) {
       if (existing.command !== command || existing.timeout !== spec.timeout) {
         existing.command = command;
         existing.timeout = spec.timeout;
         changed = true;
       }
       continue;
+    }
+    if (home && existing) {
+      changed = true;
+      if (hooksOf(home).length === 1) {
+        home.matcher = spec.matcher;
+        existing.command = command;
+        existing.timeout = spec.timeout;
+        continue;
+      }
+      home.hooks = hooksOf(home).filter((hook) => hook !== existing);
     }
     const entry = { type: "command", command, timeout: spec.timeout };
     const group = groups.find((g) => g.matcher === spec.matcher);

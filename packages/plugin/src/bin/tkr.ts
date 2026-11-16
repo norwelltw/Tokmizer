@@ -209,7 +209,7 @@ function help(): void {
       "  settings reset                    reset all settings to defaults",
       "  compression [level]               show or set compression level (light, balanced, max)",
       "  yolo [on|off|status]              local aggressive output reduction; content can be lost",
-      "  video [on|off|status] [--global]  video mode, on by default: faster render settings and speed tips",
+      "  video [on|off|status] [--global]  video mode, on by default: faster render settings, smaller images for Claude, speed tips",
       "  reducer [level]                   show or set response reducer (off, light, balanced, max)",
       "  telemetry status                  show telemetry on/off + local record count",
       "  telemetry on | off                turn usage stats (command names, token counts; on by default) on or off",
@@ -592,7 +592,7 @@ async function main(): Promise<void> {
     process.stdout.write(
       `Video mode: ${here ? "on" : "off"} for ${videoProjectRoot()}${mode.global ? " (on everywhere)" : ""}\n` +
         (here
-          ? "A plain Blender render goes to the GPU (Apple Silicon), and render and encode commands get speed tips. Images and video files are never changed. Off: tkr video off\n"
+          ? "A plain Blender render goes to the GPU (Apple Silicon), images over 1280 px reach Claude at 1280 px (macOS; a name with -grand is read at full size), and render and encode commands get speed tips. Images and video files on disk are never changed. Off: tkr video off\n"
           : "Commands run as written. Turn on for this project: tkr video on    everywhere: tkr video on --global\n")
     );
     return;

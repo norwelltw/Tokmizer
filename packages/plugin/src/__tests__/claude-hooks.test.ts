@@ -41,7 +41,7 @@ describe.skipIf(process.platform === "win32")("Claude Code hooks for the standal
       UserPromptSubmit: [`|${safe("/opt/tokmizer/bin/tkr")} hook reducer-prompt-submit`],
       Stop: [`|${safe("/opt/tokmizer/bin/tkr")} hook reducer-stop`],
       UserPromptExpansion: [`|${safe("/opt/tokmizer/bin/tkr")} hook command-expansion`],
-      PreToolUse: [`Bash|${safe("/opt/tokmizer/bin/tkr-exec")} --pre-tool-use`],
+      PreToolUse: [`Bash|Read|${safe("/opt/tokmizer/bin/tkr-exec")} --pre-tool-use`],
       PostToolUse: [`Read|Grep|Glob|Bash|${safe("/opt/tokmizer/bin/tkr-exec")} --post-tool-use`]
     });
     expect(claudeHooksPresent(settings())).toBe(true);
@@ -54,7 +54,7 @@ describe.skipIf(process.platform === "win32")("Claude Code hooks for the standal
     expect(await ensureClaudeHooks(executables, "darwin")).toBe("present");
     expect(await ensureClaudeHooks({ tkr: "/new/tkr", exec: "/new/tkr-exec" }, "darwin")).toBe("updated");
     expect(settings().model).toBe("opus");
-    expect(commands().PreToolUse).toEqual(["Bash|my-guard", `Bash|${safe("/new/tkr-exec")} --pre-tool-use`]);
+    expect(commands().PreToolUse).toEqual(["Bash|my-guard", `Bash|Read|${safe("/new/tkr-exec")} --pre-tool-use`]);
     expect(Object.values(commands()).flat().filter((c) => c.includes("/opt/"))).toEqual([]);
   });
 
@@ -62,7 +62,25 @@ describe.skipIf(process.platform === "win32")("Claude Code hooks for the standal
     mkdirSync(join(dir, "claude"), { recursive: true });
     writeFileSync(claudeSettingsFile(), JSON.stringify({ hooks: { PreToolUse: [{ matcher: "Bash", hooks: [{ type: "command", command: "'/old/tkr-exec' --pre-tool-use", timeout: 5 }] }] } }));
     expect(await ensureClaudeHooks(executables, "darwin")).toBe("added");
-    expect(commands().PreToolUse).toEqual([`Bash|${safe("/opt/tokmizer/bin/tkr-exec")} --pre-tool-use`]);
+    expect(commands().PreToolUse).toEqual([`Bash|Read|${safe("/opt/tokmizer/bin/tkr-exec")} --pre-tool-use`]);
+  });
+
+  it("moves a 1.2.1 Bash-only pre-tool hook to Bash|Read and leaves the user's hook where it was", async () => {
+    mkdirSync(join(dir, "claude"), { recursive: true });
+    const ours = `${safe("/opt/tokmizer/bin/tkr-exec")} --pre-tool-use`;
+    writeFileSync(claudeSettingsFile(), JSON.stringify({ hooks: { PreToolUse: [{ matcher: "Bash", hooks: [{ type: "command", command: "my-guard" }, { type: "command", command: ours, timeout: 5 }] }] } }));
+    await ensureClaudeHooks(executables, "darwin");
+    expect(commands().PreToolUse).toEqual(["Bash|my-guard", `Bash|Read|${ours}`]);
+    expect(await ensureClaudeHooks(executables, "darwin")).toBe("present");
+  });
+
+  it("keeps a matcher the user chose for another Tokmizer hook", async () => {
+    await ensureClaudeHooks(executables, "darwin");
+    const parsed = settings() as { hooks: Record<string, { matcher: string }[]> };
+    parsed.hooks.SessionStart![0]!.matcher = "startup";
+    writeFileSync(claudeSettingsFile(), JSON.stringify(parsed));
+    expect(await ensureClaudeHooks(executables, "darwin")).toBe("present");
+    expect((settings() as { hooks: Record<string, { matcher: string }[]> }).hooks.SessionStart![0]!.matcher).toBe("startup");
   });
 
   it("a hook whose executable is gone exits 0 without output", () => {

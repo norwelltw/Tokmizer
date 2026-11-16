@@ -9,11 +9,14 @@ import { yoloEnabled } from "../yolo-mode";
 import { kickBackgroundEnroll, processCapturedOutput } from "./wrapper";
 import { buildPreToolUseOutput, claudeLaunchArgs, execInvocation, type PreToolUsePayload } from "../hooks-host/pre-tool-rewrite";
 import { postToolUseResponse, type PostToolUsePayload } from "../hooks-host/post-tool-process";
-import { routePreToolUse } from "../hooks-host/hook-router";
+import { isClaudeRead, routePreToolUse, routeReadAsync } from "../hooks-host/hook-router";
 import { recordUsageSync } from "../usage";
 import { KNOWN_HOSTS, type Host } from "../host-detect";
 import { FrameReader, encodeProcessingFrame, decodeCapturedFrame, MAX_CAPTURE_BYTES, MAX_CAPTURE_FRAME_BYTES, MAX_PREPARE_BYTES } from "./processing-protocol";
 import { failOpenActive } from "../shim/sh";
+
+// The native hook client gives the server 250 ms per pre-tool answer.
+const READ_IMAGE_WAIT_MS = 180;
 
 const HOST_ENV = {
   "claude-code": "CLAUDECODE",
@@ -222,18 +225,38 @@ export async function startProcessingServer(opts: {
             }
             opts.onActivity?.();
             let usage: { sessionId: string; routed: boolean } | undefined;
-            const output = routePreToolUse(candidate.payload, candidate.host, { recordUsage: (sessionId, routed) => { usage = { sessionId, routed }; }, claudeDirs: { projectDir: candidate.claudeProjectDir, configDir: candidate.claudeConfigDir }, pathEnv: candidate.path ?? "", launchArgs: () => (candidate.claudePid ? claudeLaunchArgs({ CLAUDE_PID: candidate.claudePid }) : null) });
-            const response = Buffer.from(JSON.stringify({ ok: true, protocol: 2, output }));
-            if (response.length > 1024 * 1024) throw new Error("hook response limit");
-            account = async () => {
-              const delivered = usage;
-              usage = undefined;
-              if (delivered) recordUsageSync(delivered.sessionId, delivered.routed);
+            const routeOptions = { recordUsage: (sessionId: string, routed: boolean) => { usage = { sessionId, routed }; }, claudeDirs: { projectDir: candidate.claudeProjectDir, configDir: candidate.claudeConfigDir }, pathEnv: candidate.path ?? "", launchArgs: () => (candidate.claudePid ? claudeLaunchArgs({ CLAUDE_PID: candidate.claudePid }) : null) };
+            const deliver = (output: string) => {
+              const response = Buffer.from(JSON.stringify({ ok: true, protocol: 2, output }));
+              if (response.length > 1024 * 1024) throw new Error("hook response limit");
+              account = async () => {
+                const delivered = usage;
+                usage = undefined;
+                if (delivered) recordUsageSync(delivered.sessionId, delivered.routed);
+              };
+              release();
+              phase = "delivery";
+              setDeadline(opts.processingTimeoutMs ?? 5000);
+              socket.write(encodeProcessingFrame(response));
             };
-            release();
-            phase = "delivery";
+            if (!isClaudeRead(candidate.payload, candidate.host)) {
+              deliver(routePreToolUse(candidate.payload, candidate.host, routeOptions));
+              return;
+            }
+            phase = "processing";
+            processing = true;
             setDeadline(opts.processingTimeoutMs ?? 5000);
-            socket.write(encodeProcessingFrame(response));
+            const work = routeReadAsync(candidate.payload, routeOptions, READ_IMAGE_WAIT_MS).then((output) => {
+              if (!socket.destroyed) deliver(output);
+            }).catch(() => stop()).finally(() => {
+              processing = false;
+              if (socket.destroyed) {
+                release();
+                sockets.delete(socket);
+              }
+              pending.delete(work);
+            });
+            pending.add(work);
             return;
           }
           const candidate = Prepare.parse(parsed);

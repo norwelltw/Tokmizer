@@ -87,6 +87,13 @@ describe.skipIf(process.platform === "win32")("persistent hook processing", () =
     }
   });
 
+  it("answers a Read through the image path without blocking, and leaves a text file alone", async () => {
+    const socket = await client();
+    const response = receive(socket);
+    socket.write(request({ hook_event_name: "PreToolUse", tool_name: "Read", cwd: "/", tool_input: { file_path: "/etc/hosts" }, session_id: "read" }));
+    expect(JSON.parse((await response).toString())).toEqual({ ok: true, protocol: 2, output: "" });
+  });
+
   it("never resolves commands with the processor's own PATH", async () => {
     const socket = await client();
     const response = receive(socket);

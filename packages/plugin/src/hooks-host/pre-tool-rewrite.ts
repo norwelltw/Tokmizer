@@ -746,15 +746,15 @@ export function currentClaudeDirs(): ClaudeDirs {
   return { projectDir: process.env.CLAUDE_PROJECT_DIR, configDir: process.env.CLAUDE_CONFIG_DIR?.trim() ? claudeConfigDir() : undefined };
 }
 
-function claudeRules(cwd: string, dirs: ClaudeDirs): RuleSet {
+type ClaudeScope = "managed" | "loaded" | "loadedLocal" | "project" | "extra";
+
+function claudeSettingsGroups(cwd: string, dirs: ClaudeDirs): [string[], ClaudeScope][] {
   const settings = (dir: string) => [join(dir, "settings.json"), join(dir, "settings.local.json")];
   const project = (dir: string) => settings(join(dir, ".claude"));
   const home = join(homedir(), ".claude");
-  type Scope = "managed" | "loaded" | "loadedLocal" | "project" | "extra";
   const loadedDir = dirs.configDir || home;
-  if (osPolicyPresent()) return "unreadable";
   const remote = [...new Set([join(loadedDir, "remote-settings.json"), join(home, "remote-settings.json")])];
-  const groups: [string[], Scope][] = [
+  return [
     [[...remote, ...claudeManagedFiles()], "managed"],
     [[join(loadedDir, "settings.json")], "loaded"],
     [[join(loadedDir, "settings.local.json")], "loadedLocal"],
@@ -762,6 +762,29 @@ function claudeRules(cwd: string, dirs: ClaudeDirs): RuleSet {
     [dirs.projectDir ? project(dirs.projectDir) : [], "project"],
     [ancestors(cwd).flatMap(project), "extra"]
   ];
+}
+
+// True when every Claude Code settings file reads cleanly and none has a Read
+// rule in deny or ask: a Read inside the project then runs without a prompt.
+export function claudeReadUnrestricted(cwd: string, dirs: ClaudeDirs = currentClaudeDirs()): boolean {
+  if (osPolicyPresent()) return false;
+  const collect = (config: Record<string, unknown>): boolean => {
+    const permissions = config.permissions;
+    if (permissions === undefined) return true;
+    if (!isRecord(permissions)) return false;
+    for (const key of ["deny", "ask"]) {
+      const list = stringList(permissions[key]);
+      if (!list || list.some((rule) => /^\s*Read\b/.test(rule))) return false;
+    }
+    return true;
+  };
+  return claudeSettingsGroups(cwd, dirs).every(([files]) => readRuleFiles(files, false, collect, true) !== "unreadable");
+}
+
+function claudeRules(cwd: string, dirs: ClaudeDirs): RuleSet {
+  type Scope = ClaudeScope;
+  if (osPolicyPresent()) return "unreadable";
+  const groups = claudeSettingsGroups(cwd, dirs);
   const allow: Matcher[] = [];
   const narrow: Record<Scope, AllowRule[]> = { managed: [], loaded: [], loadedLocal: [], project: [], extra: [] };
   const blanket: Record<Scope, boolean> = { managed: false, loaded: false, loadedLocal: false, project: false, extra: false };

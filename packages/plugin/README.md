@@ -207,7 +207,7 @@ Your deny and ask rules, `--disallowedTools`, `--settings`, managed policies and
 | `/tkr-compression` | `tkr compression light\|balanced\|max` | how hard output is shortened, `balanced` by default |
 | `/tkr-reducer` | `tkr reducer off\|light\|balanced\|max` | shorter replies from the model itself, `off` by default |
 | `/tkr-yolo` | `tkr yolo on\|off\|status` | very aggressive mode, see below |
-| — | `tkr video on\|off\|status [--global]` | video mode, `on` by default: Blender on the GPU, render speed tips |
+| — | `tkr video on\|off\|status [--global]` | video mode, `on` by default: Blender on the GPU, images at 1280 px for Claude, render speed tips |
 | `/power` | `$power` in Codex, `/power` in most agents | plan, build, test and ship a change in one go |
 | `/tkr` | `tkr settings show\|set\|configure` | every setting |
 | `/tkr-telemetry` | `tkr telemetry on\|off\|status` | usage stats |
@@ -217,7 +217,7 @@ Your deny and ask rules, `--disallowedTools`, `--settings`, managed policies and
 
 Also in the terminal: `tkr usage`, `tkr restore`, `tkr doctor [--fix]`, `tkr discover`, `tkr session`, `tkr learn`, `tkr gain --watch`, `tkr network`, `tkr filters`, `tkr migrate rtk`, `tkr setup`, `tkr uninstall`. `tkr help` lists everything.
 
-**Video mode.** The output of `hyperframes`, `ffmpeg`, `ffprobe`, `blender` and `yt-dlp` is always shortened (a Blender render log goes from 33,494 bytes to 407). Video mode is on by default. On Apple Silicon, a plain background Blender render with no Python script gets `-- --cycles-device METAL` and renders on the GPU (2x to 5x faster in our M4 Pro tests), and the output says so in a `[tkr video]` line. After a successful render or encode, up to two `[tkr tip]` lines name a setting that is slower than the machine needs. Each tip shows once per session. Tokmizer never changes the scene settings, the images or the video files. `tkr video off` (or `--global`) runs commands as written. Measured examples: https://tokmizer.com/video
+**Video mode.** The output of `hyperframes`, `ffmpeg`, `ffprobe`, `blender` and `yt-dlp` is always shortened (a Blender render log goes from 33,494 bytes to 407). Video mode is on by default. On Apple Silicon, a plain background Blender render with no Python script gets `-- --cycles-device METAL` and renders on the GPU (2x to 5x faster in our M4 Pro tests), and the output says so in a `[tkr video]` line. On macOS, an image over 1280 px that Claude reads reaches it at 1280 px on its long side (58% fewer image tokens on a 60-shot contact sheet, same answer); the file on disk is not changed, and a file whose name contains `-grand` is read at full size. After a successful render or encode, up to two `[tkr tip]` lines name a setting that is slower than the machine needs. Each tip shows once per session. Tokmizer never changes the scene settings, the images or the video files. `tkr video off` (or `--global`) runs commands as written. Measured examples: https://tokmizer.com/video
 
 `tkr usage` reads the logs Claude Code and Codex keep on your machine and prints the tokens they used, by agent and model, with the public API price (`--week`, `--all`, `--daily`, `--json`). The first run reads the logs once, later runs only what is new.
 
