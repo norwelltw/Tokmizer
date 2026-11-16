@@ -28,7 +28,7 @@ import { selfInvocation, singleBinary } from "../self-command";
 import { networkEnabled, networkNoticeMarker } from "../network";
 import { shQuote } from "../shim/sh";
 import { videoModeEnabled } from "../video-mode";
-import { formatTips, unseenTips, videoTips } from "../video-tips";
+import { autoVideoArgs, autoVideoNotice, formatTips, unseenTips, videoTips } from "../video-tips";
 
 const MAX_BUFFER_BYTES = 10 * 1024 * 1024;
 const MIN_STDERR_FILTER_BYTES = 1024;
@@ -120,7 +120,16 @@ export type WrapResult = {
   truncated: boolean;
 };
 
-export async function runWrapped(argv: string[]): Promise<WrapResult> {
+export async function runWrapped(written: string[]): Promise<WrapResult> {
+  let argv = written;
+  let notice = "";
+  try {
+    const auto = autoVideoArgs(written);
+    if (auto.added && videoModeEnabled(process.cwd())) {
+      argv = auto.argv;
+      notice = autoVideoNotice(auto.added);
+    }
+  } catch {}
   const [cmd, ...args] = argv;
   if (!cmd) throw new Error("tkr-exec: missing command");
   const yolo = yoloEnabled();
@@ -241,11 +250,13 @@ export async function runWrapped(argv: string[]): Promise<WrapResult> {
   const stdout = decodeBuffered(stdoutChunks, truncated);
   const stderr = decodeBuffered(stderrChunks, stderrTruncated);
 
-  return processCapturedOutput({ argv, stdout, stderr, exitCode, truncated, stderrTruncated }, {
+  const result = await processCapturedOutput({ argv, stdout, stderr, exitCode, truncated, stderrTruncated }, {
     yolo,
     env: process.env,
     onMissingState: kickBackgroundEnroll
   });
+  if (notice) result.stdout = `${result.stdout}${result.stdout.length === 0 || result.stdout.endsWith("\n") ? "" : "\n"}${notice}\n`;
+  return result;
 }
 
 export type CapturedOutput = {

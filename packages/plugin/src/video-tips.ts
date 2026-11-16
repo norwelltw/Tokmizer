@@ -1,9 +1,9 @@
 import { appendFileSync, mkdirSync, readFileSync } from "node:fs";
-import { cpus, totalmem } from "node:os";
+import { arch, cpus, totalmem } from "node:os";
 import { join } from "node:path";
 import { tokmizerHome } from "./paths";
 
-export type TipContext = { platform: NodeJS.Platform; totalMemBytes: number; cpus: number };
+export type TipContext = { platform: NodeJS.Platform; totalMemBytes: number; cpus: number; arch?: string };
 export type VideoTip = { id: string; text: string };
 
 const MAX_TIPS = 2;
@@ -15,7 +15,7 @@ const BLENDER_RE = /(?:^|[\s/;&|(])[Bb]lender(?:\.exe)?\s([^;&|\n]*)/;
 const SESSION_ID_RE = /^[A-Za-z0-9_-]{1,128}$/;
 
 function hostContext(): TipContext {
-  return { platform: process.platform, totalMemBytes: totalmem(), cpus: cpus().length };
+  return { platform: process.platform, totalMemBytes: totalmem(), cpus: cpus().length, arch: arch() };
 }
 
 function has(args: string, flag: string): boolean {
@@ -75,6 +75,29 @@ function blenderTips(args: string, output: string, ctx: TipContext): VideoTip[] 
     id: "blender-cycles-device",
     text: `Cycles uses the device saved in Blender's preferences, the CPU on a fresh install. Add -- --cycles-device ${device}${others} to render on the GPU: 2x to 5x faster on M4 Pro tests. The first GPU render compiles its kernels once.`
   }];
+}
+
+const BLENDER_BIN_RE = /^blender(?:\.exe)?$/i;
+const BLENDER_RENDER_FLAGS = new Set(["-a", "--render-anim", "-f", "--render-frame"]);
+const BLENDER_PYTHON_FLAGS = new Set(["-P", "--python", "--python-expr", "--python-text", "--python-console"]);
+
+// Settings video mode applies to a command before it runs. Only settings that
+// keep the scene and output settings as they are: a plain background Blender render goes to the
+// Apple GPU. A command carrying `--` or a Python script is left as written,
+// since a script may parse the arguments after `--` and reject a new one.
+export function autoVideoArgs(argv: string[], ctx: TipContext = hostContext()): { argv: string[]; added: string | null } {
+  const same = { argv, added: null };
+  const [head, ...args] = argv;
+  if (!head || !BLENDER_BIN_RE.test(head.split(/[\\/]/).pop() ?? "")) return same;
+  if (ctx.platform !== "darwin" || ctx.arch !== "arm64") return same;
+  if (!args.includes("-b") && !args.includes("--background")) return same;
+  if (!args.some((arg) => BLENDER_RENDER_FLAGS.has(arg))) return same;
+  if (args.includes("--") || args.some((arg) => BLENDER_PYTHON_FLAGS.has(arg))) return same;
+  return { argv: [...argv, "--", "--cycles-device", "METAL"], added: "-- --cycles-device METAL" };
+}
+
+export function autoVideoNotice(added: string): string {
+  return `[tkr video] Added ${added}: Blender renders on the GPU with the same scene settings. tkr video off runs commands as written.`;
 }
 
 export function videoTips(cmdLine: string, output: string, ctx: TipContext = hostContext()): VideoTip[] {

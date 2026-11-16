@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, mkdtempSync, readdirSync, realpathSync, rmSync, 
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { readVideoMode, setVideoMode, videoModeEnabled, videoProjectRoot } from "../video-mode";
-import { formatTips, unseenTips, videoTips, type TipContext } from "../video-tips";
+import { autoVideoArgs, formatTips, unseenTips, videoTips, type TipContext } from "../video-tips";
 import { processCapturedOutput } from "../exec/wrapper";
 import { Settings } from "../contracts";
 import { loadSettingsCache } from "../settings-cache";
@@ -39,29 +39,43 @@ afterEach(() => {
 });
 
 describe("video mode setting", () => {
-  it("is off by default and writes nothing when turned off", async () => {
+  it("is on by default, and stays off once turned off everywhere", async () => {
+    expect(videoModeEnabled(project)).toBe(true);
+    await setVideoMode(false, { global: true });
     expect(videoModeEnabled(project)).toBe(false);
-    await setVideoMode(false, { global: false, cwd: project });
-    expect(existsSync(home)).toBe(false);
+    expect(readVideoMode()).toEqual({ global: false, projects: [], off: [] });
+    await setVideoMode(true, { global: true });
+    expect(videoModeEnabled(project)).toBe(true);
+  });
+
+  it("turns off for one project while staying on elsewhere", async () => {
+    await setVideoMode(false, { global: false, cwd: join(project, "shots") });
+    expect(videoModeEnabled(project)).toBe(false);
+    expect(videoModeEnabled(join(project, "shots"))).toBe(false);
+    expect(videoModeEnabled(dir)).toBe(true);
+    await setVideoMode(true, { global: false, cwd: project });
+    expect(videoModeEnabled(project)).toBe(true);
   });
 
   it("turns on for one project, from any folder inside it, and off again", async () => {
+    await setVideoMode(false, { global: true });
     await setVideoMode(true, { global: false, cwd: join(project, "shots") });
-    expect(readVideoMode()).toEqual({ global: false, projects: [project] });
+    expect(readVideoMode()).toEqual({ global: false, projects: [project], off: [] });
     expect(videoProjectRoot(join(project, "shots"))).toBe(project);
     expect(videoModeEnabled(join(project, "shots"))).toBe(true);
     expect(videoModeEnabled(dir)).toBe(false);
     expect(videoModeEnabled(`${project}-other`)).toBe(false);
     await setVideoMode(false, { global: false, cwd: project });
     expect(videoModeEnabled(project)).toBe(false);
-    expect(existsSync(join(home, "video-mode.json"))).toBe(false);
+    expect(existsSync(join(home, "video-mode.json"))).toBe(true);
   });
 
   it("turns on everywhere with the global scope and ignores a malformed file", async () => {
     await setVideoMode(true, { global: true });
     expect(videoModeEnabled(dir)).toBe(true);
+    mkdirSync(home, { recursive: true });
     writeFileSync(join(home, "video-mode.json"), "{broken");
-    expect(videoModeEnabled(dir)).toBe(false);
+    expect(videoModeEnabled(dir)).toBe(true);
   });
 });
 
@@ -127,11 +141,57 @@ describe("render tips", () => {
   });
 });
 
+describe("render settings applied by video mode", () => {
+  const silicon: TipContext = { ...mac, arch: "arm64" };
+  const auto = (argv: string[], ctx = silicon) => autoVideoArgs(argv, ctx);
+
+  it("puts a plain background Blender render on the Apple GPU", () => {
+    expect(auto(["blender", "-b", "scene.blend", "-a"])).toEqual({
+      argv: ["blender", "-b", "scene.blend", "-a", "--", "--cycles-device", "METAL"],
+      added: "-- --cycles-device METAL"
+    });
+    expect(auto(["/Applications/Blender.app/Contents/MacOS/Blender", "--background", "s.blend", "-f", "1"]).added).toBe("-- --cycles-device METAL");
+    expect(auto(["blender", "-b", "scene.blend", "--render-anim"]).added).toBe("-- --cycles-device METAL");
+  });
+
+  it("leaves every other command exactly as written", () => {
+    const same = (argv: string[], ctx = silicon) => expect(auto(argv, ctx)).toEqual({ argv, added: null });
+    same(["blender", "-b", "scene.blend", "-a", "--", "--cycles-device", "CPU"]);
+    same(["blender", "-b", "scene.blend", "-P", "build.py", "-a"]);
+    same(["blender", "-b", "scene.blend", "--python-expr", "import bpy", "-a"]);
+    same(["blender", "-b", "-P", "rendre.py", "--", "--sortie", "out"]);
+    same(["blender", "-b", "scene.blend"]);
+    same(["blender", "scene.blend", "-a"]);
+    same(["blender", "-b", "scene.blend", "-a"], { ...mac, arch: "x64" });
+    same(["blender", "-b", "scene.blend", "-a"], { ...linux, arch: "arm64" });
+    same(["hyperframes", "render", "-o", "out.mp4"]);
+    same(["ffmpeg", "-i", "in.mov", "-c:v", "libx264", "out.mp4"]);
+  });
+});
+
+describe("video mode settings at run time", () => {
+  it.runIf(process.platform === "darwin" && process.arch === "arm64")("runs Blender with the GPU flag and says so, or as written once video mode is off", async () => {
+    const bin = join(dir, "bin");
+    mkdirSync(bin);
+    writeFileSync(join(bin, "blender"), "#!/bin/sh\necho \"ARGS $*\"\n", { mode: 0o755 });
+    vi.stubEnv("PATH", `${bin}:${process.env.PATH}`);
+    const { runWrapped } = await import("../exec/wrapper");
+    const on = await runWrapped(["blender", "-b", "scene.blend", "-a"]);
+    expect(on.stdout).toContain("ARGS -b scene.blend -a -- --cycles-device METAL");
+    expect(on.stdout).toContain("[tkr video] Added -- --cycles-device METAL");
+    await setVideoMode(false, { global: true });
+    const off = await runWrapped(["blender", "-b", "scene.blend", "-a"]);
+    expect(off.stdout).toContain("ARGS -b scene.blend -a\n");
+    expect(off.stdout).not.toContain("[tkr video]");
+  });
+});
+
 describe("tips in delivered output", () => {
   const run = (argv: string[], exitCode = 0) =>
     processCapturedOutput({ argv, stdout: "Rendered out.mp4\n", stderr: "", exitCode, truncated: false, stderrTruncated: false }, { yolo: false, env: process.env, cwd: project, resolver: async () => null });
 
   it("adds nothing while video mode is off", async () => {
+    await setVideoMode(false, { global: true });
     expect((await run(["hyperframes", "render", "--low-memory-mode", "--gpu"])).stdout).toBe("Rendered out.mp4\n");
   });
 

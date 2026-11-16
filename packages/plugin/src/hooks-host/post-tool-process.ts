@@ -1,4 +1,4 @@
-import { existsSync, writeFileSync, appendFileSync, statSync, constants as fsConstants } from "node:fs";
+import { existsSync, writeFileSync, appendFileSync, statSync, renameSync, constants as fsConstants } from "node:fs";
 import { lstat, open } from "node:fs/promises";
 import { basename, dirname, isAbsolute, join } from "node:path";
 import { tokmizerHome } from "../paths";
@@ -40,6 +40,7 @@ type Payload = {
         output?: string;
         stdout?: string;
         stderr?: string;
+        type?: string;
         file?: { content?: string };
         filenames?: string[];
         interrupted?: boolean;
@@ -142,7 +143,7 @@ function recordDrift(tool: string, resp: unknown): void {
     if (!resp || typeof resp !== "object") return;
     const file = join(tokmizerHome(), "drift.jsonl");
     try {
-      if (statSync(file).size > DRIFT_LOG_MAX_BYTES) return;
+      if (statSync(file).size > DRIFT_LOG_MAX_BYTES) renameSync(file, join(tokmizerHome(), "drift.old.jsonl"));
     } catch {}
     const keys = Object.keys(resp).slice(0, 12);
     appendFileSync(file, `${JSON.stringify({ t: Math.floor(Date.now() / 1000), tool, keys })}\n`);
@@ -388,6 +389,9 @@ async function processPayload(payload: Payload, options: PostToolUseOptions, max
   }
   const raw = extractOutput(payload.tool_response);
   if (raw == null) {
+    // Read of an image, a PDF or a notebook: no text to shorten, a known shape.
+    const resp = payload.tool_response;
+    if (resp && typeof resp === "object" && resp.file && typeof resp.type === "string" && resp.type !== "text") return null;
     recordDrift(payload.tool_name, payload.tool_response);
     return null;
   }

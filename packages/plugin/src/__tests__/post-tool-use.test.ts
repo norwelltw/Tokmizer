@@ -633,6 +633,41 @@ describe("schema drift recording", () => {
     expect(r).toBeNull();
     expect(ex(driftFile)).toBe(false);
   });
+
+  it("does not record drift for an image or PDF Read", async () => {
+    const { rmSync: rm, existsSync: ex } = await import("node:fs");
+    const { join: j } = await import("node:path");
+    const driftFile = j(process.env.TOKMIZER_HOME!, "drift.jsonl");
+    rm(driftFile, { force: true });
+    for (const type of ["image", "pdf"]) {
+      const r = await processToolOutput({
+        tool_name: "Read",
+        tool_input: { file_path: `/a/b.${type}` },
+        tool_response: { type, file: { base64: "x".repeat(3000), type: "image/png", originalSize: 3000 } } as never
+      });
+      expect(r).toBeNull();
+    }
+    expect(ex(driftFile)).toBe(false);
+  });
+
+  it("rotates a full drift log instead of freezing it", async () => {
+    const { rmSync: rm, readFileSync: rf, writeFileSync: wf, existsSync: ex } = await import("node:fs");
+    const { join: j } = await import("node:path");
+    const driftFile = j(process.env.TOKMIZER_HOME!, "drift.jsonl");
+    const oldFile = j(process.env.TOKMIZER_HOME!, "drift.old.jsonl");
+    rm(oldFile, { force: true });
+    wf(driftFile, `${JSON.stringify({ t: 1, tool: "Read", keys: ["old"] })}\n`.repeat(2000));
+    await processToolOutput({
+      tool_name: "Read",
+      tool_input: { file_path: "/a/b.ts" },
+      tool_response: { brand_new_field: { content: "x" } } as never
+    });
+    const rows = rf(driftFile, "utf8").trim().split("\n");
+    expect(rows).toHaveLength(1);
+    expect(JSON.parse(rows[0]!).keys).toContain("brand_new_field");
+    expect(ex(oldFile)).toBe(true);
+    rm(oldFile, { force: true });
+  });
 });
 
 describe("fold restore hint", () => {
