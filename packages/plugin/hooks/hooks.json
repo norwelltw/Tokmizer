@@ -6,6 +6,11 @@
         "hooks": [
           {
             "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/dist/bin/tkr-exec\" --session-start",
+            "timeout": 5
+          },
+          {
+            "type": "command",
             "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/on-session-start.mjs\"",
             "timeout": 5
           },
@@ -52,7 +57,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/dist/hooks-host/pre-tool-use.js\"",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/dist/bin/tkr-exec\" --pre-tool-use",
             "timeout": 5
           }
         ]
@@ -64,7 +69,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/dist/hooks-host/post-tool-use.js\"",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/dist/bin/tkr-exec\" --post-tool-use",
             "timeout": 10
           }
         ]

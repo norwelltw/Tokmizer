@@ -1,0 +1,4 @@
+[youtube] Extracting URL: https://www.youtube.com/watch?v=zZzZzZzZzZz
+[youtube] zZzZzZzZzZz: Downloading webpage
+[youtube] zZzZzZzZzZz: Downloading tv client config
+ERROR: [youtube] zZzZzZzZzZz: Video unavailable. This video is private

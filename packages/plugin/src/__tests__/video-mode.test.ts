@@ -104,6 +104,17 @@ describe("render tips", () => {
     expect(ids("ffmpeg -i in.mov -c:v copy out.mp4")).toEqual([]);
   });
 
+  it("suggests the GPU for a background Cycles render that does not choose its device", () => {
+    const cycles = "00:00.263  render           | Engine: Cycles";
+    expect(ids("blender -b scene.blend -a", mac, cycles)).toEqual(["blender-cycles-device"]);
+    expect(videoTips("blender -b scene.blend -a", cycles, mac)[0]!.text).toContain("--cycles-device METAL");
+    expect(videoTips("blender -b scene.blend -a", cycles, linux)[0]!.text).toContain("--cycles-device OPTIX");
+    expect(ids("/Applications/Blender.app/Contents/MacOS/Blender -b s.blend -f 1", mac, cycles)).toEqual(["blender-cycles-device"]);
+    expect(ids("blender -b scene.blend -a -- --cycles-device METAL", mac, cycles)).toEqual([]);
+    expect(ids("blender -b scene.blend -a", mac, "00:00.263  render           | Engine: EEVEE")).toEqual([]);
+    expect(ids("blender scene.blend", mac, cycles)).toEqual([]);
+  });
+
   it("shows each tip once per session", () => {
     const tips = videoTips("hyperframes render", "", mac);
     expect(unseenTips(tips, "session-1")).toEqual(tips);

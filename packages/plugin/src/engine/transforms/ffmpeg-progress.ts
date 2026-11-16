@@ -1,6 +1,6 @@
 import { registerTransform } from "./registry";
 
-const PROGRESS_RE = /^(?:frame=\s*\d+\s|size=\s*\S+\s+time=)/;
+const PROGRESS_RE = /^(?:frame=\s*\d+\s|size=\s*\S+\s+time=|\[download\]\s+[\d.]+% of )/;
 
 export function ffmpegProgress(lines: string[]): string[] {
   const out: string[] = [];

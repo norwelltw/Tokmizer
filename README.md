@@ -207,6 +207,7 @@ Your deny and ask rules, `--disallowedTools`, `--settings`, managed policies and
 | `/tkr-compression` | `tkr compression light\|balanced\|max` | how hard output is shortened, `balanced` by default |
 | `/tkr-reducer` | `tkr reducer off\|light\|balanced\|max` | shorter replies from the model itself, `off` by default |
 | `/tkr-yolo` | `tkr yolo on\|off\|status` | very aggressive mode, see below |
+| — | `tkr video on\|off\|status [--global]` | video mode: render speed tips, `off` by default |
 | `/power` | `$power` in Codex, `/power` in most agents | plan, build, test and ship a change in one go |
 | `/tkr` | `tkr settings show\|set\|configure` | every setting |
 | `/tkr-telemetry` | `tkr telemetry on\|off\|status` | usage stats |
@@ -215,6 +216,8 @@ Your deny and ask rules, `--disallowedTools`, `--settings`, managed policies and
 | `/tkr-update` | npm, brew or auto-update | latest version |
 
 Also in the terminal: `tkr usage`, `tkr restore`, `tkr doctor [--fix]`, `tkr discover`, `tkr session`, `tkr learn`, `tkr gain --watch`, `tkr network`, `tkr filters`, `tkr migrate rtk`, `tkr setup`, `tkr uninstall`. `tkr help` lists everything.
+
+**Video mode.** The output of `hyperframes`, `ffmpeg`, `ffprobe`, `blender` and `yt-dlp` is always shortened (a Blender render log goes from 33,494 bytes to 407). `tkr video on` adds up to two `[tkr tip]` lines after a successful render or encode when a setting is slower than the machine needs, such as a Cycles render on the CPU while the GPU is free: `-- --cycles-device METAL` was 2x to 5x faster in our M4 Pro tests. Each tip shows once per session, and Tokmizer never changes the command, the images or the video files. Measured examples: https://tokmizer.com/video
 
 `tkr usage` reads the logs Claude Code and Codex keep on your machine and prints the tokens they used, by agent and model, with the public API price (`--week`, `--all`, `--daily`, `--json`). The first run reads the logs once, later runs only what is new.
 

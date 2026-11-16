@@ -1,0 +1,27 @@
+[youtube] Extracting URL: https://www.youtube.com/watch?v=aBcDeFgHiJk
+[youtube] aBcDeFgHiJk: Downloading webpage
+[youtube] aBcDeFgHiJk: Downloading tv client config
+[youtube] aBcDeFgHiJk: Downloading player 1a2b3c4d-main
+[youtube] aBcDeFgHiJk: Downloading tv player API JSON
+[youtube] aBcDeFgHiJk: Downloading ios player API JSON
+[youtube] aBcDeFgHiJk: Downloading m3u8 information
+[info] aBcDeFgHiJk: Downloading 1 format(s): 299+140
+[hlsnative] Downloading m3u8 manifest
+[hlsnative] Total fragments: 6
+[download] Destination: clip.f299.mp4
+[download]   1.8% of ~  12.74MiB at   1.04MiB/s ETA 00:02 (frag 1/6)[download]   3.9% of ~  12.74MiB at   1.18MiB/s ETA 00:02 (frag 1/6)[download]   6.1% of ~  12.74MiB at   1.32MiB/s ETA 00:02 (frag 1/6)[download]   8.3% of ~  12.74MiB at   1.47MiB/s ETA 00:02 (frag 1/6)[download]  10.5% of ~  12.74MiB at   1.61MiB/s ETA 00:02 (frag 1/6)[download]  12.6% of ~  12.74MiB at   1.75MiB/s ETA 00:02 (frag 1/6)[download]  14.8% of ~  12.74MiB at   1.89MiB/s ETA 00:02 (frag 1/6)[download]  17.0% of ~  12.74MiB at   2.03MiB/s ETA 00:02 (frag 2/6)[download]  19.2% of ~  12.74MiB at   2.17MiB/s ETA 00:02 (frag 2/6)[download]  21.3% of ~  12.74MiB at   2.31MiB/s ETA 00:02 (frag 2/6)[download]  23.5% of ~  12.74MiB at   2.45MiB/s ETA 00:02 (frag 2/6)[download]  25.7% of ~  12.74MiB at   2.60MiB/s ETA 00:02 (frag 2/6)[download]  27.9% of ~  12.74MiB at   2.74MiB/s ETA 00:02 (frag 2/6)[download]  30.0% of ~  12.74MiB at   2.88MiB/s ETA 00:02 (frag 2/6)[download]  32.2% of ~  12.74MiB at   3.02MiB/s ETA 00:02 (frag 2/6)[download]  34.4% of ~  12.74MiB at   3.16MiB/s ETA 00:02 (frag 3/6)[download]  36.6% of ~  12.74MiB at   3.30MiB/s ETA 00:01 (frag 3/6)[download]  38.7% of ~  12.74MiB at   3.44MiB/s ETA 00:01 (frag 3/6)[download]  40.9% of ~  12.74MiB at   3.58MiB/s ETA 00:01 (frag 3/6)[download]  43.1% of ~  12.74MiB at   3.73MiB/s ETA 00:01 (frag 3/6)[download]  45.3% of ~  12.74MiB at   3.87MiB/s ETA 00:01 (frag 3/6)[download]  47.4% of ~  12.74MiB at   4.01MiB/s ETA 00:01 (frag 3/6)[download]  49.6% of ~  12.74MiB at   4.15MiB/s ETA 00:01 (frag 4/6)[download]  51.8% of ~  12.74MiB at   4.29MiB/s ETA 00:01 (frag 4/6)[download]  53.9% of ~  12.74MiB at   4.43MiB/s ETA 00:01 (frag 4/6)[download]  56.1% of ~  12.74MiB at   4.57MiB/s ETA 00:01 (frag 4/6)[download]  58.3% of ~  12.74MiB at   4.72MiB/s ETA 00:01 (frag 4/6)[download]  60.5% of ~  12.74MiB at   4.86MiB/s ETA 00:01 (frag 4/6)[download]  62.6% of ~  12.74MiB at   5.00MiB/s ETA 00:01 (frag 4/6)[download]  64.8% of ~  12.74MiB at   5.14MiB/s ETA 00:01 (frag 4/6)[download]  67.0% of ~  12.74MiB at   5.28MiB/s ETA 00:01 (frag 5/6)[download]  69.2% of ~  12.74MiB at   5.42MiB/s ETA 00:01 (frag 5/6)[download]  71.3% of ~  12.74MiB at   5.56MiB/s ETA 00:01 (frag 5/6)[download]  73.5% of ~  12.74MiB at   5.70MiB/s ETA 00:01 (frag 5/6)[download]  75.7% of ~  12.74MiB at   5.85MiB/s ETA 00:01 (frag 5/6)[download]  77.9% of ~  12.74MiB at   5.99MiB/s ETA 00:00 (frag 5/6)[download]  80.0% of ~  12.74MiB at   6.13MiB/s ETA 00:00 (frag 5/6)[download]  82.2% of ~  12.74MiB at   6.27MiB/s ETA 00:00 (frag 5/6)[download]  84.4% of ~  12.74MiB at   6.41MiB/s ETA 00:00 (frag 6/6)[download]  86.6% of ~  12.74MiB at   6.55MiB/s ETA 00:00 (frag 6/6)[download]  88.7% of ~  12.74MiB at   6.69MiB/s ETA 00:00 (frag 6/6)[download]  90.9% of ~  12.74MiB at   6.83MiB/s ETA 00:00 (frag 6/6)[download]  93.1% of ~  12.74MiB at   6.98MiB/s ETA 00:00 (frag 6/6)[download]  95.3% of ~  12.74MiB at   7.12MiB/s ETA 00:00 (frag 6/6)[download]  97.4% of ~  12.74MiB at   7.26MiB/s ETA 00:00 (frag 6/6)[download]  99.6% of ~  12.74MiB at   7.40MiB/s ETA 00:00 (frag 6/6)[download] 100% of   12.74MiB in 00:00:02 at 6.01MiB/s                
+[download]   4.8% of ~  12.52MiB at   2.88MiB/s ETA 00:04 (frag 1/6)
+[download]  21.3% of ~  12.61MiB at   5.10MiB/s ETA 00:02 (frag 2/6)
+[download]  38.0% of ~  12.70MiB at   6.44MiB/s ETA 00:01 (frag 3/6)
+[download]  55.2% of ~  12.71MiB at   7.02MiB/s ETA 00:01 (frag 4/6)
+[download]  71.9% of ~  12.73MiB at   7.40MiB/s ETA 00:00 (frag 5/6)
+[download]  88.6% of ~  12.74MiB at   7.66MiB/s ETA 00:00 (frag 6/6)
+[download] 100% of   12.74MiB in 00:00:02 at 6.01MiB/s                
+[download] Destination: clip.f140.m4a
+[download]   6.7% of ~   1.94MiB at   1.36MiB/s ETA 00:01[download]  13.9% of ~   1.94MiB at   1.83MiB/s ETA 00:01[download]  21.0% of ~   1.94MiB at   2.29MiB/s ETA 00:01[download]  28.2% of ~   1.94MiB at   2.76MiB/s ETA 00:00[download]  35.3% of ~   1.94MiB at   3.22MiB/s ETA 00:00[download]  42.5% of ~   1.94MiB at   3.69MiB/s ETA 00:00[download]  49.6% of ~   1.94MiB at   4.15MiB/s ETA 00:00[download]  56.7% of ~   1.94MiB at   4.61MiB/s ETA 00:00[download]  63.9% of ~   1.94MiB at   5.08MiB/s ETA 00:00[download]  71.0% of ~   1.94MiB at   5.54MiB/s ETA 00:00[download]  78.2% of ~   1.94MiB at   6.01MiB/s ETA 00:00[download]  85.3% of ~   1.94MiB at   6.47MiB/s ETA 00:00[download]  92.5% of ~   1.94MiB at   6.94MiB/s ETA 00:00[download]  99.6% of ~   1.94MiB at   7.40MiB/s ETA 00:00[download] 100% of    1.94MiB in 00:00:00 at 2.41MiB/s   
+[download]   51.5% of    1.94MiB at    2.10MiB/s ETA 00:00
+[download]  100.0% of    1.94MiB at    2.55MiB/s ETA 00:00
+[download] 100% of    1.94MiB in 00:00:00 at 2.41MiB/s   
+[Merger] Merging formats into "clip.mp4"
+Deleting original file clip.f299.mp4 (pass -k to keep)
+Deleting original file clip.f140.m4a (pass -k to keep)

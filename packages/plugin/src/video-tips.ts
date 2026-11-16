@@ -11,6 +11,7 @@ const GIB = 1024 ** 3;
 const LOW_MEMORY_LIMIT_BYTES = 8 * GIB;
 const RENDER_RE = /(?:^|[\s/;&|(])hyperframes(?:@[^\s]+)?\s+render\b([^;&|\n]*)/;
 const FFMPEG_RE = /(?:^|[\s/;&|(])ffmpeg\s([^;&|\n]*)/;
+const BLENDER_RE = /(?:^|[\s/;&|(])[Bb]lender(?:\.exe)?\s([^;&|\n]*)/;
 const SESSION_ID_RE = /^[A-Za-z0-9_-]{1,128}$/;
 
 function hostContext(): TipContext {
@@ -65,11 +66,24 @@ function ffmpegTips(args: string, output: string, ctx: TipContext): VideoTip[] {
   return [{ id: "ffmpeg-hardware-encoder", text: `This encode uses ${software} on the CPU. ${hardware} uses this Mac's hardware encoder: faster, with a larger file at the same visual quality, so it suits drafts best.` }];
 }
 
+function blenderTips(args: string, output: string, ctx: TipContext): VideoTip[] {
+  if (!/(?:^|\s)-b(?:\s|$)|(?:^|\s)--background(?:\s|$)/.test(args)) return [];
+  if (!/\| Engine: Cycles\b/.test(output) || /(?:^|\s)--cycles-device(?:=|\s)/.test(args)) return [];
+  const device = ctx.platform === "darwin" ? "METAL" : "OPTIX";
+  const others = ctx.platform === "darwin" ? "" : " (CUDA on older NVIDIA cards, HIP on AMD, ONEAPI on Intel)";
+  return [{
+    id: "blender-cycles-device",
+    text: `Cycles uses the device saved in Blender's preferences, the CPU on a fresh install. Add -- --cycles-device ${device}${others} to render on the GPU: 2x to 5x faster on M4 Pro tests. The first GPU render compiles its kernels once.`
+  }];
+}
+
 export function videoTips(cmdLine: string, output: string, ctx: TipContext = hostContext()): VideoTip[] {
   const render = RENDER_RE.exec(cmdLine);
   if (render) return renderTips(render[1] ?? "", ctx).slice(0, MAX_TIPS);
   const ffmpeg = FFMPEG_RE.exec(cmdLine);
   if (ffmpeg) return ffmpegTips(ffmpeg[1] ?? "", output, ctx).slice(0, MAX_TIPS);
+  const blender = BLENDER_RE.exec(cmdLine);
+  if (blender) return blenderTips(blender[1] ?? "", output, ctx).slice(0, MAX_TIPS);
   return [];
 }
 

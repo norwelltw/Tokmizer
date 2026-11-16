@@ -185,3 +185,62 @@ describe("ffprobe filter", () => {
     expect(JSON.parse(r.output).streams).toHaveLength(2);
   });
 });
+
+describe("yt-dlp filter", () => {
+  it("keeps the chosen formats, the destinations, the final size and the merge", async () => {
+    const raw = fixture("ytdlp-download.txt");
+    const r = await processOutput("yt-dlp -f 299+140 -o clip.mp4 https://www.youtube.com/watch?v=aBcDeFgHiJk", raw, null, { exitCode: 0 });
+    expect(r.filterId).toBe("yt-dlp");
+    expect(r.output).toContain("Downloading 1 format(s): 299+140");
+    expect(r.output).toContain("[download] Destination: clip.f299.mp4");
+    expect(r.output).toContain("[download] 100% of   12.74MiB in 00:00:02");
+    expect(r.output).toContain("[download] 100% of    1.94MiB in 00:00:00");
+    expect(r.output).toContain('[Merger] Merging formats into "clip.mp4"');
+    expect(r.output).not.toContain("ETA");
+    expect(r.output).not.toContain("player API JSON");
+    expect(r.output).not.toContain("pass -k to keep");
+    expect(bytes(r.output)).toBeLessThan(bytes(raw) * 0.15);
+  });
+
+  it("keeps the error of a failed download", async () => {
+    const r = await processOutput("yt-dlp https://www.youtube.com/watch?v=zZzZzZzZzZz", fixture("ytdlp-fail.txt"), null, { exitCode: 1 });
+    expect(r.output).toContain("ERROR: [youtube] zZzZzZzZzZz: Video unavailable. This video is private");
+  });
+
+  it("matches yt-dlp and youtube-dl only", () => {
+    for (const cmd of ["yt-dlp URL", "yt-dlp -x --audio-format mp3 URL", "youtube-dl URL"]) expect(matches("yt-dlp", cmd), cmd).toBe(true);
+    for (const cmd of ["yt-dlp-wrapper URL", "pip install yt-dlp"]) expect(matches("yt-dlp", cmd), cmd).toBe(false);
+  });
+});
+
+describe("blender filter", () => {
+  it("keeps saved frames and render times, drops per-frame progress", async () => {
+    const raw = fixture("blender-render.txt");
+    const r = await processOutput("blender -b scene.blend -o out/f_ -s 60 -e 61 -a", raw, null, { exitCode: 0 });
+    expect(r.filterId).toBe("blender");
+    expect(r.output).toContain('Read blend: "/work/scene/scene.blend"');
+    expect(r.output).toContain("Rendering animation (frames 60..61)");
+    expect(r.output).toContain("Saved: '/work/scene/out/f_0060.png'");
+    expect(r.output).toContain("Saved: '/work/scene/out/f_0061.png'");
+    expect(r.output).toMatch(/\| Time: 00:09\.\d+ \(Saving: /);
+    expect(r.output).toContain("Blender quit");
+    expect(r.output).not.toContain("| Fra: ");
+    expect(r.output).not.toContain("Synchronizing object");
+    expect(bytes(r.output)).toBeLessThan(bytes(raw) * 0.05);
+  });
+
+  it("keeps a missing file error and a Python traceback", async () => {
+    const miss = await processOutput("blender -b /work/absent/scene.blend -a", fixture("blender-fail.txt"), null, { exitCode: 0 });
+    expect(miss.output).toContain('ERROR Cannot read file "/work/absent/scene.blend": No such file or directory');
+    const py = await processOutput("blender -b --factory-startup -P casse.py", fixture("blender-python-error.txt"), null, { exitCode: 0 });
+    expect(py.output).toContain("Traceback (most recent call last):");
+    expect(py.output).toContain("AttributeError: 'CyclesRenderSettings' object has no attribute 'samplez'. Did you mean: 'samples'?");
+  });
+
+  it("matches Blender binaries and app paths only", () => {
+    for (const cmd of ["blender -b scene.blend -a", "/Applications/Blender.app/Contents/MacOS/Blender -b s.blend -f 1", "blender.exe -b s.blend -a"]) {
+      expect(matches("blender", cmd), cmd).toBe(true);
+    }
+    for (const cmd of ["blenderproc run x.py", "pip install blender-mcp"]) expect(matches("blender", cmd), cmd).toBe(false);
+  });
+});

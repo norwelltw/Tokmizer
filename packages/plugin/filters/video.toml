@@ -70,3 +70,34 @@ strip_lines_matching = [
 strip_on_failure = true
 truncate_lines_at = 400
 max_lines = 120
+
+[filters.yt-dlp]
+description = "Collapse yt-dlp download progress to its final line, drop extractor chatter"
+match_command = "^(?:yt-dlp|youtube-dl)(\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = [
+  "^\\s*$",
+  "^\\[[\\w:]+\\] [\\w-]+: Downloading (?:webpage|tv client config|player |(?:tv |ios |android |web |mweb )?player API JSON|m3u8 information|guest token|GraphQL JSON|API JSON|JSON metadata|MPD manifest|initial data)",
+  "^\\[hlsnative\\] Downloading m3u8 manifest",
+  "^Deleting original file .* \\(pass -k to keep\\)$",
+]
+strip_on_failure = true
+transform = "ffmpeg-progress"
+truncate_lines_at = 300
+max_lines = 80
+
+[filters.blender]
+description = "Drop Blender per-frame render progress, keep saved frames, times, warnings and errors"
+match_command = "^(?:\\S*/)?[Bb]lender(?:\\.exe)?(\\s|$)"
+priority = 60
+strip_ansi = true
+strip_lines_matching = [
+  "^\\s*$",
+  "\\| Fra: \\d+ \\| ",
+  "\\| (?:Start rendering: |Engine: |Rendering frame \\d+$)",
+  "^Blender \\d+\\.\\d+(?:\\.\\d+)? \\(hash ",
+]
+strip_on_failure = true
+truncate_lines_at = 300
+max_lines = 80

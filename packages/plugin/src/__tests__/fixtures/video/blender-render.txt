@@ -1,0 +1,387 @@
+00:00.238  blend            | Read blend: "/work/scene/scene.blend"
+00:00.263  render           | Rendering animation (frames 60..61)
+00:00.263  render           | Rendering frame 60
+00:00.263  render           | Start rendering: Scene, ViewLayer
+00:00.263  render           | Engine: Cycles
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | monde
+Blender 5.3.0 (hash 02f0899d78e3 built 2026-11-10 01:31:21)
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.005
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.008
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.009
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.013
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.014
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.015
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.016
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.019
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.020
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.021
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.022
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.027
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.028
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.029
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.030
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.031
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.032
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.033
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.034
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.035
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.036
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.037
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.039
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.041
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.042
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.043
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.044
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.045
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.046
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.049
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.050
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.051
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.052
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.054
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.055
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.056
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.057
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.058
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.059
+00:00.280  render           | Fra: 60 | Mem: 0M | Synchronizing object | P5_cle
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.061
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.063
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.064
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.066
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.067
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.068
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.069
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | Cube.070
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | hugo_corps_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | hugo_tete_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | hugo_tete_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | hugo_brasD_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | hugo_brasG_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | hugo_jambeD_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | hugo_jambeD_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | hugo_jambeG_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | hugo_vis_surpris
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | ancien_corps_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | ancien_tete_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | ancien_brasD_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | ancien_brasD_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | ancien_brasG_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | ancien_brasG_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | ancien_jambeD_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | ancien_jambeG_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | ancien_jambeG_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | ancien_vis_neutre
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | kai_corps_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | P2_cle
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | P1_cle
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | lp4
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | kai_tete_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | kai_tete_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | kai_brasD_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | kai_brasG_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | kai_jambeD_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | kai_jambeG_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | kai_jambeG_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | kai_vis_neutre
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | sunny_corps_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | sunny_tete_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | sunny_tete_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | sunny_brasD_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | sunny_brasD_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | sunny_brasG_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | sunny_jambeD_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | sunny_jambeD_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | sunny_jambeG_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | sunny_jambeG_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | sunny_vis_neutre
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | zuri_corps_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | zuri_tete_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | zuri_brasD_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | Plane.003
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | zuri_brasD_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | lp2
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | Plane.002
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | zuri_brasG_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | lp1
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | Plane.001
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | zuri_jambeD_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | zuri_jambeG_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | zuri_vis_neutre
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | efe_corps_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | efe_tete_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | efe_brasD_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | efe_brasD_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | efe_brasG_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | efe_brasG_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | efe_jambeD_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | efe_jambeG_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | efe_vis_neutre
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | Plane
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | noor_corps_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | noor_tete_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | noor_tete_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | noor_brasD_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | noor_brasD_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | noor_brasG_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | noor_jambeD_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | noor_jambeD_o
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | noor_jambeG_m
+00:00.281  render           | Fra: 60 | Mem: 0M | Synchronizing object | noor_vis_neutre
+00:00.281  render           | Fra: 60 | Mem: 0M | Initializing
+00:00.283  render           | Fra: 60 | Mem: 0M | Waiting for render to start
+00:00.283  render           | Fra: 60 | Mem: 0M | Updating Scene
+00:00.283  render           | Fra: 60 | Mem: 0M | Updating Shaders
+00:00.283  render           | Fra: 60 | Mem: 0M | Loading render kernels (may take a few minutes the first time)
+00:00.307  render           | Fra: 60 | Mem: 1M | Updating Procedurals
+00:00.307  render           | Fra: 60 | Mem: 1M | Updating Background
+00:00.307  render           | Fra: 60 | Mem: 1M | Updating Scene Attribute
+00:00.307  render           | Fra: 60 | Mem: 1M | Updating Camera
+00:00.307  render           | Fra: 60 | Mem: 1M | Updating Meshes Flags
+00:00.307  render           | Fra: 60 | Mem: 1M | Updating Objects
+00:00.307  render           | Fra: 60 | Mem: 1M | Updating Objects | Copying Transformations to device
+00:00.307  render           | Fra: 60 | Mem: 1M | Updating Particle Systems
+00:00.307  render           | Fra: 60 | Mem: 1M | Updating Particle Systems | Copying Particles to device
+00:00.307  render           | Fra: 60 | Mem: 1M | Updating Meshes
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Objects | Applying Static Transformations
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH P2_cle 66/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH vis_noor_neutre 65/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH vis_noor_neutre 65/65 | Building BVH 0%
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH corps 2/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH brasD 6/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH vis_hugo_surpris 10/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH corps.002 11/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH tete.002 13/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH teteo.002 14/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH brasD.002 15/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH brasDo.002 16/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH brasG.002 17/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH brasGo.002 18/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH jambeD.002 19/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH jambeDo.002 20/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH jambeG.002 21/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH vis_kai_neutre 23/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH corps.003 24/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH corpso.003 25/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH tete.003 26/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH teteo.003 27/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH brasD.003 28/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH brasDo.003 29/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH brasG.003 30/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH brasGo.003 31/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH jambeD.003 32/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH jambeGo.003 35/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH vis_sunny_neutre 36/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH corps.004 37/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH corpso.004 38/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH tete.004 39/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH teteo.004 40/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH brasD.004 41/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH brasG.004 43/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH brasGo.004 44/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH jambeD.004 45/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH jambeDo.004 46/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH jambeG.004 47/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH tete.006 63/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH jambeGo.004 48/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH corps.005 50/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH tete.005 52/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH teteo.005 53/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH brasD.005 54/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH brasDo.005 55/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH jambeD.005 58/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH jambeDo.005 59/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH jambeG.005 60/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH jambeGo.005 61/65 | Building BVH
+00:00.308  render           | Fra: 60 | Mem: 1M | Updating Geometry BVH vis_efe_neutre 62/65 | Building BVH
+00:00.309  render           | Fra: 60 | Mem: 1M | Updating Scene BVH | Building
+00:00.309  render           | Fra: 60 | Mem: 1M | Updating Scene BVH | Building BVH
+00:00.311  render           | Fra: 60 | Mem: 2M | Updating Scene BVH | Copying BVH to device
+00:00.311  render           | Fra: 60 | Mem: 2M | Updating Mesh | Computing attributes
+00:00.311  render           | Fra: 60 | Mem: 2M | Updating Mesh | Copying Attributes to device
+00:00.311  render           | Fra: 60 | Mem: 4M | Updating Mesh | Computing normals
+00:00.311  render           | Fra: 60 | Mem: 4M | Updating Mesh | Copying Mesh to device
+00:00.311  render           | Fra: 60 | Mem: 4M | Updating Objects Flags
+00:00.311  render           | Fra: 60 | Mem: 4M | Updating Primitive Offsets
+00:00.311  render           | Fra: 60 | Mem: 4M | Updating Images
+00:00.311  render           | Fra: 60 | Mem: 4M | Updating Images | Loading noor-neutre.png
+00:00.311  render           | Fra: 60 | Mem: 4M | Updating Images | Loading nether_portal.png
+00:00.311  render           | Fra: 60 | Mem: 4M | Updating Images | Loading mossy_stone_bricks.png
+00:00.311  render           | Fra: 60 | Mem: 4M | Updating Images | Loading smooth_stone.png
+00:00.311  render           | Fra: 60 | Mem: 4M | Updating Images | Loading chiseled_stone_bricks.png
+00:00.311  render           | Fra: 60 | Mem: 4M | Updating Images | Loading quartz_block_side.png
+00:00.311  render           | Fra: 60 | Mem: 4M | Updating Images | Loading wide-noor.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading obsidian.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading noor-clin.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading glass.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading quartz_pillar_side.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading efe-clin.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading grass_block_side.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading orange_concrete.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading oak_leaves.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading oak_log.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading birch_log_top.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading noor-cligne.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading gold_block.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading diamond_block.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading emerald_block.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading red_concrete.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading short_grass.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading efe-cligne.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading fern.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading dandelion.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading oxeye_daisy.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading cornflower.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading wide-ari.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading noor-malin.png
+00:00.312  render           | Fra: 60 | Mem: 4M | Updating Images | Loading hugo-neutre.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading hugo-regarde_haut.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading hugo-sourire.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading hugo-cligne.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading hugo-clin.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading wide-steve.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading ancien-neutre.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading ancien-regarde_haut.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading ancien-surpris.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading noor-sourire.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading ancien-reflechit.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading efe-malin.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading ancien-sourire.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading ancien-malin.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading ancien-cligne.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading ancien-clin.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading kai-neutre.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading kai-regarde_haut.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading kai-reflechit.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading noor-reflechit.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading kai-malin.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading kai-cligne.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading kai-clin.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading wide-sunny.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading sunny-neutre.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading sunny-surpris.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading sunny-reflechit.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading sunny-sourire.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading sunny-cligne.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading sunny-clin.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading wide-zuri.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading noor-surpris.png
+00:00.313  render           | Fra: 60 | Mem: 4M | Updating Images | Loading zuri-neutre.png
+00:00.314  render           | Fra: 60 | Mem: 4M | Updating Images | Loading zuri-regarde_haut.png
+00:00.314  render           | Fra: 60 | Mem: 4M | Updating Images | Loading zuri-reflechit.png
+00:00.314  render           | Fra: 60 | Mem: 4M | Updating Images | Loading zuri-malin.png
+00:00.314  render           | Fra: 60 | Mem: 4M | Updating Images | Loading zuri-cligne.png
+00:00.314  render           | Fra: 60 | Mem: 4M | Updating Images | Loading zuri-clin.png
+00:00.314  render           | Fra: 60 | Mem: 4M | Updating Images | Loading wide-efe.png
+00:00.314  render           | Fra: 60 | Mem: 4M | Updating Images | Loading noor-regarde_haut.png
+00:00.314  render           | Fra: 60 | Mem: 4M | Updating Images | Loading efe-regarde_haut.png
+00:00.314  render           | Fra: 60 | Mem: 4M | Updating Images | Loading efe-surpris.png
+00:00.314  render           | Fra: 60 | Mem: 5M | Updating Volume
+00:00.314  render           | Fra: 60 | Mem: 5M | Updating Camera Volume
+00:00.314  render           | Fra: 60 | Mem: 5M | Updating Lookup Tables
+00:00.314  render           | Fra: 60 | Mem: 5M | Updating Lights
+00:00.314  render           | Fra: 60 | Mem: 5M | Updating Lights | Importance map
+00:00.384  render           | Fra: 60 | Mem: 69M | Updating Lights | Computing tree
+00:00.384  render           | Fra: 60 | Mem: 69M | Updating Integrator
+00:00.384  render           | Fra: 60 | Mem: 69M | Updating Film
+00:00.384  render           | Fra: 60 | Mem: 69M | Updating Lookup Tables
+00:00.384  render           | Fra: 60 | Mem: 69M | Updating Baking
+00:00.384  render           | Fra: 60 | Mem: 69M | Updating Device | Writing constant memory
+00:00.384  render           | Fra: 60 | Mem: 69M | Loading denoising kernels (may take a few minutes the first time)
+00:00.384  render           | Fra: 60 | Mem: 69M | Sample 0/16
+00:00.900  render           | Fra: 60 | Remaining: 00:07.74 | Mem: 154M | Sample 1/16
+00:00.900  render           | Fra: 60 | Remaining: 00:07.74 | Mem: 154M | Updating Scene
+00:00.900  render           | Fra: 60 | Remaining: 00:07.74 | Mem: 154M | Updating Shaders
+00:00.900  render           | Fra: 60 | Remaining: 00:07.74 | Mem: 154M | Updating Background
+00:00.900  render           | Fra: 60 | Remaining: 00:07.74 | Mem: 154M | Updating Scene Attribute
+00:00.900  render           | Fra: 60 | Remaining: 00:07.74 | Mem: 154M | Updating Camera
+00:00.900  render           | Fra: 60 | Remaining: 00:07.74 | Mem: 154M | Updating Objects
+00:00.900  render           | Fra: 60 | Remaining: 00:07.74 | Mem: 154M | Updating Particle Systems
+00:00.900  render           | Fra: 60 | Remaining: 00:07.74 | Mem: 154M | Updating Meshes
+00:00.900  render           | Fra: 60 | Remaining: 00:07.74 | Mem: 154M | Updating Objects Flags
+00:00.900  render           | Fra: 60 | Remaining: 00:07.74 | Mem: 154M | Updating Primitive Offsets
+00:00.900  render           | Fra: 60 | Remaining: 00:07.74 | Mem: 154M | Updating Images
+00:00.900  render           | Fra: 60 | Remaining: 00:07.74 | Mem: 154M | Updating Volume
+00:00.900  render           | Fra: 60 | Remaining: 00:07.74 | Mem: 154M | Updating Camera Volume
+00:00.900  render           | Fra: 60 | Remaining: 00:07.74 | Mem: 154M | Updating Lookup Tables
+00:00.900  render           | Fra: 60 | Remaining: 00:07.74 | Mem: 154M | Updating Lights
+00:00.900  render           | Fra: 60 | Remaining: 00:07.74 | Mem: 154M | Updating Integrator
+00:00.900  render           | Fra: 60 | Remaining: 00:07.74 | Mem: 154M | Updating Film
+00:00.900  render           | Fra: 60 | Remaining: 00:07.74 | Mem: 154M | Updating Lookup Tables
+00:00.900  render           | Fra: 60 | Remaining: 00:07.74 | Mem: 154M | Updating Baking
+00:00.900  render           | Fra: 60 | Remaining: 00:07.74 | Mem: 154M | Updating Device | Writing constant memory
+00:00.900  render           | Fra: 60 | Remaining: 00:07.74 | Mem: 154M | Sample 1/16
+00:09.926  render           | Fra: 60 | Mem: 154M | Sample 16/16
+00:09.926  render           | Fra: 60 | Mem: 154M | Finished
+00:10.017  render           | Saved: '/work/scene/out/f_0060.png'
+00:10.017  render           | Time: 00:09.75 (Saving: 00:00.09)
+00:10.017  render           | Rendering frame 61
+00:10.018  render           | Start rendering: Scene, ViewLayer
+00:10.018  render           | Engine: Cycles
+00:10.019  render           | Fra: 61 | Mem: 154M | Synchronizing object | hugo_jambeD_m
+00:10.019  render           | Fra: 61 | Mem: 154M | Synchronizing object | ancien_brasD_o
+00:10.019  render           | Fra: 61 | Mem: 154M | Synchronizing object | ancien_brasG_o
+00:10.019  render           | Fra: 61 | Mem: 154M | Synchronizing object | ancien_jambeD_m
+00:10.019  render           | Fra: 61 | Mem: 154M | Synchronizing object | ancien_jambeG_m
+00:10.019  render           | Fra: 61 | Mem: 154M | Synchronizing object | ancien_jambeG_o
+00:10.019  render           | Fra: 61 | Mem: 154M | Synchronizing object | noor_corps_m
+00:10.019  render           | Fra: 61 | Mem: 154M | Synchronizing object | noor_brasD_m
+00:10.019  render           | Fra: 61 | Mem: 154M | Synchronizing object | noor_brasD_o
+00:10.019  render           | Fra: 61 | Mem: 154M | Synchronizing object | P5_cle
+00:10.019  render           | Fra: 61 | Mem: 154M | Synchronizing object | noor_brasG_o
+00:10.019  render           | Fra: 61 | Mem: 154M | Synchronizing object | noor_jambeD_m
+00:10.019  render           | Fra: 61 | Mem: 154M | Synchronizing object | noor_jambeD_o
+00:10.019  render           | Fra: 61 | Mem: 154M | Synchronizing object | noor_jambeG_m
+00:10.019  render           | Fra: 61 | Mem: 154M | Synchronizing object | noor_jambeG_o
+00:10.019  render           | Fra: 61 | Mem: 154M | Synchronizing object | Plane
+00:10.019  render           | Fra: 61 | Mem: 154M | Synchronizing object | lp1
+00:10.019  render           | Fra: 61 | Mem: 154M | Synchronizing object | Plane.002
+00:10.019  render           | Fra: 61 | Mem: 154M | Synchronizing object | lp2
+00:10.019  render           | Fra: 61 | Mem: 154M | Synchronizing object | Plane.003
+00:10.019  render           | Fra: 61 | Mem: 154M | Synchronizing object | lp3
+00:10.020  render           | Fra: 61 | Mem: 154M | Synchronizing object | Plane.004
+00:10.020  render           | Fra: 61 | Mem: 154M | Synchronizing object | lp4
+00:10.020  render           | Fra: 61 | Mem: 154M | Synchronizing object | P1_cle
+00:10.020  render           | Fra: 61 | Mem: 154M | Synchronizing object | P4_cle
+00:10.020  render           | Fra: 61 | Mem: 154M | Initializing
+00:10.021  render           | Fra: 61 | Mem: 154M | Waiting for render to start
+00:10.021  render           | Fra: 61 | Mem: 154M | Updating Scene
+00:10.021  render           | Fra: 61 | Mem: 154M | Updating Shaders
+00:10.022  render           | Fra: 61 | Mem: 154M | Updating Background
+00:10.022  render           | Fra: 61 | Mem: 154M | Updating Scene Attribute
+00:10.022  render           | Fra: 61 | Mem: 154M | Updating Camera
+00:10.022  render           | Fra: 61 | Mem: 154M | Updating Meshes Flags
+00:10.022  render           | Fra: 61 | Mem: 152M | Updating Objects
+00:10.022  render           | Fra: 61 | Mem: 152M | Updating Objects | Copying Transformations to device
+00:10.022  render           | Fra: 61 | Mem: 152M | Updating Particle Systems
+00:10.022  render           | Fra: 61 | Mem: 152M | Updating Meshes
+00:10.022  render           | Fra: 61 | Mem: 150M | Updating Objects | Applying Static Transformations
+00:10.022  render           | Fra: 61 | Mem: 150M | Updating Scene BVH | Building
+00:10.022  render           | Fra: 61 | Mem: 150M | Updating Scene BVH | Building BVH
+00:10.022  render           | Fra: 61 | Mem: 151M | Updating Scene BVH | Building BVH 0%
+00:10.025  render           | Fra: 61 | Mem: 152M | Updating Scene BVH | Copying BVH to device
+00:10.025  render           | Fra: 61 | Mem: 152M | Updating Mesh | Computing attributes
+00:10.025  render           | Fra: 61 | Mem: 152M | Updating Mesh | Copying Attributes to device
+00:10.025  render           | Fra: 61 | Mem: 153M | Updating Mesh | Computing normals
+00:10.025  render           | Fra: 61 | Mem: 153M | Updating Mesh | Copying Mesh to device
+00:10.025  render           | Fra: 61 | Mem: 154M | Updating Objects Flags
+00:10.025  render           | Fra: 61 | Mem: 154M | Updating Primitive Offsets
+00:10.025  render           | Fra: 61 | Mem: 154M | Updating Images
+00:10.025  render           | Fra: 61 | Mem: 154M | Updating Volume
+00:10.025  render           | Fra: 61 | Mem: 154M | Updating Camera Volume
+00:10.025  render           | Fra: 61 | Mem: 154M | Updating Lookup Tables
+00:10.025  render           | Fra: 61 | Mem: 154M | Updating Lights
+00:10.025  render           | Fra: 61 | Mem: 154M | Updating Lights | Computing tree
+00:10.025  render           | Fra: 61 | Mem: 154M | Updating Integrator
+00:10.025  render           | Fra: 61 | Mem: 154M | Updating Film
+00:10.025  render           | Fra: 61 | Mem: 154M | Updating Lookup Tables
+00:10.025  render           | Fra: 61 | Mem: 154M | Updating Baking
+00:10.025  render           | Fra: 61 | Mem: 154M | Updating Device | Writing constant memory
+00:10.025  render           | Fra: 61 | Mem: 154M | Sample 0/16
+00:10.544  render           | Fra: 61 | Remaining: 00:07.77 | Mem: 154M | Sample 1/16
+00:19.559  render           | Fra: 61 | Mem: 154M | Sample 16/16
+00:19.559  render           | Fra: 61 | Mem: 154M | Finished
+00:19.617  render           | Saved: '/work/scene/out/f_0061.png'
+00:19.617  render           | Time: 00:09.59 (Saving: 00:00.05)
+
+Blender quit
