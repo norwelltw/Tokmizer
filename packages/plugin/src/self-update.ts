@@ -144,10 +144,16 @@ export async function selfUpdate(d: SelfUpdateDeps): Promise<string[]> {
       // The registry alone is not trusted: install the exact tarball listed in our signed release,
       // so a hijacked npm account cannot push an update to every install.
       const verified = d.verifiedNpmTarball ? await d.verifiedNpmTarball(latest).catch(() => undefined) : `@tokmizer/plugin@${latest}`;
-      const r = verified
-        ? await d.run("npm", ["i", "-g", verified, "--no-audit", "--no-fund"]).catch((): RunResult => ({ code: 1, stdout: "" }))
+      // No package script runs during a verified install: a tampered platform package gets no code execution.
+      // Our own postinstall then runs from the verified tarball and checks the platform executable's hash.
+      const strict = Boolean(d.verifiedNpmTarball);
+      let r = verified
+        ? await d.run("npm", ["i", "-g", verified, "--no-audit", "--no-fund", ...(strict ? ["--ignore-scripts"] : [])]).catch((): RunResult => ({ code: 1, stdout: "" }))
         : undefined;
-      if (verified && d.verifiedNpmTarball) rmSync(dirname(verified), { recursive: true, force: true });
+      if (verified && strict) rmSync(dirname(verified), { recursive: true, force: true });
+      if (r?.code === 0 && strict) {
+        r = await d.run("node", [join(root, "@tokmizer", "plugin", "scripts", "install-native.mjs")]).catch((): RunResult => ({ code: 1, stdout: "" }));
+      }
       if (!r) actions.push(`npm skipped: ${latest} is not in a signed release`);
       else {
       const after = d.npmVersion(root);

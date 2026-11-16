@@ -74,7 +74,9 @@ describe("selfUpdate", () => {
     const { d, calls } = deps({ verifiedNpmTarball: async (v) => (asked.push(v), "/tmp/tkr-verified/plugin-0.9.34.tgz") });
     await selfUpdate(d);
     expect(asked).toEqual(["0.9.34"]);
-    expect(calls).toContainEqual({ cmd: "npm", args: ["i", "-g", "/tmp/tkr-verified/plugin-0.9.34.tgz", "--no-audit", "--no-fund"] });
+    expect(calls).toContainEqual({ cmd: "npm", args: ["i", "-g", "/tmp/tkr-verified/plugin-0.9.34.tgz", "--no-audit", "--no-fund", "--ignore-scripts"] });
+    const post = calls.find((c) => c.cmd === "node");
+    expect(post?.args[0]).toMatch(/@tokmizer\/plugin\/scripts\/install-native\.mjs$/);
   });
 
   it("finds a file's sum in SHA256SUMS", () => {
