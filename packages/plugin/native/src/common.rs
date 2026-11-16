@@ -685,6 +685,16 @@ pub fn run(args: &[OsString]) -> Option<i32> {
     {
         prepare["hostOutputChars"] = json!(limit);
     }
+    // Lets video mode adjust a Blender render for this directory (see video-launch.ts).
+    if let Some(cwd) = env::current_dir()
+        .ok()
+        .and_then(|dir| dir.to_str().map(str::to_owned))
+    {
+        prepare["cwd"] = json!(cwd);
+        if let Some(path) = env::var("PATH").ok().filter(|path| path.len() <= 32768) {
+            prepare["path"] = json!(path);
+        }
+    }
     let metadata = serde_json::to_vec(&prepare).ok()?;
     if metadata.len() > METADATA_CAP {
         return None;
@@ -692,11 +702,43 @@ pub fn run(args: &[OsString]) -> Option<i32> {
     let deadline = Instant::now() + Duration::from_millis(250);
     write_frame(&mut stream, &metadata, deadline).ok()?;
     let ready: serde_json::Value =
-        serde_json::from_slice(&read_frame(&mut stream, 1024, deadline).ok()?).ok()?;
+        serde_json::from_slice(&read_frame(&mut stream, METADATA_CAP, deadline).ok()?).ok()?;
     if ready["ok"] != true || ready["protocol"] != 2 || !ready["yolo"].is_boolean() {
         return None;
     }
-    let (out, err, code) = platform::capture(args, &home, timeout).ok()?;
+    let launch_args: Vec<OsString> = match ready.get("argv") {
+        None => args.to_vec(),
+        Some(value) => value
+            .as_array()?
+            .iter()
+            .map(|arg| arg.as_str().map(OsString::from))
+            .collect::<Option<Vec<_>>>()?,
+    };
+    // Video mode only appends arguments to the command as written.
+    if launch_args.len() < args.len() || launch_args[..args.len()] != *args {
+        return None;
+    }
+    let mut extra_env: Vec<(String, OsString)> = Vec::new();
+    if let Some(entries) = ready.get("appendPathEnv") {
+        for (name, dir) in entries.as_object()? {
+            if name != "BLENDER_SYSTEM_SCRIPTS" {
+                return None;
+            }
+            let dir = std::path::PathBuf::from(dir.as_str()?);
+            let mut paths: Vec<std::path::PathBuf> = env::var_os(name)
+                .map(|value| {
+                    env::split_paths(&value)
+                        .filter(|p| !p.as_os_str().is_empty())
+                        .collect()
+                })
+                .unwrap_or_default();
+            if !paths.contains(&dir) {
+                paths.push(dir);
+            }
+            extra_env.push((name.clone(), env::join_paths(paths).ok()?));
+        }
+    }
+    let (out, err, code) = platform::capture(&launch_args, &home, timeout, &extra_env).ok()?;
     let mut stdout = out.text();
     let mut stderr = err.text();
     let flags = u32::from(out.truncated) | (u32::from(err.truncated) << 1);

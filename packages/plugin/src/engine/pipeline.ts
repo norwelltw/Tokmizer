@@ -3,6 +3,11 @@ import { stripAnsi } from "./transforms/strip-ansi";
 import { stripLinesMatching } from "./transforms/strip-lines";
 import { truncateLinesAt } from "./transforms/truncate-lines";
 import { headTailLines, omissionMarker } from "./transforms/max-lines";
+import { foldSimilarRuns } from "./transforms/fold-similar";
+
+// Program logs, where long runs of lines differ only by their numbers (steps, frames, timings).
+// Not file reads, tables or listings: there each row is data.
+const FOLD_SIMILAR_SLUGS = new Set(["python", "node", "ffmpeg", "blender", "yt-dlp", "hyperframes-render"]);
 import { foldPassing, FAILURE } from "./transforms/fold-passing";
 import { maskAbsPaths } from "./transforms/mask-abs-paths";
 import { smartCodeCollapse, looksLikeCode, foldPaddingMask } from "./transforms/smart-code";
@@ -171,7 +176,15 @@ export function applyFilterWithTail(
     const mult = def.scale_with_level ? capMultiplier(opts.verbosity) : 1.0;
     const effectiveCap = Math.min(def.max_lines, Math.max(CAP_FLOOR, Math.round(def.max_lines * mult)));
     const pad = keepNumbering ? foldPaddingMask(lines) : null;
+    let foldedAway: string[] = [];
+    if (!pad && lines.length > effectiveCap && FOLD_SIMILAR_SLUGS.has(def.slug)) {
+      // Repetitive lines first: a cut that only drops them keeps more of what differs.
+      const folded = foldSimilarRuns(lines);
+      lines = folded.kept;
+      foldedAway = folded.dropped;
+    }
     const meaningful = pad ? pad.filter((x) => !x).length : lines.length;
+    if (meaningful <= effectiveCap && foldedAway.length > 0) droppedTail = foldedAway.join("\n");
     if (meaningful > effectiveCap) {
       let cut = effectiveCap;
       if (pad) {
@@ -191,14 +204,16 @@ export function applyFilterWithTail(
         const last = lastKept > 0 ? lines.slice(lines.length - lastKept) : [];
         const nonFailureTail = tail.filter((l) => !FAILURE.test(l));
         const omitted = tail.reduce((count, line, i) => count + (!FAILURE.test(line) && !pad?.[headCut + i] ? 1 : 0), 0);
-        droppedTail = nonFailureTail.length > 0 ? nonFailureTail.join("\n") : null;
+        droppedTail = foldedAway.length + nonFailureTail.length > 0 ? [...foldedAway, ...nonFailureTail].join("\n") : null;
         lines = [...lines.slice(0, headCut), ...(omitted > 0 ? [omissionMarker(omitted)] : []), ...tail.filter((l) => FAILURE.test(l)), ...last];
       } else if (keepNumbering) {
         droppedTail = lines.slice(cut).join("\n");
         lines = [...lines.slice(0, cut), omissionMarker(omitted)];
       } else {
         const { kept, dropped } = headTailLines(lines, effectiveCap);
-        droppedTail = dropped.length > 0 ? dropped.join("\n") : null;
+        // The folded lines too: a partial restore (no raw original kept) must hold everything removed.
+        const removed = [...foldedAway, ...dropped];
+        droppedTail = removed.length > 0 ? removed.join("\n") : null;
         lines = kept;
       }
     }

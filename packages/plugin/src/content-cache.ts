@@ -193,7 +193,7 @@ function restoreHint(compressed: string, hash: string): string {
 
 const FAILURE_WORD_RE = /✕|✗|×|\bFAIL\b|\bERROR\b|\bFATAL\b|\bError|\berror|Expected|Received|\bfailed\b|^Traceback \(most recent call last\):$|\w(?:Error|Exception):|^panic: /;
 const ZERO_FAILURES_RE = /\b0 (?:failed|failures?|errors?)\b|\b(?:failed|failures?|errors?)\s*[:=]?\s*0\b|\bNo errors? found\b/gi;
-const VISIBLE_CUT_RE = /^… \(?\d+ more lines omitted\)?$|^… \d+ similar log lines dropped …$/m;
+const VISIBLE_CUT_RE = /^… \(?\d+ more lines omitted\)?$|^… \d+ similar log lines dropped(?:, no errors)? …$/m;
 
 export function cleanSuccess(exitCode: number | null | undefined, text: string): boolean {
   return exitCode === 0 && !text.split("\n").some((line) => FAILURE_WORD_RE.test(line.replace(ZERO_FAILURES_RE, "")));

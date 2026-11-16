@@ -8,9 +8,15 @@ import { startProcessingServer } from "../exec/processing-server";
 import { FrameReader, encodeProcessingFrame, encodeCapturedFrame } from "../exec/processing-protocol";
 import { kickBackgroundEnroll, processCapturedOutput } from "../exec/wrapper";
 import { setYoloMode } from "../yolo-mode";
+import { videoLaunch } from "../video-launch";
 import type { DaemonRuntime } from "../daemon/runtime";
 
 vi.mock("../exec/wrapper", () => ({ processCapturedOutput: vi.fn(), kickBackgroundEnroll: vi.fn() }));
+vi.mock("../video-launch", () => ({
+  videoLaunch: vi.fn((argv: string[], cwd: string) => cwd === "/video" && argv[0] === "blender"
+    ? { argv: [...argv, "--", "--cycles-device", "METAL"], notice: "[tkr video] Added -- --cycles-device METAL", appendPathEnv: { BLENDER_SYSTEM_SCRIPTS: "/h/video/blender-scripts" } }
+    : { argv, notice: "", appendPathEnv: {} })
+}));
 
 let home: string;
 let socketPath: string;
@@ -96,6 +102,36 @@ describe.skipIf(process.platform === "win32")("authenticated processing service"
       onMissingState: kickBackgroundEnroll,
       env: { CODEX_CLI: "1", CLAUDE_CODE_SESSION_ID: "session-a", TOKMIZER_CCR_DISABLED: "1", TOKMIZER_CCR_ENTRY_MAX_BYTES: "100" }
     }));
+  });
+
+  it("tells the native launcher how video mode runs a render, and processes and labels what it ran", async () => {
+    await start();
+    const socket = await client();
+    const ready = frameFrom(socket);
+    socket.write(prepare({ argv: ["blender", "-b", "a.blend", "-f", "1"], cwd: "/video", path: "/caller/bin" }));
+    expect(JSON.parse((await ready).toString())).toEqual({
+      ok: true, protocol: 2, yolo: false,
+      argv: ["blender", "-b", "a.blend", "-f", "1", "--", "--cycles-device", "METAL"],
+      appendPathEnv: { BLENDER_SYSTEM_SCRIPTS: "/h/video/blender-scripts" }
+    });
+    const delivered = frameFrom(socket);
+    socket.write(encodeProcessingFrame(encodeCapturedFrame(input)));
+    const response = await delivered;
+    const stdoutBytes = response.readUInt32BE(0);
+    expect(response.subarray(8, 8 + stdoutBytes).toString()).toBe(`${input.stdout}\n[tkr video] Added -- --cycles-device METAL\n`);
+    expect(processCapturedOutput).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ argv: ["blender", "-b", "a.blend", "-f", "1", "--", "--cycles-device", "METAL"] }), expect.anything());
+    expect(videoLaunch).toHaveBeenCalledWith(["blender", "-b", "a.blend", "-f", "1"], "/video", { pathEnv: "/caller/bin" });
+  });
+
+  it("replies as before when the caller sends no directory or video mode changes nothing", async () => {
+    await start();
+    for (const extra of [{}, { cwd: "/elsewhere" }]) {
+      const socket = await client();
+      const ready = frameFrom(socket);
+      socket.write(prepare(extra));
+      expect(JSON.parse((await ready).toString())).toEqual({ ok: true, protocol: 2, yolo: false });
+      socket.destroy();
+    }
   });
 
   it("passes the caller's Claude Code output limit to processing", async () => {

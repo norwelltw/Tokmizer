@@ -1,3 +1,4 @@
+import { similarMarker } from "../engine/transforms/fold-similar";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { mkdtempSync, mkdirSync, chmodSync, rmSync, existsSync, utimesSync, statSync, writeFileSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -532,8 +533,12 @@ describe("restore line after a clean success", () => {
     const { createHash } = await import("node:crypto");
     expect(await readContentCache(createHash("sha256").update(raw).digest("hex").slice(0, 16))).toBe(raw);
   });
-  it("keeps the restore line when the output shows a cut", async () => {
-    const out = await captureForRestore("x\n".repeat(400), "head\n… (400 more lines omitted)\n", {}, { quiet: true });
+  it.each([
+    "head\n… (400 more lines omitted)\n",
+    `step 1\n${similarMarker(5)}\nstep 7\n`,
+    `step 1\n${similarMarker(398)}\nstep 400\n`
+  ])("keeps the restore line when the output shows a cut: %j", async (shown) => {
+    const out = await captureForRestore("x\n".repeat(400), shown, {}, { quiet: true });
     expect(out).toMatch(/\n\[tkr restore [0-9a-f]{16}\]\n$/);
   });
   it("counts as clean only an exit 0 with no failure-looking line", () => {

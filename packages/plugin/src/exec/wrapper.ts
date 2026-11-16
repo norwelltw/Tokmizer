@@ -28,7 +28,8 @@ import { selfInvocation, singleBinary } from "../self-command";
 import { networkEnabled, networkNoticeMarker } from "../network";
 import { shQuote } from "../shim/sh";
 import { videoModeEnabled } from "../video-mode";
-import { autoVideoArgs, autoVideoNotice, formatTips, unseenTips, videoTips } from "../video-tips";
+import { formatTips, unseenTips, videoTips } from "../video-tips";
+import { appendPathList, videoLaunch } from "../video-launch";
 import { claudeCodePersistChars, PREVIEW_BUDGET_CHARS, previewExcerpt, withoutRestoreHints } from "./host-budget";
 
 const MAX_BUFFER_BYTES = 10 * 1024 * 1024;
@@ -123,20 +124,19 @@ export type WrapResult = {
 };
 
 export async function runWrapped(written: string[]): Promise<WrapResult> {
-  let argv = written;
-  let notice = "";
+  let cwd: string | null = null;
   try {
-    const auto = autoVideoArgs(written);
-    if (auto.added && videoModeEnabled(process.cwd())) {
-      argv = auto.argv;
-      notice = autoVideoNotice(auto.added);
-    }
+    cwd = process.cwd();
   } catch {}
+  const launch = cwd ? videoLaunch(written, cwd) : { argv: written, notice: "", appendPathEnv: {} };
+  const argv = launch.argv;
+  const notice = launch.notice;
   const [cmd, ...args] = argv;
   if (!cmd) throw new Error("tkr-exec: missing command");
   const yolo = yoloEnabled();
 
-  const env = { ...envWithoutShimDir(), [CAPTURING_ENV]: "1" };
+  const env: NodeJS.ProcessEnv = { ...envWithoutShimDir(), [CAPTURING_ENV]: "1" };
+  for (const [name, dir] of Object.entries(launch.appendPathEnv)) env[name] = appendPathList(env[name], dir);
   const child = spawn(windowsCommand(cmd, env), args, {
     stdio: ["inherit", "pipe", "pipe"],
     env,

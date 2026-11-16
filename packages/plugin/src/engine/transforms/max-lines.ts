@@ -2,7 +2,7 @@ export function omissionMarker(omitted: number): string {
   return `… (${omitted} more lines omitted)`;
 }
 
-const ERROR_LINE = /\b(?:ERROR|FATAL|CRITICAL|PANIC)\b|\bpanic:|\bTraceback \(most recent|\b[A-Z][A-Za-z0-9]*(?:Error|Exception)\b|\berror(?:\[[A-Za-z0-9]+\])?:/;
+export const ERROR_LINE = /\b(?:ERROR|FATAL|CRITICAL|PANIC)\b|\bpanic:|\bTraceback \(most recent|\b[A-Z][A-Za-z0-9]*(?:Error|Exception)\b|\berror(?:\[[A-Za-z0-9]+\])?:/;
 const MAX_RESCUED_LINES = 20;
 const MAX_RESCUED_LENGTH = 4_096;
 

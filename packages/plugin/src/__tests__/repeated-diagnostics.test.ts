@@ -32,7 +32,7 @@ describe("Max repeated diagnostic output", () => {
     useFilter();
     const input = progress.repeat(100) + diagnostic;
     const result = await processOutput("npm test", input, null, { verbosity, exitCode: 1 });
-    expect(result.output).toBe(progress + "… 97 similar log lines dropped …\n" + progress.repeat(2) + diagnostic);
+    expect(result.output).toBe(progress + "… 97 similar log lines dropped, no errors …\n" + progress.repeat(2) + diagnostic);
     expect(result.droppedTail).toBe(input);
   });
 

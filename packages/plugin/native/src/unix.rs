@@ -307,6 +307,7 @@ pub fn capture(
     args: &[OsString],
     home: &Path,
     timeout: u64,
+    extra_env: &[(String, OsString)],
 ) -> io::Result<(Capture, Capture, i32)> {
     let _signals = Signals::install()?;
     let path = env::split_paths(&env::var_os("PATH").unwrap_or_default())
@@ -316,6 +317,7 @@ pub fn capture(
         .args(&args[1..])
         .env("PATH", env::join_paths(path).map_err(|_| invalid())?)
         .env(crate::common::CAPTURING_ENV, "1")
+        .envs(extra_env.iter().map(|(name, value)| (name, value)))
         .stdin(Stdio::inherit())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
@@ -513,7 +515,7 @@ mod tests {
         let args = ["sh", "-c", script].map(OsString::from);
         let started = Instant::now();
         let (stdout, stderr, code) =
-            capture(&args, Path::new("/nonexistent-tokmizer-home"), 60_000).unwrap();
+            capture(&args, Path::new("/nonexistent-tokmizer-home"), 60_000, &[]).unwrap();
         (stdout, stderr, code, started.elapsed())
     }
 

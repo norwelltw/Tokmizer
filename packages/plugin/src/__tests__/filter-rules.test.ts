@@ -1,3 +1,4 @@
+import { foldSimilarRuns } from "../engine/transforms/fold-similar";
 import { describe, it, expect } from "vitest";
 import { foldPassing } from "../engine/transforms/fold-passing";
 import { maskAbsPaths } from "../engine/transforms/mask-abs-paths";
@@ -37,10 +38,39 @@ describe("interpreter filters cap long successful output", () => {
   it.each(["python", "node"])("%s keeps head, tail and the last line", (slug) => {
     const def = FilterDef.parse({ slug, ...source.filters[slug] });
     const out = applyFilter(log.join("\n") + "\n", def, { verbosity: "compact" }).trimEnd().split("\n");
-    expect(out.length).toBeLessThanOrEqual(121);
-    expect(out[0]).toBe(log[0]);
-    expect(out.at(-1)).toBe(log[1867]);
-    expect(out).toContain(`… (${1868 - 120} more lines omitted)`);
+    // The repeated `sq: send` lines fold to one run: first, marker, last, then the summary.
+    expect(out).toEqual([log[0], "… 1865 similar log lines dropped, no errors …", log[1866], log[1867]]);
+  });
+
+  it.each(["python", "node"])("%s folds similar lines and still cuts what stays too long", (slug) => {
+    const def = FilterDef.parse({ slug, ...source.filters[slug] });
+    const lines = Array.from({ length: 400 }, (_, i) => `${"abcdefghijklmnopqrstuvwxyz"[i % 26]!.repeat(3)} unique line`);
+    const mixed = [...lines.slice(0, 200), ...Array.from({ length: 50 }, (_, i) => `step ${i}/50 ok`), "ERROR disk full", ...lines.slice(200)];
+    const out = applyFilter(mixed.join("\n") + "\n", def, { verbosity: "compact" }).trimEnd().split("\n");
+    expect(out.length).toBeLessThanOrEqual(121 + 1);
+    expect(out).toContain("ERROR disk full");
+    expect(out.at(-1)).toBe(mixed.at(-1));
+  });
+});
+
+describe("foldSimilarRuns", () => {
+  it("never folds data rows, lowercase errors, or a run shorter than its marker", () => {
+    const table = Array.from({ length: 30 }, (_, i) => `${i}, ${i * 3}.5, ${i % 7}`);
+    expect(foldSimilarRuns(table).kept).toEqual(table);
+    const json = ["[", ...Array.from({ length: 30 }, (_, i) => `  ${i * 3},`), "]"];
+    expect(foldSimilarRuns(json).kept).toEqual(json);
+    const decode = Array.from({ length: 30 }, (_, i) => `[h264 @ 0x7f8a1c00] error while decoding MB ${i} 34, bytestream -5`);
+    expect(foldSimilarRuns(decode).kept).toEqual(decode);
+    const tiny = ["step 1", "step 2", "step 3", "step 4"];
+    expect(foldSimilarRuns(tiny).kept).toEqual(tiny);
+  });
+
+  it("folds runs of four or more lines differing only by numbers, never error lines", () => {
+    const lines = ["start", ...Array.from({ length: 6 }, (_, i) => `frame ${i} at ${i * 1.5}s`), "ERROR 1 bad", "ERROR 2 bad", "ERROR 3 bad", "ERROR 4 bad", "a 1", "a 2", "a 3", "end"];
+    expect(foldSimilarRuns(lines)).toEqual({
+      kept: ["start", "frame 0 at 0s", "… 4 similar log lines dropped …", "frame 5 at 7.5s", "ERROR 1 bad", "ERROR 2 bad", "ERROR 3 bad", "ERROR 4 bad", "a 1", "a 2", "a 3", "end"],
+      dropped: ["frame 1 at 1.5s", "frame 2 at 3s", "frame 3 at 4.5s", "frame 4 at 6s"]
+    });
   });
 });
 

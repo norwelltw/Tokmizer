@@ -1,4 +1,5 @@
 import { FAILURE } from "./fold-passing";
+import { similarMarker } from "./fold-similar";
 
 const TIMESTAMP_PREFIX = /^\s*(?:\d{4}-\d{2}-\d{2}[T\s]\d{2}:\d{2}:\d{2}(?:\.\d+)?Z?|\d{2}:\d{2}:\d{2}(?:\.\d+)?)\s*/;
 const VERBOSE_LEVEL_PREFIX = /^\s*(?:\[(?:DEBUG|TRACE|INFO|VERBOSE)\]|(?:DEBUG|TRACE|INFO|VERBOSE)(?!\s*:))(?=\s|:|$)(?!\s*[+\-*\/%&|^?]*=)/;
@@ -62,7 +63,7 @@ export function condenseLogNoise(lines: string[]): string[] {
       out.push(...lines.slice(i, j));
     } else {
       out.push(...lines.slice(i, i + NOISE_KEEP_HEAD));
-      out.push(`… ${run - NOISE_KEEP_HEAD - NOISE_KEEP_TAIL} similar log lines dropped …`);
+      out.push(similarMarker(run - NOISE_KEEP_HEAD - NOISE_KEEP_TAIL));
       out.push(...lines.slice(j - NOISE_KEEP_TAIL, j));
     }
     i = j;

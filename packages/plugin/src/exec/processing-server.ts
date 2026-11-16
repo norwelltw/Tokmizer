@@ -6,6 +6,7 @@ import { z } from "zod";
 import { maxBundleAgeMs, type DaemonRuntime } from "../daemon/runtime";
 import { tokmizerHome } from "../paths";
 import { yoloEnabled } from "../yolo-mode";
+import { videoLaunch } from "../video-launch";
 import { kickBackgroundEnroll, processCapturedOutput } from "./wrapper";
 import { buildPreToolUseOutput, claudeLaunchArgs, execInvocation, type PreToolUsePayload } from "../hooks-host/pre-tool-rewrite";
 import { postToolUseResponse, type PostToolUsePayload } from "../hooks-host/post-tool-process";
@@ -49,6 +50,8 @@ const Prepare = z.object({
   restoreDisabled: z.boolean(),
   restoreMaxBytes: z.number().int().positive().max(MAX_CAPTURE_BYTES).optional(),
   hostOutputChars: z.number().int().positive().max(1_000_000_000).optional(),
+  cwd: z.string().min(1).max(4096).refine((value) => !value.includes("\0")).optional(),
+  path: z.string().max(32768).refine((value) => !value.includes("\0")).optional(),
   timeoutMs: z.number().int().positive().max(86_400_000)
 }).strict();
 
@@ -119,6 +122,7 @@ export async function startProcessingServer(opts: {
     let phase: "prepare" | "capture" | "hook-payload" | "processing" | "delivery" | "accounting" | "closed" = "prepare";
     let request: z.infer<typeof Prepare> | null = null;
     let yolo = false;
+    let launchNotice = "";
     let reserved = 0;
     let processing = false;
     let account: (() => Promise<void>) | undefined;
@@ -266,13 +270,23 @@ export async function startProcessingServer(opts: {
             stop();
             return;
           }
-          request = candidate;
+          // Video mode decides here for the native launcher, which runs the command itself.
+          // The caller's PATH, not the daemon's: it decides which Blender the command starts.
+          const launch = candidate.cwd ? videoLaunch(candidate.argv, candidate.cwd, { pathEnv: candidate.path ?? "" }) : null;
+          request = launch && launch.argv !== candidate.argv ? { ...candidate, argv: launch.argv } : candidate;
+          launchNotice = launch?.notice ?? "";
           opts.onActivity?.();
           yolo = yoloEnabled();
           release();
           phase = "capture";
           setDeadline(candidate.timeoutMs + 5000);
-          replyJson({ ok: true, protocol: 2, yolo });
+          replyJson({
+            ok: true,
+            protocol: 2,
+            yolo,
+            ...(request.argv !== candidate.argv ? { argv: request.argv } : {}),
+            ...(launch && Object.keys(launch.appendPathEnv).length > 0 ? { appendPathEnv: launch.appendPathEnv } : {})
+          });
           return;
         }
         if (phase !== "capture" || !request) throw new Error("unexpected processing frame");
@@ -305,7 +319,8 @@ export async function startProcessingServer(opts: {
           }
         }).then((result) => {
           if (socket.destroyed) return;
-          const stdout = Buffer.from(result.stdout);
+          const shown = launchNotice ? `${result.stdout}${result.stdout.length === 0 || result.stdout.endsWith("\n") ? "" : "\n"}${launchNotice}\n` : result.stdout;
+          const stdout = Buffer.from(shown);
           const stderr = Buffer.from(result.stderr);
           if (stdout.length > MAX_CAPTURE_BYTES + MAX_PREPARE_BYTES || stderr.length > MAX_CAPTURE_BYTES + MAX_PREPARE_BYTES) {
             throw new Error("processing response limit");
