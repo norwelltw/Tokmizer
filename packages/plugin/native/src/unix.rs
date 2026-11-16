@@ -311,6 +311,7 @@ pub fn capture(
 ) -> io::Result<(Capture, Capture, i32)> {
     let _signals = Signals::install()?;
     let mut timed_out = false;
+    let mut tree: Vec<u32> = Vec::new();
     let path = env::split_paths(&env::var_os("PATH").unwrap_or_default())
         .filter(|entry| !entry.as_os_str().is_empty() && entry != &home.join("shims"))
         .collect::<Vec<_>>();
@@ -345,7 +346,7 @@ pub fn capture(
             }
         }
     }
-    let mut captures = [Capture::new(), Capture::new()];
+    let mut captures = [Capture::stdout(), Capture::new()];
     let start = Instant::now();
     let mut terminated = None;
     let mut status = None;
@@ -381,9 +382,12 @@ pub fn capture(
         if start.elapsed() >= Duration::from_millis(timeout) && terminated.is_none() {
             if status.is_none() {
                 timed_out = true;
+                // Children of the command would outlive it: signal the whole tree.
+                tree = descendants(child.id());
                 unsafe {
                     libc::kill(child.id() as libc::pid_t, libc::SIGTERM);
                 }
+                signal_all(&tree, libc::SIGTERM);
             }
             terminated = Some(Instant::now());
         }
@@ -392,6 +396,7 @@ pub fn capture(
                 let _ = child.kill();
                 status = child.wait().ok();
             }
+            signal_all(&tree, libc::SIGKILL);
             for (poll, capture) in polls.iter_mut().zip(&mut captures) {
                 if poll.fd >= 0 {
                     capture.truncated = true;
@@ -575,5 +580,44 @@ mod tests {
         assert_eq!(code, 0);
         assert_eq!(stdout.bytes, b"done\n");
         assert!(elapsed >= Duration::from_millis(500));
+    }
+}
+
+/// Every process below `root`, read once from `ps`; empty when `ps` is missing.
+pub(crate) fn descendants(root: u32) -> Vec<u32> {
+    let Ok(out) = Command::new("ps")
+        .args(["-A", "-o", "pid=,ppid="])
+        .stderr(Stdio::null())
+        .output()
+    else {
+        return Vec::new();
+    };
+    let mut children: std::collections::HashMap<u32, Vec<u32>> = std::collections::HashMap::new();
+    for line in String::from_utf8_lossy(&out.stdout).lines() {
+        let mut parts = line
+            .split_whitespace()
+            .filter_map(|part| part.parse::<u32>().ok());
+        if let (Some(pid), Some(ppid)) = (parts.next(), parts.next()) {
+            children.entry(ppid).or_default().push(pid);
+        }
+    }
+    let mut found = Vec::new();
+    let mut queue: std::collections::VecDeque<u32> =
+        children.get(&root).cloned().unwrap_or_default().into();
+    while let Some(pid) = queue.pop_front() {
+        if found.len() >= 4096 {
+            break;
+        }
+        found.push(pid);
+        queue.extend(children.get(&pid).cloned().unwrap_or_default());
+    }
+    found
+}
+
+fn signal_all(pids: &[u32], signal: libc::c_int) {
+    for pid in pids {
+        unsafe {
+            libc::kill(*pid as libc::pid_t, signal);
+        }
     }
 }

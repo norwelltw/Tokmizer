@@ -37,6 +37,11 @@ export type SelfUpdateDeps = {
   codexInstalled: () => boolean;
   ensureCodexHook: (npmRoot: string) => Promise<string>;
   standalone?: StandaloneDeps | undefined;
+  /**
+   * Downloads the npm tarball of `version` and returns its local path only when its SHA-256 matches
+   * the entry in that GitHub release's SHA256SUMS signed with our key; undefined otherwise.
+   */
+  verifiedNpmTarball?: ((version: string) => Promise<string | undefined>) | undefined;
   now?: () => number;
 };
 
@@ -136,12 +141,21 @@ export async function selfUpdate(d: SelfUpdateDeps): Promise<string[]> {
     else if (!ripe) waits(npmV);
     else if (!d.writable(root)) actions.push("npm needs permission");
     else {
-      const r = await d.run("npm", ["i", "-g", `@tokmizer/plugin@${latest}`, "--no-audit", "--no-fund"]).catch((): RunResult => ({ code: 1, stdout: "" }));
+      // The registry alone is not trusted: install the exact tarball listed in our signed release,
+      // so a hijacked npm account cannot push an update to every install.
+      const verified = d.verifiedNpmTarball ? await d.verifiedNpmTarball(latest).catch(() => undefined) : `@tokmizer/plugin@${latest}`;
+      const r = verified
+        ? await d.run("npm", ["i", "-g", verified, "--no-audit", "--no-fund"]).catch((): RunResult => ({ code: 1, stdout: "" }))
+        : undefined;
+      if (verified && d.verifiedNpmTarball) rmSync(dirname(verified), { recursive: true, force: true });
+      if (!r) actions.push(`npm skipped: ${latest} is not in a signed release`);
+      else {
       const after = d.npmVersion(root);
       if (r.code === 0 && after === latest) {
         actions.push(`npm ${npmV} -> ${latest}`);
         current.push(latest);
       } else actions.push(`npm failed (${npmV})`);
+      }
     }
   }
 
@@ -304,6 +318,31 @@ function defaultStandalone(): StandaloneDeps | undefined {
   };
 }
 
+async function verifiedNpmTarball(version: string): Promise<string | undefined> {
+  const base = `https://github.com/norwelltw/Tokmizer/releases/download/v${version}`;
+  const name = `plugin-${version}.tgz`;
+  const deps = { fetch: (url: string) => fetch(url, { redirect: "follow", signal: AbortSignal.timeout(5 * 60_000) }) } as StandaloneDeps;
+  const sums = await download(deps, `${base}/SHA256SUMS`, SUMS_BYTES);
+  const sig = await download(deps, `${base}/SHA256SUMS.sig`, SIG_BYTES);
+  if (!verifyReleaseSums(sums, sig, TOKMIZER_RELEASE_PUBLIC_KEY_PEM)) return undefined;
+  const expected = signedSum(sums, name);
+  if (!expected) return undefined;
+  const tarball = await download(deps, `https://registry.npmjs.org/@tokmizer/plugin/-/${name}`, ARCHIVE_BYTES);
+  if (createHash("sha256").update(tarball).digest("hex") !== expected) return undefined;
+  const dir = mkdtempSync(join(tokmizerHome(), ".npm-update-"));
+  const file = join(dir, name);
+  writeFileSync(file, tarball, { mode: 0o600 });
+  return file;
+}
+
+export function signedSum(sums: Buffer, name: string): string | undefined {
+  return sums
+    .toString("utf8")
+    .split("\n")
+    .map((line) => /^([0-9a-f]{64}) {2}(\S+)$/.exec(line.trim()))
+    .find((m) => m?.[2] === name)?.[1];
+}
+
 function runCommand(cmd: string, args: string[], env?: NodeJS.ProcessEnv): Promise<RunResult> {
   return new Promise((resolve) => {
     const child = spawn(cmd, args, {
@@ -338,6 +377,7 @@ export function defaultDeps(latest: string | undefined): SelfUpdateDeps {
     latest,
     run: runCommand,
     standalone: defaultStandalone(),
+    verifiedNpmTarball,
     npmVersion: (root) => {
       try {
         const v = JSON.parse(readFileSync(join(root, "@tokmizer", "plugin", "package.json"), "utf8")).version;

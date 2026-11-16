@@ -52,6 +52,9 @@ impl Descriptor {
 pub struct Capture {
     pub bytes: Vec<u8>,
     pub truncated: bool,
+    /// Stdout only: bytes that are not text go straight out, untouched.
+    pub stream_binary: bool,
+    pub raw: bool,
 }
 
 impl Capture {
@@ -59,10 +62,29 @@ impl Capture {
         Self {
             bytes: Vec::new(),
             truncated: false,
+            stream_binary: false,
+            raw: false,
+        }
+    }
+
+    pub fn stdout() -> Self {
+        Self {
+            stream_binary: true,
+            ..Self::new()
         }
     }
 
     pub fn append(&mut self, bytes: &[u8]) {
+        // An image, an archive or a video piped through: decoding it as text would corrupt it.
+        if self.stream_binary && !self.raw && self.bytes.len() < 8192 && bytes.contains(&0) {
+            self.raw = true;
+            let _ = io::stdout().write_all(&self.bytes);
+            self.bytes.clear();
+        }
+        if self.raw {
+            let _ = io::stdout().write_all(bytes);
+            return;
+        }
         let available = CAP - self.bytes.len();
         self.bytes
             .extend_from_slice(&bytes[..bytes.len().min(available)]);
@@ -739,6 +761,12 @@ pub fn run(args: &[OsString]) -> Option<i32> {
         }
     }
     let (out, err, code) = platform::capture(&launch_args, &home, timeout, &extra_env).ok()?;
+    if out.raw {
+        let _ = io::stdout().flush();
+        let _ = io::stderr().write_all(&err.bytes);
+        let _ = io::stderr().flush();
+        return Some(code);
+    }
     let mut stdout = out.text();
     let mut stderr = err.text();
     let flags = u32::from(out.truncated) | (u32::from(err.truncated) << 1);
@@ -778,6 +806,18 @@ pub fn run(args: &[OsString]) -> Option<i32> {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn text_output_stays_captured_and_only_stdout_streams_binary() {
+        let mut stdout = super::Capture::stdout();
+        stdout.append(b"plain text\n");
+        assert!(!stdout.raw);
+        assert_eq!(stdout.bytes, b"plain text\n");
+        let mut stderr = super::Capture::new();
+        stderr.append(b"a\0b");
+        assert!(!stderr.raw);
+        assert_eq!(stderr.bytes, b"a\0b");
+    }
+
     #[test]
     fn post_exit_release_waits_for_quiet_or_cap() {
         let exited = std::time::Instant::now();
@@ -898,6 +938,7 @@ mod tests {
         let capture = Capture {
             bytes: vec![0xff, 0xff, 0xe2, 0x82],
             truncated: true,
+            ..Capture::new()
         };
         assert_eq!(capture.text(), "��");
     }

@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { constants as osConstants } from "node:os";
 import { fileURLToPath } from "node:url";
 import { StringDecoder } from "node:string_decoder";
+import { spawnSync } from "node:child_process";
 import { processOutput, type FilterResolver } from "../engine";
 import { slugKey } from "../contracts";
 import { resolveAllowedFilters } from "../default-rules";
@@ -164,7 +165,19 @@ export async function runWrapped(written: string[]): Promise<WrapResult> {
   let truncated = false;
   let stderrTruncated = false;
 
+  // Bytes that are not text (an image, an archive, a video piped to a file) go out untouched:
+  // decoding them as UTF-8 would corrupt them, and there is nothing to shorten.
+  let binary = false;
   child.stdout?.on("data", (chunk: Buffer) => {
+    if (!binary && stdoutBytes < 8192 && chunk.includes(0)) {
+      binary = true;
+      for (const earlier of stdoutChunks) process.stdout.write(earlier);
+      stdoutChunks.length = 0;
+    }
+    if (binary) {
+      process.stdout.write(chunk);
+      return;
+    }
     if (stdoutBytes >= MAX_BUFFER_BYTES) {
       truncated = true;
       return;
@@ -237,8 +250,14 @@ export async function runWrapped(written: string[]): Promise<WrapResult> {
       });
       killTimer = setTimeout(() => {
         timedOut = true;
+        // Children of the command (a dev server started by a script, a test worker...) would outlive it.
+        const tree = descendants(child.pid);
         child.kill("SIGTERM");
-        forceKillTimer = setTimeout(() => child.kill("SIGKILL"), 2000);
+        signalAll(tree, "SIGTERM");
+        forceKillTimer = setTimeout(() => {
+          child.kill("SIGKILL");
+          signalAll(tree, "SIGKILL");
+        }, 2000);
       }, DEFAULT_TIMEOUT_MS);
       killTimer.unref?.();
     });
@@ -253,6 +272,11 @@ export async function runWrapped(written: string[]): Promise<WrapResult> {
 
   const stdout = decodeBuffered(stdoutChunks, truncated);
   const stderr = decodeBuffered(stderrChunks, stderrTruncated);
+  if (binary) {
+    // Wait for the raw bytes to reach the pipe before the caller exits.
+    await new Promise<void>((resolve) => process.stdout.write("", () => resolve()));
+    return { stdout: "", stderr, code: exitCode, filterId: null, rawBytes: 0, filteredBytes: 0, truncated: false };
+  }
 
   const result = await processCapturedOutput({ argv, stdout, stderr, exitCode, truncated, stderrTruncated }, {
     yolo,
@@ -461,5 +485,34 @@ export async function processCapturedOutput(
     return rawResult();
   } finally {
     if (!resolver) closeDaemonResolver();
+  }
+}
+
+/** Every process below `root`, read once from `ps`; empty on Windows or when `ps` is missing. */
+export function descendants(root: number | undefined): number[] {
+  if (root == null || process.platform === "win32") return [];
+  const ps = spawnSync("ps", ["-A", "-o", "pid=,ppid="], { encoding: "utf8", timeout: 2000 });
+  if (ps.status !== 0 || !ps.stdout) return [];
+  const children = new Map<number, number[]>();
+  for (const line of ps.stdout.split("\n")) {
+    const [pid, ppid] = line.trim().split(/\s+/).map(Number);
+    if (!pid || ppid == null || Number.isNaN(ppid)) continue;
+    children.set(ppid, [...(children.get(ppid) ?? []), pid]);
+  }
+  const out: number[] = [];
+  const queue = [...(children.get(root) ?? [])];
+  while (queue.length > 0 && out.length < 4096) {
+    const pid = queue.shift()!;
+    out.push(pid);
+    queue.push(...(children.get(pid) ?? []));
+  }
+  return out;
+}
+
+function signalAll(pids: number[], sig: NodeJS.Signals): void {
+  for (const pid of pids) {
+    try {
+      process.kill(pid, sig);
+    } catch {}
   }
 }

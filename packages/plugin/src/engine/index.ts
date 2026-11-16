@@ -50,6 +50,18 @@ const EXIT_ONE_IS_FINDINGS =
 const FALLBACK_MIN_BYTES = 2048;
 const FAILURE_NOISE_MIN_BYTES = 2048;
 export const READ_FOLD_MIN_BYTES = 32 * 1024;
+// Instructions, specs and notes: read to be followed, so never cut. Covers the Read tool
+// and the shell commands agents use to print a file (Codex, Cursor, Windows...).
+const DOCUMENT_FILE_RE = /(?:\.(?:md|mdx|mdc|markdown|rst|adoc|asciidoc|org)|(?:^|[\/\\])(?:README|CHANGELOG|LICENSE|NOTICE|CONTRIBUTING|AGENTS|CLAUDE|GEMINI|\.cursorrules|\.windsurfrules)(?:\.[A-Za-z]+)?)["']?$/i;
+const FILE_PRINTER_RE = /^(?:cat|bat|batcat|nl|head|tail|sed|awk|more|less|type|get-content|gc)$/i;
+
+function readsDocument(cmd: string, producer: string | null, readTool: boolean): boolean {
+  if (readTool) return DOCUMENT_FILE_RE.test(cmd.trim());
+  if (producer == null) return false;
+  const words = producer.trim().split(/\s+/);
+  const head = (words[0] ?? "").split(/[\/\\]/).pop() ?? "";
+  return FILE_PRINTER_RE.test(head) && words.slice(1).some((w) => !w.startsWith("-") && DOCUMENT_FILE_RE.test(w));
+}
 
 function failureStripped(output: string, filter: LoadedFilter, verbosity: PipelineOpts["verbosity"]): string {
   const kept = applyFilter(output, {
@@ -100,7 +112,10 @@ export async function processOutput(
     // A cut file read costs a `tkr restore` turn, which outweighs the bytes saved under 16 KB.
     (pipelineOpts.verbosity ?? "normal") !== "minimal" && pipelineOpts.smartCode !== true;
   const editableRead = chosen?.slug === "read-tool" && rawBytes < READ_FOLD_MIN_BYTES;
-  if (!yolo && (completeLightRead || editableRead || explicitSlice || (targetedRead && pipelineOpts.smartCode !== true))) {
+  // Instructions, specs and notes are read to be followed: cutting their end drops rules the agent needs.
+  // Up to 192 KB: instruction files fit, a multi-megabyte text dump still gets shortened.
+  const documentRead = rawBytes <= 192 * 1024 && readsDocument(cmd, producer, chosen?.slug === "read-tool");
+  if (documentRead || (!yolo && (completeLightRead || editableRead || explicitSlice || (targetedRead && pipelineOpts.smartCode !== true)))) {
     return { output, filterId: chosen?.slug ?? null, rawBytes, filteredBytes: rawBytes, debugBypass: knownFailure || suspectedFailure, droppedTail: null };
   }
   if (!yolo && chosen && !chosen.preserve_exact && (knownFailure || suspectedFailure) && TEST_COMMAND_RE.test(effectiveCmd)) {

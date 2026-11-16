@@ -127,3 +127,34 @@ it("retains compression for a broad inventory piped through head", async () => {
   expect(result.filteredBytes).toBeLessThan(result.rawBytes / 2);
   expect(result.output).toContain("omitted");
 });
+
+describe("whole reads of instruction documents", () => {
+  const doc = Array.from({ length: 900 }, (_, i) => `${i + 1}\t- Rule ${i + 1}: keep the build green and never skip the last step.`).join("\n") + "\n";
+
+  for (const verbosity of ["normal", "compact", "minimal"] as const) {
+    it(`passes a long Markdown file through untouched (${verbosity})`, async () => {
+      const result = await processOutput("read-tool: read /work/GUIDE.md", doc, null, { verbosity, exitCode: 0 });
+      expect(result.output).toBe(doc);
+    });
+  }
+
+  for (const cmd of ["bash-tool: cat /work/GUIDE.md", "cat AGENTS.md", "bash-tool: sed -n 1,900p notes.rst", "nl /repo/README", "Get-Content C:\\work\\CLAUDE.md"]) {
+    it(`passes a document printed by a shell command through untouched: ${cmd}`, async () => {
+      const plain = doc.replace(/^\d+\t/gm, "");
+      const result = await processOutput(cmd, plain, null, { verbosity: "compact", exitCode: 0 });
+      expect(result.output).toBe(plain);
+    });
+  }
+
+  it("still shortens a long code file printed with cat", async () => {
+    const long = Array.from({ length: 120 }, () => code).join("");
+    const result = await processOutput("bash-tool: cat src/invoice.ts", long, null, { verbosity: "normal", exitCode: 0 });
+    expect(result.filteredBytes).toBeLessThan(result.rawBytes);
+  });
+
+  it("still outlines a long code file", async () => {
+    const long = Array.from({ length: 120 }, () => code).join("");
+    const result = await processOutput("read-tool: read /work/invoice.ts", long, null, { verbosity: "normal", exitCode: 0 });
+    expect(result.filteredBytes).toBeLessThan(result.rawBytes);
+  });
+});

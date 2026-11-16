@@ -1,3 +1,4 @@
+import { seenBefore } from "./read-memory";
 import { existsSync, writeFileSync, appendFileSync, statSync, renameSync, constants as fsConstants } from "node:fs";
 import { lstat, open } from "node:fs/promises";
 import { basename, dirname, isAbsolute, join } from "node:path";
@@ -389,8 +390,10 @@ async function processPayload(payload: Payload, options: PostToolUseOptions, max
       });
     }
   }
-  if (payload.tool_name === "Read" && (payload.tool_input?.offset != null || payload.tool_input?.limit != null)) {
-    return null;
+  if (payload.tool_name === "Read") {
+    // A second read of the same file, or a read by line range, means the agent works on it: give it whole.
+    const again = seenBefore(payload.session_id, payload.tool_input?.file_path);
+    if (again || payload.tool_input?.offset != null || payload.tool_input?.limit != null) return null;
   }
   const raw = extractOutput(payload.tool_response);
   if (raw == null) {

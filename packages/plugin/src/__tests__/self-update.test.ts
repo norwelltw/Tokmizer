@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { mkdtempSync, rmSync, writeFileSync, mkdirSync, existsSync, utimesSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { selfUpdate, autoUpdateEnabled, setAutoUpdate, claimSelfUpdateSlot, type SelfUpdateDeps } from "../self-update";
+import { selfUpdate, autoUpdateEnabled, setAutoUpdate, claimSelfUpdateSlot, signedSum, type SelfUpdateDeps } from "../self-update";
 
 let home: string;
 let origHome: string | undefined;
@@ -60,6 +60,27 @@ describe("selfUpdate", () => {
     expect(calls).toContainEqual({ cmd: "npm", args: ["i", "-g", "@tokmizer/plugin@0.9.34", "--no-audit", "--no-fund"] });
     expect(calls).toContainEqual({ cmd: "tkr", args: ["shims-refresh"] });
     expect(actions).toContain("npm 0.9.33 -> 0.9.34");
+  });
+
+  it("refuses an npm version whose tarball is not in a release signed with our key", async () => {
+    const { d, calls } = deps({ verifiedNpmTarball: async () => undefined });
+    const actions = await selfUpdate(d);
+    expect(calls.some((c) => c.cmd === "npm" && c.args[0] === "i")).toBe(false);
+    expect(actions).toContain("npm skipped: 0.9.34 is not in a signed release");
+  });
+
+  it("installs the exact tarball that matched the signed release", async () => {
+    const asked: string[] = [];
+    const { d, calls } = deps({ verifiedNpmTarball: async (v) => (asked.push(v), "/tmp/tkr-verified/plugin-0.9.34.tgz") });
+    await selfUpdate(d);
+    expect(asked).toEqual(["0.9.34"]);
+    expect(calls).toContainEqual({ cmd: "npm", args: ["i", "-g", "/tmp/tkr-verified/plugin-0.9.34.tgz", "--no-audit", "--no-fund"] });
+  });
+
+  it("finds a file's sum in SHA256SUMS", () => {
+    const sums = Buffer.from(`${"a".repeat(64)}  tokmizer-1.0.0-linux-x64.tar.gz\n${"b".repeat(64)}  plugin-1.0.0.tgz\n`);
+    expect(signedSum(sums, "plugin-1.0.0.tgz")).toBe("b".repeat(64));
+    expect(signedSum(sums, "plugin-1.0.1.tgz")).toBeUndefined();
   });
 
   it("does nothing when the install is current or newer", async () => {

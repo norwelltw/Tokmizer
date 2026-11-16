@@ -147,6 +147,35 @@ describe("processToolOutput", () => {
     expect(r).not.toBeNull();
   });
 
+  it("gives a file whole once the session comes back to it", async () => {
+    const read = (extra: object = {}) => processToolOutput({
+      session_id: "work-1",
+      tool_name: "Read",
+      tool_input: { file_path: "/src/scene.py", ...extra },
+      tool_response: { file: { content: "line\n".repeat(500) } }
+    } as never);
+    expect(await read()).not.toBeNull();
+    expect(await read()).toBeNull();
+    const other = await processToolOutput({
+      session_id: "work-2",
+      tool_name: "Read",
+      tool_input: { file_path: "/src/scene.py" },
+      tool_response: { file: { content: "line\n".repeat(500) } }
+    } as never);
+    expect(other).not.toBeNull();
+  });
+
+  it("gives a file whole after the agent read part of it", async () => {
+    const read = (extra: object = {}) => processToolOutput({
+      session_id: "work-3",
+      tool_name: "Read",
+      tool_input: { file_path: "/src/index.html", ...extra },
+      tool_response: { file: { content: "line\n".repeat(500) } }
+    } as never);
+    expect(await read({ offset: 10, limit: 20 })).toBeNull();
+    expect(await read()).toBeNull();
+  });
+
   it("replaces an identical repeated Bash output with a short restorable notice", async () => {
     const out = `report\n${"row data\n".repeat(400)}`;
     const p = (cmd: string) => ({ session_id: "rep-1", tool_name: "Bash", tool_input: { command: cmd }, tool_response: out });
