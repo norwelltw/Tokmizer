@@ -1,5 +1,5 @@
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { existsSync, mkdirSync, readdirSync, readFileSync, realpathSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { join, resolve, sep } from "node:path";
 import { claudeConfigDir } from "./claude-config-dir";
 import { maskSecrets, redactCommand } from "./learn/redact";
 
@@ -186,10 +186,26 @@ export function writableCorrections(list: Correction[]): Correction[] {
   return list.filter((c) => writable(c.failed) && writable(c.fixed));
 }
 
-export function writeRules(cwd: string, list: Correction[]): string {
+// A cloned repository can ship .claude, .claude/rules or the rules file as a symbolic link.
+// Nothing is created or written outside the project, and a linked file is replaced, not followed.
+export function writeRules(cwd: string, list: Correction[]): string | null {
   const dir = join(cwd, ".claude", "rules");
-  mkdirSync(dir, { recursive: true });
   const file = join(dir, "tkr-command-corrections.md");
-  writeFileSync(file, rulesMarkdown(list));
-  return file;
+  const temporary = `${file}.${process.pid}.tmp`;
+  try {
+    const root = realpathSync(cwd);
+    const inside = (path: string): boolean => {
+      const real = realpathSync(path);
+      return real === root || real.startsWith(root + sep);
+    };
+    for (const existing of [join(cwd, ".claude"), dir]) if (existsSync(existing) && !inside(existing)) return null;
+    mkdirSync(dir, { recursive: true });
+    if (!inside(dir)) return null;
+    writeFileSync(temporary, rulesMarkdown(list), { flag: "wx" });
+    renameSync(temporary, file);
+    return file;
+  } catch {
+    rmSync(temporary, { force: true });
+    return null;
+  }
 }

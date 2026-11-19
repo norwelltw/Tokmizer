@@ -18,8 +18,7 @@ strip_lines_matching = [
   "^\\s*┌|^\\s*├|^\\s*└|^\\s*│",
   "^\\s*ƒ Middleware",
   "^\\s*\\(Server\\)|^\\s*\\(Static\\)|^\\s*\\(Dynamic\\)",
-  "^\\s*○ \\(",
-  "^\\s*● \\(",
+  "^\\s*[○●ƒ]\\s+\\(",
 ]
 truncate_lines_at = 240
 max_lines = 220

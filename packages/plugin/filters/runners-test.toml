@@ -23,7 +23,7 @@ max_lines = 200
 
 [filters.jest]
 description = "Compact jest"
-match_command = "^jest(\\s|$)|^npx\\s+jest"
+match_command = "^jest(\\s|$)|^npx\\s+jest(\\s|$)"
 priority = 60
 strip_ansi = true
 strip_lines_matching = ["^PASS\\s", "^\\s*✓", "^Ran all test suites", "^\\s*$"]
@@ -31,7 +31,7 @@ max_lines = 200
 
 [filters.vitest]
 description = "Compact vitest"
-match_command = "^vitest(\\s|$)|^npx\\s+vitest"
+match_command = "^vitest(\\s|$)|^npx\\s+vitest(\\s|$)"
 priority = 60
 strip_ansi = true
 strip_lines_matching = ["^\\s*✓", "^\\s*$"]
@@ -39,10 +39,10 @@ max_lines = 200
 
 [filters.go-test]
 description = "Compact go test"
-match_command = "^go\\s+test"
+match_command = "^go\\s+test(\\s|$)"
 priority = 60
 strip_ansi = true
-strip_lines_matching = ["^=== RUN", "^--- PASS:", "^\\s*$"]
+strip_lines_matching = ["^=== RUN", "^\\s*$"]
 max_lines = 200
 
 [filters.rspec]

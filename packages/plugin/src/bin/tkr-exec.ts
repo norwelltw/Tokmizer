@@ -14,7 +14,8 @@ async function passthrough(argv: string[]): Promise<never> {
   if (!cmd) process.exit(2);
   const child = spawn(windowsCommand(cmd, process.env), args, { stdio: "inherit" });
   const code: number = await new Promise((resolve) => {
-    child.on("error", () => resolve(127));
+    // POSIX: 126 when the command exists but cannot be executed, 127 when it is not found.
+    child.on("error", (err: NodeJS.ErrnoException) => resolve(err.code === "EACCES" ? 126 : 127));
     child.on("close", (c, signal) => resolve(c != null ? c : signal ? 128 + signalNumber(signal) : 0));
   });
   process.exit(code);

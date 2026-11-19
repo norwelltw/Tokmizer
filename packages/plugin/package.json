@@ -1,6 +1,6 @@
 {
   "name": "@tokmizer/plugin",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "Tokmizer reduces token consumption for AI coding tools (Claude Code, Codex, Cursor, Aider, Gemini CLI, Cline, Windsurf, Copilot). Cross-OS.",
   "type": "module",
   "engines": {
@@ -57,15 +57,15 @@
     "cross-spawn": "^7.0.6",
     "esbuild": "^0.28.0",
     "smol-toml": "^1.9.0",
-    "zod": "^3.23.8"
+    "zod": "^4.6.7"
   },
   "optionalDependencies": {
-    "@tokmizer/plugin-darwin-arm64": "1.2.7",
-    "@tokmizer/plugin-darwin-x64": "1.2.7",
-    "@tokmizer/plugin-linux-arm64": "1.2.7",
-    "@tokmizer/plugin-linux-x64": "1.2.7",
-    "@tokmizer/plugin-win32-arm64": "1.2.7",
-    "@tokmizer/plugin-win32-x64": "1.2.7"
+    "@tokmizer/plugin-darwin-arm64": "1.2.8",
+    "@tokmizer/plugin-darwin-x64": "1.2.8",
+    "@tokmizer/plugin-linux-arm64": "1.2.8",
+    "@tokmizer/plugin-linux-x64": "1.2.8",
+    "@tokmizer/plugin-win32-arm64": "1.2.8",
+    "@tokmizer/plugin-win32-x64": "1.2.8"
   },
   "publishConfig": {
     "access": "public"

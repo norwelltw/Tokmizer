@@ -1,6 +1,6 @@
 [filters.tsc]
 description = "Compact tsc / tsc --noEmit output"
-match_command = "^tsc(\\s|$)|^npx\\s+tsc|^npm\\s+(run|exec)\\s+tsc|^pnpm\\s+(run|exec)?\\s*tsc"
+match_command = "^tsc(\\s|$)|^npx\\s+tsc(\\s|$)|^npm\\s+(run|exec)\\s+tsc(\\s|$)|^pnpm\\s+(run|exec)?\\s*tsc(\\s|$)"
 priority = 65
 strip_ansi = true
 preserve_exact = true

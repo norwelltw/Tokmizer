@@ -2,16 +2,25 @@ import { readFile, writeFile, mkdir, chmod, rm, rename, readdir } from "node:fs/
 import { randomUUID } from "node:crypto";
 import { join } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
-import { Settings } from "./contracts";
+import * as z from "zod";
+import { OutputVerbosity, ReducerLevel, Settings } from "./contracts";
 import type { Settings as SettingsT } from "./contracts";
 import { tokmizerHome } from "./paths";
 
 const FILE = "settings-cache.json";
 
 const DEFAULTS: SettingsT = Settings.parse({});
-const SettingsPatch = Settings.partial().extend({
-  filters: Settings.shape.filters.removeDefault().partial().optional()
-});
+// No defaults in a patch: under zod 4 a default also fills a key the patch leaves out, which would
+// overwrite the stored choice (a telemetry refusal, for one).
+const SettingsPatch = z
+  .object({
+    enabled: z.boolean(),
+    telemetryOptIn: z.boolean(),
+    outputVerbosity: OutputVerbosity,
+    reducer: ReducerLevel,
+    filters: z.object({ enableAll: z.boolean(), disabled: z.array(z.string().max(64)).max(100) }).partial()
+  })
+  .partial();
 
 export async function loadSettingsCache(): Promise<SettingsT> {
   let stored: Record<string, unknown> | null = null;

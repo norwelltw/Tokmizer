@@ -4,7 +4,8 @@ import { FAILURE } from "./fold-passing";
 const RESULT_RE = /^\s*\d+\/\d+ Test\s+#\s*\d+: \S+ \.{2,}/;
 const RESULT_PARTS_RE = /^\s*\d+\/\d+ Test\s+#\s*(\d+): (\S+) \.{2,}\s*(?:\*{3})?(.*)$/;
 const SUMMARY_RE = /^\d+% tests passed, \d+ tests? failed out of \d+$/;
-const FAILURE_LIKE = new RegExp(`${FAILURE.source}|\\*\\*\\*|Exception|FAIL|ERROR`);
+// Also the line that says where an assertion failed (QtTest `Loc: [file(line)]`, `file.cpp:42`).
+const FAILURE_LIKE = new RegExp(`${FAILURE.source}|\\*\\*\\*|Exception|FAIL|ERROR|^\\s*Loc: |\\.(?:c|cc|cpp|cxx|h|hpp)[:(]\\d+`);
 const HEAD_LINES = 3;
 const TAIL_LINES = 8;
 

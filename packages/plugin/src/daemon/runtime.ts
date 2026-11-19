@@ -1,5 +1,5 @@
 import { createPublicKey, verify } from "node:crypto";
-import { z } from "zod";
+import * as z from "zod";
 import type { Plan } from "../contracts";
 import { FilterDef } from "../engine/schema";
 import { selectFilter } from "../engine/matcher";

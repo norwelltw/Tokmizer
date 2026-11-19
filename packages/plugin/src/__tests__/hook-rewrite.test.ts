@@ -21,6 +21,13 @@ describe("PreToolUse rewrite", () => {
     expect(rewrite("git log")).toBe("tkr-exec git log");
   });
 
+  it("leaves the whole command alone once the shell's own output is redirected with exec", () => {
+    for (const cmd of ["ls; exec > out.log; git log", "exec >> build.log 2>&1 && npm test", "exec 3> trace.txt; git status"]) {
+      expect(rewrite(cmd), cmd).toBe(cmd);
+    }
+    expect(rewrite("git status && exec true")).toBe("tkr-exec git status && exec true");
+  });
+
   it("wraps each segment of compound &&", () => {
     expect(rewrite("git pull && npm test")).toBe(
       "tkr-exec git pull && tkr-exec npm test"
@@ -323,7 +330,13 @@ describe("Codex rewrite is limited to read-only commands", () => {
   });
 
   it("does not restrict Claude Code, which never grants a permission", () => {
-    expect(buildPreToolUseOutput(p("git log && git push"), "claude-code", "tkr-exec")).not.toBeNull();
+    // A directory of its own: from the repository, the rules of the developer's real Claude settings apply.
+    const cwd = mkdtempSync(join(tmpdir(), "tkr-cc-cwd-"));
+    try {
+      expect(buildPreToolUseOutput({ ...p("git log && git push"), cwd }, "claude-code", "tkr-exec")).not.toBeNull();
+    } finally {
+      rmSync(cwd, { recursive: true, force: true });
+    }
   });
 });
 

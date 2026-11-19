@@ -83,6 +83,8 @@ describe("CLAUDE_CONFIG_DIR resolution", () => {
   it("expands a leading tilde", () => {
     expect(claudeConfigDir({ CLAUDE_CONFIG_DIR: "~/.claude-work" }, "/opt/u")).toBe("/opt/u/.claude-work");
     expect(claudeConfigDir({ CLAUDE_CONFIG_DIR: "~" }, "/opt/u")).toBe("/opt/u");
+    // A relative value is read from the project, wherever the hook itself runs.
+    expect(claudeConfigDir({ CLAUDE_CONFIG_DIR: ".claude-work", CLAUDE_PROJECT_DIR: "/srv/proj" }, "/opt/u")).toBe("/srv/proj/.claude-work");
   });
   it("resolves relative paths and normalizes", () => {
     expect(claudeConfigDir({ CLAUDE_CONFIG_DIR: "rel/dir" }, "/opt/u")).toBe(resolve("rel/dir"));

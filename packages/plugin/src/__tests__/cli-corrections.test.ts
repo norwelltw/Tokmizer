@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { commandShape, findCorrections, mergeCorrections, normalizeCommand, projectKey, rulesMarkdown, sessionOutcomes, writableCorrections } from "../cli-corrections";
+import { commandShape, findCorrections, mergeCorrections, normalizeCommand, projectKey, rulesMarkdown, sessionOutcomes, writableCorrections, writeRules } from "../cli-corrections";
 
 let counter = 0;
 
@@ -177,5 +177,40 @@ describe("tkr learn", () => {
     const mixed = run("gain", "--watch", "--json");
     expect(mixed.status).toBe(1);
     expect(mixed.stderr).toContain("Usage: tkr gain");
+  });
+});
+
+describe("writeRules never writes outside the project", () => {
+  const list = [{ failed: "git lgo --oneline -3", fixed: "git log --oneline -3", count: 3 }] as never;
+  let root: string;
+  beforeEach(() => {
+    root = realpathSync(mkdtempSync(join(tmpdir(), "tkr-rules-")));
+    mkdirSync(join(root, "outside"));
+    mkdirSync(join(root, "clone"));
+    writeFileSync(join(root, "outside", "victim.txt"), "victim contents\n");
+  });
+  afterEach(() => rmSync(root, { recursive: true, force: true }));
+
+  it("replaces a rules file that is a symbolic link instead of writing through it", () => {
+    mkdirSync(join(root, "clone", ".claude", "rules"), { recursive: true });
+    symlinkSync(join(root, "outside", "victim.txt"), join(root, "clone", ".claude", "rules", "tkr-command-corrections.md"));
+    const file = writeRules(join(root, "clone"), list);
+    expect(file).toBe(join(root, "clone", ".claude", "rules", "tkr-command-corrections.md"));
+    expect(readFileSync(join(root, "outside", "victim.txt"), "utf8")).toBe("victim contents\n");
+    expect(lstatSync(file!).isSymbolicLink()).toBe(false);
+    expect(readFileSync(file!, "utf8")).toContain("git log --oneline -3");
+  });
+
+  it.each([".claude", join(".claude", "rules")])("writes nothing when %s is a link leading outside the project", (linked) => {
+    if (linked !== ".claude") mkdirSync(join(root, "clone", ".claude"));
+    symlinkSync(join(root, "outside"), join(root, "clone", linked));
+    expect(writeRules(join(root, "clone"), list)).toBeNull();
+    expect(existsSync(join(root, "outside", "tkr-command-corrections.md"))).toBe(false);
+    expect(existsSync(join(root, "outside", "rules"))).toBe(false);
+  });
+
+  it("still writes in an ordinary project", () => {
+    const file = writeRules(join(root, "clone"), list);
+    expect(readFileSync(file!, "utf8")).toContain("git log --oneline -3");
   });
 });

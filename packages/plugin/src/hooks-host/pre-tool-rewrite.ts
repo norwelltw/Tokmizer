@@ -407,6 +407,8 @@ function rewriteAt(cmd: string, exec: string, depth: number, headOk: HeadCheck, 
   if (cmd.includes("<<")) return cmd;
   if (FUNC_DEF_ANYWHERE.test(cmd)) return cmd;
   const segs = splitTopLevel(cmd);
+  // `exec > file` redirects the shell itself: every later command writes into that file.
+  if (segs.some((seg) => seg.kind !== "sep" && firstWord(seg.text.trim()) === "exec" && hasTopLevelRedirect(seg.text))) return cmd;
   const frozen = capturedCompoundSegments(segs);
   const out: string[] = [];
   for (let s = 0; s < segs.length; s++) {
@@ -1251,7 +1253,7 @@ function globRegex(pattern: string): RegExp {
 const MAX_MATCH_WORDS = 512;
 
 function commandWords(cmd: string): string[][] {
-  const words = cmd.replace(/['"\\]/g, "").split(/[\s;&|(){}<>`$]+/).filter(Boolean);
+  const words = cmd.replace(/['"\\]/g, "").split(/[\s;&|(){}<>`$!]+/).filter(Boolean);
   return [words, words.map(basename)];
 }
 

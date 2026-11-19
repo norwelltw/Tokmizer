@@ -16,7 +16,7 @@ on_empty = "mix format: ok"
 
 [filters.mix-test]
 description = "Compact mix test"
-match_command = "^mix\\s+test"
+match_command = "^mix\\s+test(\\s|$)"
 priority = 60
 strip_ansi = true
 strip_lines_matching = ["^Excluding tags:", "^\\s*$"]

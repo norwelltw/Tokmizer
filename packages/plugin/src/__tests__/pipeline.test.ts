@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { applyFilter, applyFilterWithTail } from "../engine/pipeline";
+import { applyFilter, applyFilterWithTail, runLineTransform, suppressesOnEmpty } from "../engine/pipeline";
+import "../engine/transforms/smart-ls";
 import "../engine/transforms/smart-read";
 import { FilterDef } from "../engine/schema";
 import "../engine/transforms/smart-find";
@@ -53,6 +54,27 @@ describe("applyFilter pipeline", () => {
     const def = base({ strip_lines_matching: ["^.*$"], on_empty: "nothing" });
     const out = applyFilter("erase me\nme too", def);
     expect(out).toBe("nothing");
+  });
+
+  it("does not double the slash ls -F already put after a directory", () => {
+    const out = runLineTransform("smart-ls", [
+      "total 0",
+      "drwxr-xr-x  2 albert  staff  64 Nov 19 05:00 dir1/",
+      "drwxr-xr-x  2 albert  staff  64 Nov 19 05:00 dir2/",
+      "-rw-r--r--  1 albert  staff   0 Nov 19 05:00 a.txt",
+      "-rwxr-xr-x  1 albert  staff   0 Nov 19 05:00 b.sh*"
+    ], "ls -lF lsd").join("\n");
+    expect(out).toContain("dir1/");
+    expect(out).not.toContain("//");
+  });
+
+  it("keeps an empty answer empty for git formats meant for a program", () => {
+    for (const cmd of ["git status --porcelain", "git status --porcelain=v2 -b", "git diff --cached --name-only", "git diff --name-status HEAD~1", "git ls-files -z", "git log HEAD..HEAD --format=%H", "git log --pretty=oneline a..b"]) {
+      expect(suppressesOnEmpty(cmd), cmd).toBe(true);
+    }
+    for (const cmd of ["git status", "git log HEAD..HEAD", "git stash list", "cargo check -q"]) {
+      expect(suppressesOnEmpty(cmd), cmd).toBe(false);
+    }
   });
 
   it("does not drop find names past the 100th dir (max_lines must sit above the smart-find tree cap)", () => {

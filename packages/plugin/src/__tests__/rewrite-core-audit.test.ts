@@ -105,6 +105,8 @@ describe("H2: Claude Code allow rules keep working", () => {
     const payload = (command: string) => ({ tool_name: "Bash", permission_mode: "bypassPermissions", session_id: "s", cwd: project, tool_input: { command } });
     expect(buildPreToolUseOutput(payload("git push"), "claude-code", "tkr-exec", () => {}, { configDir: config }, pathEnv)).toBeNull();
     expect(buildPreToolUseOutput(payload("rm -rf x"), "claude-code", "tkr-exec", () => {}, { configDir: config }, pathEnv)).toBeNull();
+    // zsh's `&!` glued to the next command must not hide it from the deny rule.
+    expect(buildPreToolUseOutput(payload("git log; echo hi &!rm -rf /tmp/example"), "claude-code", "tkr-exec", () => {}, { configDir: config }, pathEnv)).toBeNull();
     const out = JSON.parse(buildPreToolUseOutput(payload("git log"), "claude-code", "tkr-exec", () => {}, { configDir: config }, pathEnv)!);
     expect(out.hookSpecificOutput).not.toHaveProperty("permissionDecision");
     expect(out.hookSpecificOutput.updatedInput.command).toBe("tkr-exec git log");

@@ -51,5 +51,5 @@ max_lines = 150
 description = "Compact Spring Boot logs"
 match_command = "^(java\\s+-jar.*\\.jar|\\./mvnw\\s+spring-boot|gradle\\s+bootRun)"
 priority = 50
-strip_lines_matching = ["^\\d{4}-\\d{2}-\\d{2}.*DEBUG", "^\\s*$"]
+strip_lines_matching = ["^\\d{4}-\\d{2}-\\d{2}[T ]\\S+\\s+DEBUG\\s+\\d+\\s+---", "^\\s*$"]
 max_lines = 200

@@ -26,9 +26,17 @@ export function claudeCodePersistChars(env: NodeJS.ProcessEnv): number {
 
 /** Start and end of a too-long line, joined by an ellipsis, within `cap` characters. */
 function clipLine(line: string, cap: number): string {
-  const head = Math.ceil((cap - 1) * 0.7);
-  return `${line.slice(0, head)}…${line.slice(line.length - (cap - 1 - head))}`;
+  const high = (i: number): boolean => line.charCodeAt(i) >= 0xd800 && line.charCodeAt(i) <= 0xdbff;
+  const low = (i: number): boolean => line.charCodeAt(i) >= 0xdc00 && line.charCodeAt(i) <= 0xdfff;
+  let head = Math.ceil((cap - 1) * 0.7);
+  let tail = line.length - (cap - 1 - head);
+  // Never cut between the two halves of a character outside the basic plane.
+  if (high(head - 1) && low(head)) head -= 1;
+  if (low(tail) && high(tail - 1)) tail += 1;
+  return `${line.slice(0, head)}…${line.slice(tail)}`;
 }
+
+const OMISSION_MARKER_LINE = /^… \((\d+) more lines omitted\)$/;
 
 /** Excerpt within the budget: the last lines (final summary), failure and warning lines, the first lines, then more of the end. */
 export function previewExcerpt(text: string, budget: number = PREVIEW_BUDGET_CHARS): string {
@@ -60,7 +68,8 @@ export function previewExcerpt(text: string, budget: number = PREVIEW_BUDGET_CHA
   let gap = 0;
   lines.forEach((line, i) => {
     if (!keep.has(i)) {
-      gap += 1;
+      // A dropped line that already stands for N omitted lines counts for N.
+      gap += Number(OMISSION_MARKER_LINE.exec(line)?.[1] ?? 1);
       return;
     }
     if (gap > 0) out.push(omissionMarker(gap));

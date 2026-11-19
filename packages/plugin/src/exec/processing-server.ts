@@ -2,7 +2,7 @@ import { timingSafeEqual } from "node:crypto";
 import { chmodSync, lstatSync, realpathSync } from "node:fs";
 import { dirname } from "node:path";
 import { createServer, type Socket } from "node:net";
-import { z } from "zod";
+import * as z from "zod";
 import { maxBundleAgeMs, type DaemonRuntime } from "../daemon/runtime";
 import { tokmizerHome } from "../paths";
 import { yoloEnabled } from "../yolo-mode";

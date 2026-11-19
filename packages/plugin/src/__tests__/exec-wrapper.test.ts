@@ -282,11 +282,28 @@ describe("runWrapped output buffer limits", () => {
     expect(r.stderr.endsWith("\n… (stderr truncated at 10MB)")).toBe(true);
   });
 
-  it("preserves decoding of incomplete bytes when no buffer truncation occurred", async () => {
-    const script = "const b=Buffer.from([97,240,159]);process.stdout.write(b);process.stderr.write(b);";
-    const r = await runWrapped([process.execPath, "-e", script]);
-    expect(r.stdout).toBe("a\uFFFD");
-    expect(r.stderr).toBe("a\uFFFD");
+  it("delivers output that is not UTF-8 byte for byte instead of replacing characters", async () => {
+    const written: Record<"out" | "err", Buffer[]> = { out: [], err: [] };
+    const collect = (into: Buffer[]) => ((chunk: string | Uint8Array, done?: unknown) => {
+      into.push(Buffer.from(chunk));
+      if (typeof done === "function") (done as () => void)();
+      return true;
+    }) as never;
+    const out = vi.spyOn(process.stdout, "write").mockImplementation(collect(written.out));
+    const err = vi.spyOn(process.stderr, "write").mockImplementation(collect(written.err));
+    let r;
+    try {
+      const script = "process.stdout.write(Buffer.from([0x63,0x61,0x66,0xe9,0x0a]));process.stderr.write(Buffer.from([0x6f,0x6c,0xe9,0x0a]));";
+      r = await runWrapped([process.execPath, "-e", script]);
+    } finally {
+      out.mockRestore();
+      err.mockRestore();
+    }
+    expect(r.code).toBe(0);
+    expect(r.stdout).toBe("");
+    expect(r.stderr).toBe("");
+    expect(Buffer.concat(written.out)).toEqual(Buffer.from([0x63, 0x61, 0x66, 0xe9, 0x0a]));
+    expect(Buffer.concat(written.err)).toEqual(Buffer.from([0x6f, 0x6c, 0xe9, 0x0a]));
   });
 });
 

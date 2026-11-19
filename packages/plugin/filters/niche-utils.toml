@@ -23,7 +23,7 @@ description = "Compact quarto render output"
 match_command = "^quarto(\\s|$)"
 priority = 50
 strip_ansi = true
-strip_lines_matching = ["^Output created:", "^\\s*$"]
+strip_lines_matching = ["^\\s*$"]
 max_lines = 80
 
 [filters.shopify]

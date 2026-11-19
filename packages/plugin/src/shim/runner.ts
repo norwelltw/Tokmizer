@@ -17,6 +17,7 @@ import { captureForRestore, captureOriginalForRestore, neutralizeMarkers, cleanS
 import { FOLD_MARKER_RE } from "../engine/transforms/smart-code";
 import { yoloEnabled } from "../yolo-mode";
 import { failOpenActive } from "./sh";
+import { isTextOutput, stdoutGoesElsewhere } from "./stdout-target";
 
 const MAX_BUFFER_BYTES = 16 * 1024 * 1024;
 
@@ -102,7 +103,7 @@ async function prepareShim(cmdName: string, args: string[]): Promise<Prepared> {
     ? new Set([...baseAllowed].filter((s) => !disabledKeys.has(s)))
     : baseAllowed;
   const host = detectHost().host;
-  const piped = !process.stdout.isTTY && host === "shell";
+  const piped = stdoutGoesElsewhere(host);
   const bypass = !settings.enabled || !state || hasNativeHook(host) || failOpenActive();
   const passthrough = isLongRunningInvocation(cmdName, args);
   return { yolo, settings, state, allowed, host, piped, bypass, passthrough };
@@ -271,7 +272,7 @@ export async function runShim(invocation: ShimInvocation): Promise<ShimResult> {
       const outRaw = Buffer.concat(outChunks);
       const errRaw = Buffer.concat(errChunks);
 
-      if (overflowed || streaming || bypass || piped) {
+      if (overflowed || streaming || bypass || piped || !isTextOutput(outRaw)) {
         if (outRaw.length) process.stdout.write(outRaw);
         if (errRaw.length) process.stderr.write(errRaw);
         resolve({

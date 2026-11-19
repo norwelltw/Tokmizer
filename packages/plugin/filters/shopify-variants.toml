@@ -1,6 +1,6 @@
 [filters.shopify-app]
 description = "Compact Shopify app dev/build"
-match_command = "^shopify\\s+app"
+match_command = "^shopify\\s+app(\\s|$)"
 priority = 60
 strip_ansi = true
 strip_lines_matching = ["^Loading", "^\\s*$"]
@@ -15,7 +15,7 @@ max_lines = 80
 
 [filters.shopify-theme-check]
 description = "Compact theme-check output"
-match_command = "^shopify\\s+theme\\s+check|^theme-check"
+match_command = "^shopify\\s+theme\\s+check(\\s|$)|^theme-check(\\s|$)"
 priority = 60
 max_lines = 80
 on_empty = "theme-check: clean"

@@ -87,7 +87,9 @@ const QUIET_ACTION_RE = new RegExp([
   String.raw`(?:^|[\s;&|(])find(?=\s)[^|;&]*?\s-(?:delete|quit|exec|execdir|ok|okdir|fprint0?|fprintf|fls|prune)(?=\s|$)`,
   String.raw`(?:^|[\s;&|(])(?:ruff|black|flake8)(?=\s)[^|;&]*?\s(?:-q+|--quiet)(?=\s|$)`,
   String.raw`(?:^|[\s;&|(])eslint(?=\s)[^|;&]*?\s(?:-o|--output-file)(?=[\s=]|$)`,
-  String.raw`(?:^|[\s;&|(])prettier(?=\s)[^|;&]*?\s(?:-l|--list-different)(?=\s|$)`
+  String.raw`(?:^|[\s;&|(])prettier(?=\s)[^|;&]*?\s(?:-l|--list-different)(?=\s|$)`,
+  // git formats meant for a program: an empty answer must stay empty.
+  String.raw`(?:^|[\s;&|(])git(?=\s)[^|;&]*?\s(?:--porcelain|-z|--name-only|--name-status|--format|--pretty)(?=[\s=]|$)`
 ].join("|"));
 
 /** Commands whose empty stdout does not mean "nothing found" (quiet/action modes). */

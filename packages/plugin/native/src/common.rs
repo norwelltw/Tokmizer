@@ -91,6 +91,15 @@ impl Capture {
         self.truncated |= bytes.len() > available;
     }
 
+    /// False for text in another encoding (Latin-1 source, a legacy log): decoding it would
+    /// replace bytes for good. A character cut by the size cap does not count.
+    pub fn is_utf8(&self) -> bool {
+        match std::str::from_utf8(&self.bytes) {
+            Ok(_) => true,
+            Err(error) => self.truncated && error.error_len().is_none(),
+        }
+    }
+
     pub fn text(&self) -> String {
         let mut bytes = self.bytes.as_slice();
         if self.truncated {
@@ -767,6 +776,13 @@ pub fn run(args: &[OsString]) -> Option<i32> {
         let _ = io::stderr().flush();
         return Some(code);
     }
+    if !out.is_utf8() || !err.is_utf8() {
+        let _ = io::stdout().write_all(&out.bytes);
+        let _ = io::stdout().flush();
+        let _ = io::stderr().write_all(&err.bytes);
+        let _ = io::stderr().flush();
+        return Some(code);
+    }
     let mut stdout = out.text();
     let mut stderr = err.text();
     let flags = u32::from(out.truncated) | (u32::from(err.truncated) << 1);
@@ -924,6 +940,27 @@ mod tests {
         assert_eq!(capture.bytes.len(), CAP);
         assert!(capture.truncated);
         assert_eq!(capture.text().len(), CAP - 2);
+    }
+
+    #[test]
+    fn other_encodings_are_not_taken_for_utf8() {
+        let mut latin1 = Capture::new();
+        latin1.append(b"caf\xe9 au lait\n");
+        assert!(!latin1.is_utf8());
+        let mut utf8 = Capture::new();
+        utf8.append("café 😀\n".as_bytes());
+        assert!(utf8.is_utf8());
+        let cut = Capture {
+            bytes: "ok 😀".as_bytes()[..5].to_vec(),
+            truncated: true,
+            ..Capture::new()
+        };
+        assert!(cut.is_utf8());
+        let cut_but_not_truncated = Capture {
+            bytes: "ok 😀".as_bytes()[..5].to_vec(),
+            ..Capture::new()
+        };
+        assert!(!cut_but_not_truncated.is_utf8());
     }
 
     #[test]

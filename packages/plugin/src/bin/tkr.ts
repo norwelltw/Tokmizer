@@ -440,7 +440,7 @@ async function uninstallEverything(): Promise<void> {
   for (const f of (await setGlobalPath(false)).files) lines.push(`Removed the Tokmizer PATH line from ${f} (backup in ~/.tokmizer/backup/rc).`);
   await rm(hookLauncherFile(), { force: true }).catch(() => {});
   lines.push(
-    "Your shell and agents now run without Tokmizer. Your savings history stays in ~/.tokmizer (delete that folder to erase it).",
+    "Your shell and agents now run without Tokmizer. Your savings history stays in ~/.tokmizer, with the command outputs cached for `tkr restore` (delete that folder to erase them).",
     "To remove the program itself: npm uninstall -g @tokmizer/plugin, brew uninstall tokmizer, or /plugin uninstall tokmizer@tokmizer in Claude Code."
   );
   process.stdout.write(`${lines.join("\n")}\n`);
@@ -1474,7 +1474,10 @@ async function main(): Promise<void> {
     const found = learnCorrections(files, minCount).slice(0, 20);
     process.stdout.write(renderCorrections(found, files.length));
     const safe = writableCorrections(found).slice(0, 10);
-    if (rest.includes("--write") && safe.length) process.stdout.write(`Wrote ${writeRules(process.cwd(), safe)}\n`);
+    if (rest.includes("--write") && safe.length) {
+      const written = writeRules(process.cwd(), safe);
+      process.stdout.write(written ? `Wrote ${written}\n` : "Nothing written: .claude/rules cannot be written here, or leads outside this project through a symbolic link.\n");
+    }
     else if (rest.includes("--write") && found.length) process.stdout.write("Nothing written: every correction contains a masked secret, a backtick or a control character.\n");
     return;
   }

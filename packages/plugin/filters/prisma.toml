@@ -1,6 +1,6 @@
 [filters.prisma]
 description = "Compact prisma output (migrate / generate / db push)"
-match_command = "^prisma(\\s|$)|^npx\\s+prisma|^pnpm\\s+(exec\\s+)?prisma|^yarn\\s+prisma"
+match_command = "^prisma(\\s|$)|^npx\\s+prisma(\\s|$)|^pnpm\\s+(exec\\s+)?prisma(\\s|$)|^yarn\\s+prisma(\\s|$)"
 priority = 60
 strip_ansi = true
 strip_lines_matching = [

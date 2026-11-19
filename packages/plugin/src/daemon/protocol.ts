@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 import { FilterDef } from "../engine/schema";
 
 export const ReqFilter = z.object({
@@ -34,7 +34,7 @@ export type ReqMessage = z.infer<typeof ReqMessage>;
 export const ResOk = z.object({
   id: z.string(),
   ok: z.literal(true),
-  data: z.unknown()
+  data: z.unknown().optional()
 });
 
 export const ResErr = z.object({

@@ -24,6 +24,7 @@ description = "Compact jira CLI output"
 match_command = "^jira(\\s|$)"
 priority = 55
 strip_ansi = true
+transform = "trim-end"
 truncate_lines_at = 200
 max_lines = 80
 

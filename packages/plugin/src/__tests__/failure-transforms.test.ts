@@ -215,3 +215,21 @@ describe("failure output", () => {
     expect(r.output).toMatch(/more lines omitted/);
   });
 });
+
+describe("smartCtest keeps where an assertion failed", () => {
+  it("keeps the QtTest location line when a long backtrace follows", () => {
+    const frames = Array.from({ length: 60 }, (_, i) => `#${i} 0x0000ffff${i} in frame_${i} ()`);
+    const out = smartCtest([
+      "1/1 Test #1: tst_widget ...***Failed    0.42 sec",
+      "********* Start testing of tst_Widget *********",
+      "FAIL!  : tst_Widget::resize() 'w.isVisible()' returned FALSE. ()",
+      "   Loc: [/src/tst_widget.cpp(42)]",
+      "QFATAL : tst_Widget::resize() Received signal 11",
+      ...frames,
+      "",
+      "0% tests passed, 1 tests failed out of 1"
+    ]).join("\n");
+    expect(out).toContain("Loc: [/src/tst_widget.cpp(42)]");
+    expect(out).toMatch(/more lines omitted/);
+  });
+});

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 import { createHash } from "node:crypto";
 
 export type Plan = "trial" | "free" | "smart" | "pro";

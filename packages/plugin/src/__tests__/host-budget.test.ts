@@ -56,4 +56,22 @@ describe("previewExcerpt", () => {
   it("returns a short text whole", () => {
     expect(previewExcerpt("a\nb\n")).toBe("a\nb\n");
   });
+
+  it("counts the lines behind an omission marker it drops", () => {
+    const head = Array.from({ length: 60 }, (_, i) => `first part line ${i} with some filler text to use the budget`);
+    const tail = Array.from({ length: 60 }, (_, i) => `second part line ${i} with some filler text to use the budget`);
+    const out = previewExcerpt([...head, "… (785 more lines omitted)", ...tail].join("\n") + "\n");
+    const lines = out.trimEnd().split("\n");
+    const omitted = lines.reduce((n, l) => n + Number(/^… \((\d+) more lines omitted\)$/.exec(l)?.[1] ?? 0), 0);
+    const shown = lines.filter((l) => !/^… \(\d+ more lines omitted\)$/.test(l)).length;
+    expect(out).not.toContain("… (785 more lines omitted)");
+    expect(shown + omitted).toBe(120 + 785);
+  });
+
+  it("never cuts a long line in the middle of a character", () => {
+    const out = previewExcerpt(`${"é😀漢".repeat(2000)}\nend\n`);
+    expect(out).not.toContain("\ufffd");
+    expect(Buffer.from(out, "utf8").toString("utf8")).toBe(out);
+    expect(/[\ud800-\udbff](?![\udc00-\udfff])|(?<![\ud800-\udbff])[\udc00-\udfff]/.test(out)).toBe(false);
+  });
 });

@@ -1,6 +1,6 @@
 import { chmodSync, readFileSync, writeFileSync, mkdirSync, renameSync } from "node:fs";
 import { join } from "node:path";
-import { z } from "zod";
+import * as z from "zod";
 import { tokmizerHome } from "../paths";
 
 const CachedEnvelope = z.object({

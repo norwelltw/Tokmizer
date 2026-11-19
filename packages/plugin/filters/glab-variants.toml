@@ -15,7 +15,7 @@ max_lines = 200
 
 [filters.glab-api]
 description = "Compact glab api raw json"
-match_command = "^glab\\s+api"
+match_command = "^glab\\s+api(\\s|$)"
 priority = 65
 
 [filters.glab-auth]

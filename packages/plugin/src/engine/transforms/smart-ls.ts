@@ -170,7 +170,7 @@ export function smartLs(lines: string[], cmd?: string): string[] {
   for (const e of shown) {
     const usual = e.isDir ? dirMode : fileMode;
     const mode = e.mode === usual ? "" : `${e.mode} `;
-    const label = `${mode}${owner === null ? `${e.owner} ` : ""}${e.isDir ? `${e.name}/` : e.name}`;
+    const label = `${mode}${owner === null ? `${e.owner} ` : ""}${e.isDir && !e.name.endsWith("/") ? `${e.name}/` : e.name}`;
     out.push(e.isDir ? label : `${label}  ${e.size}`);
   }
   if (out.length > MAX_OUTPUT_LINES) {

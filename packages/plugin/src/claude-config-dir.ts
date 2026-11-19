@@ -12,5 +12,6 @@ export function claudeConfigDir(env: NodeJS.ProcessEnv = process.env, home: stri
   let p = raw;
   if (p === "~") p = home;
   else if (p.startsWith("~/") || p.startsWith("~\\")) p = join(home, p.slice(2));
-  return isAbsolute(p) ? resolve(p) : resolve(p);
+  // Claude Code reads a relative value from where it was started: the project, not the hook's cwd.
+  return isAbsolute(p) ? resolve(p) : resolve(env.CLAUDE_PROJECT_DIR?.trim() || process.cwd(), p);
 }

@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { constants as osConstants } from "node:os";
 import { fileURLToPath } from "node:url";
 import { StringDecoder } from "node:string_decoder";
+import { isUtf8 } from "node:buffer";
 import { spawnSync } from "node:child_process";
 import { processOutput, type FilterResolver } from "../engine";
 import { slugKey } from "../contracts";
@@ -56,6 +57,15 @@ function decodeBuffered(chunks: Buffer[], truncated: boolean): string {
   const decoder = new StringDecoder("utf8");
   const text = decoder.write(Buffer.concat(chunks));
   return truncated ? text : text + decoder.end();
+}
+
+/** A capture cut at the size cap may end inside a character: that tail does not make it another encoding. */
+function validUtf8(chunks: Buffer[], truncated: boolean): boolean {
+  const bytes = Buffer.concat(chunks);
+  if (isUtf8(bytes)) return true;
+  if (!truncated) return false;
+  for (let cut = 1; cut <= 3 && cut <= bytes.length; cut++) if (isUtf8(bytes.subarray(0, bytes.length - cut))) return true;
+  return false;
 }
 
 export function kickBackgroundEnroll(): void {
@@ -155,8 +165,15 @@ export async function runWrapped(written: string[]): Promise<WrapResult> {
   };
   const onSigint = (): void => forward("SIGINT");
   const onSigterm = (): void => forward("SIGTERM");
+  // A closed terminal or agent session (SIGHUP) or a quit must stop the command too, not orphan it.
+  const onSighup = (): void => forward("SIGHUP");
+  const onSigquit = (): void => forward("SIGQUIT");
   process.on("SIGINT", onSigint);
   process.on("SIGTERM", onSigterm);
+  if (process.platform !== "win32") {
+    process.on("SIGHUP", onSighup);
+    process.on("SIGQUIT", onSigquit);
+  }
 
   const stdoutChunks: Buffer[] = [];
   const stderrChunks: Buffer[] = [];
@@ -268,8 +285,17 @@ export async function runWrapped(written: string[]): Promise<WrapResult> {
     if (capTimer) clearTimeout(capTimer);
     process.off("SIGINT", onSigint);
     process.off("SIGTERM", onSigterm);
+    process.off("SIGHUP", onSighup);
+    process.off("SIGQUIT", onSigquit);
   }
 
+  // Text in another encoding (Latin-1 source, a legacy log): decoding it as UTF-8 would replace
+  // bytes for good, even when nothing is shortened. Both streams go out as they came.
+  if (!binary && !(validUtf8(stdoutChunks, truncated) && validUtf8(stderrChunks, stderrTruncated))) {
+    await new Promise<void>((resolve) => process.stdout.write(Buffer.concat(stdoutChunks), () => resolve()));
+    await new Promise<void>((resolve) => process.stderr.write(Buffer.concat(stderrChunks), () => resolve()));
+    return { stdout: "", stderr: "", code: exitCode, filterId: null, rawBytes: 0, filteredBytes: 0, truncated: false };
+  }
   const stdout = decodeBuffered(stdoutChunks, truncated);
   const stderr = decodeBuffered(stderrChunks, stderrTruncated);
   if (binary) {
